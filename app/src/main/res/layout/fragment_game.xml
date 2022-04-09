@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <TextView
+            style="?android:listSeparatorTextViewStyle"
+            android:id="@+id/team_home_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/home_team" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/versus"
+            android:gravity="center_horizontal"/>
+
+        <TextView
+            style="?android:listSeparatorTextViewStyle"
+            android:id="@+id/team_guest_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/guest_team" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/stadium_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/stadium"/>
+
+    <EditText
+        android:id="@+id/league_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/league" />
+
+    <Button
+        android:id="@+id/game_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Wed Nov 14 11:56 EST 2022" />
+
+    <CheckBox
+        android:id="@+id/game_paid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/gamePaidCheckbox" />
+
+</LinearLayout>
