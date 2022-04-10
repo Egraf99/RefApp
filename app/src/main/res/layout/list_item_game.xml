@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text = "Guest Name"
-        app:layout_constraintEnd_toStartOf="@+id/check_isPaid"
+        app:layout_constraintEnd_toStartOf="@+id/img_check_isPaid"
         app:layout_constraintStart_toEndOf="@+id/team_home_textview"
         app:layout_constraintTop_toTopOf="parent" />
 

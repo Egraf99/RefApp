@@ -1,9 +1,7 @@
 package com.egraf.refapp
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,12 +11,18 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.util.*
 
 class GameListFragment : Fragment() {
     private lateinit var gameRecyclerView: RecyclerView
     private var adapter: GameAdapter? = GameAdapter(emptyList())
     private val gameViewModel: GameListViewModel by lazy {
         ViewModelProvider(this).get(GameListViewModel::class.java)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -85,6 +89,28 @@ class GameListFragment : Fragment() {
             ).show()
         }
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.fragment_game_list, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.new_game -> {
+                val game = Game()
+                game.homeTeam = "Test Home Team"
+                game.guestTeam = "Test Guest Team"
+                game.stadium = "Test Stadium"
+                game.league = "Test League"
+                game.isPaid = false
+                game.date = Date()
+                gameViewModel.addGame(game)
+                true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
     private inner class GameAdapter(var games: List<Game>) : RecyclerView.Adapter<GameHolder>() {
