@@ -1,23 +1,37 @@
 package com.egraf.refapp
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
 class GameListFragment : Fragment() {
+    interface Callbacks {
+        fun onGameSelected(gameId: UUID)
+    }
+
+    private var callbacks: Callbacks? = null
     private lateinit var gameRecyclerView: RecyclerView
     private var adapter: GameAdapter? = GameAdapter(emptyList())
-    private val gameViewModel: GameListViewModel by lazy {
+    private val gameListViewModel: GameListViewModel by lazy {
         ViewModelProvider(this).get(GameListViewModel::class.java)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +55,7 @@ class GameListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        gameViewModel.gamesListLiveData.observe(
+        gameListViewModel.gamesListLiveData.observe(
             viewLifecycleOwner
         ) { games ->
             games?.let {
@@ -81,12 +95,8 @@ class GameListFragment : Fragment() {
             imgIsPaid.visibility = if (this.game.isPaid) View.VISIBLE else View.GONE
         }
 
-        override fun onClick(p0: View?) {
-            Toast.makeText(
-                context,
-                "${game.homeTeam} vs. ${game.guestTeam} clicked!",
-                Toast.LENGTH_SHORT
-            ).show()
+        override fun onClick(v: View?) {
+            callbacks?.onGameSelected(game.id)
         }
 
     }
@@ -100,13 +110,8 @@ class GameListFragment : Fragment() {
         return when (item.itemId) {
             R.id.new_game -> {
                 val game = Game()
-                game.homeTeam = "Test Home Team"
-                game.guestTeam = "Test Guest Team"
-                game.stadium = "Test Stadium"
-                game.league = "Test League"
-                game.isPaid = false
-                game.date = Date()
-                gameViewModel.addGame(game)
+                gameListViewModel.addGame(game)
+                callbacks?.onGameSelected(game.id)
                 true
             }
             else -> return super.onOptionsItemSelected(item)

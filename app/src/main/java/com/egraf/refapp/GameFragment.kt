@@ -11,17 +11,11 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val ARG_GAME_ID = "game_id"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [GameFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class GameFragment : Fragment() {
     private lateinit var game: Game
     private lateinit var homeTeamTextView: TextView
@@ -30,14 +24,16 @@ class GameFragment : Fragment() {
     private lateinit var leagueEditText: EditText
     private lateinit var dateButton: Button
     private lateinit var gamePaidCheckBox: CheckBox
+    private val gameDetailViewModel: GameDetailViewModel by lazy {
+        ViewModelProvider(this).get(GameDetailViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         game = Game()
-//        arguments?.let {
-//            param1 = it.getString(ARG_PARAM1)
-//            param2 = it.getString(ARG_PARAM2)
-//        }
+
+        val gameId = arguments?.getSerializable(ARG_GAME_ID) as UUID
+        gameDetailViewModel.loadGame(gameId)
     }
 
     override fun onCreateView(
@@ -63,7 +59,18 @@ class GameFragment : Fragment() {
 
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        gameDetailViewModel.gameLiveData.observe(viewLifecycleOwner) { game ->
+            game?.let {
+                this.game = game
+                updateUI(game)
+            }
+        }
+    }
+
     override fun onStart() {
+
         super.onStart()
 
         val stadiumWatcher = object : TextWatcher {
@@ -98,23 +105,33 @@ class GameFragment : Fragment() {
 
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment GameFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            GameFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onStop() {
+        super.onStop()
+        gameDetailViewModel.saveGame(game)
     }
+
+    private fun updateUI(game: Game) {
+        homeTeamTextView.text = game.homeTeam
+        guestTeamTextView.text = game.guestTeam
+        stadiumEditText.setText(game.stadium)
+        leagueEditText.setText(game.league)
+        dateButton.text = game.date.toString()
+        gamePaidCheckBox.apply {
+            isChecked = game.isPaid
+            jumpDrawablesToCurrentState()
+        }
+    }
+
+    companion object {
+        fun newInstance(gameId: UUID): GameFragment {
+            val args = Bundle()
+                .apply {
+                    putSerializable(ARG_GAME_ID, gameId)
+                }
+            return GameFragment().apply {
+                arguments = args
+            }
+        }
+    }
+
 }
