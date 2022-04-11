@@ -8,7 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
@@ -19,7 +21,7 @@ class GameListFragment : Fragment() {
 
     private var callbacks: Callbacks? = null
     private lateinit var gameRecyclerView: RecyclerView
-    private var adapter: GameAdapter? = GameAdapter(emptyList())
+    private var adapter: GameAdapter? = GameAdapter()
     private val gameListViewModel: GameListViewModel by lazy {
         ViewModelProvider(this).get(GameListViewModel::class.java)
     }
@@ -65,8 +67,7 @@ class GameListFragment : Fragment() {
     }
 
     private fun updateUI(games: List<Game>) {
-        adapter = GameAdapter(games)
-        gameRecyclerView.adapter = adapter
+        adapter?.submitList(games)
     }
 
     private inner class GameHolder(view: View) : RecyclerView.ViewHolder(view),
@@ -118,18 +119,36 @@ class GameListFragment : Fragment() {
         }
     }
 
-    private inner class GameAdapter(var games: List<Game>) : RecyclerView.Adapter<GameHolder>() {
+    private inner class GameAdapter() :
+        ListAdapter<Game, GameHolder>(GameDiffUtilCallback) {
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameHolder {
             val view = layoutInflater.inflate(R.layout.list_item_game, parent, false)
             return GameHolder(view)
         }
 
         override fun onBindViewHolder(holder: GameHolder, position: Int) {
-            val game = games[position]
+            val game = currentList[position]
             holder.bind(game)
         }
 
-        override fun getItemCount() = games.size
+        override fun getItemCount() = currentList.size
+
+    }
+
+    object GameDiffUtilCallback : DiffUtil.ItemCallback<Game>() {
+        override fun areItemsTheSame(oldGame: Game, newGame: Game): Boolean {
+            return oldGame.id == newGame.id
+        }
+
+        override fun areContentsTheSame(oldGame: Game, newGame: Game): Boolean {
+            return oldGame.homeTeam == newGame.homeTeam &&
+                    oldGame.guestTeam == newGame.guestTeam &&
+                    oldGame.stadium == newGame.stadium &&
+                    oldGame.league == newGame.league &&
+                    oldGame.date == newGame.date &&
+                    oldGame.isPaid == newGame.isPaid
+        }
     }
 
     companion object {
