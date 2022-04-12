@@ -9,7 +9,7 @@ import kotlin.concurrent.fixedRateTimer
 private const val TAG = "MainActivity"
 private const val GAME_LIST_TAG = "GameListFragment"
 
-class MainActivity : AppCompatActivity(), GameListFragment.Callbacks, GameFragment.Callbacks {
+class MainActivity : AppCompatActivity(), GameListFragment.Callbacks {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -29,15 +29,5 @@ class MainActivity : AppCompatActivity(), GameListFragment.Callbacks, GameFragme
             .beginTransaction()
             .replace(R.id.fragment_container, gameFragment)
             .addToBackStack(null).commit()
-    }
-
-    override fun onGameDelete() {
-        val fragment = supportFragmentManager.findFragmentByTag(GAME_LIST_TAG)
-        if (fragment != null) {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit()
-        }
     }
 }

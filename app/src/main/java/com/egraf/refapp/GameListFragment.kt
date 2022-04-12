@@ -79,7 +79,8 @@ class GameListFragment : Fragment() {
         val stadiumTextView: TextView = itemView.findViewById(R.id.stadium_textview)
         val leagueTextView: TextView = itemView.findViewById(R.id.league_textview)
         val dateButton: Button = itemView.findViewById(R.id.date)
-        val imgIsPaid: ImageView = itemView.findViewById(R.id.img_check_isPaid)
+        val imgGamePaid: ImageView = itemView.findViewById(R.id.img_check_isPaid)
+        val imgGameDone: ImageView = itemView.findViewById(R.id.img_check_gamePass)
 
         init {
             itemView.setOnClickListener(this)
@@ -93,7 +94,13 @@ class GameListFragment : Fragment() {
             leagueTextView.text = this.game.league
             dateButton.text = this.game.date.toString()
             dateButton.isEnabled = false
-            imgIsPaid.visibility = if (this.game.isPaid) View.VISIBLE else View.GONE
+
+            val resGamePaid = if (game.isPaid) R.drawable.ic_paiment_done else R.drawable.ic_paiment_wait
+            imgGamePaid.setBackgroundResource(resGamePaid)
+
+//            val resGameGone = if (game.isDone) R.drawable.ic_is_paid else R.drawable.ic_calendar_yelow
+//            imgGameDone.setBackgroundResource(resGameGone)
+            imgGameDone.setBackgroundResource(R.drawable.ic_calendar_yelow)
         }
 
         override fun onClick(v: View?) {

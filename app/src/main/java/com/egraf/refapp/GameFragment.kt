@@ -1,6 +1,6 @@
 package com.egraf.refapp
 
-import android.content.Context
+import DatePickerFragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,18 +11,17 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
-import android.widget.TextView
+import androidx.fragment.app.FragmentResultListener
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import java.util.*
 
 private const val ARG_GAME_ID = "game_id"
+private const val ARG_DATE = "date"
+private const val REQUEST_DATE = "DialogDate"
+private const val DIALOG_DATE = "DialogDate"
 
-class GameFragment : Fragment() {
-    interface Callbacks {
-        fun onGameDelete()
-    }
-
-    private var callbacks: Callbacks? = null
+class GameFragment : Fragment(), FragmentResultListener {
     private lateinit var game: Game
     private lateinit var homeTeamEditText: EditText
     private lateinit var guestTeamEditText: EditText
@@ -33,16 +32,6 @@ class GameFragment : Fragment() {
     private lateinit var buttonDelete: Button
     private val gameDetailViewModel: GameDetailViewModel by lazy {
         ViewModelProvider(this).get(GameDetailViewModel::class.java)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        callbacks = context as Callbacks?
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        callbacks = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,19 +48,14 @@ class GameFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_game, container, false)
+
+        // Init views
         homeTeamEditText = view.findViewById(R.id.team_home_edittext) as EditText
         guestTeamEditText = view.findViewById(R.id.team_guest_edittext) as EditText
         stadiumEditText = view.findViewById(R.id.stadium_edittext) as EditText
         leagueEditText = view.findViewById(R.id.league_edittext) as EditText
-
         dateButton = view.findViewById(R.id.game_date) as Button
-        dateButton.apply {
-            this.text = game.date.toString()
-            this.isEnabled = false
-        }
-
         buttonDelete = view.findViewById(R.id.button_delete) as Button
-
         gamePaidCheckBox = view.findViewById(R.id.game_paid) as CheckBox
 
         return view
@@ -83,17 +67,14 @@ class GameFragment : Fragment() {
         gameDetailViewModel.gameLiveData.observe(viewLifecycleOwner) { game ->
             game?.let {
                 this.game = game
-                updateUI(game)
+                updateUI()
             }
         }
-        buttonDelete.setOnClickListener { _ ->
-            gameDetailViewModel.deleteGame(game)
-            callbacks?.onGameDelete()
-        }
+
+        parentFragmentManager.setFragmentResultListener(REQUEST_DATE, viewLifecycleOwner, this)
     }
 
     override fun onStart() {
-
         super.onStart()
 
         val homeTeamWatcher = object : TextWatcher {
@@ -152,6 +133,17 @@ class GameFragment : Fragment() {
             setOnCheckedChangeListener { _, isPaid -> game.isPaid = isPaid }
         }
 
+        dateButton.setOnClickListener {
+            DatePickerFragment
+                .newInstance(game.date, REQUEST_DATE)
+                .show(parentFragmentManager, REQUEST_DATE)
+        }
+
+        buttonDelete.setOnClickListener {
+            gameDetailViewModel.deleteGame(game)
+            parentFragmentManager.beginTransaction().remove(this).commit()
+            parentFragmentManager.popBackStack()
+        }
     }
 
     override fun onStop() {
@@ -159,7 +151,7 @@ class GameFragment : Fragment() {
         gameDetailViewModel.saveGame(game)
     }
 
-    private fun updateUI(game: Game) {
+    private fun updateUI() {
         homeTeamEditText.setText(game.homeTeam)
         guestTeamEditText.setText(game.guestTeam)
         stadiumEditText.setText(game.stadium)
@@ -168,6 +160,15 @@ class GameFragment : Fragment() {
         gamePaidCheckBox.apply {
             isChecked = game.isPaid
             jumpDrawablesToCurrentState()
+        }
+    }
+
+    override fun onFragmentResult(requestKey: String, result: Bundle) {
+        when(requestKey) {
+            REQUEST_DATE -> {
+                game.date = DatePickerFragment.getSelectedDate(result)
+                updateUI()
+            }
         }
     }
 

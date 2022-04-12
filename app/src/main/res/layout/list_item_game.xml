@@ -69,8 +69,7 @@
         android:layout_height="56dp"
         app:layout_constraintBottom_toTopOf="@id/img_check_isPaid"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/team_home_textview"
-        app:srcCompat="@drawable/ic_football_ball" />
+        app:layout_constraintTop_toBottomOf="@+id/team_home_textview"/>
 
     <ImageView
         android:id="@+id/img_check_isPaid"
@@ -79,8 +78,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/img_check_gamePass"
         app:layout_constraintStart_toStartOf="@id/img_check_gamePass"
-        app:layout_constraintTop_toBottomOf="@+id/img_check_gamePass"
-        app:srcCompat="@drawable/ic_is_paid" />
+        app:layout_constraintTop_toBottomOf="@+id/img_check_gamePass" />
 
     <Button
         android:id="@+id/date"
