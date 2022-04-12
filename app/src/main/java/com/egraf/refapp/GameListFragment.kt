@@ -119,7 +119,7 @@ class GameListFragment : Fragment() {
         }
     }
 
-    private inner class GameAdapter() :
+    private inner class GameAdapter :
         ListAdapter<Game, GameHolder>(GameDiffUtilCallback) {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameHolder {

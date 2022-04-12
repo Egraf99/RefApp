@@ -8,4 +8,5 @@
     <string name="guest_team">Guest Team</string>
     <string name="stadium">Stadium</string>
     <string name="league">League</string>
+    <string name="delete">Delete game</string>
 </resources>

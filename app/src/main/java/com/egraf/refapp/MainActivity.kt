@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import java.util.*
+import kotlin.concurrent.fixedRateTimer
 
 private const val TAG = "MainActivity"
+private const val GAME_LIST_TAG = "GameListFragment"
 
-class MainActivity : AppCompatActivity(), GameListFragment.Callbacks {
+class MainActivity : AppCompatActivity(), GameListFragment.Callbacks, GameFragment.Callbacks {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -16,7 +18,7 @@ class MainActivity : AppCompatActivity(), GameListFragment.Callbacks {
         if (currentFragment == null) {
             val fragment = GameListFragment.newInstance()
             supportFragmentManager.beginTransaction()
-                .add(R.id.fragment_container, fragment)
+                .add(R.id.fragment_container, fragment, GAME_LIST_TAG)
                 .commit()
         }
     }
@@ -27,5 +29,15 @@ class MainActivity : AppCompatActivity(), GameListFragment.Callbacks {
             .beginTransaction()
             .replace(R.id.fragment_container, gameFragment)
             .addToBackStack(null).commit()
+    }
+
+    override fun onGameDelete() {
+        val fragment = supportFragmentManager.findFragmentByTag(GAME_LIST_TAG)
+        if (fragment != null) {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
+        }
     }
 }

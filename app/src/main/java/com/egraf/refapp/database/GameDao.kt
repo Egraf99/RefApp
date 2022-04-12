@@ -1,10 +1,7 @@
 package com.egraf.refapp.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.egraf.refapp.Game
 import java.util.*
 
@@ -21,4 +18,7 @@ interface GameDao {
 
     @Insert
     fun addGame(game: Game)
+
+    @Delete
+    fun deleteGame(game: Game)
 }

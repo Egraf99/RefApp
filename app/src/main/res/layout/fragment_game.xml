@@ -1,62 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:layout_height="match_parent"
+    android:layout_margin="8dp">
 
-    <LinearLayout
+<!--First line-->
+    <TextView
+        android:id="@+id/team_home_textview"
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintWidth_default="spread"
+        android:gravity="start"
+        android:text="@string/home_team"
+        app:layout_constraintBottom_toBottomOf="@+id/team_guest_textview"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/versus"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/versus"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="8dp"
+        android:gravity="center"
+        android:text="@string/versus"
+        app:layout_constraintBottom_toBottomOf="@+id/team_guest_edittext"
+        app:layout_constraintEnd_toStartOf="@+id/team_guest_textview"
+        app:layout_constraintHeight_default="spread"
+        app:layout_constraintStart_toEndOf="@+id/team_home_textview"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/team_guest_textview"
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintWidth_default="spread"
+        android:gravity="start"
+        android:text="@string/guest_team"
+        app:layout_constraintStart_toEndOf="@id/versus"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+<!--Second line-->
+    <EditText
+        android:id="@+id/team_home_edittext"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:hint="@string/home_team"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/versus"
+        app:layout_constraintTop_toBottomOf="@+id/team_home_textview" />
+
+
+    <EditText
+        android:id="@+id/team_guest_edittext"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
+        app:layout_constraintWidth_default="spread"
+        android:inputType="textPersonName"
+        app:layout_constraintTop_toBottomOf="@id/team_home_textview"
+        app:layout_constraintStart_toEndOf="@id/versus"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:hint="@string/guest_team" />
+
+<!--    Third line-->
+    <TextView
+        android:id="@+id/stadium_textview"
+        style="?android:listSeparatorTextViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <TextView
-            style="?android:listSeparatorTextViewStyle"
-            android:id="@+id/team_home_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/home_team" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/versus"
-            android:gravity="center_horizontal"/>
-
-        <TextView
-            style="?android:listSeparatorTextViewStyle"
-            android:id="@+id/team_guest_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/guest_team" />
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/stadium"
+        app:layout_constraintTop_toBottomOf="@+id/team_home_edittext"
+        tools:layout_editor_absoluteX="10dp" />
 
     <EditText
         android:id="@+id/stadium_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/stadium"/>
+        android:hint="@string/stadium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stadium_textview" />
+
+    <TextView
+        android:id="@+id/league_textview"
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/league"
+        app:layout_constraintTop_toBottomOf="@id/stadium_edittext"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <EditText
         android:id="@+id/league_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/league" />
+        android:hint="@string/league"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/league_textview" />
 
     <Button
         android:id="@+id/game_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/game_paid"
         tools:text="Wed Nov 14 11:56 EST 2022" />
 
     <CheckBox
         android:id="@+id/game_paid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/gamePaidCheckbox" />
+        android:layout_marginTop="16dp"
+        android:text="@string/gamePaidCheckbox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/league_edittext" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/button_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/delete"
+        android:backgroundTint="@color/red"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,6 +31,9 @@ class GameRepository private constructor(context: Context) {
             gameDao.addGame(game)
         }
     }
+    fun deleteGame(game: Game) {
+        executor.execute { gameDao.deleteGame(game) }
+    }
 
     companion object {
         private var INSTANCE: GameRepository? = null

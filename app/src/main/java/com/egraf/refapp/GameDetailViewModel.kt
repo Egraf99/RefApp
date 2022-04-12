@@ -21,4 +21,8 @@ class GameDetailViewModel : ViewModel() {
     fun saveGame(game: Game) {
         gameRepository.updateGame(game)
     }
+
+    fun deleteGame(game: Game) {
+        gameRepository.deleteGame(game)
+    }
 }
