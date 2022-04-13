@@ -182,6 +182,10 @@ class GameFragment : Fragment(), FragmentResultListener {
                 arguments = args
             }
         }
+
+        fun putGameId(gameId: UUID): Bundle {
+            return Bundle().apply { putSerializable(ARG_GAME_ID, gameId) }
+        }
     }
 
 }
