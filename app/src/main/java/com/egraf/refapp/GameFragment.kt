@@ -1,9 +1,9 @@
 package com.egraf.refapp
 
-import DatePickerFragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.format.DateFormat
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,14 +12,14 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.FragmentResultListener
-import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import java.util.*
 
 private const val ARG_GAME_ID = "game_id"
-private const val ARG_DATE = "date"
 private const val REQUEST_DATE = "DialogDate"
-private const val DIALOG_DATE = "DialogDate"
+private const val REQUEST_TIME = "DialogTime"
+private const val DATE_FORMAT = "EEE dd.MM.yyyy"
+private const val TIME_FORMAT = "HH:mm"
 
 class GameFragment : Fragment(), FragmentResultListener {
     private lateinit var game: Game
@@ -28,6 +28,7 @@ class GameFragment : Fragment(), FragmentResultListener {
     private lateinit var stadiumEditText: EditText
     private lateinit var leagueEditText: EditText
     private lateinit var dateButton: Button
+    private lateinit var timeButton: Button
     private lateinit var gamePaidCheckBox: CheckBox
     private lateinit var buttonDelete: Button
     private val gameDetailViewModel: GameDetailViewModel by lazy {
@@ -55,6 +56,7 @@ class GameFragment : Fragment(), FragmentResultListener {
         stadiumEditText = view.findViewById(R.id.stadium_edittext) as EditText
         leagueEditText = view.findViewById(R.id.league_edittext) as EditText
         dateButton = view.findViewById(R.id.game_date) as Button
+        timeButton = view.findViewById(R.id.game_time) as Button
         buttonDelete = view.findViewById(R.id.button_delete) as Button
         gamePaidCheckBox = view.findViewById(R.id.game_paid) as CheckBox
 
@@ -72,6 +74,7 @@ class GameFragment : Fragment(), FragmentResultListener {
         }
 
         parentFragmentManager.setFragmentResultListener(REQUEST_DATE, viewLifecycleOwner, this)
+        parentFragmentManager.setFragmentResultListener(REQUEST_TIME, viewLifecycleOwner, this)
     }
 
     override fun onStart() {
@@ -139,6 +142,12 @@ class GameFragment : Fragment(), FragmentResultListener {
                 .show(parentFragmentManager, REQUEST_DATE)
         }
 
+        timeButton.setOnClickListener {
+            TimePickerFragment
+                .newInstance(game.date, REQUEST_TIME)
+                .show(parentFragmentManager, REQUEST_TIME)
+        }
+
         buttonDelete.setOnClickListener {
             gameDetailViewModel.deleteGame(game)
             parentFragmentManager.beginTransaction().remove(this).commit()
@@ -156,7 +165,8 @@ class GameFragment : Fragment(), FragmentResultListener {
         guestTeamEditText.setText(game.guestTeam)
         stadiumEditText.setText(game.stadium)
         leagueEditText.setText(game.league)
-        dateButton.text = game.date.toString()
+        dateButton.text = DateFormat.format(DATE_FORMAT, game.date).toString()
+        timeButton.text = DateFormat.format(TIME_FORMAT, game.date).toString()
         gamePaidCheckBox.apply {
             isChecked = game.isPaid
             jumpDrawablesToCurrentState()
@@ -169,20 +179,14 @@ class GameFragment : Fragment(), FragmentResultListener {
                 game.date = DatePickerFragment.getSelectedDate(result)
                 updateUI()
             }
+            REQUEST_TIME -> {
+                game.date = TimePickerFragment.getSelectedTime(result)
+                updateUI()
+            }
         }
     }
 
     companion object {
-        fun newInstance(gameId: UUID): GameFragment {
-            val args = Bundle()
-                .apply {
-                    putSerializable(ARG_GAME_ID, gameId)
-                }
-            return GameFragment().apply {
-                arguments = args
-            }
-        }
-
         fun putGameId(gameId: UUID): Bundle {
             return Bundle().apply { putSerializable(ARG_GAME_ID, gameId) }
         }

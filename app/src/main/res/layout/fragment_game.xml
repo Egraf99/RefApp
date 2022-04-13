@@ -111,11 +111,22 @@
 
     <Button
         android:id="@+id/game_date"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/game_paid"
-        tools:text="Wed Nov 14 11:56 EST 2022" />
+        app:layout_constraintWidth_percent="0.5"
+        tools:text="Wed Nov 14 2022" />
+
+    <Button
+        android:id="@+id/game_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/game_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/game_date"
+        app:layout_constraintWidth_percent="0.5"
+        tools:text="12:00"/>
 
     <CheckBox
         android:id="@+id/game_paid"
