@@ -1,9 +1,12 @@
 package com.egraf.refapp
 
+import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,17 +14,26 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import java.util.*
 
+private const val TAG = "GameFragment"
+
 private const val ARG_GAME_ID = "game_id"
 private const val REQUEST_DATE = "DialogDate"
 private const val REQUEST_TIME = "DialogTime"
+private const val REQUEST_DELETE = "DialogDelete"
 private const val DATE_FORMAT = "EEE dd.MM.yyyy"
 private const val TIME_FORMAT = "HH:mm"
 
 class GameFragment : Fragment(), FragmentResultListener {
+    interface Callbacks {
+        fun remoteGameDetail()
+    }
+
+    private var callbacks: Callbacks? = null
     private lateinit var game: Game
     private lateinit var homeTeamEditText: EditText
     private lateinit var guestTeamEditText: EditText
@@ -33,6 +45,16 @@ class GameFragment : Fragment(), FragmentResultListener {
     private lateinit var buttonDelete: Button
     private val gameDetailViewModel: GameDetailViewModel by lazy {
         ViewModelProvider(this).get(GameDetailViewModel::class.java)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +97,7 @@ class GameFragment : Fragment(), FragmentResultListener {
 
         parentFragmentManager.setFragmentResultListener(REQUEST_DATE, viewLifecycleOwner, this)
         parentFragmentManager.setFragmentResultListener(REQUEST_TIME, viewLifecycleOwner, this)
+        parentFragmentManager.setFragmentResultListener(REQUEST_DELETE, viewLifecycleOwner, this)
     }
 
     override fun onStart() {
@@ -149,9 +172,9 @@ class GameFragment : Fragment(), FragmentResultListener {
         }
 
         buttonDelete.setOnClickListener {
-            gameDetailViewModel.deleteGame(game)
-            parentFragmentManager.beginTransaction().remove(this).commit()
-            parentFragmentManager.popBackStack()
+            DeleteDialog
+                .newInstance(REQUEST_DELETE)
+                .show(parentFragmentManager, REQUEST_DELETE)
         }
     }
 
@@ -182,6 +205,15 @@ class GameFragment : Fragment(), FragmentResultListener {
             REQUEST_TIME -> {
                 game.date = TimePickerFragment.getSelectedTime(result)
                 updateUI()
+            }
+
+            REQUEST_DELETE -> {
+                when(DeleteDialog.getDeleteAnswer(result)) {
+                    AlertDialog.BUTTON_POSITIVE -> {
+                        gameDetailViewModel.deleteGame(game)
+                        callbacks?.remoteGameDetail()
+                    }
+                }
             }
         }
     }

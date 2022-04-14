@@ -9,4 +9,7 @@
     <string name="stadium">Stadium</string>
     <string name="league">League</string>
     <string name="delete">Delete game</string>
+    <string name="cancel">Cancel</string>
+    <string name="warning">Warning</string>
+    <string name="warning_delete_text">Are you sure?</string>
 </resources>
