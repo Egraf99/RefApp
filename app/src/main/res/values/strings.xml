@@ -12,4 +12,5 @@
     <string name="cancel">Cancel</string>
     <string name="warning">Warning</string>
     <string name="warning_delete_text">Are you sure?</string>
+    <string name="empty_list">Games list is empty</string>
 </resources>

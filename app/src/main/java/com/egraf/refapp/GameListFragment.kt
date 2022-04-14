@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
+private const val TAG = "GameListFragment"
+
 class GameListFragment : Fragment() {
     interface Callbacks {
         fun onGameSelected(gameId: UUID)
@@ -25,6 +27,9 @@ class GameListFragment : Fragment() {
     private val gameListViewModel: GameListViewModel by lazy {
         ViewModelProvider(this).get(GameListViewModel::class.java)
     }
+    private lateinit var emptyListTextView: TextView
+    private lateinit var newGameButton: Button
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -49,8 +54,10 @@ class GameListFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_game_list, container, false)
         gameRecyclerView = view.findViewById(R.id.game_recycle_view) as RecyclerView
         gameRecyclerView.layoutManager = LinearLayoutManager(context)
-
         gameRecyclerView.adapter = adapter
+
+        emptyListTextView = view.findViewById(R.id.empty_list_textview)
+        newGameButton = view.findViewById(R.id.new_game_button)
 
         return view
     }
@@ -64,10 +71,33 @@ class GameListFragment : Fragment() {
                 updateUI(games)
             }
         }
+
+        gameListViewModel.countGamesLiveData.observe(
+            viewLifecycleOwner
+        ) { count ->
+            showEmptyListRepresent(count)
+        }
     }
 
     private fun updateUI(games: List<Game>) {
         adapter?.submitList(games)
+    }
+
+    private fun showEmptyListRepresent(count: Int) {
+        if (count > 0) {
+            emptyListTextView.visibility = View.GONE
+            newGameButton.visibility = View.GONE
+        } else {
+            emptyListTextView.visibility = View.VISIBLE
+            newGameButton.visibility = View.VISIBLE
+            newGameButton.setOnClickListener { addNewGame() }
+        }
+    }
+
+    private fun addNewGame() {
+        val game = Game()
+        gameListViewModel.addGame(game)
+        callbacks?.onGameSelected(game.id)
     }
 
     private inner class GameHolder(view: View) : RecyclerView.ViewHolder(view),
@@ -117,9 +147,7 @@ class GameListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.new_game -> {
-                val game = Game()
-                gameListViewModel.addGame(game)
-                callbacks?.onGameSelected(game.id)
+                addNewGame()
                 true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -158,9 +186,4 @@ class GameListFragment : Fragment() {
         }
     }
 
-    companion object {
-        fun newInstance(): GameListFragment {
-            return GameListFragment()
-        }
-    }
 }
