@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.egraf.refapp.database.GameDatabase
 import com.egraf.refapp.database.entities.Game
-import com.egraf.refapp.database.entities.GameWithStadium
+import com.egraf.refapp.database.entities.GameWithAttributes
 import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.database.migration_1_2
 import java.lang.IllegalStateException
@@ -25,12 +25,18 @@ class GameRepository private constructor(context: Context) {
     private val stadiumDao = database.stadiumDao()
     private val executor = Executors.newSingleThreadExecutor()
 
-    fun getGames(): LiveData<List<GameWithStadium>> = gameDao.getGames()
+    fun getGames(): LiveData<List<GameWithAttributes>> = gameDao.getGames()
     fun countGames(): LiveData<Int> = gameDao.countGames()
-    fun getGame(id: UUID): LiveData<GameWithStadium?> = gameDao.getGame(id)
+    fun getGame(id: UUID): LiveData<GameWithAttributes?> = gameDao.getGame(id)
     fun updateGame(game: Game) {
         executor.execute {
             gameDao.updateGame(game)
+        }
+    }
+
+    fun addGameWithAttributes(gameWithAttributes: GameWithAttributes) {
+        executor.execute {
+            gameDao.addGameWithAttributes(gameWithAttributes)
         }
     }
 

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.database.entities.Game
-import com.egraf.refapp.database.entities.GameWithStadium
+import com.egraf.refapp.database.entities.GameWithAttributes
 import com.egraf.refapp.database.entities.Stadium
 import java.util.*
 
@@ -47,6 +47,7 @@ class GameListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "++++++++++ GameListFragment onCreate ++++++++++")
         setHasOptionsMenu(true)
     }
 
@@ -83,7 +84,8 @@ class GameListFragment : Fragment() {
         }
     }
 
-    private fun updateUI(games: List<GameWithStadium>) {
+    private fun updateUI(games: List<GameWithAttributes>) {
+        Log.d(TAG, "+++++++++++ GameListFragment updateUI ++++++++++ $games")
         adapter?.submitList(games)
     }
 
@@ -100,18 +102,17 @@ class GameListFragment : Fragment() {
 
     private fun addNewGame() {
         val stadium = Stadium()
-        gameListViewModel.addStadium(stadium)
         val game = Game()
         game.stadiumId = stadium.id
-        val gameWithStadium = GameWithStadium(game, stadium)
-        Log.d(TAG, game.toString())
-        gameListViewModel.addGame(game)
+        val gameWithStadium = GameWithAttributes(game, stadium)
+        Log.d(TAG, "+++++++++++ GameFragment addGame +++++++++++ $game")
+        gameListViewModel.addGameWithAttributes(gameWithStadium)
         callbacks?.onGameSelected(game.id)
     }
 
     private inner class GameHolder(view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
-        private lateinit var game: GameWithStadium
+        private lateinit var game: GameWithAttributes
 
         val homeTeamTextVIew: TextView = itemView.findViewById(R.id.team_home_textview)
         val guestTeamTextView: TextView = itemView.findViewById(R.id.team_guest_textview)
@@ -125,8 +126,9 @@ class GameListFragment : Fragment() {
             itemView.setOnClickListener(this)
         }
 
-        fun bind(game: GameWithStadium) {
+        fun bind(game: GameWithAttributes) {
             this.game = game
+            Log.d(TAG, "+++++++++++ GameHolder bind ++++++++++++ $game")
             homeTeamTextVIew.text = this.game.game.homeTeam
             guestTeamTextView.text = this.game.game.guestTeam
             stadiumTextView.text = this.game.stadium.name
@@ -149,7 +151,7 @@ class GameListFragment : Fragment() {
     }
 
     private inner class GameAdapter :
-        ListAdapter<GameWithStadium, GameHolder>(GameDiffUtilCallback) {
+        ListAdapter<GameWithAttributes, GameHolder>(GameDiffUtilCallback) {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameHolder {
             val view = layoutInflater.inflate(R.layout.list_item_game, parent, false)
             return GameHolder(view)
@@ -164,15 +166,16 @@ class GameListFragment : Fragment() {
 
     }
 
-    object GameDiffUtilCallback : DiffUtil.ItemCallback<GameWithStadium>() {
+    object GameDiffUtilCallback : DiffUtil.ItemCallback<GameWithAttributes>() {
 
-        override fun areItemsTheSame(oldGame: GameWithStadium, newGame: GameWithStadium): Boolean {
+        override fun areItemsTheSame(oldGame: GameWithAttributes, newGame: GameWithAttributes): Boolean {
             return oldGame.game.id == newGame.game.id
         }
-        override fun areContentsTheSame(oldGame: GameWithStadium, newGame: GameWithStadium): Boolean {
+
+        override fun areContentsTheSame(oldGame: GameWithAttributes, newGame: GameWithAttributes): Boolean {
             return oldGame.game.homeTeam == newGame.game.homeTeam &&
                     oldGame.game.guestTeam == newGame.game.guestTeam &&
-                    oldGame.game.stadiumId == newGame.game.stadiumId &&
+                    oldGame.stadium.name == newGame.stadium.name &&
                     oldGame.game.league == newGame.game.league &&
                     oldGame.game.date == newGame.game.date &&
                     oldGame.game.isPaid == newGame.game.isPaid
