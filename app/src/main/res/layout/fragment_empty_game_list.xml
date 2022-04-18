@@ -18,7 +18,7 @@
         android:id="@+id/new_game_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/new_game"
+        android:text="@string/add_game"
         app:layout_constraintTop_toBottomOf="@+id/empty_list_textview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

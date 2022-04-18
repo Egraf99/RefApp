@@ -2,6 +2,7 @@ package com.egraf.refapp
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.ImageView
@@ -12,6 +13,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.egraf.refapp.database.entities.Game
+import com.egraf.refapp.database.entities.GameWithStadium
+import com.egraf.refapp.database.entities.Stadium
 import java.util.*
 
 private const val TAG = "GameListFragment"
@@ -79,7 +83,7 @@ class GameListFragment : Fragment() {
         }
     }
 
-    private fun updateUI(games: List<Game>) {
+    private fun updateUI(games: List<GameWithStadium>) {
         adapter?.submitList(games)
     }
 
@@ -95,14 +99,19 @@ class GameListFragment : Fragment() {
     }
 
     private fun addNewGame() {
+        val stadium = Stadium()
+        gameListViewModel.addStadium(stadium)
         val game = Game()
+        game.stadiumId = stadium.id
+        val gameWithStadium = GameWithStadium(game, stadium)
+        Log.d(TAG, game.toString())
         gameListViewModel.addGame(game)
         callbacks?.onGameSelected(game.id)
     }
 
     private inner class GameHolder(view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
-        private lateinit var game: Game
+        private lateinit var game: GameWithStadium
 
         val homeTeamTextVIew: TextView = itemView.findViewById(R.id.team_home_textview)
         val guestTeamTextView: TextView = itemView.findViewById(R.id.team_guest_textview)
@@ -116,25 +125,57 @@ class GameListFragment : Fragment() {
             itemView.setOnClickListener(this)
         }
 
-        fun bind(game: Game) {
+        fun bind(game: GameWithStadium) {
             this.game = game
-            homeTeamTextVIew.text = this.game.homeTeam
-            guestTeamTextView.text = this.game.guestTeam
-            stadiumTextView.text = this.game.stadium
-            leagueTextView.text = this.game.league
-            dateButton.text = this.game.date.toString()
+            homeTeamTextVIew.text = this.game.game.homeTeam
+            guestTeamTextView.text = this.game.game.guestTeam
+            stadiumTextView.text = this.game.stadium.name
+            leagueTextView.text = this.game.game.league
+            dateButton.text = this.game.game.date.toString()
             dateButton.isEnabled = false
 
-            val resGamePaid = if (game.isPaid) R.drawable.ic_paiment_done else R.drawable.ic_paiment_wait
+            val resGamePaid = if (game.game.isPaid) R.drawable.ic_paiment_done else R.drawable.ic_paiment_wait
             imgGamePaid.setBackgroundResource(resGamePaid)
 
-//            val resGameGone = if (game.isDone) R.drawable.ic_is_paid else R.drawable.ic_calendar_yelow
+//            val resGameGone = if (game.isDone) R.drawable.ic_is_paid else R.drawable.ic_calendar_yellow
 //            imgGameDone.setBackgroundResource(resGameGone)
             imgGameDone.setBackgroundResource(R.drawable.ic_calendar_yelow)
         }
 
         override fun onClick(v: View?) {
-            callbacks?.onGameSelected(game.id)
+            callbacks?.onGameSelected(game.game.id)
+        }
+
+    }
+
+    private inner class GameAdapter :
+        ListAdapter<GameWithStadium, GameHolder>(GameDiffUtilCallback) {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameHolder {
+            val view = layoutInflater.inflate(R.layout.list_item_game, parent, false)
+            return GameHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: GameHolder, position: Int) {
+            val game = currentList[position]
+            holder.bind(game)
+        }
+
+        override fun getItemCount() = currentList.size
+
+    }
+
+    object GameDiffUtilCallback : DiffUtil.ItemCallback<GameWithStadium>() {
+
+        override fun areItemsTheSame(oldGame: GameWithStadium, newGame: GameWithStadium): Boolean {
+            return oldGame.game.id == newGame.game.id
+        }
+        override fun areContentsTheSame(oldGame: GameWithStadium, newGame: GameWithStadium): Boolean {
+            return oldGame.game.homeTeam == newGame.game.homeTeam &&
+                    oldGame.game.guestTeam == newGame.game.guestTeam &&
+                    oldGame.game.stadiumId == newGame.game.stadiumId &&
+                    oldGame.game.league == newGame.game.league &&
+                    oldGame.game.date == newGame.game.date &&
+                    oldGame.game.isPaid == newGame.game.isPaid
         }
 
     }
@@ -153,37 +194,4 @@ class GameListFragment : Fragment() {
             else -> return super.onOptionsItemSelected(item)
         }
     }
-
-    private inner class GameAdapter :
-        ListAdapter<Game, GameHolder>(GameDiffUtilCallback) {
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameHolder {
-            val view = layoutInflater.inflate(R.layout.list_item_game, parent, false)
-            return GameHolder(view)
-        }
-
-        override fun onBindViewHolder(holder: GameHolder, position: Int) {
-            val game = currentList[position]
-            holder.bind(game)
-        }
-
-        override fun getItemCount() = currentList.size
-
-    }
-
-    object GameDiffUtilCallback : DiffUtil.ItemCallback<Game>() {
-        override fun areItemsTheSame(oldGame: Game, newGame: Game): Boolean {
-            return oldGame.id == newGame.id
-        }
-
-        override fun areContentsTheSame(oldGame: Game, newGame: Game): Boolean {
-            return oldGame.homeTeam == newGame.homeTeam &&
-                    oldGame.guestTeam == newGame.guestTeam &&
-                    oldGame.stadium == newGame.stadium &&
-                    oldGame.league == newGame.league &&
-                    oldGame.date == newGame.date &&
-                    oldGame.isPaid == newGame.isPaid
-        }
-    }
-
 }

@@ -4,6 +4,7 @@
     <string name="versus">vs.</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="new_game">New Game</string>
+    <string name="add_game">Add new Game</string>
     <string name="home_team">Home Team</string>
     <string name="guest_team">Guest Team</string>
     <string name="stadium">Stadium</string>
