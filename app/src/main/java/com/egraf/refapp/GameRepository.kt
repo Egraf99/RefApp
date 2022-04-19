@@ -6,8 +6,10 @@ import androidx.room.Room
 import com.egraf.refapp.database.GameDatabase
 import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.GameWithAttributes
+import com.egraf.refapp.database.entities.League
 import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.database.migration_1_2
+import com.egraf.refapp.database.migration_2_3
 import java.lang.IllegalStateException
 import java.util.*
 import java.util.concurrent.Executors
@@ -18,11 +20,12 @@ class GameRepository private constructor(context: Context) {
 
     private val database: GameDatabase =
         Room.databaseBuilder(context.applicationContext, GameDatabase::class.java, DATABASE_NAME)
-            .addMigrations(migration_1_2)
+            .addMigrations(migration_1_2, migration_2_3)
             .build()
 
     private val gameDao = database.gameDao()
     private val stadiumDao = database.stadiumDao()
+    private val leagueDao = database.leagueDao()
     private val executor = Executors.newSingleThreadExecutor()
 
     fun getGames(): LiveData<List<GameWithAttributes>> = gameDao.getGames()
@@ -36,7 +39,13 @@ class GameRepository private constructor(context: Context) {
 
     fun addGameWithAttributes(gameWithAttributes: GameWithAttributes) {
         executor.execute {
-            gameDao.addGameWithAttributes(gameWithAttributes)
+            gameDao.addGame(gameWithAttributes.game)
+            if (gameWithAttributes.stadium != null) {
+                stadiumDao.addStadium(gameWithAttributes.stadium!!)
+            }
+            if (gameWithAttributes.league != null) {
+                leagueDao.addLeague(gameWithAttributes.league!!)
+            }
         }
     }
 
@@ -52,6 +61,12 @@ class GameRepository private constructor(context: Context) {
         }
     }
 
+    fun addLeague(league: League) {
+        executor.execute {
+            leagueDao.addLeague(league)
+        }
+    }
+
     fun deleteGame(game: Game) {
         executor.execute { gameDao.deleteGame(game) }
     }
@@ -62,6 +77,14 @@ class GameRepository private constructor(context: Context) {
         if (stadium != null) {
             executor.execute {
                 stadiumDao.updateStadium(stadium)
+            }
+        }
+    }
+
+    fun updateLeague(league: League?) {
+        if (league != null) {
+            executor.execute {
+                leagueDao.updateLeague(league)
             }
         }
     }

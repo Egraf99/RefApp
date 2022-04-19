@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.GameWithAttributes
+import com.egraf.refapp.database.entities.League
 import com.egraf.refapp.database.entities.Stadium
 import java.util.*
 
@@ -63,7 +64,8 @@ class GameFragment : Fragment(), FragmentResultListener {
         super.onCreate(savedInstanceState)
         val game = Game()
         val stadium = Stadium()
-        gameWithAttributes = GameWithAttributes(game, stadium)
+        val league = League()
+        gameWithAttributes = GameWithAttributes(game, stadium, league)
         Log.d(TAG, "___________ GameFragment onCreate ____________ $gameWithAttributes")
 
         val gameId = arguments?.getSerializable(ARG_GAME_ID) as UUID
@@ -155,7 +157,10 @@ class GameFragment : Fragment(), FragmentResultListener {
             }
 
             override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                gameWithAttributes.game.league = sequence.toString()
+                if (gameWithAttributes.league == null)
+                    gameWithAttributes.league = League()
+
+                gameWithAttributes.league!!.name = sequence.toString()
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -189,7 +194,7 @@ class GameFragment : Fragment(), FragmentResultListener {
     override fun onStop() {
         super.onStop()
         Log.d(TAG, "__________ GameFragment onStop ____________ $gameWithAttributes")
-        gameDetailViewModel.saveGame(gameWithAttributes.game, gameWithAttributes.stadium)
+        gameDetailViewModel.saveGame(gameWithAttributes)
     }
 
     private fun updateUI() {
@@ -197,7 +202,7 @@ class GameFragment : Fragment(), FragmentResultListener {
         homeTeamEditText.setText(gameWithAttributes.game.homeTeam)
         guestTeamEditText.setText(gameWithAttributes.game.guestTeam)
         stadiumEditText.setText(gameWithAttributes.stadium?.name)
-        leagueEditText.setText(gameWithAttributes.game.league)
+        leagueEditText.setText(gameWithAttributes.league?.name)
         dateButton.text = DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
         timeButton.text = DateFormat.format(TIME_FORMAT, gameWithAttributes.game.date).toString()
         gamePaidCheckBox.apply {

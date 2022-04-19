@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.GameWithAttributes
+import com.egraf.refapp.database.entities.League
 import com.egraf.refapp.database.entities.Stadium
 import java.util.*
 
@@ -18,19 +19,8 @@ interface GameDao {
     @Update
     fun updateGame(game: Game)
 
-    @Transaction
-    fun addGameWithAttributes(gameWithAttributes: GameWithAttributes) {
-        addGame(gameWithAttributes.game)
-        if (gameWithAttributes.stadium != null) {
-            addStadium(gameWithAttributes.stadium!!)
-        }
-    }
-
     @Insert
     fun addGame(game: Game)
-
-    @Insert
-    fun addStadium(stadium: Stadium)
 
     @Delete
     fun deleteGame(game: Game)

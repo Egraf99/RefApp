@@ -13,6 +13,6 @@ data class Game(
     var homeTeam: String = "",
     var guestTeam: String = "",
     var stadiumId: UUID = UUID.randomUUID(),
-    var league: String = "",
+    var leagueId: UUID = UUID.randomUUID(),
     var isPaid: Boolean = false,
 )

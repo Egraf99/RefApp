@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.GameWithAttributes
+import com.egraf.refapp.database.entities.League
 import com.egraf.refapp.database.entities.Stadium
 import java.util.*
 
@@ -102,9 +103,11 @@ class GameListFragment : Fragment() {
 
     private fun addNewGame() {
         val stadium = Stadium()
+        val league = League()
         val game = Game()
         game.stadiumId = stadium.id
-        val gameWithStadium = GameWithAttributes(game, stadium)
+        game.leagueId = league.id
+        val gameWithStadium = GameWithAttributes(game, stadium, league)
         Log.d(TAG, "+++++++++++ GameFragment addGame +++++++++++ $game")
         gameListViewModel.addGameWithAttributes(gameWithStadium)
         callbacks?.onGameSelected(game.id)
@@ -132,7 +135,7 @@ class GameListFragment : Fragment() {
             homeTeamTextVIew.text = this.game.game.homeTeam
             guestTeamTextView.text = this.game.game.guestTeam
             stadiumTextView.text = this.game.stadium?.name
-            leagueTextView.text = this.game.game.league
+            leagueTextView.text = this.game.league?.name
             dateButton.text = this.game.game.date.toString()
             dateButton.isEnabled = false
 
@@ -176,7 +179,7 @@ class GameListFragment : Fragment() {
             return oldGame.game.homeTeam == newGame.game.homeTeam &&
                     oldGame.game.guestTeam == newGame.game.guestTeam &&
                     oldGame.stadium?.name == newGame.stadium?.name &&
-                    oldGame.game.league == newGame.game.league &&
+                    oldGame.league?.name == newGame.league?.name &&
                     oldGame.game.date == newGame.game.date &&
                     oldGame.game.isPaid == newGame.game.isPaid
         }
