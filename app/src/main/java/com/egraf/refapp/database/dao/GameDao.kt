@@ -21,7 +21,9 @@ interface GameDao {
     @Transaction
     fun addGameWithAttributes(gameWithAttributes: GameWithAttributes) {
         addGame(gameWithAttributes.game)
-        addStadium(gameWithAttributes.stadium)
+        if (gameWithAttributes.stadium != null) {
+            addStadium(gameWithAttributes.stadium!!)
+        }
     }
 
     @Insert

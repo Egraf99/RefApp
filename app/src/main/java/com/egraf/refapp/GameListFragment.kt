@@ -131,7 +131,7 @@ class GameListFragment : Fragment() {
             Log.d(TAG, "+++++++++++ GameHolder bind ++++++++++++ $game")
             homeTeamTextVIew.text = this.game.game.homeTeam
             guestTeamTextView.text = this.game.game.guestTeam
-            stadiumTextView.text = this.game.stadium.name
+            stadiumTextView.text = this.game.stadium?.name
             leagueTextView.text = this.game.game.league
             dateButton.text = this.game.game.date.toString()
             dateButton.isEnabled = false
@@ -175,7 +175,7 @@ class GameListFragment : Fragment() {
         override fun areContentsTheSame(oldGame: GameWithAttributes, newGame: GameWithAttributes): Boolean {
             return oldGame.game.homeTeam == newGame.game.homeTeam &&
                     oldGame.game.guestTeam == newGame.game.guestTeam &&
-                    oldGame.stadium.name == newGame.stadium.name &&
+                    oldGame.stadium?.name == newGame.stadium?.name &&
                     oldGame.game.league == newGame.game.league &&
                     oldGame.game.date == newGame.game.date &&
                     oldGame.game.isPaid == newGame.game.isPaid

@@ -21,7 +21,7 @@ class GameDetailViewModel : ViewModel() {
         gameIdLiveData.value = gameId
     }
 
-    fun saveGame(game: Game, stadium: Stadium) {
+    fun saveGame(game: Game, stadium: Stadium?) {
         gameRepository.updateGame(game)
         gameRepository.updateStadium(stadium)
     }

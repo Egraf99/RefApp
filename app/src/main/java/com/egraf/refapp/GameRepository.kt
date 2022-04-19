@@ -58,9 +58,11 @@ class GameRepository private constructor(context: Context) {
 
     fun getStadiums(): LiveData<List<Stadium>> = stadiumDao.getStadiums()
     fun getStadium(id: Long): LiveData<Stadium?> = stadiumDao.getStadium(id)
-    fun updateStadium(stadium: Stadium) {
-        executor.execute{
-            stadiumDao.updateStadium(stadium)
+    fun updateStadium(stadium: Stadium?) {
+        if (stadium != null) {
+            executor.execute {
+                stadiumDao.updateStadium(stadium)
+            }
         }
     }
 

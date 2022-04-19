@@ -139,7 +139,10 @@ class GameFragment : Fragment(), FragmentResultListener {
             }
 
             override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                gameWithAttributes.stadium.name = sequence.toString()
+                if (gameWithAttributes.stadium == null)
+                    gameWithAttributes.stadium = Stadium()
+
+                gameWithAttributes.stadium!!.name = sequence.toString()
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -193,7 +196,7 @@ class GameFragment : Fragment(), FragmentResultListener {
         Log.d(TAG, "_________ GameFragment updateUI __________ $gameWithAttributes")
         homeTeamEditText.setText(gameWithAttributes.game.homeTeam)
         guestTeamEditText.setText(gameWithAttributes.game.guestTeam)
-        stadiumEditText.setText(gameWithAttributes.stadium.name)
+        stadiumEditText.setText(gameWithAttributes.stadium?.name)
         leagueEditText.setText(gameWithAttributes.game.league)
         dateButton.text = DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
         timeButton.text = DateFormat.format(TIME_FORMAT, gameWithAttributes.game.date).toString()
