@@ -16,10 +16,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
-import com.egraf.refapp.database.entities.Game
-import com.egraf.refapp.database.entities.GameWithAttributes
-import com.egraf.refapp.database.entities.League
-import com.egraf.refapp.database.entities.Stadium
+import com.egraf.refapp.database.entities.*
 import java.util.*
 
 private const val TAG = "GameFragment"
@@ -63,10 +60,7 @@ class GameFragment : Fragment(), FragmentResultListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val game = Game()
-//        val stadium = Stadium()
-//        val league = League()
         gameWithAttributes = GameWithAttributes(game)
-        Log.d(TAG, "___________  ____________ ${gameWithAttributes.stadium}")
         Log.d(TAG, "___________ GameFragment onCreate ____________ $gameWithAttributes")
 
         val gameId = arguments?.getSerializable(ARG_GAME_ID) as UUID
@@ -116,7 +110,12 @@ class GameFragment : Fragment(), FragmentResultListener {
             }
 
             override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                gameWithAttributes.game.homeTeam = sequence.toString()
+                if (!sequence.isNullOrBlank()) {
+                    if (gameWithAttributes.homeTeam == null)
+                        gameWithAttributes.homeTeam = Team()
+
+                    gameWithAttributes.homeTeam!!.name = sequence.toString()
+                }
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -129,7 +128,12 @@ class GameFragment : Fragment(), FragmentResultListener {
             }
 
             override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                gameWithAttributes.game.guestTeam = sequence.toString()
+                if (!sequence.isNullOrBlank()) {
+                    if (gameWithAttributes.guestTeam == null)
+                        gameWithAttributes.guestTeam = Team()
+
+                    gameWithAttributes.guestTeam!!.name = sequence.toString()
+                }
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -204,8 +208,8 @@ class GameFragment : Fragment(), FragmentResultListener {
 
     private fun updateUI() {
         Log.d(TAG, "_________ GameFragment updateUI __________ $gameWithAttributes")
-        homeTeamEditText.setText(gameWithAttributes.game.homeTeam)
-        guestTeamEditText.setText(gameWithAttributes.game.guestTeam)
+        homeTeamEditText.setText(gameWithAttributes.homeTeam?.name)
+        guestTeamEditText.setText(gameWithAttributes.guestTeam?.name)
         stadiumEditText.setText(gameWithAttributes.stadium?.name)
         leagueEditText.setText(gameWithAttributes.league?.name)
         dateButton.text = DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()

@@ -10,15 +10,7 @@ class GameListViewModel: ViewModel() {
     val gamesListLiveData = gameRepository.getGames()
     val countGamesLiveData = gameRepository.countGames()
 
-    fun addGameWithAttributes(gameWithAttributes: GameWithAttributes) {
-        gameRepository.addGameWithAttributes(gameWithAttributes)
-    }
-
     fun addGame(game: Game) {
         gameRepository.addGame(game)
-    }
-
-    fun addStadium(stadium: Stadium) {
-        gameRepository.addStadium(stadium)
     }
 }

@@ -102,14 +102,9 @@ class GameListFragment : Fragment() {
     }
 
     private fun addNewGame() {
-//        val stadium = Stadium()
-//        val league = League()
         val game = Game()
-//        game.stadiumId = stadium.id
-//        game.leagueId = league.id
-        val gameWithStadium = GameWithAttributes(game)
         Log.d(TAG, "+++++++++++ GameFragment addGame +++++++++++ $game")
-        gameListViewModel.addGameWithAttributes(gameWithStadium)
+        gameListViewModel.addGame(game)
         callbacks?.onGameSelected(game.id)
     }
 
@@ -132,8 +127,8 @@ class GameListFragment : Fragment() {
         fun bind(game: GameWithAttributes) {
             this.game = game
             Log.d(TAG, "+++++++++++ GameHolder bind ++++++++++++ $game")
-            homeTeamTextVIew.text = this.game.game.homeTeam
-            guestTeamTextView.text = this.game.game.guestTeam
+            homeTeamTextVIew.text = this.game.homeTeam?.name
+            guestTeamTextView.text = this.game.guestTeam?.name
             stadiumTextView.text = this.game.stadium?.name
             leagueTextView.text = this.game.league?.name
             dateButton.text = this.game.game.date.toString()
@@ -176,8 +171,8 @@ class GameListFragment : Fragment() {
         }
 
         override fun areContentsTheSame(oldGame: GameWithAttributes, newGame: GameWithAttributes): Boolean {
-            return oldGame.game.homeTeam == newGame.game.homeTeam &&
-                    oldGame.game.guestTeam == newGame.game.guestTeam &&
+            return oldGame.homeTeam?.name == newGame.homeTeam?.name &&
+                    oldGame.guestTeam?.name == newGame.guestTeam?.name &&
                     oldGame.stadium?.name == newGame.stadium?.name &&
                     oldGame.league?.name == newGame.league?.name &&
                     oldGame.game.date == newGame.game.date &&

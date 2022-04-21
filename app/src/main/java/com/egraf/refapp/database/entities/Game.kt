@@ -9,8 +9,8 @@ data class Game(
     @PrimaryKey
     var id: UUID = UUID.randomUUID(),
     var date: Date = Date(),
-    var homeTeam: String = "",
-    var guestTeam: String = "",
+    var homeTeamId: UUID? = null,
+    var guestTeamId: UUID? = null,
     var stadiumId: UUID? = null,
     var leagueId: UUID? = null,
     var isPaid: Boolean = false,
