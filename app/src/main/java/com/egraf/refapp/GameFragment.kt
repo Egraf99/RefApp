@@ -63,9 +63,10 @@ class GameFragment : Fragment(), FragmentResultListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val game = Game()
-        val stadium = Stadium()
-        val league = League()
-        gameWithAttributes = GameWithAttributes(game, stadium, league)
+//        val stadium = Stadium()
+//        val league = League()
+        gameWithAttributes = GameWithAttributes(game)
+        Log.d(TAG, "___________  ____________ ${gameWithAttributes.stadium}")
         Log.d(TAG, "___________ GameFragment onCreate ____________ $gameWithAttributes")
 
         val gameId = arguments?.getSerializable(ARG_GAME_ID) as UUID
@@ -141,10 +142,12 @@ class GameFragment : Fragment(), FragmentResultListener {
             }
 
             override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (gameWithAttributes.stadium == null)
-                    gameWithAttributes.stadium = Stadium()
+                if (!sequence.isNullOrBlank()) {
+                    if (gameWithAttributes.stadium == null)
+                        gameWithAttributes.stadium = Stadium()
 
-                gameWithAttributes.stadium!!.name = sequence.toString()
+                    gameWithAttributes.stadium!!.name = sequence.toString()
+                }
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -157,10 +160,12 @@ class GameFragment : Fragment(), FragmentResultListener {
             }
 
             override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (gameWithAttributes.league == null)
-                    gameWithAttributes.league = League()
+                if (!sequence.isNullOrBlank()) {
+                    if (gameWithAttributes.league == null)
+                        gameWithAttributes.league = League()
 
-                gameWithAttributes.league!!.name = sequence.toString()
+                    gameWithAttributes.league!!.name = sequence.toString()
+                }
             }
 
             override fun afterTextChanged(p0: Editable?) {

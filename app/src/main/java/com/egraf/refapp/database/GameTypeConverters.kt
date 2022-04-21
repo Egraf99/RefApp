@@ -23,6 +23,8 @@ class GameTypeConverters {
 
     @TypeConverter
     fun inUUID(uuid:String?): UUID? {
-        return UUID.fromString(uuid)
+        if (uuid != null)
+            return UUID.fromString(uuid)
+        return null
     }
 }

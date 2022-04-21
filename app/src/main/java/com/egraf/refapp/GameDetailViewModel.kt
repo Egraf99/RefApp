@@ -22,9 +22,20 @@ class GameDetailViewModel : ViewModel() {
     }
 
     fun saveGame(gameWithAttributes: GameWithAttributes) {
+        if (gameWithAttributes.stadium != null) {
+            // добавляем стадион и обновляем id стадиона в игре
+            gameWithAttributes.game.stadiumId = gameWithAttributes.stadium!!.id
+            gameRepository.addStadium(gameWithAttributes.stadium!!)
+        }
+
+        if (gameWithAttributes.league != null) {
+            // добавляем лигу и обновляем id лиги в игре
+            gameWithAttributes.game.leagueId = gameWithAttributes.league!!.id
+            gameRepository.addLeague(gameWithAttributes.league!!)
+        }
+
+//        обновляем игру
         gameRepository.updateGame(gameWithAttributes.game)
-        gameRepository.updateStadium(gameWithAttributes.stadium)
-        gameRepository.updateLeague(gameWithAttributes.league)
     }
 
     fun deleteGame(game: Game) {

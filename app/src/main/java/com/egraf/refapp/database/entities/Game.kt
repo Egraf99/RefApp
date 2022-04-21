@@ -1,8 +1,7 @@
 package com.egraf.refapp.database.entities
 
-import androidx.room.*
-import androidx.room.ForeignKey.RESTRICT
-import androidx.room.ForeignKey.SET_NULL
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.util.*
 
 @Entity
@@ -12,7 +11,7 @@ data class Game(
     var date: Date = Date(),
     var homeTeam: String = "",
     var guestTeam: String = "",
-    var stadiumId: UUID = UUID.randomUUID(),
-    var leagueId: UUID = UUID.randomUUID(),
+    var stadiumId: UUID? = null,
+    var leagueId: UUID? = null,
     var isPaid: Boolean = false,
 )

@@ -102,12 +102,12 @@ class GameListFragment : Fragment() {
     }
 
     private fun addNewGame() {
-        val stadium = Stadium()
-        val league = League()
+//        val stadium = Stadium()
+//        val league = League()
         val game = Game()
-        game.stadiumId = stadium.id
-        game.leagueId = league.id
-        val gameWithStadium = GameWithAttributes(game, stadium, league)
+//        game.stadiumId = stadium.id
+//        game.leagueId = league.id
+        val gameWithStadium = GameWithAttributes(game)
         Log.d(TAG, "+++++++++++ GameFragment addGame +++++++++++ $game")
         gameListViewModel.addGameWithAttributes(gameWithStadium)
         callbacks?.onGameSelected(game.id)

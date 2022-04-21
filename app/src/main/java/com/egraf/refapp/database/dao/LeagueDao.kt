@@ -2,12 +2,13 @@ package com.egraf.refapp.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Update
 import com.egraf.refapp.database.entities.League
 
 @Dao
 interface LeagueDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addLeague(league: League)
 
     @Update
