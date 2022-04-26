@@ -147,14 +147,8 @@ class GameFragment : Fragment(), FragmentResultListener {
         }
         guestTeamEditText.addTextChangedListener(guestTeamTextWatcher)
 
-        val stadiumAdapter =
-            StadiumAdapter(
-                requireContext(),
-                android.R.layout.select_dialog_singlechoice,
-                stadiumsList.map { it.name }
-            )
         stadiumAutoCompleteTextView.threshold = 1
-        stadiumAutoCompleteTextView.setAdapter(stadiumAdapter)
+        updateStadiumAdapter()
         stadiumAutoCompleteTextView.setOnItemClickListener { _, _, i, _ ->
             gameWithAttributes.stadium = stadiumsList[i]
         }
@@ -222,7 +216,7 @@ class GameFragment : Fragment(), FragmentResultListener {
 
     private fun updateStadiumAdapter() {
         stadiumAutoCompleteTextView.setAdapter(
-            StadiumAdapter(
+            ArrayAdapter(
                 requireContext(),
                 android.R.layout.select_dialog_item,
                 stadiumsList.map { it.name })
@@ -232,12 +226,13 @@ class GameFragment : Fragment(), FragmentResultListener {
     override fun onStop() {
         super.onStop()
         Log.d(TAG, "__________ GameFragment onStop ____________ $gameWithAttributes")
+        checkGameAttributes()
         gameDetailViewModel.saveGame(gameWithAttributes)
     }
 
-    private fun saveStadium(stadiumName: String) {
-        val stadium = Stadium().apply { name = stadiumName }
-        gameWithAttributes.stadium = stadium
+    private fun checkGameAttributes() {
+        if (gameWithAttributes.stadium?.name != stadiumAutoCompleteTextView.text.toString())
+            gameWithAttributes.stadium = Stadium(name = stadiumAutoCompleteTextView.text.toString())
     }
 
     private fun updateUI() {
