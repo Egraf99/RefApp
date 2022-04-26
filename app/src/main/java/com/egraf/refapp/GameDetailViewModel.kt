@@ -12,13 +12,26 @@ import java.util.*
 class GameDetailViewModel : ViewModel() {
     private val gameRepository = GameRepository.get()
     private val gameIdLiveData = MutableLiveData<UUID>()
+    private val stadiumIdLiveData = MutableLiveData<UUID>()
 
     val gameLiveData: LiveData<GameWithAttributes?> = Transformations.switchMap(gameIdLiveData) { gameId ->
         gameRepository.getGame(gameId)
     }
 
+    val stadiumListLiveData: LiveData<List<Stadium>> = Transformations.switchMap(gameIdLiveData) {
+        gameRepository.getStadiums()
+    }
+
+    val stadiumLiveData: LiveData<Stadium?> = Transformations.switchMap(stadiumIdLiveData) {stadiumId ->
+        gameRepository.getStadium(stadiumId)
+    }
+
     fun loadGame(gameId: UUID) {
         gameIdLiveData.value = gameId
+    }
+
+    fun loadStadium(stadiumId: UUID) {
+        stadiumIdLiveData.value = stadiumId
     }
 
     fun saveGame(gameWithAttributes: GameWithAttributes) {

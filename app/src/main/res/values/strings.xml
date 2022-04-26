@@ -14,4 +14,5 @@
     <string name="warning">Warning</string>
     <string name="warning_delete_text">Are you sure?</string>
     <string name="empty_list">Games list is empty</string>
+    <string name="hint_auto_complete">stadium_hint</string>
 </resources>

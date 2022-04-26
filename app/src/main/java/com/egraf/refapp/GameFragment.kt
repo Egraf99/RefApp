@@ -2,6 +2,7 @@ package com.egraf.refapp
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Entity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,9 +12,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
+import android.widget.*
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.database.entities.*
@@ -33,11 +32,13 @@ class GameFragment : Fragment(), FragmentResultListener {
         fun remoteGameDetail()
     }
 
+    private var stadiumsList: List<Stadium> = emptyList()
+
     private var callbacks: Callbacks? = null
     private lateinit var gameWithAttributes: GameWithAttributes
     private lateinit var homeTeamEditText: EditText
     private lateinit var guestTeamEditText: EditText
-    private lateinit var stadiumEditText: EditText
+    private lateinit var stadiumAutoCompleteTextView: AutoCompleteTextView
     private lateinit var leagueEditText: EditText
     private lateinit var dateButton: Button
     private lateinit var timeButton: Button
@@ -77,7 +78,8 @@ class GameFragment : Fragment(), FragmentResultListener {
         // Init views
         homeTeamEditText = view.findViewById(R.id.team_home_edittext) as EditText
         guestTeamEditText = view.findViewById(R.id.team_guest_edittext) as EditText
-        stadiumEditText = view.findViewById(R.id.stadium_edittext) as EditText
+        stadiumAutoCompleteTextView =
+            view.findViewById(R.id.stadium_autocomplete) as AutoCompleteTextView
         leagueEditText = view.findViewById(R.id.league_edittext) as EditText
         dateButton = view.findViewById(R.id.game_date) as Button
         timeButton = view.findViewById(R.id.game_time) as Button
@@ -95,6 +97,10 @@ class GameFragment : Fragment(), FragmentResultListener {
                 this.gameWithAttributes = game
                 updateUI()
             }
+        }
+        gameDetailViewModel.stadiumListLiveData.observe(viewLifecycleOwner) { stadiums ->
+            stadiumsList = stadiums
+            updateStadiumAdapter()
         }
 
         parentFragmentManager.setFragmentResultListener(REQUEST_DATE, viewLifecycleOwner, this)
@@ -141,23 +147,17 @@ class GameFragment : Fragment(), FragmentResultListener {
         }
         guestTeamEditText.addTextChangedListener(guestTeamTextWatcher)
 
-        val stadiumWatcher = object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (!sequence.isNullOrBlank()) {
-                    if (gameWithAttributes.stadium == null)
-                        gameWithAttributes.stadium = Stadium()
-
-                    gameWithAttributes.stadium!!.name = sequence.toString()
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-            }
+        val stadiumAdapter =
+            StadiumAdapter(
+                requireContext(),
+                android.R.layout.select_dialog_singlechoice,
+                stadiumsList.map { it.name }
+            )
+        stadiumAutoCompleteTextView.threshold = 1
+        stadiumAutoCompleteTextView.setAdapter(stadiumAdapter)
+        stadiumAutoCompleteTextView.setOnItemClickListener { _, _, i, _ ->
+            gameWithAttributes.stadium = stadiumsList[i]
         }
-        stadiumEditText.addTextChangedListener(stadiumWatcher)
 
         val leagueWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -200,17 +200,51 @@ class GameFragment : Fragment(), FragmentResultListener {
         }
     }
 
+    private inner class StadiumAdapter(context: Context, resource: Int, objects: List<String>) :
+        ArrayAdapter<String>(context, resource, objects) {
+        private val size = objects.size
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val view = if (position < size) {
+                Log.d(TAG, ")))))))))))))")
+                layoutInflater.inflate(R.layout.add_entity_button, parent, false)
+            } else {
+                Log.d(TAG, "(((((((((((((")
+                layoutInflater.inflate(android.R.layout.select_dialog_item, parent, false)
+            }
+            return view
+        }
+
+        override fun getCount(): Int {
+            return size - 1
+        }
+    }
+
+    private fun updateStadiumAdapter() {
+        stadiumAutoCompleteTextView.setAdapter(
+            StadiumAdapter(
+                requireContext(),
+                android.R.layout.select_dialog_item,
+                stadiumsList.map { it.name })
+        )
+    }
+
     override fun onStop() {
         super.onStop()
         Log.d(TAG, "__________ GameFragment onStop ____________ $gameWithAttributes")
         gameDetailViewModel.saveGame(gameWithAttributes)
     }
 
+    private fun saveStadium(stadiumName: String) {
+        val stadium = Stadium().apply { name = stadiumName }
+        gameWithAttributes.stadium = stadium
+    }
+
     private fun updateUI() {
         Log.d(TAG, "_________ GameFragment updateUI __________ $gameWithAttributes")
         homeTeamEditText.setText(gameWithAttributes.homeTeam?.name)
         guestTeamEditText.setText(gameWithAttributes.guestTeam?.name)
-        stadiumEditText.setText(gameWithAttributes.stadium?.name)
+        stadiumAutoCompleteTextView.setText(gameWithAttributes.stadium?.name)
         leagueEditText.setText(gameWithAttributes.league?.name)
         dateButton.text = DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
         timeButton.text = DateFormat.format(TIME_FORMAT, gameWithAttributes.game.date).toString()

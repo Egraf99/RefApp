@@ -71,7 +71,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:hint="@string/guest_team" />
 
-<!--    Third line-->
+    <!--    Third line-->
     <TextView
         android:id="@+id/stadium_textview"
         style="?android:listSeparatorTextViewStyle"
@@ -82,14 +82,32 @@
         app:layout_constraintTop_toBottomOf="@+id/team_home_edittext"
         tools:layout_editor_absoluteX="10dp" />
 
-    <EditText
-        android:id="@+id/stadium_edittext"
-        android:layout_width="match_parent"
+    <AutoCompleteTextView
+        android:id="@+id/stadium_autocomplete"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:hint="@string/stadium"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="4"
+        app:layout_constraintEnd_toStartOf="stadium_add_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/stadium_textview" />
+
+
+    <!--    <EditText-->
+    <!--        android:id="@+id/stadium_edittext"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:hint="@string/stadium"-->
+
+    <ImageButton
+        android:id="@+id/stadium_add_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/stadium_autocomplete"
+        app:layout_constraintTop_toBottomOf="@id/stadium_textview"
+        app:srcCompat="@android:drawable/ic_input_add" />
 
     <TextView
         android:id="@+id/league_textview"
@@ -98,8 +116,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/league"
-        app:layout_constraintTop_toBottomOf="@id/stadium_edittext"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stadium_autocomplete" />
 
     <EditText
         android:id="@+id/league_edittext"

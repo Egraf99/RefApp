@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.Stadium
+import java.util.*
 
 @Dao
 interface StadiumDao {
@@ -14,7 +15,7 @@ interface StadiumDao {
     fun addStadium(stadium: Stadium)
 
     @Query("SELECT * FROM Stadium WHERE id=(:id)")
-    fun getStadium(id: Long): LiveData<Stadium?>
+    fun getStadium(id: UUID): LiveData<Stadium?>
 
     @Update
     fun updateStadium(stadium: Stadium)

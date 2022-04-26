@@ -52,7 +52,7 @@ class GameRepository private constructor(context: Context) {
         }
     }
     fun getStadiums(): LiveData<List<Stadium>> = stadiumDao.getStadiums()
-    fun getStadium(id: Long): LiveData<Stadium?> = stadiumDao.getStadium(id)
+    fun getStadium(id: UUID): LiveData<Stadium?> = stadiumDao.getStadium(id)
     fun updateStadium(stadium: Stadium) {
         executor.execute {
             stadiumDao.updateStadium(stadium)
