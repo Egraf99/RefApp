@@ -2,6 +2,7 @@ package com.egraf.refapp
 
 import android.content.Context
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.*
 import android.widget.Button
@@ -15,11 +16,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.GameWithAttributes
-import com.egraf.refapp.database.entities.League
-import com.egraf.refapp.database.entities.Stadium
 import java.util.*
 
 private const val TAG = "GameListFragment"
+private const val DATE_FORMAT = "EEE dd.MM.yyyy HH:mm"
 
 class GameListFragment : Fragment() {
     interface Callbacks {
@@ -110,7 +110,7 @@ class GameListFragment : Fragment() {
 
     private inner class GameHolder(view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
-        private lateinit var game: GameWithAttributes
+        private lateinit var gameWithAttributes: GameWithAttributes
 
         val homeTeamTextVIew: TextView = itemView.findViewById(R.id.team_home_textview)
         val guestTeamTextView: TextView = itemView.findViewById(R.id.team_guest_textview)
@@ -125,25 +125,27 @@ class GameListFragment : Fragment() {
         }
 
         fun bind(game: GameWithAttributes) {
-            this.game = game
+            this.gameWithAttributes = game
             Log.d(TAG, "+++++++++++ GameHolder bind ++++++++++++ $game")
-            homeTeamTextVIew.text = this.game.homeTeam?.name
-            guestTeamTextView.text = this.game.guestTeam?.name
-            stadiumTextView.text = this.game.stadium?.name
-            leagueTextView.text = this.game.league?.name
-            dateButton.text = this.game.game.date.toString()
+            homeTeamTextVIew.text = this.gameWithAttributes.homeTeam?.name
+            guestTeamTextView.text = this.gameWithAttributes.guestTeam?.name
+            stadiumTextView.text = this.gameWithAttributes.stadium?.name
+            leagueTextView.text = this.gameWithAttributes.league?.name
+            dateButton.text =
+                DateFormat.format(DATE_FORMAT, this.gameWithAttributes.game.date).toString()
             dateButton.isEnabled = false
 
-            val resGamePaid = if (game.game.isPaid) R.drawable.ic_paiment_done else R.drawable.ic_paiment_wait
+            val resGamePaid =
+                if (game.game.isPaid) R.drawable.ic_paiment_done else R.drawable.ic_paiment_wait
             imgGamePaid.setBackgroundResource(resGamePaid)
 
-//            val resGameGone = if (game.isDone) R.drawable.ic_is_paid else R.drawable.ic_calendar_yellow
+//            val resGameGone = if (gameWithAttributes.isDone) R.drawable.ic_is_paid else R.drawable.ic_calendar_yellow
 //            imgGameDone.setBackgroundResource(resGameGone)
             imgGameDone.setBackgroundResource(R.drawable.ic_calendar_yelow)
         }
 
         override fun onClick(v: View?) {
-            callbacks?.onGameSelected(game.game.id)
+            callbacks?.onGameSelected(gameWithAttributes.game.id)
         }
 
     }

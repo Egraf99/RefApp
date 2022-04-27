@@ -13,9 +13,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.database.entities.*
+import com.google.android.material.textfield.TextInputLayout
 import java.util.*
 
 private const val TAG = "GameFragment"
@@ -38,6 +40,7 @@ class GameFragment : Fragment(), FragmentResultListener {
     private lateinit var gameWithAttributes: GameWithAttributes
     private lateinit var homeTeamEditText: EditText
     private lateinit var guestTeamEditText: EditText
+    private lateinit var stadiumLayout: TextInputLayout
     private lateinit var stadiumAutoCompleteTextView: AutoCompleteTextView
     private lateinit var leagueEditText: EditText
     private lateinit var dateButton: Button
@@ -78,6 +81,7 @@ class GameFragment : Fragment(), FragmentResultListener {
         // Init views
         homeTeamEditText = view.findViewById(R.id.team_home_edittext) as EditText
         guestTeamEditText = view.findViewById(R.id.team_guest_edittext) as EditText
+        stadiumLayout = view.findViewById(R.id.stadium_layout) as TextInputLayout
         stadiumAutoCompleteTextView =
             view.findViewById(R.id.stadium_autocomplete) as AutoCompleteTextView
         leagueEditText = view.findViewById(R.id.league_edittext) as EditText
@@ -149,8 +153,34 @@ class GameFragment : Fragment(), FragmentResultListener {
 
         stadiumAutoCompleteTextView.threshold = 1
         updateStadiumAdapter()
-        stadiumAutoCompleteTextView.setOnItemClickListener { _, _, i, _ ->
-            gameWithAttributes.stadium = stadiumsList[i]
+        stadiumAutoCompleteTextView.doAfterTextChanged { text ->
+            if (text.isNullOrEmpty()) {
+                gameWithAttributes.stadium = null
+                showEndButton(stadiumLayout, false)
+                return@doAfterTextChanged
+            }
+
+//            индекс стадиона из списка, название которого совпало с текстом
+            val indexStadiumCoincidence = stadiumsList.map { it.name }.indexOf(text.toString())
+            if (indexStadiumCoincidence < 0) {
+                // показываем кнопку добавелния стадиона
+                showEndButton(stadiumLayout, true)
+            } else {
+                // скрывам кнопку добавления стадиона
+                showEndButton(stadiumLayout, false)
+                // обновляем стадион игры
+                gameWithAttributes.stadium = stadiumsList[indexStadiumCoincidence]
+            }
+        }
+
+        stadiumLayout.setEndIconOnClickListener {
+            val newStadiumName = stadiumAutoCompleteTextView.text.toString()
+            if (newStadiumName == "")
+                return@setEndIconOnClickListener
+            gameWithAttributes.stadium = Stadium(name = newStadiumName)
+            showEndButton(stadiumLayout, false)
+            Toast.makeText(requireContext(), "Stadium $newStadiumName added", Toast.LENGTH_SHORT)
+                .show()
         }
 
         val leagueWatcher = object : TextWatcher {
@@ -193,25 +223,10 @@ class GameFragment : Fragment(), FragmentResultListener {
                 .show(parentFragmentManager, REQUEST_DELETE)
         }
     }
-
-    private inner class StadiumAdapter(context: Context, resource: Int, objects: List<String>) :
-        ArrayAdapter<String>(context, resource, objects) {
-        private val size = objects.size
-
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val view = if (position < size) {
-                Log.d(TAG, ")))))))))))))")
-                layoutInflater.inflate(R.layout.add_entity_button, parent, false)
-            } else {
-                Log.d(TAG, "(((((((((((((")
-                layoutInflater.inflate(android.R.layout.select_dialog_item, parent, false)
-            }
-            return view
-        }
-
-        override fun getCount(): Int {
-            return size - 1
-        }
+    private fun showEndButton(layout: TextInputLayout, isShow: Boolean) {
+        Log.d(TAG, "showENDButton $isShow")
+        layout.setEndIconActivated(isShow)
+        layout.isEndIconVisible = isShow
     }
 
     private fun updateStadiumAdapter() {
@@ -226,13 +241,7 @@ class GameFragment : Fragment(), FragmentResultListener {
     override fun onStop() {
         super.onStop()
         Log.d(TAG, "__________ GameFragment onStop ____________ $gameWithAttributes")
-        checkGameAttributes()
         gameDetailViewModel.saveGame(gameWithAttributes)
-    }
-
-    private fun checkGameAttributes() {
-        if (gameWithAttributes.stadium?.name != stadiumAutoCompleteTextView.text.toString())
-            gameWithAttributes.stadium = Stadium(name = stadiumAutoCompleteTextView.text.toString())
     }
 
     private fun updateUI() {

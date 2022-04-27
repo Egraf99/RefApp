@@ -39,21 +39,30 @@ class GameDetailViewModel : ViewModel() {
             // добавляем стадион и обновляем id стадиона в игре
             gameWithAttributes.game.stadiumId = gameWithAttributes.stadium!!.id
             gameRepository.addStadium(gameWithAttributes.stadium!!)
+        } else {
+            gameWithAttributes.game.stadiumId = null
         }
+
         if (gameWithAttributes.league != null) {
             // добавляем лигу и обновляем id лиги в игре
             gameWithAttributes.game.leagueId = gameWithAttributes.league!!.id
             gameRepository.addLeague(gameWithAttributes.league!!)
+        } else {
+            gameWithAttributes.game.leagueId = null
         }
         if (gameWithAttributes.homeTeam != null) {
             // добавляем команду хозяев и обновляем id команды хозяев в игре
             gameWithAttributes.game.homeTeamId = gameWithAttributes.homeTeam!!.id
             gameRepository.addTeam(gameWithAttributes.homeTeam!!)
+        } else {
+            gameWithAttributes.game.homeTeamId = null
         }
         if (gameWithAttributes.guestTeam != null) {
             // добавляем команду хозяев и обновляем id команды хозяев в игре
             gameWithAttributes.game.guestTeamId = gameWithAttributes.guestTeam!!.id
             gameRepository.addTeam(gameWithAttributes.guestTeam!!)
+        } else {
+            gameWithAttributes.game.guestTeamId = null
         }
 
 //        обновляем игру
