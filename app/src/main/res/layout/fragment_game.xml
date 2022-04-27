@@ -8,70 +8,55 @@
     android:layout_margin="8dp">
 
 <!--First line-->
-    <TextView
-        android:id="@+id/team_home_textview"
-        style="?android:listSeparatorTextViewStyle"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/team_home_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintWidth_default="spread"
-        android:gravity="start"
-        android:text="@string/home_team"
-        app:layout_constraintBottom_toBottomOf="@+id/team_guest_textview"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/versus"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/versus"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="8dp"
-        android:gravity="center"
-        android:text="@string/versus"
-        app:layout_constraintBottom_toBottomOf="@+id/team_guest_edittext"
-        app:layout_constraintEnd_toStartOf="@+id/team_guest_textview"
-        app:layout_constraintHeight_default="spread"
-        app:layout_constraintStart_toEndOf="@+id/team_home_textview"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/team_guest_textview"
-        style="?android:listSeparatorTextViewStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintWidth_default="spread"
-        android:gravity="start"
-        android:text="@string/guest_team"
-        app:layout_constraintStart_toEndOf="@id/versus"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-<!--Second line-->
-    <EditText
-        android:id="@+id/team_home_edittext"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="4dp"
         android:hint="@string/home_team"
-        android:inputType="textPersonName"
+        app:startIconDrawable="@drawable/ic_polo_team"
+        app:startIconTint="@color/design_default_color_primary"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_add_outline"
+        app:endIconTint="@color/design_default_color_primary"
+        app:layout_constraintEnd_toStartOf="@id/team_guest_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/versus"
-        app:layout_constraintTop_toBottomOf="@+id/team_home_textview" />
+        app:layout_constraintTop_toTopOf="parent">
 
+        <AutoCompleteTextView
+            android:id="@+id/team_home_autocomplete"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:paddingStart="8dp"/>
 
-    <EditText
-        android:id="@+id/team_guest_edittext"
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/team_guest_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="9dp"
-        app:layout_constraintWidth_default="spread"
-        android:inputType="textPersonName"
-        app:layout_constraintTop_toBottomOf="@id/team_home_textview"
-        app:layout_constraintStart_toEndOf="@id/versus"
+        android:layout_marginTop="4dp"
+        android:hint="@string/guest_team"
+        app:endIconDrawable="@drawable/ic_add_outline"
+        app:endIconMode="custom"
+        app:endIconTint="@color/design_default_color_primary"
         app:layout_constraintEnd_toEndOf="parent"
-        android:hint="@string/guest_team" />
+        app:layout_constraintStart_toEndOf="@id/team_home_layout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:startIconDrawable="@drawable/ic_polo_team"
+        app:startIconTint="@color/design_default_color_primary">
 
-    <!--    Third line-->
+        <AutoCompleteTextView
+            android:id="@+id/team_guest_autocomplete"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:paddingStart="8dp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--    Second line-->
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -87,7 +72,7 @@
         app:endIconTint="@color/design_default_color_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/team_home_edittext">
+        app:layout_constraintTop_toBottomOf="@id/team_home_layout">
 
         <AutoCompleteTextView
             android:id="@+id/stadium_autocomplete"
@@ -97,30 +82,29 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-
-    <!--    <EditText-->
-    <!--        android:id="@+id/stadium_edittext"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:hint="@string/stadium"-->
-
-    <TextView
-        android:id="@+id/league_textview"
-        style="?android:listSeparatorTextViewStyle"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/league_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/league"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stadium_layout" />
-
-    <EditText
-        android:id="@+id/league_edittext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:hint="@string/league"
+        app:startIconDrawable="@drawable/ic_football_ball"
+        app:startIconTint="@color/design_default_color_primary"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_add_outline"
+        app:endIconTint="@color/design_default_color_primary"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/league_textview" />
+        app:layout_constraintTop_toBottomOf="@id/stadium_layout" >
+
+        <AutoCompleteTextView
+            android:id="@+id/league_autocomplete"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:paddingStart="8dp"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/game_date"
@@ -148,7 +132,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/gamePaidCheckbox"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/league_edittext" />
+        app:layout_constraintTop_toBottomOf="@+id/league_layout" />
 
     <Button
         android:id="@+id/button_delete"

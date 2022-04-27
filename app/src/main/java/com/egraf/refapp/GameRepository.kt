@@ -60,6 +60,7 @@ class GameRepository private constructor(context: Context) {
     }
 
     //    league block
+    fun getLeagues(): LiveData<List<League>> = leagueDao.getLeagues()
     fun addLeague(league: League) {
         executor.execute {
             leagueDao.addLeague(league)
@@ -72,6 +73,7 @@ class GameRepository private constructor(context: Context) {
     }
 
 //    team block
+    fun getTeams(): LiveData<List<Team>> = teamDao.getTeams()
     fun addTeam(team: Team){
         executor.execute {
             teamDao.addTeam(team)

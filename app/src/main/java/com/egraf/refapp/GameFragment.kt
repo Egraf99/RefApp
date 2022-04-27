@@ -2,10 +2,7 @@ package com.egraf.refapp
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Entity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.text.format.DateFormat
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -35,14 +32,19 @@ class GameFragment : Fragment(), FragmentResultListener {
     }
 
     private var stadiumsList: List<Stadium> = emptyList()
+    private var leaguesList: List<League> = emptyList()
+    private var teamsList: List<Team> = emptyList()
 
     private var callbacks: Callbacks? = null
     private lateinit var gameWithAttributes: GameWithAttributes
-    private lateinit var homeTeamEditText: EditText
-    private lateinit var guestTeamEditText: EditText
     private lateinit var stadiumLayout: TextInputLayout
     private lateinit var stadiumAutoCompleteTextView: AutoCompleteTextView
-    private lateinit var leagueEditText: EditText
+    private lateinit var leagueLayout: TextInputLayout
+    private lateinit var leagueAutoCompleteTextView: AutoCompleteTextView
+    private lateinit var homeTeamLayout: TextInputLayout
+    private lateinit var homeTeamAutoCompleteTextView: AutoCompleteTextView
+    private lateinit var guestTeamLayout: TextInputLayout
+    private lateinit var guestTeamAutoCompleteTextView: AutoCompleteTextView
     private lateinit var dateButton: Button
     private lateinit var timeButton: Button
     private lateinit var gamePaidCheckBox: CheckBox
@@ -79,12 +81,18 @@ class GameFragment : Fragment(), FragmentResultListener {
         val view = inflater.inflate(R.layout.fragment_game, container, false)
 
         // Init views
-        homeTeamEditText = view.findViewById(R.id.team_home_edittext) as EditText
-        guestTeamEditText = view.findViewById(R.id.team_guest_edittext) as EditText
+        homeTeamLayout = view.findViewById(R.id.team_home_layout) as TextInputLayout
+        homeTeamAutoCompleteTextView =
+            view.findViewById(R.id.team_home_autocomplete) as AutoCompleteTextView
+        guestTeamLayout = view.findViewById(R.id.team_guest_layout) as TextInputLayout
+        guestTeamAutoCompleteTextView =
+            view.findViewById(R.id.team_guest_autocomplete) as AutoCompleteTextView
         stadiumLayout = view.findViewById(R.id.stadium_layout) as TextInputLayout
         stadiumAutoCompleteTextView =
             view.findViewById(R.id.stadium_autocomplete) as AutoCompleteTextView
-        leagueEditText = view.findViewById(R.id.league_edittext) as EditText
+        leagueLayout = view.findViewById(R.id.league_layout) as TextInputLayout
+        leagueAutoCompleteTextView =
+            view.findViewById(R.id.league_autocomplete) as AutoCompleteTextView
         dateButton = view.findViewById(R.id.game_date) as Button
         timeButton = view.findViewById(R.id.game_time) as Button
         buttonDelete = view.findViewById(R.id.button_delete) as Button
@@ -104,7 +112,16 @@ class GameFragment : Fragment(), FragmentResultListener {
         }
         gameDetailViewModel.stadiumListLiveData.observe(viewLifecycleOwner) { stadiums ->
             stadiumsList = stadiums
-            updateStadiumAdapter()
+            updateAdapter(stadiumAutoCompleteTextView, stadiumsList.map { it.name })
+        }
+        gameDetailViewModel.leagueListLiveData.observe(viewLifecycleOwner) { leagues ->
+            leaguesList = leagues
+            updateAdapter(leagueAutoCompleteTextView, leagues.map { it.name })
+        }
+        gameDetailViewModel.teamListLiveData.observe(viewLifecycleOwner) { teams ->
+            teamsList = teams
+            updateAdapter(homeTeamAutoCompleteTextView, teams.map { it.name })
+            updateAdapter(guestTeamAutoCompleteTextView, teams.map { it.name })
         }
 
         parentFragmentManager.setFragmentResultListener(REQUEST_DATE, viewLifecycleOwner, this)
@@ -115,44 +132,72 @@ class GameFragment : Fragment(), FragmentResultListener {
     override fun onStart() {
         super.onStart()
 
-        val homeTeamWatcher = object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        homeTeamAutoCompleteTextView.threshold = 1
+        updateAdapter(homeTeamAutoCompleteTextView, teamsList.map { it.name })
+        homeTeamAutoCompleteTextView.doAfterTextChanged { text ->
+            if (text.isNullOrEmpty()) {
+                gameWithAttributes.homeTeam = null
+                showEndButton(homeTeamLayout, false)
+                return@doAfterTextChanged
             }
 
-            override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (!sequence.isNullOrBlank()) {
-                    if (gameWithAttributes.homeTeam == null)
-                        gameWithAttributes.homeTeam = Team()
-
-                    gameWithAttributes.homeTeam!!.name = sequence.toString()
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-            }
-        }
-        homeTeamEditText.addTextChangedListener(homeTeamWatcher)
-
-        val guestTeamTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (!sequence.isNullOrBlank()) {
-                    if (gameWithAttributes.guestTeam == null)
-                        gameWithAttributes.guestTeam = Team()
-
-                    gameWithAttributes.guestTeam!!.name = sequence.toString()
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
+//            индекс стадиона из списка, название которого совпало с текстом
+            val indexStadiumCoincidence = teamsList.map { it.name }.indexOf(text.toString())
+            if (indexStadiumCoincidence < 0) {
+                // показываем кнопку добавелния стадиона
+                showEndButton(homeTeamLayout, true)
+            } else {
+                // скрывам кнопку добавления стадиона
+                showEndButton(homeTeamLayout, false)
+                // обновляем стадион игры
+                gameWithAttributes.homeTeam = teamsList[indexStadiumCoincidence]
             }
         }
-        guestTeamEditText.addTextChangedListener(guestTeamTextWatcher)
+
+        homeTeamLayout.setEndIconOnClickListener {
+            val newHomeTeamName = homeTeamAutoCompleteTextView.text.toString()
+            if (newHomeTeamName == "")
+                return@setEndIconOnClickListener
+            gameWithAttributes.homeTeam = Team(name = newHomeTeamName)
+            showEndButton(homeTeamLayout, false)
+            Toast.makeText(requireContext(), "Home Team $newHomeTeamName added", Toast.LENGTH_SHORT)
+                .show()
+        }
+
+        guestTeamAutoCompleteTextView.threshold = 1
+        updateAdapter(guestTeamAutoCompleteTextView, teamsList.map { it.name })
+        guestTeamAutoCompleteTextView.doAfterTextChanged { text ->
+            if (text.isNullOrEmpty()) {
+                gameWithAttributes.guestTeam = null
+                showEndButton(guestTeamLayout, false)
+                return@doAfterTextChanged
+            }
+
+//            индекс стадиона из списка, название которого совпало с текстом
+            val indexStadiumCoincidence = teamsList.map { it.name }.indexOf(text.toString())
+            if (indexStadiumCoincidence < 0) {
+                // показываем кнопку добавелния стадиона
+                showEndButton(guestTeamLayout, true)
+            } else {
+                // скрывам кнопку добавления стадиона
+                showEndButton(guestTeamLayout, false)
+                // обновляем стадион игры
+                gameWithAttributes.guestTeam = teamsList[indexStadiumCoincidence]
+            }
+        }
+
+        guestTeamLayout.setEndIconOnClickListener {
+            val newGuestTeamName = guestTeamAutoCompleteTextView.text.toString()
+            if (newGuestTeamName == "")
+                return@setEndIconOnClickListener
+            gameWithAttributes.guestTeam = Team(name = newGuestTeamName)
+            showEndButton(guestTeamLayout, false)
+            Toast.makeText(requireContext(), "Guest Team $newGuestTeamName added", Toast.LENGTH_SHORT)
+                .show()
+        }
 
         stadiumAutoCompleteTextView.threshold = 1
-        updateStadiumAdapter()
+        updateAdapter(stadiumAutoCompleteTextView, stadiumsList.map { it.name })
         stadiumAutoCompleteTextView.doAfterTextChanged { text ->
             if (text.isNullOrEmpty()) {
                 gameWithAttributes.stadium = null
@@ -183,23 +228,37 @@ class GameFragment : Fragment(), FragmentResultListener {
                 .show()
         }
 
-        val leagueWatcher = object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        leagueAutoCompleteTextView.threshold = 1
+        updateAdapter(leagueAutoCompleteTextView, leaguesList.map { it.name })
+        leagueAutoCompleteTextView.doAfterTextChanged { text ->
+            if (text.isNullOrEmpty()) {
+                gameWithAttributes.league = null
+                showEndButton(leagueLayout, false)
+                return@doAfterTextChanged
             }
 
-            override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (!sequence.isNullOrBlank()) {
-                    if (gameWithAttributes.league == null)
-                        gameWithAttributes.league = League()
-
-                    gameWithAttributes.league!!.name = sequence.toString()
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
+//            индекс стадиона из списка, название которого совпало с текстом
+            val indexStadiumCoincidence = leaguesList.map { it.name }.indexOf(text.toString())
+            if (indexStadiumCoincidence < 0) {
+                // показываем кнопку добавелния стадиона
+                showEndButton(leagueLayout, true)
+            } else {
+                // скрывам кнопку добавления стадиона
+                showEndButton(leagueLayout, false)
+                // обновляем стадион игры
+                gameWithAttributes.league = leaguesList[indexStadiumCoincidence]
             }
         }
-        leagueEditText.addTextChangedListener(leagueWatcher)
+
+        leagueLayout.setEndIconOnClickListener {
+            val newLeagueName = leagueAutoCompleteTextView.text.toString()
+            if (newLeagueName == "")
+                return@setEndIconOnClickListener
+            gameWithAttributes.league = League(name = newLeagueName)
+            showEndButton(leagueLayout, false)
+            Toast.makeText(requireContext(), "League $newLeagueName added", Toast.LENGTH_SHORT)
+                .show()
+        }
 
         gamePaidCheckBox.apply {
             setOnCheckedChangeListener { _, isPaid -> gameWithAttributes.game.isPaid = isPaid }
@@ -229,12 +288,12 @@ class GameFragment : Fragment(), FragmentResultListener {
         layout.isEndIconVisible = isShow
     }
 
-    private fun updateStadiumAdapter() {
-        stadiumAutoCompleteTextView.setAdapter(
+    private fun updateAdapter(textView: AutoCompleteTextView, list: List<String>) {
+        textView.setAdapter(
             ArrayAdapter(
                 requireContext(),
                 android.R.layout.select_dialog_item,
-                stadiumsList.map { it.name })
+                list)
         )
     }
 
@@ -246,10 +305,10 @@ class GameFragment : Fragment(), FragmentResultListener {
 
     private fun updateUI() {
         Log.d(TAG, "_________ GameFragment updateUI __________ $gameWithAttributes")
-        homeTeamEditText.setText(gameWithAttributes.homeTeam?.name)
-        guestTeamEditText.setText(gameWithAttributes.guestTeam?.name)
+        homeTeamAutoCompleteTextView.setText(gameWithAttributes.homeTeam?.name)
+        guestTeamAutoCompleteTextView.setText(gameWithAttributes.guestTeam?.name)
         stadiumAutoCompleteTextView.setText(gameWithAttributes.stadium?.name)
-        leagueEditText.setText(gameWithAttributes.league?.name)
+        leagueAutoCompleteTextView.setText(gameWithAttributes.league?.name)
         dateButton.text = DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
         timeButton.text = DateFormat.format(TIME_FORMAT, gameWithAttributes.game.date).toString()
         gamePaidCheckBox.apply {

@@ -44,15 +44,38 @@
         tools:text="Guest Name" />
 
     <TextView
-        android:id="@+id/stadium_textview"
+        android:id="@+id/_stadium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toStartOf="@+id/img_check_isPaid"
+        android:text="@string/stadium"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/team_home_textview"
+        app:layout_goneMarginEnd="56dp" />
+
+    <TextView
+        android:id="@+id/stadium_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/img_check_isPaid"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/_stadium"
+        app:layout_constraintBottom_toBottomOf="@id/_stadium"
         app:layout_goneMarginEnd="56dp"
         tools:text="Stadium" />
+
+    <TextView
+        android:id="@+id/_league"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/league"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/_stadium"
+        app:layout_goneMarginEnd="56dp" />
 
     <TextView
         android:id="@+id/league_textview"
@@ -60,13 +83,14 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@+id/img_check_isPaid"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stadium_textview"
+        app:layout_constraintTop_toTopOf="@id/_league"
+        app:layout_constraintBottom_toBottomOf="@id/_league"
         tools:text="League" />
 
     <ImageView
         android:id="@+id/img_check_gamePass"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         app:layout_constraintBottom_toTopOf="@id/img_check_isPaid"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/team_home_textview"/>

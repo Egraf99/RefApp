@@ -4,34 +4,28 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.egraf.refapp.database.entities.Game
-import com.egraf.refapp.database.entities.GameWithAttributes
-import com.egraf.refapp.database.entities.Stadium
+import com.egraf.refapp.database.entities.*
 import java.util.*
 
 class GameDetailViewModel : ViewModel() {
     private val gameRepository = GameRepository.get()
     private val gameIdLiveData = MutableLiveData<UUID>()
-    private val stadiumIdLiveData = MutableLiveData<UUID>()
 
     val gameLiveData: LiveData<GameWithAttributes?> = Transformations.switchMap(gameIdLiveData) { gameId ->
         gameRepository.getGame(gameId)
     }
-
     val stadiumListLiveData: LiveData<List<Stadium>> = Transformations.switchMap(gameIdLiveData) {
         gameRepository.getStadiums()
     }
-
-    val stadiumLiveData: LiveData<Stadium?> = Transformations.switchMap(stadiumIdLiveData) {stadiumId ->
-        gameRepository.getStadium(stadiumId)
+    val leagueListLiveData: LiveData<List<League>> = Transformations.switchMap(gameIdLiveData) {
+        gameRepository.getLeagues()
+    }
+    val teamListLiveData: LiveData<List<Team>> = Transformations.switchMap(gameIdLiveData) {
+        gameRepository.getTeams()
     }
 
     fun loadGame(gameId: UUID) {
         gameIdLiveData.value = gameId
-    }
-
-    fun loadStadium(stadiumId: UUID) {
-        stadiumIdLiveData.value = stadiumId
     }
 
     fun saveGame(gameWithAttributes: GameWithAttributes) {
