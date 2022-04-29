@@ -194,6 +194,7 @@ class GameFragment : Fragment(), FragmentResultListener {
         val namesList = getNamesList(attribute)
         val matches = namesList.map { it.getEntityName() }.indexOf(text.toString())
 
+        textInputLayout.setEndIconDrawable(R.drawable.ic_add_outline)
         showEndButton(textInputLayout, !text.isNullOrEmpty() && matches < 0)
 
         return if (matches > -1)
