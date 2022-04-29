@@ -23,6 +23,9 @@ class GameDetailViewModel : ViewModel() {
     val teamListLiveData: LiveData<List<Team>> = Transformations.switchMap(gameIdLiveData) {
         gameRepository.getTeams()
     }
+    val refereeListLiveData: LiveData<List<Referee>> = Transformations.switchMap(gameIdLiveData) {
+        gameRepository.getReferees()
+    }
 
     fun loadGame(gameId: UUID) {
         gameIdLiveData.value = gameId
@@ -52,11 +55,18 @@ class GameDetailViewModel : ViewModel() {
             gameWithAttributes.game.homeTeamId = null
         }
         if (gameWithAttributes.guestTeam != null) {
-            // добавляем команду хозяев и обновляем id команды хозяев в игре
+            // добавляем команду гостей и обновляем id команды гостей в игре
             gameWithAttributes.game.guestTeamId = gameWithAttributes.guestTeam!!.id
             gameRepository.addTeam(gameWithAttributes.guestTeam!!)
         } else {
             gameWithAttributes.game.guestTeamId = null
+        }
+        if (gameWithAttributes.chiefReferee != null) {
+            // добавляем главного судью и обновляем id главного судьи в игре
+            gameWithAttributes.game.chiefRefereeId = gameWithAttributes.chiefReferee!!.id
+            gameRepository.addReferee(gameWithAttributes.chiefReferee!!)
+        } else {
+            gameWithAttributes.game.chiefRefereeId = null
         }
 
 //        обновляем игру

@@ -15,4 +15,9 @@
     <string name="warning_delete_text">Are you sure?</string>
     <string name="empty_list">Games list is empty</string>
     <string name="hint_auto_complete">stadium_hint</string>
+    <string name="gamePassedCheckBox">Passed</string>
+    <string name="chief_referee">Chief Referee</string>
+    <string name="first_assistant">First Assistant</string>
+    <string name="second_assistant">Second Assistant</string>
+    <string name="reserve_referee">Reserve Referee</string>
 </resources>

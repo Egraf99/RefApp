@@ -5,9 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.egraf.refapp.database.GameDatabase
 import com.egraf.refapp.database.entities.*
-import com.egraf.refapp.database.migration_1_2
-import com.egraf.refapp.database.migration_2_3
-import com.egraf.refapp.database.migration_3_4
+//import com.egraf.refapp.database.migration_1_2n_1_2
 import java.lang.IllegalStateException
 import java.util.*
 import java.util.concurrent.Executors
@@ -18,7 +16,7 @@ class GameRepository private constructor(context: Context) {
 
     private val database: GameDatabase =
         Room.databaseBuilder(context.applicationContext, GameDatabase::class.java, DATABASE_NAME)
-            .addMigrations(migration_1_2, migration_2_3, migration_3_4)
+//            .addMigrations(migration_1_2)
             .build()
 
     private val executor = Executors.newSingleThreadExecutor()
@@ -26,6 +24,7 @@ class GameRepository private constructor(context: Context) {
     private val stadiumDao = database.stadiumDao()
     private val leagueDao = database.leagueDao()
     private val teamDao = database.teamDao()
+    private val refereeDao = database.refereeDao()
 
 //    game block
     fun getGames(): LiveData<List<GameWithAttributes>> = gameDao.getGames()
@@ -78,6 +77,12 @@ class GameRepository private constructor(context: Context) {
         executor.execute {
             teamDao.addTeam(team)
         }
+    }
+
+//    referee block
+    fun getReferees(): LiveData<List<Referee>> = refereeDao.getReferees()
+    fun addReferee(referee: Referee) {
+        executor.execute { refereeDao.addReferee(referee) }
     }
 
     companion object {

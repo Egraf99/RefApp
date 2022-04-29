@@ -15,8 +15,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:hint="@string/home_team"
-        app:startIconDrawable="@drawable/ic_polo_team"
-        app:startIconTint="@color/design_default_color_primary"
         app:endIconMode="custom"
         app:endIconDrawable="@drawable/ic_add_outline"
         app:endIconTint="@color/design_default_color_primary"
@@ -28,7 +26,8 @@
             android:id="@+id/team_home_autocomplete"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:paddingStart="8dp"/>
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -44,20 +43,18 @@
         app:endIconTint="@color/design_default_color_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/team_home_layout"
-        app:layout_constraintTop_toTopOf="parent"
-        app:startIconDrawable="@drawable/ic_polo_team"
-        app:startIconTint="@color/design_default_color_primary">
+        app:layout_constraintTop_toTopOf="parent">
 
         <AutoCompleteTextView
             android:id="@+id/team_guest_autocomplete"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:paddingStart="8dp" />
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <!--    Second line-->
-
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:id="@+id/stadium_layout"
@@ -78,7 +75,8 @@
             android:id="@+id/stadium_autocomplete"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:paddingStart="8dp"/>
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,15 +94,136 @@
         app:endIconTint="@color/design_default_color_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stadium_layout" >
+        app:layout_constraintTop_toBottomOf="@id/stadium_layout">
 
         <AutoCompleteTextView
             android:id="@+id/league_autocomplete"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:paddingStart="8dp"/>
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp"/>
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/chief_referee_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:hint="@string/chief_referee"
+        app:startIconDrawable="@drawable/ic_whistle"
+        app:startIconTint="@color/design_default_color_primary"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_add_outline"
+        app:endIconTint="@color/design_default_color_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/league_layout">
+
+        <AutoCompleteTextView
+            android:id="@+id/chief_referee_autocomplete"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/first_referee_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:hint="@string/first_assistant"
+        app:startIconDrawable="@drawable/ic_assistant_flag"
+        app:startIconTintMode="src_atop"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_add_outline"
+        app:endIconTint="@color/design_default_color_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chief_referee_layout">
+
+        <AutoCompleteTextView
+            android:id="@+id/first_referee_autocomplete"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/second_referee_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:hint="@string/second_assistant"
+        app:startIconDrawable="@drawable/ic_assistant_flag"
+        app:startIconTintMode="screen"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_add_outline"
+        app:endIconTint="@color/design_default_color_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/first_referee_layout">
+
+        <AutoCompleteTextView
+            android:id="@+id/second_referee_autocomplete"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/reserve_referee_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:hint="@string/reserve_referee"
+        app:startIconDrawable="@drawable/ic_scoreboard"
+        app:startIconTint="@color/design_default_color_primary"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_add_outline"
+        app:endIconTint="@color/design_default_color_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/second_referee_layout">
+
+        <AutoCompleteTextView
+            android:id="@+id/reserve_referee_autocomplete"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <CheckBox
+        android:id="@+id/game_paid"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintWidth_percent="0.5"
+        android:text="@string/gamePaidCheckbox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reserve_referee_layout" />
+
+    <CheckBox
+        android:id="@+id/game_passed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintWidth_percent="0.5"
+        android:text="@string/gamePassedCheckBox"
+        app:layout_constraintStart_toEndOf="@id/game_paid"
+        app:layout_constraintTop_toTopOf="@id/game_paid"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <Button
         android:id="@+id/game_date"
@@ -124,15 +243,6 @@
         app:layout_constraintTop_toTopOf="@id/game_date"
         app:layout_constraintWidth_percent="0.5"
         tools:text="12:00"/>
-
-    <CheckBox
-        android:id="@+id/game_paid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/gamePaidCheckbox"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/league_layout" />
 
     <Button
         android:id="@+id/button_delete"

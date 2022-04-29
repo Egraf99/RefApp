@@ -5,12 +5,14 @@ import androidx.room.PrimaryKey
 import java.util.*
 
 @Entity
-data class League(
+data class Referee(
     @PrimaryKey
     var id: UUID = UUID.randomUUID(),
-    var name: String = "",
+    var firstName: String = "",
+    var secondName: String = "",
+    var thirdName: String = "",
 ): com.egraf.refapp.database.entities.Entity {
     override fun getEntityName(): String {
-        return name
+        return "$secondName $firstName"
     }
 }

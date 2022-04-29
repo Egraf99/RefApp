@@ -3,6 +3,7 @@ package com.egraf.refapp
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
 import android.text.format.DateFormat
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -34,6 +35,7 @@ class GameFragment : Fragment(), FragmentResultListener {
     private var stadiumsList: List<Stadium> = emptyList()
     private var leaguesList: List<League> = emptyList()
     private var teamsList: List<Team> = emptyList()
+    private var refereeList: List<Referee> = emptyList()
 
     private var callbacks: Callbacks? = null
     private lateinit var gameWithAttributes: GameWithAttributes
@@ -45,9 +47,18 @@ class GameFragment : Fragment(), FragmentResultListener {
     private lateinit var homeTeamAutoCompleteTextView: AutoCompleteTextView
     private lateinit var guestTeamLayout: TextInputLayout
     private lateinit var guestTeamAutoCompleteTextView: AutoCompleteTextView
+    private lateinit var chiefRefereeLayout: TextInputLayout
+    private lateinit var chiefRefereeAutoCompleteTextView: AutoCompleteTextView
+    private lateinit var firstRefereeLayout: TextInputLayout
+    private lateinit var firstRefereeAutoCompleteTextView: AutoCompleteTextView
+    private lateinit var secondRefereeLayout: TextInputLayout
+    private lateinit var secondRefereeAutoCompleteTextView: AutoCompleteTextView
+    private lateinit var reserveRefereeLayout: TextInputLayout
+    private lateinit var reserveRefereeAutoCompleteTextView: AutoCompleteTextView
     private lateinit var dateButton: Button
     private lateinit var timeButton: Button
     private lateinit var gamePaidCheckBox: CheckBox
+    private lateinit var gamePassedCheckBox: CheckBox
     private lateinit var buttonDelete: Button
     private val gameDetailViewModel: GameDetailViewModel by lazy {
         ViewModelProvider(this).get(GameDetailViewModel::class.java)
@@ -93,10 +104,23 @@ class GameFragment : Fragment(), FragmentResultListener {
         leagueLayout = view.findViewById(R.id.league_layout) as TextInputLayout
         leagueAutoCompleteTextView =
             view.findViewById(R.id.league_autocomplete) as AutoCompleteTextView
+        chiefRefereeLayout = view.findViewById(R.id.chief_referee_layout) as TextInputLayout
+        chiefRefereeAutoCompleteTextView =
+            view.findViewById(R.id.chief_referee_autocomplete) as AutoCompleteTextView
+        firstRefereeLayout = view.findViewById(R.id.first_referee_layout) as TextInputLayout
+        firstRefereeAutoCompleteTextView =
+            view.findViewById(R.id.first_referee_autocomplete) as AutoCompleteTextView
+        secondRefereeLayout = view.findViewById(R.id.second_referee_layout) as TextInputLayout
+        secondRefereeAutoCompleteTextView =
+            view.findViewById(R.id.second_referee_autocomplete) as AutoCompleteTextView
+        reserveRefereeLayout = view.findViewById(R.id.reserve_referee_layout) as TextInputLayout
+        reserveRefereeAutoCompleteTextView =
+            view.findViewById(R.id.reserve_referee_autocomplete) as AutoCompleteTextView
         dateButton = view.findViewById(R.id.game_date) as Button
         timeButton = view.findViewById(R.id.game_time) as Button
         buttonDelete = view.findViewById(R.id.button_delete) as Button
         gamePaidCheckBox = view.findViewById(R.id.game_paid) as CheckBox
+        gamePassedCheckBox = view.findViewById(R.id.game_passed) as CheckBox
 
         return view
 
@@ -120,8 +144,17 @@ class GameFragment : Fragment(), FragmentResultListener {
         }
         gameDetailViewModel.teamListLiveData.observe(viewLifecycleOwner) { teams ->
             teamsList = teams
-            updateAdapter(homeTeamAutoCompleteTextView, teams.map { it.name })
-            updateAdapter(guestTeamAutoCompleteTextView, teams.map { it.name })
+            val teamNameList = teams.map { it.name }
+            updateAdapter(homeTeamAutoCompleteTextView, teamNameList)
+            updateAdapter(guestTeamAutoCompleteTextView, teamNameList)
+        }
+        gameDetailViewModel.refereeListLiveData.observe(viewLifecycleOwner) { referee ->
+            refereeList = referee
+            val refereeNameList = referee.map { it.secondName + " " + it.firstName }
+            updateAdapter(chiefRefereeAutoCompleteTextView, refereeNameList)
+            updateAdapter(firstRefereeAutoCompleteTextView, refereeNameList)
+            updateAdapter(secondRefereeAutoCompleteTextView, refereeNameList)
+            updateAdapter(reserveRefereeAutoCompleteTextView, refereeNameList)
         }
 
         parentFragmentManager.setFragmentResultListener(REQUEST_DATE, viewLifecycleOwner, this)
@@ -260,8 +293,65 @@ class GameFragment : Fragment(), FragmentResultListener {
                 .show()
         }
 
+        chiefRefereeAutoCompleteTextView.threshold = 1
+        updateAdapter(
+            chiefRefereeAutoCompleteTextView,
+            refereeList.map { it.secondName + " " + it.firstName })
+        chiefRefereeAutoCompleteTextView.doAfterTextChanged { text ->
+            if (text.isNullOrEmpty()) {
+                gameWithAttributes.chiefReferee = null
+                showEndButton(chiefRefereeLayout, false)
+                return@doAfterTextChanged
+            }
+
+//            индекс стадиона из списка, название которого совпало с текстом
+            val indexStadiumCoincidence =
+                refereeList.map { it.secondName + " " + it.firstName }.indexOf(text.toString())
+            if (indexStadiumCoincidence < 0) {
+                // показываем кнопку добавелния стадиона
+                showEndButton(chiefRefereeLayout, true)
+            } else {
+                // скрывам кнопку добавления стадиона
+                showEndButton(chiefRefereeLayout, false)
+                // обновляем стадион игры
+                gameWithAttributes.chiefReferee = refereeList[indexStadiumCoincidence]
+            }
+        }
+
+        chiefRefereeLayout.setEndIconOnClickListener {
+            val newRefereeName = chiefRefereeAutoCompleteTextView.text.toString().split(" ")
+            val firstName = newRefereeName[0]
+            var secondName = ""
+            var thirdName = ""
+            if (firstName == "")
+                return@setEndIconOnClickListener
+            if (newRefereeName.size > 1)
+                secondName = newRefereeName[1]
+            if (newRefereeName.size > 2)
+                thirdName = newRefereeName[2]
+            gameWithAttributes.chiefReferee = Referee(
+                firstName = firstName,
+                secondName = secondName,
+                thirdName = thirdName
+            )
+            showEndButton(chiefRefereeLayout, false)
+            Toast.makeText(
+                requireContext(),
+                "Referee $firstName $secondName added",
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
+
+
         gamePaidCheckBox.apply {
             setOnCheckedChangeListener { _, isPaid -> gameWithAttributes.game.isPaid = isPaid }
+        }
+
+        gamePassedCheckBox.apply {
+            setOnCheckedChangeListener { _, isPassed ->
+                gameWithAttributes.game.isPassed = isPassed
+            }
         }
 
         dateButton.setOnClickListener {
@@ -283,7 +373,7 @@ class GameFragment : Fragment(), FragmentResultListener {
         }
     }
     private fun showEndButton(layout: TextInputLayout, isShow: Boolean) {
-        Log.d(TAG, "showENDButton $isShow")
+        Log.d(TAG, "showEndButton $isShow")
         layout.setEndIconActivated(isShow)
         layout.isEndIconVisible = isShow
     }
@@ -311,8 +401,13 @@ class GameFragment : Fragment(), FragmentResultListener {
         leagueAutoCompleteTextView.setText(gameWithAttributes.league?.name)
         dateButton.text = DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
         timeButton.text = DateFormat.format(TIME_FORMAT, gameWithAttributes.game.date).toString()
+        chiefRefereeAutoCompleteTextView.setText(gameWithAttributes.chiefReferee?.secondName + " " + gameWithAttributes.chiefReferee?.firstName)
         gamePaidCheckBox.apply {
             isChecked = gameWithAttributes.game.isPaid
+            jumpDrawablesToCurrentState()
+        }
+        gamePassedCheckBox.apply {
+            isChecked = gameWithAttributes.game.isPassed
             jumpDrawablesToCurrentState()
         }
     }

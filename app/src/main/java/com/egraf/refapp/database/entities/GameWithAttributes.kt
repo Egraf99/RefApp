@@ -14,6 +14,8 @@ class GameWithAttributes(
     var homeTeam: Team? = null,
     @Relation(parentColumn = "guestTeamId", entityColumn = "id")
     var guestTeam: Team? = null,
+    @Relation(parentColumn = "chiefRefereeId", entityColumn = "id")
+    var chiefReferee: Referee? = null,
 
 ) {
     override fun toString(): String {

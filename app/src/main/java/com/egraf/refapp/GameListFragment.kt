@@ -125,23 +125,23 @@ class GameListFragment : Fragment() {
         }
 
         fun bind(game: GameWithAttributes) {
-            this.gameWithAttributes = game
+            gameWithAttributes = game
             Log.d(TAG, "+++++++++++ GameHolder bind ++++++++++++ $game")
-            homeTeamTextVIew.text = this.gameWithAttributes.homeTeam?.name
-            guestTeamTextView.text = this.gameWithAttributes.guestTeam?.name
-            stadiumTextView.text = this.gameWithAttributes.stadium?.name
-            leagueTextView.text = this.gameWithAttributes.league?.name
+            homeTeamTextVIew.text = gameWithAttributes.homeTeam?.name
+            guestTeamTextView.text = gameWithAttributes.guestTeam?.name
+            stadiumTextView.text = gameWithAttributes.stadium?.name
+            leagueTextView.text = gameWithAttributes.league?.name
             dateButton.text =
-                DateFormat.format(DATE_FORMAT, this.gameWithAttributes.game.date).toString()
+                DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
             dateButton.isEnabled = false
 
             val resGamePaid =
-                if (game.game.isPaid) R.drawable.ic_paiment_done else R.drawable.ic_paiment_wait
+                if (gameWithAttributes.game.isPaid) R.drawable.ic_paiment_done else R.drawable.ic_paiment_wait
             imgGamePaid.setBackgroundResource(resGamePaid)
 
-//            val resGameGone = if (gameWithAttributes.isDone) R.drawable.ic_is_paid else R.drawable.ic_calendar_yellow
-//            imgGameDone.setBackgroundResource(resGameGone)
-            imgGameDone.setBackgroundResource(R.drawable.ic_calendar_yelow)
+            val resGameGone =
+                if (gameWithAttributes.game.isPassed) R.drawable.ic_calendar_green else R.drawable.ic_calendar_yelow
+            imgGameDone.setBackgroundResource(resGameGone)
         }
 
         override fun onClick(v: View?) {

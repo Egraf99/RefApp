@@ -9,4 +9,8 @@ data class Stadium(
     @PrimaryKey
     var id: UUID = UUID.randomUUID(),
     var name: String = ""
-)
+): com.egraf.refapp.database.entities.Entity {
+    override fun getEntityName(): String {
+        return name
+    }
+}
