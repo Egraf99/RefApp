@@ -20,4 +20,8 @@
     <string name="first_assistant">First Assistant</string>
     <string name="second_assistant">Second Assistant</string>
     <string name="reserve_referee">Reserve Referee</string>
+    <string name="team_add_message">Team %1$s added</string>
+    <string name="stadium_add_message">Stadium %1$s added</string>
+    <string name="league_add_message">League %1$s added</string>
+    <string name="referee_add_message">Referee %1$s added</string>
 </resources>

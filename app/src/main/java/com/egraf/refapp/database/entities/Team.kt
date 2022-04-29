@@ -13,4 +13,8 @@ data class Team(
     override fun getEntityName(): String {
         return name
     }
+
+    override fun setEntityName(text: String): Team {
+        return this.apply { name = text.trim() }
+    }
 }

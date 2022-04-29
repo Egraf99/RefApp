@@ -68,6 +68,27 @@ class GameDetailViewModel : ViewModel() {
         } else {
             gameWithAttributes.game.chiefRefereeId = null
         }
+        if (gameWithAttributes.firstReferee != null) {
+            // добавляем главного судью и обновляем id главного судьи в игре
+            gameWithAttributes.game.firstRefereeId = gameWithAttributes.firstReferee!!.id
+            gameRepository.addReferee(gameWithAttributes.firstReferee!!)
+        } else {
+            gameWithAttributes.game.firstRefereeId = null
+        }
+        if (gameWithAttributes.secondReferee != null) {
+            // добавляем главного судью и обновляем id главного судьи в игре
+            gameWithAttributes.game.secondRefereeId = gameWithAttributes.secondReferee!!.id
+            gameRepository.addReferee(gameWithAttributes.secondReferee!!)
+        } else {
+            gameWithAttributes.game.secondRefereeId = null
+        }
+        if (gameWithAttributes.reserveReferee != null) {
+            // добавляем главного судью и обновляем id главного судьи в игре
+            gameWithAttributes.game.reserveRefereeId = gameWithAttributes.reserveReferee!!.id
+            gameRepository.addReferee(gameWithAttributes.reserveReferee!!)
+        } else {
+            gameWithAttributes.game.reserveRefereeId = null
+        }
 
 //        обновляем игру
         gameRepository.updateGame(gameWithAttributes.game)

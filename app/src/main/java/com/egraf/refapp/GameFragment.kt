@@ -6,12 +6,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.format.DateFormat
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.database.entities.*
@@ -136,25 +136,31 @@ class GameFragment : Fragment(), FragmentResultListener {
         }
         gameDetailViewModel.stadiumListLiveData.observe(viewLifecycleOwner) { stadiums ->
             stadiumsList = stadiums
-            updateAdapter(stadiumAutoCompleteTextView, stadiumsList.map { it.name })
+            updateAdapter(stadiumAutoCompleteTextView, stadiumsList.map { it.getEntityName() })
         }
         gameDetailViewModel.leagueListLiveData.observe(viewLifecycleOwner) { leagues ->
             leaguesList = leagues
-            updateAdapter(leagueAutoCompleteTextView, leagues.map { it.name })
+            updateAdapter(leagueAutoCompleteTextView, leagues.map { it.getEntityName() })
         }
         gameDetailViewModel.teamListLiveData.observe(viewLifecycleOwner) { teams ->
             teamsList = teams
-            val teamNameList = teams.map { it.name }
-            updateAdapter(homeTeamAutoCompleteTextView, teamNameList)
-            updateAdapter(guestTeamAutoCompleteTextView, teamNameList)
+            val teamNameList = teams.map { it.getEntityName() }
+            for (autoTextView in listOf(
+                homeTeamAutoCompleteTextView,
+                guestTeamAutoCompleteTextView,
+            ))
+                updateAdapter(autoTextView, teamNameList)
         }
         gameDetailViewModel.refereeListLiveData.observe(viewLifecycleOwner) { referee ->
             refereeList = referee
-            val refereeNameList = referee.map { it.secondName + " " + it.firstName }
-            updateAdapter(chiefRefereeAutoCompleteTextView, refereeNameList)
-            updateAdapter(firstRefereeAutoCompleteTextView, refereeNameList)
-            updateAdapter(secondRefereeAutoCompleteTextView, refereeNameList)
-            updateAdapter(reserveRefereeAutoCompleteTextView, refereeNameList)
+            val refereeNameList = referee.map { it.getEntityName() }
+            for (autoTextView in listOf(
+                chiefRefereeAutoCompleteTextView,
+                firstRefereeAutoCompleteTextView,
+                secondRefereeAutoCompleteTextView,
+                reserveRefereeAutoCompleteTextView
+            ))
+                updateAdapter(autoTextView, refereeNameList)
         }
 
         parentFragmentManager.setFragmentResultListener(REQUEST_DATE, viewLifecycleOwner, this)
@@ -162,186 +168,220 @@ class GameFragment : Fragment(), FragmentResultListener {
         parentFragmentManager.setFragmentResultListener(REQUEST_DELETE, viewLifecycleOwner, this)
     }
 
+    private enum class GameAttribute {
+        LEAGUE,
+        REFEREE,
+        STADIUM,
+        TEAM
+    }
+
+    private fun getNamesList(
+        attribute: GameAttribute
+    ): List<Entity> {
+        return when (attribute) {
+            GameAttribute.TEAM -> teamsList
+            GameAttribute.LEAGUE -> leaguesList
+            GameAttribute.STADIUM -> stadiumsList
+            GameAttribute.REFEREE -> refereeList
+        }
+    }
+
+    private fun checkTextForChangeGameEntity(
+        text: Editable?,
+        attribute: GameAttribute,
+        textInputLayout: TextInputLayout
+    ): Entity? {
+        val namesList = getNamesList(attribute)
+        val matches = namesList.map { it.getEntityName() }.indexOf(text.toString())
+
+        showEndButton(textInputLayout, !text.isNullOrEmpty() && matches < 0)
+
+        return if (matches > -1)
+            namesList[matches]
+        else
+            null
+    }
+
+    private fun showEndButton(layout: TextInputLayout, isShow: Boolean) {
+        layout.setEndIconActivated(isShow)
+        layout.isEndIconVisible = isShow
+    }
+
+    private fun addNewEntity(
+        text: Editable?,
+        entity: Entity,
+        textInputLayout: TextInputLayout,
+        toastMessage: String
+    ): Entity {
+        showEndButton(textInputLayout, false)
+        Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
+            .show()
+
+        return entity.setEntityName(text.toString())
+    }
+
     override fun onStart() {
         super.onStart()
 
         homeTeamAutoCompleteTextView.threshold = 1
-        updateAdapter(homeTeamAutoCompleteTextView, teamsList.map { it.name })
         homeTeamAutoCompleteTextView.doAfterTextChanged { text ->
-            if (text.isNullOrEmpty()) {
-                gameWithAttributes.homeTeam = null
-                showEndButton(homeTeamLayout, false)
-                return@doAfterTextChanged
-            }
-
-//            индекс стадиона из списка, название которого совпало с текстом
-            val indexStadiumCoincidence = teamsList.map { it.name }.indexOf(text.toString())
-            if (indexStadiumCoincidence < 0) {
-                // показываем кнопку добавелния стадиона
-                showEndButton(homeTeamLayout, true)
-            } else {
-                // скрывам кнопку добавления стадиона
-                showEndButton(homeTeamLayout, false)
-                // обновляем стадион игры
-                gameWithAttributes.homeTeam = teamsList[indexStadiumCoincidence]
-            }
+            gameWithAttributes.homeTeam =
+                checkTextForChangeGameEntity(text, GameAttribute.TEAM, homeTeamLayout) as Team?
         }
 
         homeTeamLayout.setEndIconOnClickListener {
-            val newHomeTeamName = homeTeamAutoCompleteTextView.text.toString()
-            if (newHomeTeamName == "")
-                return@setEndIconOnClickListener
-            gameWithAttributes.homeTeam = Team(name = newHomeTeamName)
-            showEndButton(homeTeamLayout, false)
-            Toast.makeText(requireContext(), "Home Team $newHomeTeamName added", Toast.LENGTH_SHORT)
-                .show()
+            gameWithAttributes.homeTeam = addNewEntity(
+                homeTeamAutoCompleteTextView.text,
+                Team(),
+                homeTeamLayout,
+                getString(
+                    R.string.team_add_message,
+                    homeTeamAutoCompleteTextView.text.toString()
+                )
+            ) as Team
         }
 
         guestTeamAutoCompleteTextView.threshold = 1
-        updateAdapter(guestTeamAutoCompleteTextView, teamsList.map { it.name })
         guestTeamAutoCompleteTextView.doAfterTextChanged { text ->
-            if (text.isNullOrEmpty()) {
-                gameWithAttributes.guestTeam = null
-                showEndButton(guestTeamLayout, false)
-                return@doAfterTextChanged
-            }
-
-//            индекс стадиона из списка, название которого совпало с текстом
-            val indexStadiumCoincidence = teamsList.map { it.name }.indexOf(text.toString())
-            if (indexStadiumCoincidence < 0) {
-                // показываем кнопку добавелния стадиона
-                showEndButton(guestTeamLayout, true)
-            } else {
-                // скрывам кнопку добавления стадиона
-                showEndButton(guestTeamLayout, false)
-                // обновляем стадион игры
-                gameWithAttributes.guestTeam = teamsList[indexStadiumCoincidence]
-            }
+            gameWithAttributes.guestTeam =
+                checkTextForChangeGameEntity(text, GameAttribute.TEAM, guestTeamLayout) as Team?
         }
-
         guestTeamLayout.setEndIconOnClickListener {
-            val newGuestTeamName = guestTeamAutoCompleteTextView.text.toString()
-            if (newGuestTeamName == "")
-                return@setEndIconOnClickListener
-            gameWithAttributes.guestTeam = Team(name = newGuestTeamName)
-            showEndButton(guestTeamLayout, false)
-            Toast.makeText(requireContext(), "Guest Team $newGuestTeamName added", Toast.LENGTH_SHORT)
-                .show()
+            gameWithAttributes.guestTeam = addNewEntity(
+                guestTeamAutoCompleteTextView.text,
+                Team(),
+                guestTeamLayout,
+                getString(
+                    R.string.team_add_message,
+                    guestTeamAutoCompleteTextView.text.toString()
+                )
+            ) as Team
         }
 
         stadiumAutoCompleteTextView.threshold = 1
-        updateAdapter(stadiumAutoCompleteTextView, stadiumsList.map { it.name })
         stadiumAutoCompleteTextView.doAfterTextChanged { text ->
-            if (text.isNullOrEmpty()) {
-                gameWithAttributes.stadium = null
-                showEndButton(stadiumLayout, false)
-                return@doAfterTextChanged
-            }
-
-//            индекс стадиона из списка, название которого совпало с текстом
-            val indexStadiumCoincidence = stadiumsList.map { it.name }.indexOf(text.toString())
-            if (indexStadiumCoincidence < 0) {
-                // показываем кнопку добавелния стадиона
-                showEndButton(stadiumLayout, true)
-            } else {
-                // скрывам кнопку добавления стадиона
-                showEndButton(stadiumLayout, false)
-                // обновляем стадион игры
-                gameWithAttributes.stadium = stadiumsList[indexStadiumCoincidence]
-            }
+            gameWithAttributes.stadium =
+                checkTextForChangeGameEntity(text, GameAttribute.STADIUM, stadiumLayout) as Stadium?
         }
 
         stadiumLayout.setEndIconOnClickListener {
-            val newStadiumName = stadiumAutoCompleteTextView.text.toString()
-            if (newStadiumName == "")
-                return@setEndIconOnClickListener
-            gameWithAttributes.stadium = Stadium(name = newStadiumName)
-            showEndButton(stadiumLayout, false)
-            Toast.makeText(requireContext(), "Stadium $newStadiumName added", Toast.LENGTH_SHORT)
-                .show()
+            gameWithAttributes.stadium = addNewEntity(
+                stadiumAutoCompleteTextView.text,
+                Stadium(),
+                stadiumLayout,
+                getString(
+                    R.string.stadium_add_message,
+                    stadiumAutoCompleteTextView.text.toString()
+                )
+            ) as Stadium
         }
 
         leagueAutoCompleteTextView.threshold = 1
-        updateAdapter(leagueAutoCompleteTextView, leaguesList.map { it.name })
         leagueAutoCompleteTextView.doAfterTextChanged { text ->
-            if (text.isNullOrEmpty()) {
-                gameWithAttributes.league = null
-                showEndButton(leagueLayout, false)
-                return@doAfterTextChanged
-            }
-
-//            индекс стадиона из списка, название которого совпало с текстом
-            val indexStadiumCoincidence = leaguesList.map { it.name }.indexOf(text.toString())
-            if (indexStadiumCoincidence < 0) {
-                // показываем кнопку добавелния стадиона
-                showEndButton(leagueLayout, true)
-            } else {
-                // скрывам кнопку добавления стадиона
-                showEndButton(leagueLayout, false)
-                // обновляем стадион игры
-                gameWithAttributes.league = leaguesList[indexStadiumCoincidence]
-            }
+            gameWithAttributes.league =
+                checkTextForChangeGameEntity(text, GameAttribute.LEAGUE, leagueLayout) as League?
         }
 
         leagueLayout.setEndIconOnClickListener {
-            val newLeagueName = leagueAutoCompleteTextView.text.toString()
-            if (newLeagueName == "")
-                return@setEndIconOnClickListener
-            gameWithAttributes.league = League(name = newLeagueName)
-            showEndButton(leagueLayout, false)
-            Toast.makeText(requireContext(), "League $newLeagueName added", Toast.LENGTH_SHORT)
-                .show()
+            gameWithAttributes.league = addNewEntity(
+                leagueAutoCompleteTextView.text,
+                League(),
+                leagueLayout,
+                getString(
+                    R.string.league_add_message,
+                    leagueAutoCompleteTextView.text.toString()
+                )
+            ) as League
         }
 
         chiefRefereeAutoCompleteTextView.threshold = 1
-        updateAdapter(
-            chiefRefereeAutoCompleteTextView,
-            refereeList.map { it.secondName + " " + it.firstName })
         chiefRefereeAutoCompleteTextView.doAfterTextChanged { text ->
-            if (text.isNullOrEmpty()) {
-                gameWithAttributes.chiefReferee = null
-                showEndButton(chiefRefereeLayout, false)
-                return@doAfterTextChanged
-            }
-
-//            индекс стадиона из списка, название которого совпало с текстом
-            val indexStadiumCoincidence =
-                refereeList.map { it.secondName + " " + it.firstName }.indexOf(text.toString())
-            if (indexStadiumCoincidence < 0) {
-                // показываем кнопку добавелния стадиона
-                showEndButton(chiefRefereeLayout, true)
-            } else {
-                // скрывам кнопку добавления стадиона
-                showEndButton(chiefRefereeLayout, false)
-                // обновляем стадион игры
-                gameWithAttributes.chiefReferee = refereeList[indexStadiumCoincidence]
-            }
+            gameWithAttributes.chiefReferee =
+                checkTextForChangeGameEntity(
+                    text,
+                    GameAttribute.REFEREE,
+                    chiefRefereeLayout
+                ) as Referee?
         }
 
         chiefRefereeLayout.setEndIconOnClickListener {
-            val newRefereeName = chiefRefereeAutoCompleteTextView.text.toString().split(" ")
-            val firstName = newRefereeName[0]
-            var secondName = ""
-            var thirdName = ""
-            if (firstName == "")
-                return@setEndIconOnClickListener
-            if (newRefereeName.size > 1)
-                secondName = newRefereeName[1]
-            if (newRefereeName.size > 2)
-                thirdName = newRefereeName[2]
-            gameWithAttributes.chiefReferee = Referee(
-                firstName = firstName,
-                secondName = secondName,
-                thirdName = thirdName
-            )
-            showEndButton(chiefRefereeLayout, false)
-            Toast.makeText(
-                requireContext(),
-                "Referee $firstName $secondName added",
-                Toast.LENGTH_SHORT
-            )
-                .show()
+            gameWithAttributes.chiefReferee = addNewEntity(
+                chiefRefereeAutoCompleteTextView.text,
+                Referee(),
+                chiefRefereeLayout,
+                getString(
+                    R.string.referee_add_message,
+                    chiefRefereeAutoCompleteTextView.text.toString()
+                )
+            ) as Referee
         }
+
+        firstRefereeAutoCompleteTextView.threshold = 1
+        firstRefereeAutoCompleteTextView.doAfterTextChanged { text ->
+            gameWithAttributes.firstReferee =
+                checkTextForChangeGameEntity(
+                    text,
+                    GameAttribute.REFEREE,
+                    firstRefereeLayout
+                ) as Referee?
+        }
+
+        firstRefereeLayout.setEndIconOnClickListener {
+            gameWithAttributes.firstReferee = addNewEntity(
+                firstRefereeAutoCompleteTextView.text,
+                Referee(),
+                firstRefereeLayout,
+                getString(
+                    R.string.referee_add_message,
+                    firstRefereeAutoCompleteTextView.text.toString()
+                )
+            ) as Referee
+        }
+
+        secondRefereeAutoCompleteTextView.threshold = 1
+        secondRefereeAutoCompleteTextView.doAfterTextChanged { text ->
+            gameWithAttributes.secondReferee =
+                checkTextForChangeGameEntity(
+                    text,
+                    GameAttribute.REFEREE,
+                    secondRefereeLayout
+                ) as Referee?
+        }
+
+        secondRefereeLayout.setEndIconOnClickListener {
+            gameWithAttributes.secondReferee = addNewEntity(
+                secondRefereeAutoCompleteTextView.text,
+                Referee(),
+                secondRefereeLayout,
+                getString(
+                    R.string.referee_add_message,
+                    secondRefereeAutoCompleteTextView.text.toString()
+                )
+            ) as Referee
+        }
+
+        reserveRefereeAutoCompleteTextView.threshold = 1
+        reserveRefereeAutoCompleteTextView.doAfterTextChanged { text ->
+            gameWithAttributes.reserveReferee =
+                checkTextForChangeGameEntity(
+                    text,
+                    GameAttribute.REFEREE,
+                    reserveRefereeLayout
+                ) as Referee?
+        }
+
+        reserveRefereeLayout.setEndIconOnClickListener {
+            gameWithAttributes.reserveReferee = addNewEntity(
+                reserveRefereeAutoCompleteTextView.text,
+                Referee(),
+                reserveRefereeLayout,
+                getString(
+                    R.string.referee_add_message,
+                    reserveRefereeAutoCompleteTextView.text.toString()
+                )
+            ) as Referee
+        }
+
 
 
         gamePaidCheckBox.apply {
@@ -372,11 +412,6 @@ class GameFragment : Fragment(), FragmentResultListener {
                 .show(parentFragmentManager, REQUEST_DELETE)
         }
     }
-    private fun showEndButton(layout: TextInputLayout, isShow: Boolean) {
-        Log.d(TAG, "showEndButton $isShow")
-        layout.setEndIconActivated(isShow)
-        layout.isEndIconVisible = isShow
-    }
 
     private fun updateAdapter(textView: AutoCompleteTextView, list: List<String>) {
         textView.setAdapter(
@@ -395,13 +430,16 @@ class GameFragment : Fragment(), FragmentResultListener {
 
     private fun updateUI() {
         Log.d(TAG, "_________ GameFragment updateUI __________ $gameWithAttributes")
-        homeTeamAutoCompleteTextView.setText(gameWithAttributes.homeTeam?.name)
-        guestTeamAutoCompleteTextView.setText(gameWithAttributes.guestTeam?.name)
-        stadiumAutoCompleteTextView.setText(gameWithAttributes.stadium?.name)
-        leagueAutoCompleteTextView.setText(gameWithAttributes.league?.name)
+        homeTeamAutoCompleteTextView.setText(gameWithAttributes.homeTeam?.getEntityName())
+        guestTeamAutoCompleteTextView.setText(gameWithAttributes.guestTeam?.getEntityName())
+        stadiumAutoCompleteTextView.setText(gameWithAttributes.stadium?.getEntityName())
+        leagueAutoCompleteTextView.setText(gameWithAttributes.league?.getEntityName())
         dateButton.text = DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
         timeButton.text = DateFormat.format(TIME_FORMAT, gameWithAttributes.game.date).toString()
-        chiefRefereeAutoCompleteTextView.setText(gameWithAttributes.chiefReferee?.secondName + " " + gameWithAttributes.chiefReferee?.firstName)
+        chiefRefereeAutoCompleteTextView.setText(gameWithAttributes.chiefReferee?.getEntityName())
+        firstRefereeAutoCompleteTextView.setText(gameWithAttributes.firstReferee?.getEntityName())
+        secondRefereeAutoCompleteTextView.setText(gameWithAttributes.secondReferee?.getEntityName())
+        reserveRefereeAutoCompleteTextView.setText(gameWithAttributes.reserveReferee?.getEntityName())
         gamePaidCheckBox.apply {
             isChecked = gameWithAttributes.game.isPaid
             jumpDrawablesToCurrentState()

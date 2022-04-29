@@ -13,4 +13,8 @@ data class League(
     override fun getEntityName(): String {
         return name
     }
+
+    override fun setEntityName(text: String): League {
+        return this.apply { name = text.trim() }
+    }
 }

@@ -16,6 +16,12 @@ class GameWithAttributes(
     var guestTeam: Team? = null,
     @Relation(parentColumn = "chiefRefereeId", entityColumn = "id")
     var chiefReferee: Referee? = null,
+    @Relation(parentColumn = "firstRefereeId", entityColumn = "id")
+    var firstReferee: Referee? = null,
+    @Relation(parentColumn = "secondRefereeId", entityColumn = "id")
+    var secondReferee: Referee? = null,
+    @Relation(parentColumn = "reserveRefereeId", entityColumn = "id")
+    var reserveReferee: Referee? = null,
 
 ) {
     override fun toString(): String {
@@ -23,6 +29,8 @@ class GameWithAttributes(
                 "\nStadium name: ${stadium?.name}, id is: ${stadium?.id}" +
                 "\nLeague name: ${league?.name}, id is: ${league?.id}" +
                 "\nTeamHome name: ${homeTeam?.name}, id is: ${homeTeam?.id}" +
-                "\nTeamHome name: ${guestTeam?.name}, id is: ${guestTeam?.id}"
+                "\nTeamGuest name: ${guestTeam?.name}, id is: ${guestTeam?.id}" +
+                "\nChiefReferee name: ${chiefReferee?.secondName}, id is: ${chiefReferee?.id}" +
+                "\nFirstReferee name: ${firstReferee?.secondName}, id is: ${firstReferee?.id}"
     }
 }

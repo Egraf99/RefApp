@@ -23,4 +23,8 @@ data class Game(
     override fun getEntityName(): String {
         return "$id $homeTeamId $guestTeamId $stadiumId $leagueId"
     }
+
+    override fun setEntityName(text: String): Game {
+        return this
+    }
 }

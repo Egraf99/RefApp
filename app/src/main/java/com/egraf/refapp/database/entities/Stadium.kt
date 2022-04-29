@@ -13,4 +13,8 @@ data class Stadium(
     override fun getEntityName(): String {
         return name
     }
+
+    override fun setEntityName(text: String): Stadium {
+        return this.apply { name = text.trim() }
+    }
 }
