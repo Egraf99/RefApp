@@ -19,7 +19,7 @@ import com.egraf.refapp.database.entities.GameWithAttributes
 import java.util.*
 
 private const val TAG = "GameListFragment"
-private const val DATE_FORMAT = "EEE dd.MM.yyyy HH:mm"
+private const val DATE_FORMAT = "dd.MM.yyyy (EEE) HH:mm"
 
 class GameListFragment : Fragment() {
     interface Callbacks {
@@ -116,7 +116,7 @@ class GameListFragment : Fragment() {
         val guestTeamTextView: TextView = itemView.findViewById(R.id.team_guest_textview)
         val stadiumTextView: TextView = itemView.findViewById(R.id.stadium_textview)
         val leagueTextView: TextView = itemView.findViewById(R.id.league_textview)
-        val dateButton: Button = itemView.findViewById(R.id.date)
+        val dateTextView: TextView = itemView.findViewById(R.id.date_textview)
         val imgGamePaid: ImageView = itemView.findViewById(R.id.img_check_isPaid)
         val imgGameDone: ImageView = itemView.findViewById(R.id.img_check_gamePass)
 
@@ -131,9 +131,8 @@ class GameListFragment : Fragment() {
             guestTeamTextView.text = gameWithAttributes.guestTeam?.name
             stadiumTextView.text = gameWithAttributes.stadium?.name
             leagueTextView.text = gameWithAttributes.league?.name
-            dateButton.text =
+            dateTextView.text =
                 DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
-            dateButton.isEnabled = false
 
             val resGamePaid =
                 if (gameWithAttributes.game.isPaid) R.drawable.ic_paiment_done else R.drawable.ic_paiment_wait
