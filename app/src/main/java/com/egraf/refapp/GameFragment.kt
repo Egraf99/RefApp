@@ -2,10 +2,9 @@ package com.egraf.refapp
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextWatcher
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,8 +18,8 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.database.entities.*
 import com.google.android.material.textfield.TextInputLayout
+import java.lang.IllegalStateException
 import java.util.*
-import kotlin.reflect.KClass
 
 private const val TAG = "GameFragment"
 
@@ -172,236 +171,235 @@ class GameFragment : Fragment(), FragmentResultListener {
         parentFragmentManager.setFragmentResultListener(REQUEST_DELETE, viewLifecycleOwner, this)
     }
 
+    private enum class TextEditType {
+        DEFAULT,
+        INFO,
+        ADD
+    }
+
     private enum class GameAttribute {
         LEAGUE,
-        REFEREE,
         STADIUM,
-        TEAM
+        HOME_TEAM,
+        GUEST_TEAM,
+        CHIEF_REFEREE,
+        FIRST_REFEREE,
+        SECOND_REFEREE,
+        RESERVE_REFEREE,
     }
 
-    private fun getNamesList(
-        attribute: GameAttribute
-    ): List<Entity> {
-        return when (attribute) {
-            GameAttribute.TEAM -> teamsList
-            GameAttribute.LEAGUE -> leaguesList
-            GameAttribute.STADIUM -> stadiumsList
-            GameAttribute.REFEREE -> refereeList
+    private inner class TextInputLayoutWatcher(
+        val textInputLayout: TextInputLayout,
+        val type: GameAttribute,
+        var text: Editable? = null
+    ) : TextWatcher {
+
+        fun addNewEntity(text: Editable?) = run {
+            when (type) {
+                GameAttribute.HOME_TEAM -> {
+                    val team = Team(name = text.toString().trim())
+                    gameWithAttributes.homeTeam = team
+                }
+
+                GameAttribute.GUEST_TEAM -> {
+                    val team = Team(name = text.toString().trim())
+                    gameWithAttributes.guestTeam = team
+                }
+                GameAttribute.LEAGUE -> {
+                    val league = League(name = text.toString().trim())
+                    gameWithAttributes.league = league
+                }
+                GameAttribute.STADIUM -> {
+                    val stadium = Stadium(name = text.toString().trim())
+                    gameWithAttributes.stadium = stadium
+                }
+                else -> {
+                    val name = text.toString().split(" ").toMutableList()
+                    if (name.size == 1) {
+//                        есть только одна фамилия, имя и отчество делаем пустыми
+                        name.add("")
+                        name.add("")
+                    } else if (name.size == 2) {
+//                        есть имя и фамилия, отчество делаем пустым
+                        name.add("")
+                    }
+                    val referee =
+                        Referee(firstName = name[1], secondName = name[0], thirdName = name[2])
+                    when (type) {
+                        GameAttribute.CHIEF_REFEREE -> {
+                            gameWithAttributes.chiefReferee = referee
+                        }
+                        GameAttribute.FIRST_REFEREE -> {
+                            gameWithAttributes.firstReferee = referee
+                        }
+                        GameAttribute.SECOND_REFEREE -> {
+                            gameWithAttributes.secondReferee = referee
+                        }
+                        GameAttribute.RESERVE_REFEREE -> {
+                            gameWithAttributes.reserveReferee = referee
+                        }
+                        else -> throw IllegalStateException("Unknown type $type")
+                    }
+                }
+            }
+        }
+
+
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        }
+
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        }
+
+        override fun afterTextChanged(text: Editable?) {
+            this.text = text
+            val namesList = getNamesList(type)
+            val matches = namesList.map { it.getEntityName() }.indexOf(text.toString())
+            when {
+                text.isNullOrEmpty() -> {
+//                пустой текст - убираем иконку взаимодействия
+                    setEndIcon(TextEditType.DEFAULT)
+                }
+                matches == -1 -> {
+//                нет совпадений по тексту - показывем иконку добавления Entity
+                    setEndIcon(TextEditType.ADD)
+                }
+                else -> {
+//                есть совпдение по тексту - показываем иконку info
+                    setEndIcon(TextEditType.INFO)
+                }
+            }
+        }
+
+        var addedName = fun(text: Editable?): List<String> {
+            return listOf(text.toString())
+        }
+
+        private fun getNamesList(
+            attribute: GameAttribute
+        ): List<Entity> {
+            return when (attribute) {
+                GameAttribute.HOME_TEAM, GameAttribute.GUEST_TEAM -> teamsList
+                GameAttribute.LEAGUE -> leaguesList
+                GameAttribute.STADIUM -> stadiumsList
+                GameAttribute.CHIEF_REFEREE, GameAttribute.FIRST_REFEREE,
+                GameAttribute.SECOND_REFEREE, GameAttribute.RESERVE_REFEREE -> refereeList
+            }
+        }
+
+        private fun setEndIcon(
+            type: TextEditType,
+        ) {
+            when (type) {
+                TextEditType.DEFAULT -> {
+                    textInputLayout.apply {
+                        isEndIconVisible = false
+                        setEndIconOnClickListener(null)
+                    }
+                }
+                TextEditType.INFO -> {
+                    textInputLayout.apply {
+                        isEndIconVisible = true
+                        setEndIconDrawable(R.drawable.ic_info)
+                        setEndIconTintList(
+                            ContextCompat.getColorStateList(
+                                requireContext(),
+                                com.google.android.material.R.color.design_default_color_primary
+                            )
+                        )
+                        setEndIconOnClickListener {
+                            Toast.makeText(requireContext(), "Info Clicked", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+                }
+                TextEditType.ADD -> {
+                    textInputLayout.apply {
+                        isEndIconVisible = true
+                        setEndIconDrawable(R.drawable.ic_add_outline)
+                        setEndIconTintList(
+                            ContextCompat.getColorStateList(
+                                requireContext(),
+                                R.color.green
+                            )
+                        )
+                        setEndIconOnClickListener {
+                            addNewEntity(text)
+                            Toast.makeText(requireContext(), "Add click", Toast.LENGTH_SHORT).show()
+                            setEndIcon(TextEditType.INFO)
+                        }
+                    }
+                }
+            }
         }
     }
 
-    private fun checkTextForChangeGameEntity(
-        text: Editable?,
-        attribute: GameAttribute,
-        textInputLayout: TextInputLayout
-    ): Entity? {
-        val namesList = getNamesList(attribute)
-        val matches = namesList.map { it.getEntityName() }.indexOf(text.toString())
-
-        return when {
-            text.isNullOrEmpty() -> {
-                textInputLayout.isEndIconVisible = false
-                textInputLayout.setEndIconOnClickListener(null)
-                null
-            }
-            matches > 1 -> {
-                textInputLayout.setEndIconDrawable(R.drawable.ic_info)
-                textInputLayout.setEndIconTintList(
-                    ContextCompat.getColorStateList(
-                        requireContext(),
-                        com.google.android.material.R.color.design_default_color_primary
-                    )
-                )
-                namesList[matches]
-            }
-            else -> {
-                textInputLayout.setEndIconDrawable(R.drawable.ic_add_outline)
-                textInputLayout.setEndIconTintList(
-                    ContextCompat.getColorStateList(
-                        requireContext(),
-                        R.color.green
-                    )
-                )
-                null
-            }
-        }
-    }
-
-    private fun addNewEntity(
-        text: Editable?,
-        entity: Entity,
-        textInputLayout: TextInputLayout,
-        toastMessage: String
-    ): Entity {
-        textInputLayout.isEndIconVisible = false
-        Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
-            .show()
-
-        return entity.setEntityName(text.toString())
-    }
 
     override fun onStart() {
         super.onStart()
         homeTeamAutoCompleteTextView.threshold = 1
-        homeTeamAutoCompleteTextView.doAfterTextChanged { text ->
-            gameWithAttributes.homeTeam =
-                checkTextForChangeGameEntity(text, GameAttribute.TEAM, homeTeamLayout) as Team?
-        }
-
-        homeTeamLayout.setEndIconOnClickListener {
-            gameWithAttributes.homeTeam = addNewEntity(
-                homeTeamAutoCompleteTextView.text,
-                Team(),
+        homeTeamAutoCompleteTextView.addTextChangedListener(
+            TextInputLayoutWatcher(
                 homeTeamLayout,
-                getString(
-                    R.string.team_add_message,
-                    homeTeamAutoCompleteTextView.text.toString()
-                )
-            ) as Team
-        }
+                GameAttribute.HOME_TEAM
+            )
+        )
 
         guestTeamAutoCompleteTextView.threshold = 1
-        guestTeamAutoCompleteTextView.doAfterTextChanged { text ->
-            gameWithAttributes.guestTeam =
-                checkTextForChangeGameEntity(text, GameAttribute.TEAM, guestTeamLayout) as Team?
-        }
-        guestTeamLayout.setEndIconOnClickListener {
-            gameWithAttributes.guestTeam = addNewEntity(
-                guestTeamAutoCompleteTextView.text,
-                Team(),
+        guestTeamAutoCompleteTextView.addTextChangedListener(
+            TextInputLayoutWatcher(
                 guestTeamLayout,
-                getString(
-                    R.string.team_add_message,
-                    guestTeamAutoCompleteTextView.text.toString()
-                )
-            ) as Team
-        }
+                GameAttribute.GUEST_TEAM
+            )
+        )
 
         stadiumAutoCompleteTextView.threshold = 1
-        stadiumAutoCompleteTextView.doAfterTextChanged { text ->
-            gameWithAttributes.stadium =
-                checkTextForChangeGameEntity(text, GameAttribute.STADIUM, stadiumLayout) as Stadium?
-        }
-
-        stadiumLayout.setEndIconOnClickListener {
-            gameWithAttributes.stadium = addNewEntity(
-                stadiumAutoCompleteTextView.text,
-                Stadium(),
+        stadiumAutoCompleteTextView.addTextChangedListener(
+            TextInputLayoutWatcher(
                 stadiumLayout,
-                getString(
-                    R.string.stadium_add_message,
-                    stadiumAutoCompleteTextView.text.toString()
-                )
-            ) as Stadium
-        }
+                GameAttribute.STADIUM
+            )
+        )
 
         leagueAutoCompleteTextView.threshold = 1
-        leagueAutoCompleteTextView.doAfterTextChanged { text ->
-            gameWithAttributes.league =
-                checkTextForChangeGameEntity(text, GameAttribute.LEAGUE, leagueLayout) as League?
-        }
-
-        leagueLayout.setEndIconOnClickListener {
-            gameWithAttributes.league = addNewEntity(
-                leagueAutoCompleteTextView.text,
-                League(),
+        leagueAutoCompleteTextView.addTextChangedListener(
+            TextInputLayoutWatcher(
                 leagueLayout,
-                getString(
-                    R.string.league_add_message,
-                    leagueAutoCompleteTextView.text.toString()
-                )
-            ) as League
-        }
+                GameAttribute.LEAGUE
+            )
+        )
 
         chiefRefereeAutoCompleteTextView.threshold = 1
-        chiefRefereeAutoCompleteTextView.doAfterTextChanged { text ->
-            gameWithAttributes.chiefReferee =
-                checkTextForChangeGameEntity(
-                    text,
-                    GameAttribute.REFEREE,
-                    chiefRefereeLayout
-                ) as Referee?
-        }
-
-        chiefRefereeLayout.setEndIconOnClickListener {
-            gameWithAttributes.chiefReferee = addNewEntity(
-                chiefRefereeAutoCompleteTextView.text,
-                Referee(),
+        chiefRefereeAutoCompleteTextView.addTextChangedListener(
+            TextInputLayoutWatcher(
                 chiefRefereeLayout,
-                getString(
-                    R.string.referee_add_message,
-                    chiefRefereeAutoCompleteTextView.text.toString()
-                )
-            ) as Referee
-        }
+                GameAttribute.CHIEF_REFEREE
+            )
+        )
 
         firstRefereeAutoCompleteTextView.threshold = 1
-        firstRefereeAutoCompleteTextView.doAfterTextChanged { text ->
-            gameWithAttributes.firstReferee =
-                checkTextForChangeGameEntity(
-                    text,
-                    GameAttribute.REFEREE,
-                    firstRefereeLayout
-                ) as Referee?
-        }
-
-        firstRefereeLayout.setEndIconOnClickListener {
-            gameWithAttributes.firstReferee = addNewEntity(
-                firstRefereeAutoCompleteTextView.text,
-                Referee(),
+        firstRefereeAutoCompleteTextView.addTextChangedListener(
+            TextInputLayoutWatcher(
                 firstRefereeLayout,
-                getString(
-                    R.string.referee_add_message,
-                    firstRefereeAutoCompleteTextView.text.toString()
-                )
-            ) as Referee
-        }
+                GameAttribute.FIRST_REFEREE
+            )
+        )
 
         secondRefereeAutoCompleteTextView.threshold = 1
-        secondRefereeAutoCompleteTextView.doAfterTextChanged { text ->
-            gameWithAttributes.secondReferee =
-                checkTextForChangeGameEntity(
-                    text,
-                    GameAttribute.REFEREE,
-                    secondRefereeLayout
-                ) as Referee?
-        }
-
-        secondRefereeLayout.setEndIconOnClickListener {
-            gameWithAttributes.secondReferee = addNewEntity(
-                secondRefereeAutoCompleteTextView.text,
-                Referee(),
+        secondRefereeAutoCompleteTextView.addTextChangedListener(
+            TextInputLayoutWatcher(
                 secondRefereeLayout,
-                getString(
-                    R.string.referee_add_message,
-                    secondRefereeAutoCompleteTextView.text.toString()
-                )
-            ) as Referee
-        }
+                GameAttribute.SECOND_REFEREE
+            )
+        )
 
         reserveRefereeAutoCompleteTextView.threshold = 1
-        reserveRefereeAutoCompleteTextView.doAfterTextChanged { text ->
-            gameWithAttributes.reserveReferee =
-                checkTextForChangeGameEntity(
-                    text,
-                    GameAttribute.REFEREE,
-                    reserveRefereeLayout
-                ) as Referee?
-        }
-
-        reserveRefereeLayout.setEndIconOnClickListener {
-            gameWithAttributes.reserveReferee = addNewEntity(
-                reserveRefereeAutoCompleteTextView.text,
-                Referee(),
+        reserveRefereeAutoCompleteTextView.addTextChangedListener(
+            TextInputLayoutWatcher(
                 reserveRefereeLayout,
-                getString(
-                    R.string.referee_add_message,
-                    reserveRefereeAutoCompleteTextView.text.toString()
-                )
-            ) as Referee
-        }
-
-
+                GameAttribute.RESERVE_REFEREE
+            )
+        )
 
         gamePaidCheckBox.apply {
             setOnCheckedChangeListener { _, isPaid -> gameWithAttributes.game.isPaid = isPaid }

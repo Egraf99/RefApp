@@ -93,6 +93,21 @@ class GameDetailViewModel : ViewModel() {
 //        обновляем игру
         gameRepository.updateGame(gameWithAttributes.game)
     }
+    fun saveStadium(stadium: Stadium) {
+        gameRepository.addStadium(stadium)
+    }
+
+    fun saveLeague(league: League) {
+        gameRepository.addLeague(league)
+    }
+
+    fun saveTeam(team: Team) {
+        gameRepository.addTeam(team)
+    }
+
+    fun saveReferee(referee: Referee) {
+        gameRepository.addReferee(referee)
+    }
 
     fun deleteGame(game: Game) {
         gameRepository.deleteGame(game)

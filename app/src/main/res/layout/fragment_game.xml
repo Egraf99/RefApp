@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:hint="@string/home_team"
+        app:endIconMode="custom"
         app:layout_constraintEnd_toStartOf="@id/team_guest_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -35,6 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:hint="@string/guest_team"
+        app:endIconMode="custom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/team_home_layout"
         app:layout_constraintTop_toTopOf="parent">
@@ -81,6 +83,7 @@
         android:hint="@string/league"
         app:startIconDrawable="@drawable/ic_football_ball"
         app:startIconTint="@color/design_default_color_primary"
+        app:endIconMode="custom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/stadium_layout">
@@ -103,6 +106,7 @@
         android:hint="@string/chief_referee"
         app:startIconDrawable="@drawable/ic_whistle"
         app:startIconTint="@color/design_default_color_primary"
+        app:endIconMode="custom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/league_layout">
@@ -125,6 +129,7 @@
         android:hint="@string/first_assistant"
         app:startIconDrawable="@drawable/ic_flag"
         app:startIconTint="@color/design_default_color_primary"
+        app:endIconMode="custom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/chief_referee_layout">
@@ -147,6 +152,7 @@
         android:hint="@string/second_assistant"
         app:startIconDrawable="@drawable/ic_flag"
         app:startIconTint="@color/design_default_color_primary"
+        app:endIconMode="custom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/first_referee_layout">
@@ -169,6 +175,7 @@
         android:hint="@string/reserve_referee"
         app:startIconDrawable="@drawable/ic_scoreboard"
         app:startIconTint="@color/design_default_color_primary"
+        app:endIconMode="custom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/second_referee_layout">
