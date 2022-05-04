@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:padding="5dp"
-    android:background="@drawable/back_game_item">
+    android:background="@drawable/background_game_item">
 
     <TextView
         android:id="@+id/team_home_textview"
