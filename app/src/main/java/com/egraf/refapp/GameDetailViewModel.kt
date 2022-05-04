@@ -93,6 +93,7 @@ class GameDetailViewModel : ViewModel() {
 //        обновляем игру
         gameRepository.updateGame(gameWithAttributes.game)
     }
+
     fun saveStadium(stadium: Stadium) {
         gameRepository.addStadium(stadium)
     }

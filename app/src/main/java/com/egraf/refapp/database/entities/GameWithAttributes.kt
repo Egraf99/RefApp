@@ -31,6 +31,8 @@ class GameWithAttributes(
                 "\nTeamHome name: ${homeTeam?.name}, id is: ${homeTeam?.id}" +
                 "\nTeamGuest name: ${guestTeam?.name}, id is: ${guestTeam?.id}" +
                 "\nChiefReferee name: ${chiefReferee?.secondName}, id is: ${chiefReferee?.id}" +
-                "\nFirstReferee name: ${firstReferee?.secondName}, id is: ${firstReferee?.id}"
+                "\nFirstReferee name: ${firstReferee?.secondName}, id is: ${firstReferee?.id}" +
+                "\nisPaid: ${game.isPaid}" +
+                "\nisPassed: ${game.isPassed}"
     }
 }

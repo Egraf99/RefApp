@@ -12,13 +12,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.database.entities.*
 import com.google.android.material.textfield.TextInputLayout
-import java.lang.IllegalStateException
 import java.util.*
 
 private const val TAG = "GameFragment"
@@ -194,57 +192,6 @@ class GameFragment : Fragment(), FragmentResultListener {
         var text: Editable? = null
     ) : TextWatcher {
 
-        fun addNewEntity(text: Editable?) = run {
-            when (type) {
-                GameAttribute.HOME_TEAM -> {
-                    val team = Team(name = text.toString().trim())
-                    gameWithAttributes.homeTeam = team
-                }
-
-                GameAttribute.GUEST_TEAM -> {
-                    val team = Team(name = text.toString().trim())
-                    gameWithAttributes.guestTeam = team
-                }
-                GameAttribute.LEAGUE -> {
-                    val league = League(name = text.toString().trim())
-                    gameWithAttributes.league = league
-                }
-                GameAttribute.STADIUM -> {
-                    val stadium = Stadium(name = text.toString().trim())
-                    gameWithAttributes.stadium = stadium
-                }
-                else -> {
-                    val name = text.toString().split(" ").toMutableList()
-                    if (name.size == 1) {
-//                        есть только одна фамилия, имя и отчество делаем пустыми
-                        name.add("")
-                        name.add("")
-                    } else if (name.size == 2) {
-//                        есть имя и фамилия, отчество делаем пустым
-                        name.add("")
-                    }
-                    val referee =
-                        Referee(firstName = name[1], secondName = name[0], thirdName = name[2])
-                    when (type) {
-                        GameAttribute.CHIEF_REFEREE -> {
-                            gameWithAttributes.chiefReferee = referee
-                        }
-                        GameAttribute.FIRST_REFEREE -> {
-                            gameWithAttributes.firstReferee = referee
-                        }
-                        GameAttribute.SECOND_REFEREE -> {
-                            gameWithAttributes.secondReferee = referee
-                        }
-                        GameAttribute.RESERVE_REFEREE -> {
-                            gameWithAttributes.reserveReferee = referee
-                        }
-                        else -> throw IllegalStateException("Unknown type $type")
-                    }
-                }
-            }
-        }
-
-
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
         }
 
@@ -253,8 +200,7 @@ class GameFragment : Fragment(), FragmentResultListener {
 
         override fun afterTextChanged(text: Editable?) {
             this.text = text
-            val namesList = getNamesList(type)
-            val matches = namesList.map { it.getEntityName() }.indexOf(text.toString())
+            val matches = getNamesList().map { it.getEntityName() }.indexOf(text.toString())
             when {
                 text.isNullOrEmpty() -> {
 //                пустой текст - убираем иконку взаимодействия
@@ -271,22 +217,6 @@ class GameFragment : Fragment(), FragmentResultListener {
             }
         }
 
-        var addedName = fun(text: Editable?): List<String> {
-            return listOf(text.toString())
-        }
-
-        private fun getNamesList(
-            attribute: GameAttribute
-        ): List<Entity> {
-            return when (attribute) {
-                GameAttribute.HOME_TEAM, GameAttribute.GUEST_TEAM -> teamsList
-                GameAttribute.LEAGUE -> leaguesList
-                GameAttribute.STADIUM -> stadiumsList
-                GameAttribute.CHIEF_REFEREE, GameAttribute.FIRST_REFEREE,
-                GameAttribute.SECOND_REFEREE, GameAttribute.RESERVE_REFEREE -> refereeList
-            }
-        }
-
         private fun setEndIcon(
             type: TextEditType,
         ) {
@@ -295,22 +225,6 @@ class GameFragment : Fragment(), FragmentResultListener {
                     textInputLayout.apply {
                         isEndIconVisible = false
                         setEndIconOnClickListener(null)
-                    }
-                }
-                TextEditType.INFO -> {
-                    textInputLayout.apply {
-                        isEndIconVisible = true
-                        setEndIconDrawable(R.drawable.ic_info)
-                        setEndIconTintList(
-                            ContextCompat.getColorStateList(
-                                requireContext(),
-                                com.google.android.material.R.color.design_default_color_primary
-                            )
-                        )
-                        setEndIconOnClickListener {
-                            Toast.makeText(requireContext(), "Info Clicked", Toast.LENGTH_SHORT)
-                                .show()
-                        }
                     }
                 }
                 TextEditType.ADD -> {
@@ -325,11 +239,96 @@ class GameFragment : Fragment(), FragmentResultListener {
                         )
                         setEndIconOnClickListener {
                             addNewEntity(text)
-                            Toast.makeText(requireContext(), "Add click", Toast.LENGTH_SHORT).show()
                             setEndIcon(TextEditType.INFO)
                         }
                     }
                 }
+                TextEditType.INFO -> {
+                    textInputLayout.apply {
+                        isEndIconVisible = true
+                        setEndIconDrawable(R.drawable.ic_info)
+                        setEndIconTintList(
+                            ContextCompat.getColorStateList(
+                                requireContext(),
+                                com.google.android.material.R.color.design_default_color_primary
+                            )
+                        )
+                        setEndIconOnClickListener {
+
+                            Toast.makeText(
+                                requireContext(),
+                                getMatchedEntity(text).toString(),
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        }
+                    }
+                }
+            }
+        }
+
+        private fun getMatchedEntity(text: Editable?): Entity? {
+            val list = getNamesList()
+            val match = list.map { it.getEntityName() }.indexOf(text.toString().trim())
+            return if (match != -1)
+                list[match]
+            else
+                null
+        }
+
+        fun addNewEntity(text: Editable?) = run {
+            val toastMessage: String
+            when (type) {
+                GameAttribute.HOME_TEAM, GameAttribute.GUEST_TEAM -> {
+                    val team = Team().setEntityName(text.toString())
+                    when (type) {
+                        GameAttribute.HOME_TEAM -> gameWithAttributes.homeTeam = team
+                        GameAttribute.GUEST_TEAM -> gameWithAttributes.guestTeam = team
+                    }
+                    toastMessage = getString(R.string.team_add_message, team.getEntityName())
+                }
+                GameAttribute.LEAGUE -> {
+                    val league = League().setEntityName(text.toString())
+                    gameWithAttributes.league = league
+                    toastMessage = getString(R.string.league_add_message, league.getEntityName())
+                }
+                GameAttribute.STADIUM -> {
+                    val stadium = Stadium().setEntityName(text.toString())
+                    gameWithAttributes.stadium = stadium
+                    toastMessage = getString(R.string.stadium_add_message, stadium.getEntityName())
+                }
+                else -> {
+                    val referee =
+                        Referee().setEntityName(text.toString())
+                    when (type) {
+                        GameAttribute.CHIEF_REFEREE -> {
+                            gameWithAttributes.chiefReferee = referee
+                        }
+                        GameAttribute.FIRST_REFEREE -> {
+                            gameWithAttributes.firstReferee = referee
+                        }
+                        GameAttribute.SECOND_REFEREE -> {
+                            gameWithAttributes.secondReferee = referee
+                        }
+                        GameAttribute.RESERVE_REFEREE -> {
+                            gameWithAttributes.reserveReferee = referee
+                        }
+                        else -> throw IllegalStateException("Unknown type $type")
+                    }
+                    toastMessage = getString(R.string.referee_add_message, referee.getEntityName())
+                }
+            }
+            gameDetailViewModel.saveGame(gameWithAttributes)
+            Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
+        }
+
+        private fun getNamesList(): List<Entity> {
+            return when (type) {
+                GameAttribute.HOME_TEAM, GameAttribute.GUEST_TEAM -> teamsList
+                GameAttribute.LEAGUE -> leaguesList
+                GameAttribute.STADIUM -> stadiumsList
+                GameAttribute.CHIEF_REFEREE, GameAttribute.FIRST_REFEREE,
+                GameAttribute.SECOND_REFEREE, GameAttribute.RESERVE_REFEREE -> refereeList
             }
         }
     }

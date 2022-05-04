@@ -136,11 +136,13 @@ class GameListFragment : Fragment() {
 
             val resGamePaid =
                 if (gameWithAttributes.game.isPaid) R.drawable.ic_paiment_done else R.drawable.ic_paiment_wait
+            Log.d(TAG, "bind: paid: $resGamePaid")
             imgGamePaid.setBackgroundResource(resGamePaid)
 
-            val resGameGone =
+            val resGamePassed =
                 if (gameWithAttributes.game.isPassed) R.drawable.ic_calendar_green else R.drawable.ic_calendar_yelow
-            imgGameDone.setBackgroundResource(resGameGone)
+            Log.d(TAG, "bind: passed: $resGamePassed")
+            imgGameDone.setBackgroundResource(resGamePassed)
         }
 
         override fun onClick(v: View?) {
@@ -177,7 +179,8 @@ class GameListFragment : Fragment() {
                     oldGame.stadium?.name == newGame.stadium?.name &&
                     oldGame.league?.name == newGame.league?.name &&
                     oldGame.game.date == newGame.game.date &&
-                    oldGame.game.isPaid == newGame.game.isPaid
+                    oldGame.game.isPaid == newGame.game.isPaid &&
+                    oldGame.game.isPassed == newGame.game.isPassed
         }
 
     }
