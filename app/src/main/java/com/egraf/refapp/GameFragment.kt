@@ -371,25 +371,67 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         gameDetailViewModel.saveGame(gameWithAttributes)
     }
 
+    override fun saveHomeTeam(team: Team) {
+        gameDetailViewModel.saveHomeTeam(gameWithAttributes, team)
+    }
+
+    override fun saveGuestTeam(team: Team) {
+        gameDetailViewModel.saveGuestTeam(gameWithAttributes, team)
+    }
+
+    override fun saveLeague(league: League) {
+        gameDetailViewModel.saveLeague(gameWithAttributes, league)
+    }
+
+    override fun saveStadium(stadium: Stadium) {
+        gameDetailViewModel.saveStadium(gameWithAttributes, stadium)
+    }
+
+    override fun saveChiefReferee(referee: Referee) {
+        gameDetailViewModel.saveChiefReferee(gameWithAttributes, referee)
+    }
+
+    override fun  saveFirstReferee(referee: Referee) {
+        gameDetailViewModel.saveFirstReferee(gameWithAttributes, referee)
+    }
+
+    override fun  saveSecondReferee(referee: Referee) {
+        gameDetailViewModel.saveSecondReferee(gameWithAttributes, referee)
+    }
+
+    override fun  saveReserveReferee(referee: Referee) {
+        gameDetailViewModel.saveReserveReferee(gameWithAttributes, referee)
+    }
+
     private fun updateUI() {
         Log.d(TAG, "updateUI() called")
-        if (homeTeamAutoCompleteTextView.text.isNullOrEmpty())
-            homeTeamAutoCompleteTextView.setText(gameWithAttributes.homeTeam?.getEntityName())
-        if (guestTeamAutoCompleteTextView.text.isNullOrEmpty())
-            guestTeamAutoCompleteTextView.setText(gameWithAttributes.guestTeam?.getEntityName())
-        if (stadiumAutoCompleteTextView.text.isNullOrBlank())
-            stadiumAutoCompleteTextView.setText(gameWithAttributes.stadium?.getEntityName())
-        if (leagueAutoCompleteTextView.text.isNullOrEmpty())
-            leagueAutoCompleteTextView.setText(gameWithAttributes.league?.getEntityName())
-        if (chiefRefereeAutoCompleteTextView.text.isNullOrEmpty())
-            chiefRefereeAutoCompleteTextView.setText(gameWithAttributes.chiefReferee?.getEntityName())
-        if (firstRefereeAutoCompleteTextView.text.isNullOrEmpty())
-            firstRefereeAutoCompleteTextView.setText(gameWithAttributes.firstReferee?.getEntityName())
-        if (secondRefereeAutoCompleteTextView.text.isNullOrEmpty())
-            secondRefereeAutoCompleteTextView.setText(gameWithAttributes.secondReferee?.getEntityName())
-        if (reserveRefereeAutoCompleteTextView.text.isNullOrEmpty())
-            reserveRefereeAutoCompleteTextView.setText(gameWithAttributes.reserveReferee?.getEntityName())
+        val textViewList = listOf(
+            homeTeamAutoCompleteTextView,
+            guestTeamAutoCompleteTextView,
+            stadiumAutoCompleteTextView,
+            leagueAutoCompleteTextView,
+            chiefRefereeAutoCompleteTextView,
+            firstRefereeAutoCompleteTextView,
+            secondRefereeAutoCompleteTextView,
+            reserveRefereeAutoCompleteTextView,
+        )
+        val attributesList = listOf(
+            gameWithAttributes.homeTeam,
+            gameWithAttributes.guestTeam,
+            gameWithAttributes.stadium,
+            gameWithAttributes.league,
+            gameWithAttributes.chiefReferee,
+            gameWithAttributes.firstReferee,
+            gameWithAttributes.secondReferee,
+            gameWithAttributes.reserveReferee,
+        )
 
+        for (pair in textViewList.zip(attributesList)) {
+            val textView = pair.first
+            val attribute = pair.second
+            if (textView.text.isNullOrBlank())
+                textView.setText(attribute?.getEntityName())
+        }
 
         dateButton.text = DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
         timeButton.text = DateFormat.format(TIME_FORMAT, gameWithAttributes.game.date).toString()

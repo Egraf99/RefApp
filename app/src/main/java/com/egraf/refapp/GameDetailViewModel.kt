@@ -47,6 +47,7 @@ class GameDetailViewModel : ViewModel() {
         } else {
             gameWithAttributes.game.leagueId = null
         }
+
         if (gameWithAttributes.homeTeam != null) {
             // добавляем команду хозяев и обновляем id команды хозяев в игре
             gameWithAttributes.game.homeTeamId = gameWithAttributes.homeTeam!!.id
@@ -54,6 +55,7 @@ class GameDetailViewModel : ViewModel() {
         } else {
             gameWithAttributes.game.homeTeamId = null
         }
+
         if (gameWithAttributes.guestTeam != null) {
             // добавляем команду гостей и обновляем id команды гостей в игре
             gameWithAttributes.game.guestTeamId = gameWithAttributes.guestTeam!!.id
@@ -61,6 +63,7 @@ class GameDetailViewModel : ViewModel() {
         } else {
             gameWithAttributes.game.guestTeamId = null
         }
+
         if (gameWithAttributes.chiefReferee != null) {
             // добавляем главного судью и обновляем id главного судьи в игре
             gameWithAttributes.game.chiefRefereeId = gameWithAttributes.chiefReferee!!.id
@@ -68,6 +71,7 @@ class GameDetailViewModel : ViewModel() {
         } else {
             gameWithAttributes.game.chiefRefereeId = null
         }
+
         if (gameWithAttributes.firstReferee != null) {
             // добавляем главного судью и обновляем id главного судьи в игре
             gameWithAttributes.game.firstRefereeId = gameWithAttributes.firstReferee!!.id
@@ -75,6 +79,7 @@ class GameDetailViewModel : ViewModel() {
         } else {
             gameWithAttributes.game.firstRefereeId = null
         }
+
         if (gameWithAttributes.secondReferee != null) {
             // добавляем главного судью и обновляем id главного судьи в игре
             gameWithAttributes.game.secondRefereeId = gameWithAttributes.secondReferee!!.id
@@ -82,6 +87,7 @@ class GameDetailViewModel : ViewModel() {
         } else {
             gameWithAttributes.game.secondRefereeId = null
         }
+
         if (gameWithAttributes.reserveReferee != null) {
             // добавляем главного судью и обновляем id главного судьи в игре
             gameWithAttributes.game.reserveRefereeId = gameWithAttributes.reserveReferee!!.id
@@ -94,20 +100,52 @@ class GameDetailViewModel : ViewModel() {
         gameRepository.updateGame(gameWithAttributes.game)
     }
 
-    fun saveStadium(stadium: Stadium) {
+    fun saveStadium(gameWithAttributes: GameWithAttributes, stadium: Stadium) {
         gameRepository.addStadium(stadium)
+        gameWithAttributes.game.stadiumId = stadium.id
+        gameRepository.updateGame(gameWithAttributes.game)
     }
 
-    fun saveLeague(league: League) {
+    fun saveLeague(gameWithAttributes: GameWithAttributes, league: League) {
         gameRepository.addLeague(league)
+        gameWithAttributes.game.leagueId = league.id
+        gameRepository.updateGame(gameWithAttributes.game)
     }
 
-    fun saveTeam(team: Team) {
+    fun saveHomeTeam(gameWithAttributes: GameWithAttributes, team: Team) {
         gameRepository.addTeam(team)
+        gameWithAttributes.game.homeTeamId = team.id
+        gameRepository.updateGame(gameWithAttributes.game)
     }
 
-    fun saveReferee(referee: Referee) {
+    fun saveGuestTeam(gameWithAttributes: GameWithAttributes, team: Team) {
+        gameRepository.addTeam(team)
+        gameWithAttributes.game.guestTeamId = team.id
+        gameRepository.updateGame(gameWithAttributes.game)
+    }
+
+    fun saveChiefReferee(gameWithAttributes: GameWithAttributes, referee: Referee) {
         gameRepository.addReferee(referee)
+        gameWithAttributes.game.chiefRefereeId = referee.id
+        gameRepository.updateGame(gameWithAttributes.game)
+    }
+
+    fun saveFirstReferee(gameWithAttributes: GameWithAttributes, referee: Referee) {
+        gameRepository.addReferee(referee)
+        gameWithAttributes.game.firstRefereeId = referee.id
+        gameRepository.updateGame(gameWithAttributes.game)
+    }
+
+    fun saveSecondReferee(gameWithAttributes: GameWithAttributes, referee: Referee) {
+        gameRepository.addReferee(referee)
+        gameWithAttributes.game.secondRefereeId = referee.id
+        gameRepository.updateGame(gameWithAttributes.game)
+    }
+
+    fun saveReserveReferee(gameWithAttributes: GameWithAttributes, referee: Referee) {
+        gameRepository.addReferee(referee)
+        gameWithAttributes.game.reserveRefereeId = referee.id
+        gameRepository.updateGame(gameWithAttributes.game)
     }
 
     fun deleteGame(game: Game) {

@@ -13,7 +13,12 @@ data class Referee(
     var thirdName: String = "",
 ) : com.egraf.refapp.database.entities.Entity {
     override fun getEntityName(): String {
-        return "$secondName $firstName"
+        var returnName = ""
+        if (secondName.isNotEmpty())
+            returnName += secondName
+        if (firstName.isNotEmpty())
+            returnName += " $firstName"
+        return returnName
     }
 
     override fun setEntityName(text: String): Referee {

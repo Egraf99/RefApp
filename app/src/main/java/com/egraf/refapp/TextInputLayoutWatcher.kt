@@ -31,6 +31,14 @@ abstract class TextInputLayoutWatcher : TextWatcher {
     interface Callbacks {
         fun changeGameEntity(entity: Entity?, type: TypeTextInputWatcher?)
         fun saveGame()
+        fun saveHomeTeam(team: Team)
+        fun saveGuestTeam(team: Team)
+        fun saveLeague(league: League)
+        fun saveStadium(stadium: Stadium)
+        fun saveChiefReferee(referee: Referee)
+        fun saveFirstReferee(referee: Referee)
+        fun saveSecondReferee(referee: Referee)
+        fun saveReserveReferee(referee: Referee)
     }
 
     private fun TextInputLayout.unfocused() {
@@ -85,8 +93,7 @@ abstract class TextInputLayoutWatcher : TextWatcher {
 
     override fun afterTextChanged(text: Editable?) {
         this.text = text
-        if (type == TypeTextInputWatcher.STADIUM)
-            Log.d(TAG, "afterTextChanged() called with: text = $text")
+        Log.d(TAG, "afterTextChanged() called with: text = $text, $matchedEntity, $entitiesList")
         when {
             text.isNullOrEmpty() -> {
 //                пустой текст - убираем иконку взаимодействия
@@ -99,7 +106,7 @@ abstract class TextInputLayoutWatcher : TextWatcher {
             }
             else -> {
 //                есть совпдение по тексту - показываем иконку info
-                fragment.changeGameEntity(matchedEntity, type)
+                saveEntity(matchedEntity!!)
                 setEndIcon(TextEditType.INFO)
             }
         }
@@ -135,17 +142,14 @@ abstract class TextInputLayoutWatcher : TextWatcher {
                     )
                     setEndIconOnClickListener {
                         val newEntity = createNewEntity(text)
-                        with(fragment) {
-                            changeGameEntity(newEntity, this@TextInputLayoutWatcher.type)
-                            saveGame()
-                        }
-                        textInputLayout.unfocused()
-
+                        saveEntity(newEntity)
                         Toast.makeText(
                             context,
                             context.getString(toastMessageResId, newEntity.getEntityName()),
                             Toast.LENGTH_SHORT
                         ).show()
+
+                        textInputLayout.unfocused()
                         setEndIcon(TextEditType.INFO)
                     }
                 }
@@ -175,6 +179,8 @@ abstract class TextInputLayoutWatcher : TextWatcher {
             }
         }
     }
+
+    abstract fun saveEntity(entity: Entity)
 }
 
 class WatcherFactory {
@@ -216,6 +222,14 @@ class TeamInputWatcher : TextInputLayoutWatcher() {
     override fun createNewEntity(text: Editable?): Team {
         return Team().setEntityName(text.toString())
     }
+
+    override fun saveEntity(entity: Entity) {
+        when (type) {
+            TypeTextInputWatcher.HOME_TEAM -> fragment.saveHomeTeam(entity as Team)
+            TypeTextInputWatcher.GUEST_TEAM -> fragment.saveGuestTeam(entity as Team)
+            else -> throw IllegalStateException("TeamInputWatcher type should be: TypeTextInputWatcher.HOME_TEAM, TypeTextInputWatcher.GUEST_TEAM")
+        }
+    }
 }
 
 class LeagueInputWatcher : TextInputLayoutWatcher() {
@@ -224,6 +238,10 @@ class LeagueInputWatcher : TextInputLayoutWatcher() {
 
     override fun createNewEntity(text: Editable?): League {
         return League().setEntityName(text.toString())
+    }
+
+    override fun saveEntity(entity: Entity) {
+        fragment.saveLeague(entity as League)
     }
 }
 
@@ -234,6 +252,10 @@ class StadiumInputWatcher : TextInputLayoutWatcher() {
     override fun createNewEntity(text: Editable?): Entity {
         return Stadium().setEntityName(text.toString())
     }
+
+    override fun saveEntity(entity: Entity) {
+        fragment.saveStadium(entity as Stadium)
+    }
 }
 
 class RefereeInputWatcher : TextInputLayoutWatcher() {
@@ -242,5 +264,20 @@ class RefereeInputWatcher : TextInputLayoutWatcher() {
 
     override fun createNewEntity(text: Editable?): Referee {
         return Referee().setEntityName(text.toString())
+    }
+
+    override fun saveEntity(entity: Entity) {
+        when (type) {
+            TypeTextInputWatcher.CHIEF_REFEREE -> fragment.saveChiefReferee(entity as Referee)
+            TypeTextInputWatcher.FIRST_REFEREE -> fragment.saveFirstReferee(entity as Referee)
+            TypeTextInputWatcher.SECOND_REFEREE -> fragment.saveSecondReferee(entity as Referee)
+            TypeTextInputWatcher.RESERVE_REFEREE -> fragment.saveReserveReferee(entity as Referee)
+            else -> throw IllegalStateException(
+                "TeamInputWatcher type should be: TypeTextInputWatcher.CHIEF_REFEREE, " +
+                        "TypeTextInputWatcher.FIRST_REFEREE, " +
+                        "TypeTextInputWatcher.SECOND_REFEREE, " +
+                        "TypeTextInputWatcher.RESERVE_REFEREE"
+            )
+        }
     }
 }
