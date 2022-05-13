@@ -25,7 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:paddingStart="8dp"
-            android:paddingEnd="0dp" />
+            android:paddingEnd="0dp"
+            android:inputType="textImeMultiLine"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -46,7 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:paddingStart="8dp"
-            android:paddingEnd="0dp"/>
+            android:paddingEnd="0dp"
+            android:inputType="textImeMultiLine"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -70,7 +72,8 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:paddingStart="8dp"
-            android:paddingEnd="0dp"/>
+            android:paddingEnd="0dp"
+            android:inputType="textImeMultiLine"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -93,7 +96,8 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:paddingStart="8dp"
-            android:paddingEnd="0dp"/>
+            android:paddingEnd="0dp"
+            android:inputType="textImeMultiLine"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -116,7 +120,8 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:paddingStart="8dp"
-            android:paddingEnd="0dp"/>
+            android:paddingEnd="0dp"
+            android:inputType="textImeMultiLine"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -139,7 +144,8 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:paddingStart="8dp"
-            android:paddingEnd="0dp"/>
+            android:paddingEnd="0dp"
+            android:inputType="textImeMultiLine"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -162,7 +168,9 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:paddingStart="8dp"
-            android:paddingEnd="0dp"/>
+            android:paddingEnd="0dp"
+            android:inputType="textImeMultiLine"
+            android:focusableInTouchMode="true"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -185,7 +193,8 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:paddingStart="8dp"
-            android:paddingEnd="0dp"/>
+            android:paddingEnd="0dp"
+            android:inputType="textImeMultiLine"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
