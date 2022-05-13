@@ -48,7 +48,7 @@ class GameListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "++++++++++ GameListFragment onCreate ++++++++++")
+        Log.d(TAG, "onCreate() called")
         setHasOptionsMenu(true)
     }
 
@@ -86,7 +86,7 @@ class GameListFragment : Fragment() {
     }
 
     private fun updateUI(games: List<GameWithAttributes>) {
-        Log.d(TAG, "+++++++++++ GameListFragment updateUI ++++++++++ $games")
+        Log.d(TAG, "updateUI() called with: games = $games")
         adapter?.submitList(games)
     }
 
@@ -103,7 +103,7 @@ class GameListFragment : Fragment() {
 
     private fun addNewGame() {
         val game = Game()
-        Log.d(TAG, "+++++++++++ GameFragment addGame +++++++++++ $game")
+        Log.d(TAG, "addNewGame() called")
         gameListViewModel.addGame(game)
         callbacks?.onGameSelected(game.id)
     }
@@ -126,7 +126,7 @@ class GameListFragment : Fragment() {
 
         fun bind(game: GameWithAttributes) {
             gameWithAttributes = game
-            Log.d(TAG, "+++++++++++ GameHolder bind ++++++++++++ $game")
+            Log.d(TAG, "bind() called with: game = $game")
             homeTeamTextVIew.text = gameWithAttributes.homeTeam?.name
             guestTeamTextView.text = gameWithAttributes.guestTeam?.name
             stadiumTextView.text = gameWithAttributes.stadium?.name
@@ -136,12 +136,10 @@ class GameListFragment : Fragment() {
 
             val resGamePaid =
                 if (gameWithAttributes.game.isPaid) R.drawable.ic_paiment_done else R.drawable.ic_paiment_wait
-            Log.d(TAG, "bind: paid: $resGamePaid")
             imgGamePaid.setBackgroundResource(resGamePaid)
 
             val resGamePassed =
                 if (gameWithAttributes.game.isPassed) R.drawable.ic_calendar_green else R.drawable.ic_calendar_yelow
-            Log.d(TAG, "bind: passed: $resGamePassed")
             imgGameDone.setBackgroundResource(resGamePassed)
         }
 

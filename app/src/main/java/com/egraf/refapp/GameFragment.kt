@@ -1,6 +1,5 @@
 package com.egraf.refapp
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
@@ -9,8 +8,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.Button
+import android.widget.CheckBox
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
@@ -103,7 +104,7 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         super.onCreate(savedInstanceState)
         val game = Game()
         gameWithAttributes = GameWithAttributes(game)
-        Log.d(TAG, "___________ GameFragment onCreate ____________ $gameWithAttributes")
+        Log.d(TAG, "onCreate: $gameWithAttributes")
 
         val gameId = arguments?.getSerializable(ARG_GAME_ID) as UUID
         gameDetailViewModel.loadGame(gameId)
@@ -362,7 +363,7 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
 
     override fun onStop() {
         super.onStop()
-        Log.d(TAG, "__________ GameFragment onStop ____________ $gameWithAttributes")
+        Log.d(TAG, "onStop() called")
         saveGame()
     }
 
@@ -371,7 +372,7 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
     }
 
     private fun updateUI() {
-        Log.d(TAG, "_________ GameFragment updateUI __________ $gameWithAttributes")
+        Log.d(TAG, "updateUI() called")
         if (homeTeamAutoCompleteTextView.text.isNullOrEmpty())
             homeTeamAutoCompleteTextView.setText(gameWithAttributes.homeTeam?.getEntityName())
         if (guestTeamAutoCompleteTextView.text.isNullOrEmpty())

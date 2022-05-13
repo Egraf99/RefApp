@@ -25,14 +25,14 @@ class GameWithAttributes(
 
 ) {
     override fun toString(): String {
-        return "\nGame id is: ${game.id}" +
-                "\nStadium name: ${stadium?.name}, id is: ${stadium?.id}" +
-                "\nLeague name: ${league?.name}, id is: ${league?.id}" +
-                "\nTeamHome name: ${homeTeam?.name}, id is: ${homeTeam?.id}" +
-                "\nTeamGuest name: ${guestTeam?.name}, id is: ${guestTeam?.id}" +
-                "\nChiefReferee name: ${chiefReferee?.secondName}, id is: ${chiefReferee?.id}" +
-                "\nFirstReferee name: ${firstReferee?.secondName}, id is: ${firstReferee?.id}" +
-                "\nisPaid: ${game.isPaid}" +
-                "\nisPassed: ${game.isPassed}"
+        return "Game id is: ${game.id}" +
+                " Stadium name: ${stadium?.name}, id is: ${stadium?.id}" +
+                " League name: ${league?.name}, id is: ${league?.id}" +
+                " TeamHome name: ${homeTeam?.name}, id is: ${homeTeam?.id}" +
+                " TeamGuest name: ${guestTeam?.name}, id is: ${guestTeam?.id}" +
+                " ChiefReferee name: ${chiefReferee?.secondName}, id is: ${chiefReferee?.id}" +
+                " FirstReferee name: ${firstReferee?.secondName}, id is: ${firstReferee?.id}" +
+                " isPaid: ${game.isPaid}" +
+                " isPassed: ${game.isPassed}"
     }
 }
