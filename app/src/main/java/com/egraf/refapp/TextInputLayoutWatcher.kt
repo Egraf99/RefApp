@@ -29,7 +29,6 @@ enum class TypeTextInputWatcher {
 
 abstract class TextInputLayoutWatcher : TextWatcher {
     interface Callbacks {
-        fun changeGameEntity(entity: Entity?, type: TypeTextInputWatcher?)
         fun saveGame()
         fun saveHomeTeam(team: Team)
         fun saveGuestTeam(team: Team)
@@ -39,6 +38,14 @@ abstract class TextInputLayoutWatcher : TextWatcher {
         fun saveFirstReferee(referee: Referee)
         fun saveSecondReferee(referee: Referee)
         fun saveReserveReferee(referee: Referee)
+        fun setHomeTeamNull()
+        fun setGuestTeamNull()
+        fun setLeagueNull()
+        fun setStadiumNull()
+        fun setChiefRefereeNull()
+        fun setFirstRefereeNull()
+        fun setSecondRefereeNull()
+        fun setReserveRefereeNull()
     }
 
     private fun TextInputLayout.unfocused() {
@@ -97,7 +104,7 @@ abstract class TextInputLayoutWatcher : TextWatcher {
         when {
             text.isNullOrEmpty() -> {
 //                пустой текст - убираем иконку взаимодействия
-                fragment.changeGameEntity(null, type)
+                setNullEntity()
                 setEndIcon(TextEditType.DEFAULT)
             }
             indexMatch == -1 -> {
@@ -181,6 +188,8 @@ abstract class TextInputLayoutWatcher : TextWatcher {
     }
 
     abstract fun saveEntity(entity: Entity)
+
+    abstract fun setNullEntity()
 }
 
 class WatcherFactory {
@@ -230,6 +239,14 @@ class TeamInputWatcher : TextInputLayoutWatcher() {
             else -> throw IllegalStateException("TeamInputWatcher type should be: TypeTextInputWatcher.HOME_TEAM, TypeTextInputWatcher.GUEST_TEAM")
         }
     }
+
+    override fun setNullEntity() {
+        when (type) {
+            TypeTextInputWatcher.HOME_TEAM -> fragment.setHomeTeamNull()
+            TypeTextInputWatcher.GUEST_TEAM -> fragment.setGuestTeamNull()
+            else -> throw IllegalStateException("TeamInputWatcher type should be: TypeTextInputWatcher.HOME_TEAM, TypeTextInputWatcher.GUEST_TEAM")
+        }
+    }
 }
 
 class LeagueInputWatcher : TextInputLayoutWatcher() {
@@ -243,6 +260,10 @@ class LeagueInputWatcher : TextInputLayoutWatcher() {
     override fun saveEntity(entity: Entity) {
         fragment.saveLeague(entity as League)
     }
+
+    override fun setNullEntity() {
+        fragment.setLeagueNull()
+    }
 }
 
 class StadiumInputWatcher : TextInputLayoutWatcher() {
@@ -255,6 +276,10 @@ class StadiumInputWatcher : TextInputLayoutWatcher() {
 
     override fun saveEntity(entity: Entity) {
         fragment.saveStadium(entity as Stadium)
+    }
+
+    override fun setNullEntity() {
+        fragment.setStadiumNull()
     }
 }
 
@@ -272,6 +297,21 @@ class RefereeInputWatcher : TextInputLayoutWatcher() {
             TypeTextInputWatcher.FIRST_REFEREE -> fragment.saveFirstReferee(entity as Referee)
             TypeTextInputWatcher.SECOND_REFEREE -> fragment.saveSecondReferee(entity as Referee)
             TypeTextInputWatcher.RESERVE_REFEREE -> fragment.saveReserveReferee(entity as Referee)
+            else -> throw IllegalStateException(
+                "TeamInputWatcher type should be: TypeTextInputWatcher.CHIEF_REFEREE, " +
+                        "TypeTextInputWatcher.FIRST_REFEREE, " +
+                        "TypeTextInputWatcher.SECOND_REFEREE, " +
+                        "TypeTextInputWatcher.RESERVE_REFEREE"
+            )
+        }
+    }
+
+    override fun setNullEntity() {
+        when (type) {
+            TypeTextInputWatcher.CHIEF_REFEREE -> fragment.setChiefRefereeNull()
+            TypeTextInputWatcher.FIRST_REFEREE -> fragment.setFirstRefereeNull()
+            TypeTextInputWatcher.SECOND_REFEREE -> fragment.setSecondRefereeNull()
+            TypeTextInputWatcher.RESERVE_REFEREE -> fragment.setReserveRefereeNull()
             else -> throw IllegalStateException(
                 "TeamInputWatcher type should be: TypeTextInputWatcher.CHIEF_REFEREE, " +
                         "TypeTextInputWatcher.FIRST_REFEREE, " +

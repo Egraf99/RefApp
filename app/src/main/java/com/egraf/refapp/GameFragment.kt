@@ -403,6 +403,38 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         gameDetailViewModel.saveReserveReferee(gameWithAttributes, referee)
     }
 
+    override fun setHomeTeamNull() {
+        gameWithAttributes.homeTeam = null
+    }
+
+    override fun setGuestTeamNull() {
+        gameWithAttributes.guestTeam = null
+    }
+
+    override fun setLeagueNull() {
+        gameWithAttributes.league = null
+    }
+
+    override fun setStadiumNull() {
+        gameWithAttributes.stadium = null
+    }
+
+    override fun setChiefRefereeNull() {
+        gameWithAttributes.chiefReferee = null
+    }
+
+    override fun setFirstRefereeNull() {
+        gameWithAttributes.firstReferee = null
+    }
+
+    override fun setSecondRefereeNull() {
+        gameWithAttributes.secondReferee = null
+    }
+
+    override fun setReserveRefereeNull() {
+        gameWithAttributes.reserveReferee = null
+    }
+
     private fun updateUI() {
         Log.d(TAG, "updateUI() called")
         val textViewList = listOf(
@@ -471,24 +503,6 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
     companion object {
         fun putGameId(gameId: UUID): Bundle {
             return Bundle().apply { putSerializable(ARG_GAME_ID, gameId) }
-        }
-    }
-
-    override fun changeGameEntity(entity: Entity?, type: TypeTextInputWatcher?) {
-        when (type) {
-            TypeTextInputWatcher.HOME_TEAM -> gameWithAttributes.homeTeam = entity as Team?
-            TypeTextInputWatcher.GUEST_TEAM -> gameWithAttributes.guestTeam = entity as Team?
-            TypeTextInputWatcher.LEAGUE -> gameWithAttributes.league = entity as League?
-            TypeTextInputWatcher.STADIUM -> gameWithAttributes.stadium = entity as Stadium?
-            TypeTextInputWatcher.CHIEF_REFEREE -> gameWithAttributes.chiefReferee =
-                entity as Referee?
-            TypeTextInputWatcher.FIRST_REFEREE -> gameWithAttributes.firstReferee =
-                entity as Referee?
-            TypeTextInputWatcher.SECOND_REFEREE -> gameWithAttributes.secondReferee =
-                entity as Referee?
-            TypeTextInputWatcher.RESERVE_REFEREE -> gameWithAttributes.reserveReferee =
-                entity as Referee?
-            else -> {throw IllegalStateException("Illegal type: $type")}
         }
     }
 }
