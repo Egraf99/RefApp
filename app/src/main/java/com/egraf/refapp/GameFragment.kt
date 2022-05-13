@@ -1,5 +1,6 @@
 package com.egraf.refapp
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
@@ -8,13 +9,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.database.entities.*
 import com.google.android.material.textfield.TextInputLayout
-import java.lang.IllegalStateException
 import java.util.*
 
 private const val TAG = "GameFragment"
@@ -38,30 +39,47 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
 
     private var callbacks: Callbacks? = null
     private lateinit var gameWithAttributes: GameWithAttributes
+
     private lateinit var stadiumLayout: TextInputLayout
     private lateinit var stadiumAutoCompleteTextView: AutoCompleteTextView
     private lateinit var stadiumWatcher: TextInputLayoutWatcher
+    private lateinit var stadiumListAdapter: ArrayAdapter<String>
+
     private lateinit var leagueLayout: TextInputLayout
     private lateinit var leagueAutoCompleteTextView: AutoCompleteTextView
     private lateinit var leagueWatcher: TextInputLayoutWatcher
+    private lateinit var leagueListAdapter: ArrayAdapter<String>
+
     private lateinit var homeTeamLayout: TextInputLayout
     private lateinit var homeTeamAutoCompleteTextView: AutoCompleteTextView
     private lateinit var homeTeamWatcher: TextInputLayoutWatcher
+    private lateinit var homeTeamListAdapter: ArrayAdapter<String>
+
     private lateinit var guestTeamLayout: TextInputLayout
     private lateinit var guestTeamAutoCompleteTextView: AutoCompleteTextView
     private lateinit var guestTeamWatcher: TextInputLayoutWatcher
+    private lateinit var guestTeamListAdapter: ArrayAdapter<String>
+
     private lateinit var chiefRefereeLayout: TextInputLayout
     private lateinit var chiefRefereeAutoCompleteTextView: AutoCompleteTextView
     private lateinit var chiefRefereeWatcher: TextInputLayoutWatcher
+    private lateinit var chiefRefereeListAdapter: ArrayAdapter<String>
+
     private lateinit var firstRefereeLayout: TextInputLayout
     private lateinit var firstRefereeAutoCompleteTextView: AutoCompleteTextView
     private lateinit var firstRefereeWatcher: TextInputLayoutWatcher
+    private lateinit var firstRefereeListAdapter: ArrayAdapter<String>
+
     private lateinit var secondRefereeLayout: TextInputLayout
     private lateinit var secondRefereeAutoCompleteTextView: AutoCompleteTextView
     private lateinit var secondRefereeWatcher: TextInputLayoutWatcher
+    private lateinit var secondRefereeListAdapter: ArrayAdapter<String>
+
     private lateinit var reserveRefereeLayout: TextInputLayout
     private lateinit var reserveRefereeAutoCompleteTextView: AutoCompleteTextView
     private lateinit var reserveRefereeWatcher: TextInputLayoutWatcher
+    private lateinit var reserveRefereeListAdapter: ArrayAdapter<String>
+
     private lateinit var dateButton: Button
     private lateinit var timeButton: Button
     private lateinit var gamePaidCheckBox: CheckBox
@@ -143,26 +161,31 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         }
         gameDetailViewModel.stadiumListLiveData.observe(viewLifecycleOwner) { stadiums ->
             stadiumsList = stadiums
-            updateAdapter(stadiumAutoCompleteTextView, stadiumWatcher, stadiumsList)
+            updateAdapterList(stadiumListAdapter, stadiumsList)
+            updateWatcherList(stadiumWatcher, stadiumsList)
         }
         gameDetailViewModel.leagueListLiveData.observe(viewLifecycleOwner) { leagues ->
             leaguesList = leagues
-            updateAdapter(leagueAutoCompleteTextView, leagueWatcher, leaguesList)
+            updateAdapterList(leagueListAdapter, leaguesList)
+            updateWatcherList(leagueWatcher, leaguesList)
         }
         gameDetailViewModel.teamListLiveData.observe(viewLifecycleOwner) { teams ->
             teamsList = teams
-            val listTextView = listOf(homeTeamAutoCompleteTextView, guestTeamAutoCompleteTextView)
+            val listTextView = listOf(homeTeamListAdapter, guestTeamListAdapter)
             val listWatcher = listOf(homeTeamWatcher, guestTeamWatcher)
-            for (pair in listTextView.zip(listWatcher))
-                updateAdapter(pair.first, pair.second, teamsList)
+            for (pair in listTextView.zip(listWatcher)) {
+                updateAdapterList(pair.first, teamsList)
+                updateWatcherList(pair.second, teamsList)
+            }
+
         }
         gameDetailViewModel.refereeListLiveData.observe(viewLifecycleOwner) { referee ->
             refereeList = referee
             val listTextView = listOf(
-                chiefRefereeAutoCompleteTextView,
-                firstRefereeAutoCompleteTextView,
-                secondRefereeAutoCompleteTextView,
-                reserveRefereeAutoCompleteTextView
+                chiefRefereeListAdapter,
+                firstRefereeListAdapter,
+                secondRefereeListAdapter,
+                reserveRefereeListAdapter
             )
             val listWatcher = listOf(
                 chiefRefereeWatcher,
@@ -170,8 +193,10 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
                 secondRefereeWatcher,
                 reserveRefereeWatcher
             )
-            for (pair in listTextView.zip(listWatcher))
-                updateAdapter(pair.first, pair.second, refereeList)
+            for (pair in listTextView.zip(listWatcher)) {
+                updateAdapterList(pair.first, refereeList)
+                updateWatcherList(pair.second, refereeList)
+            }
         }
 
         parentFragmentManager.setFragmentResultListener(REQUEST_DATE, viewLifecycleOwner, this)
@@ -186,69 +211,109 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
 
         homeTeamWatcher = teamWatcher.build().setType(TypeTextInputWatcher.HOME_TEAM)
             .setTextView(homeTeamAutoCompleteTextView).setLayout(homeTeamLayout).setParent(this)
-        homeTeamAutoCompleteTextView.threshold = 1
-        homeTeamAutoCompleteTextView.addTextChangedListener(
-            homeTeamWatcher
-        )
+        homeTeamListAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.select_dialog_item,
+            teamsList.map { it.getEntityName() })
+        homeTeamAutoCompleteTextView.apply {
+            threshold = 1
+            addTextChangedListener(homeTeamWatcher)
+            setAdapter(homeTeamListAdapter)
+        }
 
         guestTeamWatcher =
             teamWatcher.build().setType(TypeTextInputWatcher.GUEST_TEAM).setParent(this)
                 .setTextView(guestTeamAutoCompleteTextView).setLayout(guestTeamLayout)
-        guestTeamAutoCompleteTextView.threshold = 1
-        guestTeamAutoCompleteTextView.addTextChangedListener(
-            homeTeamWatcher
-        )
+        guestTeamListAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.select_dialog_item,
+            teamsList.map { it.getEntityName() })
+        guestTeamAutoCompleteTextView.apply {
+            threshold = 1
+            addTextChangedListener(guestTeamWatcher)
+            setAdapter(guestTeamListAdapter)
+        }
 
         stadiumWatcher =
-            WatcherFactory().setType(TypeTextInputWatcher.STADIUM).setList(stadiumsList).setParent(this)
+            WatcherFactory().setType(TypeTextInputWatcher.STADIUM).setList(stadiumsList)
+                .setParent(this)
                 .build().setTextView(stadiumAutoCompleteTextView)
                 .setLayout(stadiumLayout)
-        stadiumAutoCompleteTextView.threshold = 1
-        stadiumAutoCompleteTextView.addTextChangedListener(
-            stadiumWatcher
-        )
-        stadiumAutoCompleteTextView.setOnFocusChangeListener { view, b ->
-            Log.d(TAG, "onStart() called with: view = $view, b = $b")
+        stadiumListAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.select_dialog_item,
+            stadiumsList.map { it.getEntityName() })
+        stadiumAutoCompleteTextView.apply {
+            threshold = 1
+            addTextChangedListener(stadiumWatcher)
+            setAdapter(stadiumListAdapter)
         }
 
         leagueWatcher =
-            WatcherFactory().setType(TypeTextInputWatcher.LEAGUE).setList(leaguesList).setParent(this)
+            WatcherFactory().setType(TypeTextInputWatcher.LEAGUE).setList(leaguesList)
+                .setParent(this)
                 .build().setTextView(leagueAutoCompleteTextView)
                 .setLayout(leagueLayout)
-        leagueAutoCompleteTextView.threshold = 1
-        leagueAutoCompleteTextView.addTextChangedListener(
-            leagueWatcher
-        )
+        leagueListAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.select_dialog_item,
+            leaguesList.map { it.getEntityName() })
+        leagueAutoCompleteTextView.apply {
+            threshold = 1
+            addTextChangedListener(leagueWatcher)
+            setAdapter(leagueListAdapter)
+        }
 
         val refereeWatcher =
-            WatcherFactory().setType(TypeTextInputWatcher.REFEREE).setList(refereeList).setParent(this)
+            WatcherFactory().setType(TypeTextInputWatcher.REFEREE).setList(refereeList)
+                .setParent(this)
         chiefRefereeWatcher = refereeWatcher.build().setType(TypeTextInputWatcher.CHIEF_REFEREE)
             .setTextView(chiefRefereeAutoCompleteTextView).setLayout(chiefRefereeLayout)
-        chiefRefereeAutoCompleteTextView.threshold = 1
-        chiefRefereeAutoCompleteTextView.addTextChangedListener(
-            chiefRefereeWatcher
-        )
+        chiefRefereeListAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.select_dialog_item,
+            refereeList.map { it.getEntityName() })
+        chiefRefereeAutoCompleteTextView.apply {
+            threshold = 1
+            addTextChangedListener(chiefRefereeWatcher)
+            setAdapter(chiefRefereeListAdapter)
+        }
 
         firstRefereeWatcher = refereeWatcher.build().setType(TypeTextInputWatcher.FIRST_REFEREE)
             .setTextView(firstRefereeAutoCompleteTextView).setLayout(firstRefereeLayout)
-        firstRefereeAutoCompleteTextView.threshold = 1
-        firstRefereeAutoCompleteTextView.addTextChangedListener(
-            firstRefereeWatcher
-        )
+        firstRefereeListAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.select_dialog_item,
+            refereeList.map { it.getEntityName() })
+        firstRefereeAutoCompleteTextView.apply {
+            threshold = 1
+            addTextChangedListener(firstRefereeWatcher)
+            setAdapter(firstRefereeListAdapter)
+        }
 
         secondRefereeWatcher = refereeWatcher.build().setType(TypeTextInputWatcher.SECOND_REFEREE)
             .setTextView(secondRefereeAutoCompleteTextView).setLayout(secondRefereeLayout)
-        secondRefereeAutoCompleteTextView.threshold = 1
-        secondRefereeAutoCompleteTextView.addTextChangedListener(
-            secondRefereeWatcher
-        )
+        secondRefereeListAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.select_dialog_item,
+            refereeList.map { it.getEntityName() })
+        secondRefereeAutoCompleteTextView.apply {
+            threshold = 1
+            addTextChangedListener(secondRefereeWatcher)
+            setAdapter(secondRefereeListAdapter)
+        }
 
         reserveRefereeWatcher = refereeWatcher.build().setType(TypeTextInputWatcher.RESERVE_REFEREE)
             .setTextView(reserveRefereeAutoCompleteTextView).setLayout(reserveRefereeLayout)
-        reserveRefereeAutoCompleteTextView.threshold = 1
-        reserveRefereeAutoCompleteTextView.addTextChangedListener(
-            reserveRefereeWatcher
-        )
+        reserveRefereeListAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.select_dialog_item,
+            refereeList.map { it.getEntityName() })
+        reserveRefereeAutoCompleteTextView.apply {
+            threshold = 1
+            addTextChangedListener(reserveRefereeWatcher)
+            setAdapter(reserveRefereeListAdapter)
+        }
 
         gamePaidCheckBox.apply {
             setOnCheckedChangeListener { _, isPaid -> gameWithAttributes.game.isPaid = isPaid }
@@ -279,18 +344,20 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         }
     }
 
-    private fun updateAdapter(
-        textView: AutoCompleteTextView,
+    private fun updateAdapterList(
+        adapter: ArrayAdapter<String>,
+        list: List<Entity>
+    ) {
+        adapter.clear()
+        adapter.addAll(list.map { it.getEntityName() })
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun updateWatcherList(
         watcher: TextInputLayoutWatcher,
         list: List<Entity>
     ) {
         watcher.setList(list)
-        textView.setAdapter(
-            ArrayAdapter(
-                requireContext(),
-                android.R.layout.select_dialog_item,
-                list.map { it.getEntityName() })
-        )
     }
 
     override fun onStop() {
@@ -305,16 +372,27 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
 
     private fun updateUI() {
         Log.d(TAG, "_________ GameFragment updateUI __________ $gameWithAttributes")
-        homeTeamAutoCompleteTextView.setText(gameWithAttributes.homeTeam?.getEntityName())
-        guestTeamAutoCompleteTextView.setText(gameWithAttributes.guestTeam?.getEntityName())
-        stadiumAutoCompleteTextView.setText(gameWithAttributes.stadium?.getEntityName())
-        leagueAutoCompleteTextView.setText(gameWithAttributes.league?.getEntityName())
+        if (homeTeamAutoCompleteTextView.text.isNullOrEmpty())
+            homeTeamAutoCompleteTextView.setText(gameWithAttributes.homeTeam?.getEntityName())
+        if (guestTeamAutoCompleteTextView.text.isNullOrEmpty())
+            guestTeamAutoCompleteTextView.setText(gameWithAttributes.guestTeam?.getEntityName())
+        if (stadiumAutoCompleteTextView.text.isNullOrBlank())
+            stadiumAutoCompleteTextView.setText(gameWithAttributes.stadium?.getEntityName())
+        if (leagueAutoCompleteTextView.text.isNullOrEmpty())
+            leagueAutoCompleteTextView.setText(gameWithAttributes.league?.getEntityName())
+        if (chiefRefereeAutoCompleteTextView.text.isNullOrEmpty())
+            chiefRefereeAutoCompleteTextView.setText(gameWithAttributes.chiefReferee?.getEntityName())
+        if (firstRefereeAutoCompleteTextView.text.isNullOrEmpty())
+            firstRefereeAutoCompleteTextView.setText(gameWithAttributes.firstReferee?.getEntityName())
+        if (secondRefereeAutoCompleteTextView.text.isNullOrEmpty())
+            secondRefereeAutoCompleteTextView.setText(gameWithAttributes.secondReferee?.getEntityName())
+        if (reserveRefereeAutoCompleteTextView.text.isNullOrEmpty())
+            reserveRefereeAutoCompleteTextView.setText(gameWithAttributes.reserveReferee?.getEntityName())
+
+
         dateButton.text = DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
         timeButton.text = DateFormat.format(TIME_FORMAT, gameWithAttributes.game.date).toString()
-        chiefRefereeAutoCompleteTextView.setText(gameWithAttributes.chiefReferee?.getEntityName())
-        firstRefereeAutoCompleteTextView.setText(gameWithAttributes.firstReferee?.getEntityName())
-        secondRefereeAutoCompleteTextView.setText(gameWithAttributes.secondReferee?.getEntityName())
-        reserveRefereeAutoCompleteTextView.setText(gameWithAttributes.reserveReferee?.getEntityName())
+
         gamePaidCheckBox.apply {
             isChecked = gameWithAttributes.game.isPaid
             jumpDrawablesToCurrentState()

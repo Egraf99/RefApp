@@ -1,8 +1,10 @@
 package com.egraf.refapp
 
+import android.app.Activity
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -29,6 +31,14 @@ abstract class TextInputLayoutWatcher : TextWatcher {
     interface Callbacks {
         fun changeGameEntity(entity: Entity?, type: TypeTextInputWatcher?)
         fun saveGame()
+    }
+
+    private fun TextInputLayout.unfocused() {
+        // hide keyboard
+        val inputMethodManager = context?.getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager
+        inputMethodManager?.hideSoftInputFromWindow(this.windowToken, 0)
+        // remove focus
+        this.clearFocus()
     }
 
     lateinit var fragment: Callbacks
@@ -75,21 +85,20 @@ abstract class TextInputLayoutWatcher : TextWatcher {
 
     override fun afterTextChanged(text: Editable?) {
         this.text = text
+        if (type == TypeTextInputWatcher.STADIUM)
+            Log.d(TAG, "afterTextChanged() called with: text = $text")
         when {
             text.isNullOrEmpty() -> {
 //                пустой текст - убираем иконку взаимодействия
-                Log.d(TAG, "afterTextChanged: empty")
                 fragment.changeGameEntity(null, type)
                 setEndIcon(TextEditType.DEFAULT)
             }
             indexMatch == -1 -> {
 //                нет совпадений по тексту - показывем иконку добавления Entity
-                Log.d(TAG, "afterTextChanged: not $indexMatch")
                 setEndIcon(TextEditType.ADD)
             }
             else -> {
 //                есть совпдение по тексту - показываем иконку info
-                Log.d(TAG, "afterTextChanged: match $indexMatch")
                 fragment.changeGameEntity(matchedEntity, type)
                 setEndIcon(TextEditType.INFO)
             }
@@ -101,7 +110,6 @@ abstract class TextInputLayoutWatcher : TextWatcher {
 
     private val indexMatch: Int
         get() {
-            Log.d(TAG, "get: $entitiesList")
             return entitiesList.map { it.getEntityName() }.indexOf(text.toString().trim())
         }
 
@@ -131,12 +139,14 @@ abstract class TextInputLayoutWatcher : TextWatcher {
                             changeGameEntity(newEntity, this@TextInputLayoutWatcher.type)
                             saveGame()
                         }
+                        textInputLayout.unfocused()
 
                         Toast.makeText(
                             context,
                             context.getString(toastMessageResId, newEntity.getEntityName()),
                             Toast.LENGTH_SHORT
                         ).show()
+                        setEndIcon(TextEditType.INFO)
                     }
                 }
             }
@@ -152,6 +162,7 @@ abstract class TextInputLayoutWatcher : TextWatcher {
                         )
                     )
                     setEndIconOnClickListener {
+                        textInputLayout.unfocused()
 
                         Toast.makeText(
                             context,
