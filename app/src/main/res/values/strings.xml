@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name" translatable="false">RefApp</string>
     <string name="gamePaidCheckbox">Paid</string>
     <string name="versus" translatable="false">vs.</string>
     <string name="new_game">New Game</string>

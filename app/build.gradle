@@ -23,6 +23,15 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            resValue "string", "app_name", "RefApp"
+        }
+        debugVersion {
+            initWith debug
+            applicationIdSuffix ".debugVersion"
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue "string", "app_name", "RefApp(debug)"
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
