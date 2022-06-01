@@ -4,121 +4,71 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginHorizontal="4dp"
     android:padding="5dp"
     android:background="@drawable/background_game_item">
-
-    <TextView
-        android:id="@+id/team_home_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@id/versus"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_default="spread"
-        tools:text="Home Name" />
-
-    <TextView
-        android:id="@+id/versus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/versus"
-        app:layout_constraintBottom_toBottomOf="@+id/team_home_textview"
-        app:layout_constraintEnd_toStartOf="@id/team_guest_textview"
-        app:layout_constraintStart_toEndOf="@id/team_home_textview"
-        app:layout_constraintTop_toTopOf="@+id/team_home_textview" />
-
-    <TextView
-        android:id="@+id/team_guest_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/versus"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/versus"
-        app:layout_constraintTop_toTopOf="@+id/versus"
-        app:layout_constraintWidth_default="spread"
-        tools:text="Guest Name" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/stadium"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/stadium_textview"
-        app:layout_constraintBottom_toBottomOf="@id/stadium_textview" />
-
-    <TextView
-        android:id="@+id/stadium_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toStartOf="@+id/img_check_isPaid"
-        app:layout_constraintTop_toBottomOf="@id/team_home_textview"
-        app:layout_constraintStart_toStartOf="parent"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_goneMarginEnd="56dp"
-        tools:text="Stadium" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/league"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/league_textview"
-        app:layout_constraintBottom_toBottomOf="@id/league_textview"/>
-
-    <TextView
-        android:id="@+id/league_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/img_check_isPaid"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stadium_textview"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        tools:text="League" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/date_textview"
-        app:layout_constraintBottom_toBottomOf="@id/date_textview"
-        android:text="@string/date"/>
 
     <TextView
         android:id="@+id/date_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/img_check_isPaid"
+        android:layout_marginStart="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/league_textview"
+        app:layout_constraintEnd_toStartOf="@id/img_check_gamePass"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/stadium_textview"
         android:textSize="16sp"
         android:textStyle="bold"
         tools:text="Date" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_percent="0.45"
+        android:orientation="vertical"/>
+
+    <TextView
+        android:id="@+id/stadium_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        app:layout_constraintTop_toBottomOf="@id/date_textview"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="Stadium" />
+
+    <TextView
+        android:id="@+id/league_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        app:layout_constraintTop_toTopOf="@id/stadium_textview"
+        app:layout_constraintBottom_toBottomOf="@id/stadium_textview"
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="League" />
 
     <ImageView
         android:id="@+id/img_check_gamePass"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        app:layout_constraintBottom_toTopOf="@id/img_check_isPaid"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/team_home_textview"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/img_check_isPaid"
+        tools:src="@drawable/ic_calendar_green"/>
 
     <ImageView
         android:id="@+id/img_check_isPaid"
         android:layout_width="36dp"
         android:layout_height="36dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/img_check_gamePass"
-        app:layout_constraintStart_toStartOf="@id/img_check_gamePass"
-        app:layout_constraintTop_toBottomOf="@+id/img_check_gamePass" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:src="@drawable/ic_paiment_done"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

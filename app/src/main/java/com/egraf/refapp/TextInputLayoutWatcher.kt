@@ -169,7 +169,7 @@ abstract class TextInputLayoutWatcher : TextWatcher {
                     setEndIconTintList(
                         ContextCompat.getColorStateList(
                             context,
-                            com.google.android.material.R.color.design_default_color_primary
+                            R.color.orange
                         )
                     )
                     setEndIconOnClickListener {

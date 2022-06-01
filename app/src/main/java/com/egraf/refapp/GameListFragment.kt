@@ -19,7 +19,7 @@ import com.egraf.refapp.database.entities.GameWithAttributes
 import java.util.*
 
 private const val TAG = "GameListFragment"
-private const val DATE_FORMAT = "dd.MM.yyyy (EEE) HH:mm"
+private const val DATE_FORMAT = "dd.MM.yyyy (EEEEEEEE) HH:mm"
 
 class GameListFragment : Fragment() {
     interface Callbacks {
@@ -111,9 +111,6 @@ class GameListFragment : Fragment() {
     private inner class GameHolder(view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
         private lateinit var gameWithAttributes: GameWithAttributes
-
-        val homeTeamTextVIew: TextView = itemView.findViewById(R.id.team_home_textview)
-        val guestTeamTextView: TextView = itemView.findViewById(R.id.team_guest_textview)
         val stadiumTextView: TextView = itemView.findViewById(R.id.stadium_textview)
         val leagueTextView: TextView = itemView.findViewById(R.id.league_textview)
         val dateTextView: TextView = itemView.findViewById(R.id.date_textview)
@@ -127,8 +124,6 @@ class GameListFragment : Fragment() {
         fun bind(game: GameWithAttributes) {
             gameWithAttributes = game
             Log.d(TAG, "bind() called with: game = $game")
-            homeTeamTextVIew.text = gameWithAttributes.homeTeam?.name
-            guestTeamTextView.text = gameWithAttributes.guestTeam?.name
             stadiumTextView.text = gameWithAttributes.stadium?.name
             leagueTextView.text = gameWithAttributes.league?.name
             dateTextView.text =
@@ -172,9 +167,7 @@ class GameListFragment : Fragment() {
         }
 
         override fun areContentsTheSame(oldGame: GameWithAttributes, newGame: GameWithAttributes): Boolean {
-            return oldGame.homeTeam?.name == newGame.homeTeam?.name &&
-                    oldGame.guestTeam?.name == newGame.guestTeam?.name &&
-                    oldGame.stadium?.name == newGame.stadium?.name &&
+            return oldGame.stadium?.name == newGame.stadium?.name &&
                     oldGame.league?.name == newGame.league?.name &&
                     oldGame.game.date == newGame.game.date &&
                     oldGame.game.isPaid == newGame.game.isPaid &&
