@@ -19,6 +19,7 @@ data class Game(
     var firstRefereeId: UUID? = null,
     var secondRefereeId: UUID? = null,
     var reserveRefereeId: UUID? = null,
+    var inspectorId: UUID? = null
 ): com.egraf.refapp.database.entities.Entity {
     override fun getEntityName(): String {
         return "$id $homeTeamId $guestTeamId $stadiumId $leagueId"

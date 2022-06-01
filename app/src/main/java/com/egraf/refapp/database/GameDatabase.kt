@@ -11,7 +11,7 @@ import java.util.*
 
 @Database(
     entities = [Game::class, Stadium::class, League::class, Team::class, Referee::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(GameTypeConverters::class)
@@ -23,18 +23,18 @@ abstract class GameDatabase : RoomDatabase() {
     abstract fun refereeDao(): RefereeDao
 }
 
-///**
-// * С версии 1: Room с одном таблицей Game
-// * К версии 2: отдельная таблица Stadium с внешним ключом id = Game.stadiumId
-// */
-//val migration_1_2 = object : Migration(2, 3) {
-//    override fun migrate(database: SupportSQLiteDatabase) {
-//        database.execSQL(
-//            "ALTER TABLE Game ADD COLUMN isPassed INTEGER NOT NULL DEFAULT 0"
-//        )
-//    }
-//}
-//
+/**
+ * С версии 1: Room с одном таблицей Game
+ * К версии 2: отдельная таблица Stadium с внешним ключом id = Game.stadiumId
+ */
+val migration_1_2 = object : Migration(1, 2) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL(
+            "ALTER TABLE Game ADD COLUMN inspectorId TEXT"
+        )
+    }
+}
+
 ///**
 // * С версии 2: Room с одном таблицей Game и Stadium
 // * К версии 3: отдельная таблица League с внешним ключом id = Game.leagueId

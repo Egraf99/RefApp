@@ -96,6 +96,14 @@ class GameDetailViewModel : ViewModel() {
             gameWithAttributes.game.reserveRefereeId = null
         }
 
+        if (gameWithAttributes.inspector != null) {
+            // добавляем главного судью и обновляем id главного судьи в игре
+            gameWithAttributes.game.inspectorId = gameWithAttributes.inspector!!.id
+            gameRepository.addReferee(gameWithAttributes.inspector!!)
+        } else {
+            gameWithAttributes.game.inspectorId = null
+        }
+
 //        обновляем игру
         gameRepository.updateGame(gameWithAttributes.game)
     }
@@ -145,6 +153,12 @@ class GameDetailViewModel : ViewModel() {
     fun saveReserveReferee(gameWithAttributes: GameWithAttributes, referee: Referee) {
         gameRepository.addReferee(referee)
         gameWithAttributes.game.reserveRefereeId = referee.id
+        gameRepository.updateGame(gameWithAttributes.game)
+    }
+
+    fun saveInspector(gameWithAttributes: GameWithAttributes, referee: Referee) {
+        gameRepository.addReferee(referee)
+        gameWithAttributes.game.inspectorId = referee.id
         gameRepository.updateGame(gameWithAttributes.game)
     }
 

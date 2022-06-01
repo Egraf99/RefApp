@@ -25,6 +25,7 @@ enum class TypeTextInputWatcher {
     FIRST_REFEREE,
     SECOND_REFEREE,
     RESERVE_REFEREE,
+    INSPECTOR
 }
 
 abstract class TextInputLayoutWatcher : TextWatcher {
@@ -38,6 +39,7 @@ abstract class TextInputLayoutWatcher : TextWatcher {
         fun saveFirstReferee(referee: Referee)
         fun saveSecondReferee(referee: Referee)
         fun saveReserveReferee(referee: Referee)
+        fun saveInspector(referee: Referee)
         fun setHomeTeamNull()
         fun setGuestTeamNull()
         fun setLeagueNull()
@@ -46,6 +48,7 @@ abstract class TextInputLayoutWatcher : TextWatcher {
         fun setFirstRefereeNull()
         fun setSecondRefereeNull()
         fun setReserveRefereeNull()
+        fun setInspectorNull()
     }
 
     private fun TextInputLayout.unfocused() {
@@ -297,11 +300,13 @@ class RefereeInputWatcher : TextInputLayoutWatcher() {
             TypeTextInputWatcher.FIRST_REFEREE -> fragment.saveFirstReferee(entity as Referee)
             TypeTextInputWatcher.SECOND_REFEREE -> fragment.saveSecondReferee(entity as Referee)
             TypeTextInputWatcher.RESERVE_REFEREE -> fragment.saveReserveReferee(entity as Referee)
+            TypeTextInputWatcher.INSPECTOR -> fragment.saveInspector(entity as Referee)
             else -> throw IllegalStateException(
                 "TeamInputWatcher type should be: TypeTextInputWatcher.CHIEF_REFEREE, " +
                         "TypeTextInputWatcher.FIRST_REFEREE, " +
                         "TypeTextInputWatcher.SECOND_REFEREE, " +
-                        "TypeTextInputWatcher.RESERVE_REFEREE"
+                        "TypeTextInputWatcher.RESERVE_REFEREE" +
+                        "TypeTextInputWatcher.INSPECTOR"
             )
         }
     }
@@ -312,11 +317,13 @@ class RefereeInputWatcher : TextInputLayoutWatcher() {
             TypeTextInputWatcher.FIRST_REFEREE -> fragment.setFirstRefereeNull()
             TypeTextInputWatcher.SECOND_REFEREE -> fragment.setSecondRefereeNull()
             TypeTextInputWatcher.RESERVE_REFEREE -> fragment.setReserveRefereeNull()
+            TypeTextInputWatcher.INSPECTOR -> fragment.setInspectorNull()
             else -> throw IllegalStateException(
                 "TeamInputWatcher type should be: TypeTextInputWatcher.CHIEF_REFEREE, " +
                         "TypeTextInputWatcher.FIRST_REFEREE, " +
                         "TypeTextInputWatcher.SECOND_REFEREE, " +
-                        "TypeTextInputWatcher.RESERVE_REFEREE"
+                        "TypeTextInputWatcher.RESERVE_REFEREE" +
+                        "TypeTextInputWatcher.INSPECTOR"
             )
         }
     }

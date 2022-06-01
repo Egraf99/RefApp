@@ -8,10 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.CheckBox
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
@@ -81,11 +78,16 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
     private lateinit var reserveRefereeWatcher: TextInputLayoutWatcher
     private lateinit var reserveRefereeListAdapter: ArrayAdapter<String>
 
+    private lateinit var inspectorLayout: TextInputLayout
+    private lateinit var inspectorAutoCompleteTextView: AutoCompleteTextView
+    private lateinit var inspectorWatcher: TextInputLayoutWatcher
+    private lateinit var inspectorListAdapter: ArrayAdapter<String>
+
     private lateinit var dateButton: Button
     private lateinit var timeButton: Button
     private lateinit var gamePaidCheckBox: CheckBox
     private lateinit var gamePassedCheckBox: CheckBox
-    private lateinit var buttonDelete: Button
+    private lateinit var buttonDelete: ImageButton
     private val gameDetailViewModel: GameDetailViewModel by lazy {
         ViewModelProvider(this).get(GameDetailViewModel::class.java)
     }
@@ -142,9 +144,12 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         reserveRefereeLayout = view.findViewById(R.id.reserve_referee_layout) as TextInputLayout
         reserveRefereeAutoCompleteTextView =
             view.findViewById(R.id.reserve_referee_autocomplete) as AutoCompleteTextView
+        inspectorLayout = view.findViewById(R.id.inspector_layout) as TextInputLayout
+        inspectorAutoCompleteTextView =
+            view.findViewById(R.id.inspector_autocomplete) as AutoCompleteTextView
         dateButton = view.findViewById(R.id.game_date) as Button
         timeButton = view.findViewById(R.id.game_time) as Button
-        buttonDelete = view.findViewById(R.id.button_delete) as Button
+        buttonDelete = view.findViewById(R.id.button_delete) as ImageButton
         gamePaidCheckBox = view.findViewById(R.id.game_paid) as CheckBox
         gamePassedCheckBox = view.findViewById(R.id.game_passed) as CheckBox
 
@@ -186,13 +191,15 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
                 chiefRefereeListAdapter,
                 firstRefereeListAdapter,
                 secondRefereeListAdapter,
-                reserveRefereeListAdapter
+                reserveRefereeListAdapter,
+                inspectorListAdapter
             )
             val listWatcher = listOf(
                 chiefRefereeWatcher,
                 firstRefereeWatcher,
                 secondRefereeWatcher,
-                reserveRefereeWatcher
+                reserveRefereeWatcher,
+                inspectorWatcher
             )
             for (pair in listTextView.zip(listWatcher)) {
                 updateAdapterList(pair.first, refereeList)
@@ -316,6 +323,18 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
             setAdapter(reserveRefereeListAdapter)
         }
 
+        inspectorWatcher = refereeWatcher.build().setType(TypeTextInputWatcher.INSPECTOR)
+            .setTextView(inspectorAutoCompleteTextView).setLayout(inspectorLayout)
+        inspectorListAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.select_dialog_item,
+            refereeList.map { it.getEntityName() })
+        inspectorAutoCompleteTextView.apply {
+            threshold = 1
+            addTextChangedListener(inspectorWatcher)
+            setAdapter(inspectorListAdapter)
+        }
+
         gamePaidCheckBox.apply {
             setOnCheckedChangeListener { _, isPaid -> gameWithAttributes.game.isPaid = isPaid }
         }
@@ -403,6 +422,10 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         gameDetailViewModel.saveReserveReferee(gameWithAttributes, referee)
     }
 
+    override fun  saveInspector(referee: Referee) {
+        gameDetailViewModel.saveInspector(gameWithAttributes, referee)
+    }
+
     override fun setHomeTeamNull() {
         gameWithAttributes.homeTeam = null
     }
@@ -435,6 +458,10 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         gameWithAttributes.reserveReferee = null
     }
 
+    override fun setInspectorNull() {
+        gameWithAttributes.inspector = null
+    }
+
     private fun updateUI() {
         Log.d(TAG, "updateUI() called")
         val textViewList = listOf(
@@ -446,6 +473,7 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
             firstRefereeAutoCompleteTextView,
             secondRefereeAutoCompleteTextView,
             reserveRefereeAutoCompleteTextView,
+            inspectorAutoCompleteTextView
         )
         val attributesList = listOf(
             gameWithAttributes.homeTeam,
@@ -456,6 +484,7 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
             gameWithAttributes.firstReferee,
             gameWithAttributes.secondReferee,
             gameWithAttributes.reserveReferee,
+            gameWithAttributes.inspector
         )
 
         for (pair in textViewList.zip(attributesList)) {

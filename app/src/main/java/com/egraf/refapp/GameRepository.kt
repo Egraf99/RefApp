@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.egraf.refapp.database.GameDatabase
 import com.egraf.refapp.database.entities.*
-//import com.egraf.refapp.database.migration_1_2n_1_2
+import com.egraf.refapp.database.migration_1_2
 import java.lang.IllegalStateException
 import java.util.*
 import java.util.concurrent.Executors
@@ -16,7 +16,7 @@ class GameRepository private constructor(context: Context) {
 
     private val database: GameDatabase =
         Room.databaseBuilder(context.applicationContext, GameDatabase::class.java, DATABASE_NAME)
-//            .addMigrations(migration_1_2)
+            .addMigrations(migration_1_2)
             .build()
 
     private val executor = Executors.newSingleThreadExecutor()

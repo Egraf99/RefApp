@@ -22,4 +22,5 @@
     <string name="league_add_message">Лига %1$s добавлена</string>
     <string name="referee_add_message">Судья %1$s добавлен</string>
     <string name="date">Дата</string>
+    <string name="inspector">Инспектор</string>
 </resources>
