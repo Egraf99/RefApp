@@ -3,6 +3,7 @@ package com.egraf.refapp.database.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.*
+import kotlin.collections.ArrayList
 
 @Entity
 data class Referee(
@@ -12,14 +13,10 @@ data class Referee(
     var secondName: String = "",
     var thirdName: String = "",
 ) : com.egraf.refapp.database.entities.Entity {
-    override fun getEntityName(): String {
-        var returnName = ""
-        if (secondName.isNotEmpty())
-            returnName += secondName
-        if (firstName.isNotEmpty())
-            returnName += " $firstName"
-        return returnName
-    }
+    override val shortName: String
+        get() = arrayListOf(secondName, firstName).joinToString(" ").trim()
+    override val fullName: String
+        get() = arrayListOf(secondName, firstName, thirdName).joinToString(" ").trim()
 
     override fun setEntityName(text: String): Referee {
         val fullName = text.trim().split(" ")

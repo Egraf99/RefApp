@@ -222,7 +222,7 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         homeTeamListAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.select_dialog_item,
-            teamsList.map { it.getEntityName() })
+            teamsList.map { it.fullName })
         homeTeamAutoCompleteTextView.apply {
             threshold = 1
             addTextChangedListener(homeTeamWatcher)
@@ -235,7 +235,7 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         guestTeamListAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.select_dialog_item,
-            teamsList.map { it.getEntityName() })
+            teamsList.map { it.fullName })
         guestTeamAutoCompleteTextView.apply {
             threshold = 1
             addTextChangedListener(guestTeamWatcher)
@@ -250,7 +250,7 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         stadiumListAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.select_dialog_item,
-            stadiumsList.map { it.getEntityName() })
+            stadiumsList.map { it.fullName })
         stadiumAutoCompleteTextView.apply {
             threshold = 1
             addTextChangedListener(stadiumWatcher)
@@ -265,7 +265,7 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         leagueListAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.select_dialog_item,
-            leaguesList.map { it.getEntityName() })
+            leaguesList.map { it.fullName })
         leagueAutoCompleteTextView.apply {
             threshold = 1
             addTextChangedListener(leagueWatcher)
@@ -280,7 +280,7 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         chiefRefereeListAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.select_dialog_item,
-            refereeList.map { it.getEntityName() })
+            refereeList.map { it.fullName })
         chiefRefereeAutoCompleteTextView.apply {
             threshold = 1
             addTextChangedListener(chiefRefereeWatcher)
@@ -292,7 +292,7 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         firstRefereeListAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.select_dialog_item,
-            refereeList.map { it.getEntityName() })
+            refereeList.map { it.fullName })
         firstRefereeAutoCompleteTextView.apply {
             threshold = 1
             addTextChangedListener(firstRefereeWatcher)
@@ -304,7 +304,7 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         secondRefereeListAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.select_dialog_item,
-            refereeList.map { it.getEntityName() })
+            refereeList.map { it.fullName })
         secondRefereeAutoCompleteTextView.apply {
             threshold = 1
             addTextChangedListener(secondRefereeWatcher)
@@ -316,7 +316,7 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         reserveRefereeListAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.select_dialog_item,
-            refereeList.map { it.getEntityName() })
+            refereeList.map { it.fullName })
         reserveRefereeAutoCompleteTextView.apply {
             threshold = 1
             addTextChangedListener(reserveRefereeWatcher)
@@ -328,7 +328,7 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         inspectorListAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.select_dialog_item,
-            refereeList.map { it.getEntityName() })
+            refereeList.map { it.fullName })
         inspectorAutoCompleteTextView.apply {
             threshold = 1
             addTextChangedListener(inspectorWatcher)
@@ -369,7 +369,7 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         list: List<Entity>
     ) {
         adapter.clear()
-        adapter.addAll(list.map { it.getEntityName() })
+        adapter.addAll(list.map { it.fullName })
         adapter.notifyDataSetChanged()
     }
 
@@ -491,7 +491,7 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
             val textView = pair.first
             val attribute = pair.second
             if (textView.text.isNullOrBlank())
-                textView.setText(attribute?.getEntityName())
+                textView.setText(attribute?.shortName)
         }
 
         dateButton.text = DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()

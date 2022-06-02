@@ -1,6 +1,7 @@
 package com.egraf.refapp.database.entities
 
 interface Entity {
-    fun getEntityName(): String?
+    val shortName: String
+    val fullName: String
     fun setEntityName(text: String): Entity
 }

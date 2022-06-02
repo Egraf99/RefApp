@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import com.egraf.refapp.database.entities.*
 import com.google.android.material.textfield.TextInputLayout
 import java.lang.IllegalStateException
+import java.lang.Integer.max
 
 private const val TAG = "Watcher"
 
@@ -127,7 +128,12 @@ abstract class TextInputLayoutWatcher : TextWatcher {
 
     private val indexMatch: Int
         get() {
-            return entitiesList.map { it.getEntityName() }.indexOf(text.toString().trim())
+            return max(
+                // проверяем совпадение среди сокращенных имен
+                entitiesList.map { it.fullName }.indexOf(text.toString().trim()),
+                // проверяем совпадение среди полных имен
+                entitiesList.map { it.shortName }.indexOf(text.toString().trim())
+            )
         }
 
     private fun setEndIcon(
@@ -155,7 +161,7 @@ abstract class TextInputLayoutWatcher : TextWatcher {
                         saveEntity(newEntity)
                         Toast.makeText(
                             context,
-                            context.getString(toastMessageResId, newEntity.getEntityName()),
+                            context.getString(toastMessageResId, newEntity.fullName),
                             Toast.LENGTH_SHORT
                         ).show()
 
@@ -180,7 +186,7 @@ abstract class TextInputLayoutWatcher : TextWatcher {
 
                         Toast.makeText(
                             context,
-                            matchedEntity.toString(),
+                            matchedEntity?.fullName ?: context.getText(R.string.not_found),
                             Toast.LENGTH_SHORT
                         )
                             .show()

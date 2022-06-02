@@ -21,9 +21,11 @@ data class Game(
     var reserveRefereeId: UUID? = null,
     var inspectorId: UUID? = null
 ): com.egraf.refapp.database.entities.Entity {
-    override fun getEntityName(): String {
-        return "$id $homeTeamId $guestTeamId $stadiumId $leagueId"
-    }
+    override val shortName: String
+        get() = "id=$id homeTeamId=$homeTeamId guestTeamId=$guestTeamId"
+    override val fullName: String
+        get() =
+            "id=$id homeTeamId=$homeTeamId guestTeamId=$guestTeamId stadiumId=$stadiumId leagueId=$leagueId isPaid=$isPaid isPassed=$isPassed chiefRefereeId=$chiefRefereeId firstRefereeId=$firstRefereeId secondRefereeId=$secondRefereeId reserveRefereeId=$reserveRefereeId inspectorId=$inspectorId"
 
     override fun setEntityName(text: String): Game {
         return this

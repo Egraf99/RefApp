@@ -10,9 +10,10 @@ data class League(
     var id: UUID = UUID.randomUUID(),
     var name: String = "",
 ): com.egraf.refapp.database.entities.Entity {
-    override fun getEntityName(): String {
-        return name
-    }
+    override val shortName: String
+        get() = name
+    override val fullName: String
+        get() = name
 
     override fun setEntityName(text: String): League {
         return this.apply { name = text.trim() }
