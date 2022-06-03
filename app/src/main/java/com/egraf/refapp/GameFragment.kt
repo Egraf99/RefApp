@@ -8,14 +8,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import androidx.appcompat.widget.AppCompatAutoCompleteTextView
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.ImageButton
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
+import com.egraf.refapp.GameDetailViewModel
+import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.*
+import com.egraf.refapp.dialogs.DatePickerFragment
+import com.egraf.refapp.dialogs.DeleteDialog
+import com.egraf.refapp.dialogs.TimePickerFragment
 import com.egraf.refapp.views.textInput.EntityTextInput
-import com.google.android.material.textfield.TextInputLayout
 import java.util.*
 
 private const val TAG = "GameFragment"
