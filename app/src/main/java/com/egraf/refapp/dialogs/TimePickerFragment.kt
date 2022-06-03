@@ -1,4 +1,4 @@
-package com.egraf.refapp
+package com.egraf.refapp.dialogs
 
 import android.app.TimePickerDialog
 import android.app.Dialog

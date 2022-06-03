@@ -1,13 +1,13 @@
-package com.egraf.refapp
+package com.egraf.refapp.dialogs
 
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
+import com.egraf.refapp.R
 
 private const val TAG = "DeleteDialog"
 private const val RESULT_DELETE_KEY = "DeleteRequest"

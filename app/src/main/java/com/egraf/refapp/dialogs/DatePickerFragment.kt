@@ -1,4 +1,4 @@
-package com.egraf.refapp
+package com.egraf.refapp.dialogs
 
 import android.app.DatePickerDialog
 import android.app.Dialog
