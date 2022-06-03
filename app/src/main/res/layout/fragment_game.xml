@@ -14,7 +14,7 @@
         android:focusableInTouchMode="true">
 
         <!--First line-->
-        <com.google.android.material.textfield.TextInputLayout
+        <com.egraf.refapp.views.textInput.EntityTextInput
             android:id="@+id/team_home_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
@@ -26,17 +26,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <AutoCompleteTextView
-                android:id="@+id/team_home_autocomplete"
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:inputType="textImeMultiLine"
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </com.egraf.refapp.views.textInput.EntityTextInput>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <com.egraf.refapp.views.textInput.EntityTextInput
             android:id="@+id/team_guest_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
@@ -48,18 +47,17 @@
             app:layout_constraintStart_toEndOf="@id/team_home_layout"
             app:layout_constraintTop_toTopOf="parent">
 
-            <AutoCompleteTextView
-                android:id="@+id/team_guest_autocomplete"
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:inputType="textImeMultiLine"
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </com.egraf.refapp.views.textInput.EntityTextInput>
 
         <!--    Second line-->
-        <com.google.android.material.textfield.TextInputLayout
+        <com.egraf.refapp.views.textInput.EntityTextInput
             android:id="@+id/stadium_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -73,17 +71,16 @@
             app:startIconDrawable="@drawable/ic_stadium"
             app:startIconTint="@color/orange">
 
-            <AutoCompleteTextView
-                android:id="@+id/stadium_autocomplete"
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:inputType="textImeMultiLine"
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </com.egraf.refapp.views.textInput.EntityTextInput>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <com.egraf.refapp.views.textInput.EntityTextInput
             android:id="@+id/league_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -97,17 +94,16 @@
             app:startIconDrawable="@drawable/ic_football_ball"
             app:startIconTint="@color/orange">
 
-            <AutoCompleteTextView
-                android:id="@+id/league_autocomplete"
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:inputType="textImeMultiLine"
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </com.egraf.refapp.views.textInput.EntityTextInput>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <com.egraf.refapp.views.textInput.EntityTextInput
             android:id="@+id/chief_referee_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -121,17 +117,16 @@
             app:startIconDrawable="@drawable/ic_whistle"
             app:startIconTint="@color/orange">
 
-            <AutoCompleteTextView
-                android:id="@+id/chief_referee_autocomplete"
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:inputType="textImeMultiLine"
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </com.egraf.refapp.views.textInput.EntityTextInput>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <com.egraf.refapp.views.textInput.EntityTextInput
             android:id="@+id/first_referee_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -145,17 +140,16 @@
             app:startIconDrawable="@drawable/ic_flag"
             app:startIconTint="@color/orange">
 
-            <AutoCompleteTextView
-                android:id="@+id/first_referee_autocomplete"
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:inputType="textImeMultiLine"
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </com.egraf.refapp.views.textInput.EntityTextInput>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <com.egraf.refapp.views.textInput.EntityTextInput
             android:id="@+id/second_referee_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -169,8 +163,7 @@
             app:startIconDrawable="@drawable/ic_flag"
             app:startIconTint="@color/orange">
 
-            <AutoCompleteTextView
-                android:id="@+id/second_referee_autocomplete"
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:focusableInTouchMode="true"
@@ -178,9 +171,9 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </com.egraf.refapp.views.textInput.EntityTextInput>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <com.egraf.refapp.views.textInput.EntityTextInput
             android:id="@+id/reserve_referee_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -194,17 +187,16 @@
             app:startIconDrawable="@drawable/ic_scoreboard"
             app:startIconTint="@color/orange">
 
-            <AutoCompleteTextView
-                android:id="@+id/reserve_referee_autocomplete"
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:inputType="textImeMultiLine"
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </com.egraf.refapp.views.textInput.EntityTextInput>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <com.egraf.refapp.views.textInput.EntityTextInput
             android:id="@+id/inspector_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -218,15 +210,14 @@
             app:startIconDrawable="@drawable/ic_inspectors_list"
             app:startIconTint="@color/orange">
 
-            <AutoCompleteTextView
-                android:id="@+id/inspector_autocomplete"
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:inputType="textImeMultiLine"
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </com.egraf.refapp.views.textInput.EntityTextInput>
 
         <CheckBox
             android:id="@+id/game_paid"

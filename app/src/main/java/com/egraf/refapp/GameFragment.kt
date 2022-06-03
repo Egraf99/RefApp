@@ -9,10 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.database.entities.*
+import com.egraf.refapp.views.textInput.EntityTextInput
 import com.google.android.material.textfield.TextInputLayout
 import java.util.*
 
@@ -25,63 +27,23 @@ private const val REQUEST_DELETE = "DialogDelete"
 private const val DATE_FORMAT = "EEE dd.MM.yyyy"
 private const val TIME_FORMAT = "HH:mm"
 
-class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.Callbacks {
+class GameFragment : Fragment(), FragmentResultListener {
     interface Callbacks {
         fun remoteGameDetail()
     }
 
-    private var stadiumsList: List<Stadium> = emptyList()
-    private var leaguesList: List<League> = emptyList()
-    private var teamsList: List<Team> = emptyList()
-    private var refereeList: List<Referee> = emptyList()
-
     private var callbacks: Callbacks? = null
     private lateinit var gameWithAttributes: GameWithAttributes
 
-    private lateinit var stadiumLayout: TextInputLayout
-    private lateinit var stadiumAutoCompleteTextView: AutoCompleteTextView
-    private lateinit var stadiumWatcher: TextInputLayoutWatcher
-    private lateinit var stadiumListAdapter: ArrayAdapter<String>
-
-    private lateinit var leagueLayout: TextInputLayout
-    private lateinit var leagueAutoCompleteTextView: AutoCompleteTextView
-    private lateinit var leagueWatcher: TextInputLayoutWatcher
-    private lateinit var leagueListAdapter: ArrayAdapter<String>
-
-    private lateinit var homeTeamLayout: TextInputLayout
-    private lateinit var homeTeamAutoCompleteTextView: AutoCompleteTextView
-    private lateinit var homeTeamWatcher: TextInputLayoutWatcher
-    private lateinit var homeTeamListAdapter: ArrayAdapter<String>
-
-    private lateinit var guestTeamLayout: TextInputLayout
-    private lateinit var guestTeamAutoCompleteTextView: AutoCompleteTextView
-    private lateinit var guestTeamWatcher: TextInputLayoutWatcher
-    private lateinit var guestTeamListAdapter: ArrayAdapter<String>
-
-    private lateinit var chiefRefereeLayout: TextInputLayout
-    private lateinit var chiefRefereeAutoCompleteTextView: AutoCompleteTextView
-    private lateinit var chiefRefereeWatcher: TextInputLayoutWatcher
-    private lateinit var chiefRefereeListAdapter: ArrayAdapter<String>
-
-    private lateinit var firstRefereeLayout: TextInputLayout
-    private lateinit var firstRefereeAutoCompleteTextView: AutoCompleteTextView
-    private lateinit var firstRefereeWatcher: TextInputLayoutWatcher
-    private lateinit var firstRefereeListAdapter: ArrayAdapter<String>
-
-    private lateinit var secondRefereeLayout: TextInputLayout
-    private lateinit var secondRefereeAutoCompleteTextView: AutoCompleteTextView
-    private lateinit var secondRefereeWatcher: TextInputLayoutWatcher
-    private lateinit var secondRefereeListAdapter: ArrayAdapter<String>
-
-    private lateinit var reserveRefereeLayout: TextInputLayout
-    private lateinit var reserveRefereeAutoCompleteTextView: AutoCompleteTextView
-    private lateinit var reserveRefereeWatcher: TextInputLayoutWatcher
-    private lateinit var reserveRefereeListAdapter: ArrayAdapter<String>
-
-    private lateinit var inspectorLayout: TextInputLayout
-    private lateinit var inspectorAutoCompleteTextView: AutoCompleteTextView
-    private lateinit var inspectorWatcher: TextInputLayoutWatcher
-    private lateinit var inspectorListAdapter: ArrayAdapter<String>
+    private lateinit var stadiumLayout: EntityTextInput
+    private lateinit var leagueLayout: EntityTextInput
+    private lateinit var homeTeamLayout: EntityTextInput
+    private lateinit var guestTeamLayout: EntityTextInput
+    private lateinit var chiefRefereeLayout: EntityTextInput
+    private lateinit var firstRefereeLayout: EntityTextInput
+    private lateinit var secondRefereeLayout: EntityTextInput
+    private lateinit var reserveRefereeLayout: EntityTextInput
+    private lateinit var inspectorLayout: EntityTextInput
 
     private lateinit var dateButton: Button
     private lateinit var timeButton: Button
@@ -120,33 +82,15 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         val view = inflater.inflate(R.layout.fragment_game, container, false)
 
         // Init views
-        homeTeamLayout = view.findViewById(R.id.team_home_layout) as TextInputLayout
-        homeTeamAutoCompleteTextView =
-            view.findViewById(R.id.team_home_autocomplete) as AutoCompleteTextView
-        guestTeamLayout = view.findViewById(R.id.team_guest_layout) as TextInputLayout
-        guestTeamAutoCompleteTextView =
-            view.findViewById(R.id.team_guest_autocomplete) as AutoCompleteTextView
-        stadiumLayout = view.findViewById(R.id.stadium_layout) as TextInputLayout
-        stadiumAutoCompleteTextView =
-            view.findViewById(R.id.stadium_autocomplete) as AutoCompleteTextView
-        leagueLayout = view.findViewById(R.id.league_layout) as TextInputLayout
-        leagueAutoCompleteTextView =
-            view.findViewById(R.id.league_autocomplete) as AutoCompleteTextView
-        chiefRefereeLayout = view.findViewById(R.id.chief_referee_layout) as TextInputLayout
-        chiefRefereeAutoCompleteTextView =
-            view.findViewById(R.id.chief_referee_autocomplete) as AutoCompleteTextView
-        firstRefereeLayout = view.findViewById(R.id.first_referee_layout) as TextInputLayout
-        firstRefereeAutoCompleteTextView =
-            view.findViewById(R.id.first_referee_autocomplete) as AutoCompleteTextView
-        secondRefereeLayout = view.findViewById(R.id.second_referee_layout) as TextInputLayout
-        secondRefereeAutoCompleteTextView =
-            view.findViewById(R.id.second_referee_autocomplete) as AutoCompleteTextView
-        reserveRefereeLayout = view.findViewById(R.id.reserve_referee_layout) as TextInputLayout
-        reserveRefereeAutoCompleteTextView =
-            view.findViewById(R.id.reserve_referee_autocomplete) as AutoCompleteTextView
-        inspectorLayout = view.findViewById(R.id.inspector_layout) as TextInputLayout
-        inspectorAutoCompleteTextView =
-            view.findViewById(R.id.inspector_autocomplete) as AutoCompleteTextView
+        homeTeamLayout = view.findViewById(R.id.team_home_layout) as EntityTextInput
+        guestTeamLayout = view.findViewById(R.id.team_guest_layout) as EntityTextInput
+        stadiumLayout = view.findViewById(R.id.stadium_layout) as EntityTextInput
+        leagueLayout = view.findViewById(R.id.league_layout) as EntityTextInput
+        chiefRefereeLayout = view.findViewById(R.id.chief_referee_layout) as EntityTextInput
+        firstRefereeLayout = view.findViewById(R.id.first_referee_layout) as EntityTextInput
+        secondRefereeLayout = view.findViewById(R.id.second_referee_layout) as EntityTextInput
+        reserveRefereeLayout = view.findViewById(R.id.reserve_referee_layout) as EntityTextInput
+        inspectorLayout = view.findViewById(R.id.inspector_layout) as EntityTextInput
         dateButton = view.findViewById(R.id.game_date) as Button
         timeButton = view.findViewById(R.id.game_time) as Button
         buttonDelete = view.findViewById(R.id.button_delete) as ImageButton
@@ -161,179 +105,282 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         super.onViewCreated(view, savedInstanceState)
         gameDetailViewModel.gameLiveData.observe(viewLifecycleOwner) { game ->
             game?.let {
-                this.gameWithAttributes = game
+                gameWithAttributes = game
                 updateUI()
             }
         }
         gameDetailViewModel.stadiumListLiveData.observe(viewLifecycleOwner) { stadiums ->
-            stadiumsList = stadiums
-            updateAdapterList(stadiumListAdapter, stadiumsList)
-            updateWatcherList(stadiumWatcher, stadiumsList)
+            stadiumLayout.setEntities(stadiums)
         }
         gameDetailViewModel.leagueListLiveData.observe(viewLifecycleOwner) { leagues ->
-            leaguesList = leagues
-            updateAdapterList(leagueListAdapter, leaguesList)
-            updateWatcherList(leagueWatcher, leaguesList)
+            leagueLayout.setEntities(leagues)
         }
         gameDetailViewModel.teamListLiveData.observe(viewLifecycleOwner) { teams ->
-            teamsList = teams
-            val listTextView = listOf(homeTeamListAdapter, guestTeamListAdapter)
-            val listWatcher = listOf(homeTeamWatcher, guestTeamWatcher)
-            for (pair in listTextView.zip(listWatcher)) {
-                updateAdapterList(pair.first, teamsList)
-                updateWatcherList(pair.second, teamsList)
+            for (textInput in listOf(homeTeamLayout, guestTeamLayout)) {
+                textInput.setEntities(teams)
             }
 
         }
         gameDetailViewModel.refereeListLiveData.observe(viewLifecycleOwner) { referee ->
-            refereeList = referee
-            val listTextView = listOf(
-                chiefRefereeListAdapter,
-                firstRefereeListAdapter,
-                secondRefereeListAdapter,
-                reserveRefereeListAdapter,
-                inspectorListAdapter
-            )
-            val listWatcher = listOf(
-                chiefRefereeWatcher,
-                firstRefereeWatcher,
-                secondRefereeWatcher,
-                reserveRefereeWatcher,
-                inspectorWatcher
-            )
-            for (pair in listTextView.zip(listWatcher)) {
-                updateAdapterList(pair.first, refereeList)
-                updateWatcherList(pair.second, refereeList)
+            for (textInput in listOf(
+                chiefRefereeLayout,
+                firstRefereeLayout,
+                secondRefereeLayout,
+                reserveRefereeLayout,
+                inspectorLayout
+            )) {
+                textInput.setEntities(referee)
             }
         }
 
-        parentFragmentManager.setFragmentResultListener(REQUEST_DATE, viewLifecycleOwner, this)
-        parentFragmentManager.setFragmentResultListener(REQUEST_TIME, viewLifecycleOwner, this)
-        parentFragmentManager.setFragmentResultListener(REQUEST_DELETE, viewLifecycleOwner, this)
+        for (request in listOf(REQUEST_DATE, REQUEST_TIME, REQUEST_DELETE))
+            parentFragmentManager.setFragmentResultListener(request, viewLifecycleOwner, this)
     }
 
     override fun onStart() {
         super.onStart()
-        val teamWatcher =
-            WatcherFactory().setType(TypeTextInputWatcher.TEAM).setList(teamsList).setParent(this)
+        homeTeamLayout
+            .whatDoWhenTextIsBlank { setHomeTeamNull() }
+            .whatDoWhenTextMatchedEntity { team -> saveHomeTeam(team as Team) }
+            .whatDoWhenAddClicked { text ->
+                run {
+                    // создаем новый стадион
+                    val team = Team().setEntityName(text)
+                    // сохраняем стадион
+                    saveHomeTeam(team)
+                    // показываем сообщение
+                    Toast.makeText(
+                        context,
+                        getString(R.string.team_add_message, team.fullName),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+            .whatDoWhenInfoClicked { team ->
+                // показываем сообщение с полным именем стадиона
+                Toast.makeText(
+                    context,
+                    team.fullName,
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
 
-        homeTeamWatcher = teamWatcher.build().setType(TypeTextInputWatcher.HOME_TEAM)
-            .setTextView(homeTeamAutoCompleteTextView).setLayout(homeTeamLayout).setParent(this)
-        homeTeamListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.select_dialog_item,
-            teamsList.map { it.fullName })
-        homeTeamAutoCompleteTextView.apply {
-            threshold = 1
-            addTextChangedListener(homeTeamWatcher)
-            setAdapter(homeTeamListAdapter)
-        }
+        guestTeamLayout
+            .whatDoWhenTextIsBlank { setGuestTeamNull() }
+            .whatDoWhenTextMatchedEntity { team -> saveGuestTeam(team as Team) }
+            .whatDoWhenAddClicked { text ->
+                run {
+                    // создаем новый стадион
+                    val team = Team().setEntityName(text)
+                    // сохраняем стадион
+                    saveGuestTeam(team)
+                    // показываем сообщение
+                    Toast.makeText(
+                        context,
+                        getString(R.string.team_add_message, team.fullName),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+            .whatDoWhenInfoClicked { team ->
+                // показываем сообщение с полным именем стадиона
+                Toast.makeText(
+                    context,
+                    team.fullName,
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
 
-        guestTeamWatcher =
-            teamWatcher.build().setType(TypeTextInputWatcher.GUEST_TEAM).setParent(this)
-                .setTextView(guestTeamAutoCompleteTextView).setLayout(guestTeamLayout)
-        guestTeamListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.select_dialog_item,
-            teamsList.map { it.fullName })
-        guestTeamAutoCompleteTextView.apply {
-            threshold = 1
-            addTextChangedListener(guestTeamWatcher)
-            setAdapter(guestTeamListAdapter)
-        }
+        stadiumLayout
+            .whatDoWhenTextIsBlank { setStadiumNull() }
+            .whatDoWhenTextMatchedEntity { stadium -> saveStadium(stadium as Stadium) }
+            .whatDoWhenAddClicked { text ->
+                run {
+                    // создаем новый стадион
+                    val stadium = Stadium().setEntityName(text)
+                    // сохраняем стадион
+                    saveStadium(stadium)
+                    // показываем сообщение
+                    Toast.makeText(
+                        context,
+                        getString(R.string.stadium_add_message, stadium.fullName),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+            .whatDoWhenInfoClicked { stadium ->
+                // показываем сообщение с полным именем стадиона
+                Toast.makeText(
+                    context,
+                    stadium.fullName,
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
 
-        stadiumWatcher =
-            WatcherFactory().setType(TypeTextInputWatcher.STADIUM).setList(stadiumsList)
-                .setParent(this)
-                .build().setTextView(stadiumAutoCompleteTextView)
-                .setLayout(stadiumLayout)
-        stadiumListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.select_dialog_item,
-            stadiumsList.map { it.fullName })
-        stadiumAutoCompleteTextView.apply {
-            threshold = 1
-            addTextChangedListener(stadiumWatcher)
-            setAdapter(stadiumListAdapter)
-        }
+        leagueLayout
+            .whatDoWhenTextIsBlank { setLeagueNull() }
+            .whatDoWhenTextMatchedEntity { league -> saveLeague(league as League) }
+            .whatDoWhenAddClicked { text ->
+                run {
+                    // создаем новый лигу
+                    val league = League().setEntityName(text)
+                    // сохраняем стадион
+                    saveLeague(league)
+                    // показываем сообщение
+                    Toast.makeText(
+                        context,
+                        getString(R.string.league_add_message, league.fullName),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+            .whatDoWhenInfoClicked { league ->
+                // показываем сообщение с полным именем стадиона
+                Toast.makeText(
+                    context,
+                    league.fullName,
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
 
-        leagueWatcher =
-            WatcherFactory().setType(TypeTextInputWatcher.LEAGUE).setList(leaguesList)
-                .setParent(this)
-                .build().setTextView(leagueAutoCompleteTextView)
-                .setLayout(leagueLayout)
-        leagueListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.select_dialog_item,
-            leaguesList.map { it.fullName })
-        leagueAutoCompleteTextView.apply {
-            threshold = 1
-            addTextChangedListener(leagueWatcher)
-            setAdapter(leagueListAdapter)
-        }
+        chiefRefereeLayout
+            .whatDoWhenTextIsBlank { setChiefRefereeNull() }
+            .whatDoWhenTextMatchedEntity { referee -> saveChiefReferee(referee as Referee) }
+            .whatDoWhenAddClicked { text ->
+                run {
+                    // создаем новый стадион
+                    val referee = Referee().setEntityName(text)
+                    // сохраняем стадион
+                    saveChiefReferee(referee)
+                    // показываем сообщение
+                    Toast.makeText(
+                        context,
+                        getString(R.string.referee_add_message, referee.fullName),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+            .whatDoWhenInfoClicked { referee ->
+                // показываем сообщение с полным именем стадиона
+                Toast.makeText(
+                    context,
+                    referee.fullName,
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
 
-        val refereeWatcher =
-            WatcherFactory().setType(TypeTextInputWatcher.REFEREE).setList(refereeList)
-                .setParent(this)
-        chiefRefereeWatcher = refereeWatcher.build().setType(TypeTextInputWatcher.CHIEF_REFEREE)
-            .setTextView(chiefRefereeAutoCompleteTextView).setLayout(chiefRefereeLayout)
-        chiefRefereeListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.select_dialog_item,
-            refereeList.map { it.fullName })
-        chiefRefereeAutoCompleteTextView.apply {
-            threshold = 1
-            addTextChangedListener(chiefRefereeWatcher)
-            setAdapter(chiefRefereeListAdapter)
-        }
+        firstRefereeLayout
+            .whatDoWhenTextIsBlank { setFirstRefereeNull() }
+            .whatDoWhenTextMatchedEntity { referee -> saveFirstReferee(referee as Referee) }
+            .whatDoWhenAddClicked { text ->
+                run {
+                    // создаем новый стадион
+                    val referee = Referee().setEntityName(text)
+                    // сохраняем стадион
+                    saveFirstReferee(referee)
+                    // показываем сообщение
+                    Toast.makeText(
+                        context,
+                        getString(R.string.referee_add_message, referee.fullName),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+            .whatDoWhenInfoClicked { referee ->
+                // показываем сообщение с полным именем стадиона
+                Toast.makeText(
+                    context,
+                    referee.fullName,
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
 
-        firstRefereeWatcher = refereeWatcher.build().setType(TypeTextInputWatcher.FIRST_REFEREE)
-            .setTextView(firstRefereeAutoCompleteTextView).setLayout(firstRefereeLayout)
-        firstRefereeListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.select_dialog_item,
-            refereeList.map { it.fullName })
-        firstRefereeAutoCompleteTextView.apply {
-            threshold = 1
-            addTextChangedListener(firstRefereeWatcher)
-            setAdapter(firstRefereeListAdapter)
-        }
+        secondRefereeLayout
+            .whatDoWhenTextIsBlank { setSecondRefereeNull() }
+            .whatDoWhenTextMatchedEntity { referee -> saveSecondReferee(referee as Referee) }
+            .whatDoWhenAddClicked { text ->
+                run {
+                    // создаем новый стадион
+                    val referee = Referee().setEntityName(text)
+                    // сохраняем стадион
+                    saveSecondReferee(referee)
+                    // показываем сообщение
+                    Toast.makeText(
+                        context,
+                        getString(R.string.referee_add_message, referee.fullName),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+            .whatDoWhenInfoClicked { referee ->
+                // показываем сообщение с полным именем стадиона
+                Toast.makeText(
+                    context,
+                    referee.fullName,
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
 
-        secondRefereeWatcher = refereeWatcher.build().setType(TypeTextInputWatcher.SECOND_REFEREE)
-            .setTextView(secondRefereeAutoCompleteTextView).setLayout(secondRefereeLayout)
-        secondRefereeListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.select_dialog_item,
-            refereeList.map { it.fullName })
-        secondRefereeAutoCompleteTextView.apply {
-            threshold = 1
-            addTextChangedListener(secondRefereeWatcher)
-            setAdapter(secondRefereeListAdapter)
-        }
+        reserveRefereeLayout
+            .whatDoWhenTextIsBlank { setReserveRefereeNull() }
+            .whatDoWhenTextMatchedEntity { referee -> saveReserveReferee(referee as Referee) }
+            .whatDoWhenAddClicked { text ->
+                run {
+                    // создаем новый стадион
+                    val referee = Referee().setEntityName(text)
+                    // сохраняем стадион
+                    saveReserveReferee(referee)
+                    // показываем сообщение
+                    Toast.makeText(
+                        context,
+                        getString(R.string.referee_add_message, referee.fullName),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+            .whatDoWhenInfoClicked { referee ->
+                // показываем сообщение с полным именем стадиона
+                Toast.makeText(
+                    context,
+                    referee.fullName,
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
 
-        reserveRefereeWatcher = refereeWatcher.build().setType(TypeTextInputWatcher.RESERVE_REFEREE)
-            .setTextView(reserveRefereeAutoCompleteTextView).setLayout(reserveRefereeLayout)
-        reserveRefereeListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.select_dialog_item,
-            refereeList.map { it.fullName })
-        reserveRefereeAutoCompleteTextView.apply {
-            threshold = 1
-            addTextChangedListener(reserveRefereeWatcher)
-            setAdapter(reserveRefereeListAdapter)
-        }
-
-        inspectorWatcher = refereeWatcher.build().setType(TypeTextInputWatcher.INSPECTOR)
-            .setTextView(inspectorAutoCompleteTextView).setLayout(inspectorLayout)
-        inspectorListAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.select_dialog_item,
-            refereeList.map { it.fullName })
-        inspectorAutoCompleteTextView.apply {
-            threshold = 1
-            addTextChangedListener(inspectorWatcher)
-            setAdapter(inspectorListAdapter)
-        }
+        inspectorLayout
+            .whatDoWhenTextIsBlank { setInspectorNull() }
+            .whatDoWhenTextMatchedEntity { referee -> saveInspector(referee as Referee) }
+            .whatDoWhenAddClicked { text ->
+                run {
+                    // создаем новый стадион
+                    val referee = Referee().setEntityName(text)
+                    // сохраняем стадион
+                    saveInspector(referee)
+                    // показываем сообщение
+                    Toast.makeText(
+                        context,
+                        getString(R.string.referee_add_message, referee.fullName),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+            .whatDoWhenInfoClicked { referee ->
+                // показываем сообщение с полным именем стадиона
+                Toast.makeText(
+                    context,
+                    referee.fullName,
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
 
         gamePaidCheckBox.apply {
             setOnCheckedChangeListener { _, isPaid -> gameWithAttributes.game.isPaid = isPaid }
@@ -364,116 +411,100 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         }
     }
 
-    private fun updateAdapterList(
-        adapter: ArrayAdapter<String>,
-        list: List<Entity>
-    ) {
-        adapter.clear()
-        adapter.addAll(list.map { it.fullName })
-        adapter.notifyDataSetChanged()
-    }
-
-    private fun updateWatcherList(
-        watcher: TextInputLayoutWatcher,
-        list: List<Entity>
-    ) {
-        watcher.setList(list)
-    }
-
     override fun onStop() {
         super.onStop()
         Log.d(TAG, "onStop() called")
         saveGame()
     }
 
-    override fun saveGame() {
+    private fun saveGame() {
         gameDetailViewModel.saveGame(gameWithAttributes)
     }
 
-    override fun saveHomeTeam(team: Team) {
+    private fun saveHomeTeam(team: Team) {
         gameDetailViewModel.saveHomeTeam(gameWithAttributes, team)
     }
 
-    override fun saveGuestTeam(team: Team) {
+    private fun saveGuestTeam(team: Team) {
         gameDetailViewModel.saveGuestTeam(gameWithAttributes, team)
     }
 
-    override fun saveLeague(league: League) {
+    private fun saveLeague(league: League) {
         gameDetailViewModel.saveLeague(gameWithAttributes, league)
     }
 
-    override fun saveStadium(stadium: Stadium) {
+    private fun saveStadium(stadium: Stadium) {
         gameDetailViewModel.saveStadium(gameWithAttributes, stadium)
     }
 
-    override fun saveChiefReferee(referee: Referee) {
+    private fun saveChiefReferee(referee: Referee) {
         gameDetailViewModel.saveChiefReferee(gameWithAttributes, referee)
     }
 
-    override fun  saveFirstReferee(referee: Referee) {
+    private fun saveFirstReferee(referee: Referee) {
         gameDetailViewModel.saveFirstReferee(gameWithAttributes, referee)
     }
 
-    override fun  saveSecondReferee(referee: Referee) {
+    private fun saveSecondReferee(referee: Referee) {
         gameDetailViewModel.saveSecondReferee(gameWithAttributes, referee)
     }
 
-    override fun  saveReserveReferee(referee: Referee) {
+    private fun saveReserveReferee(referee: Referee) {
         gameDetailViewModel.saveReserveReferee(gameWithAttributes, referee)
     }
 
-    override fun  saveInspector(referee: Referee) {
+    private fun saveInspector(referee: Referee) {
         gameDetailViewModel.saveInspector(gameWithAttributes, referee)
     }
 
-    override fun setHomeTeamNull() {
+    private fun setHomeTeamNull() {
         gameWithAttributes.homeTeam = null
     }
 
-    override fun setGuestTeamNull() {
+    private fun setGuestTeamNull() {
         gameWithAttributes.guestTeam = null
     }
 
-    override fun setLeagueNull() {
+    private fun setLeagueNull() {
         gameWithAttributes.league = null
     }
 
-    override fun setStadiumNull() {
+    private fun setStadiumNull() {
         gameWithAttributes.stadium = null
     }
 
-    override fun setChiefRefereeNull() {
+    private fun setChiefRefereeNull() {
         gameWithAttributes.chiefReferee = null
     }
 
-    override fun setFirstRefereeNull() {
+    private fun setFirstRefereeNull() {
         gameWithAttributes.firstReferee = null
     }
 
-    override fun setSecondRefereeNull() {
+    private fun setSecondRefereeNull() {
         gameWithAttributes.secondReferee = null
     }
 
-    override fun setReserveRefereeNull() {
+    private fun setReserveRefereeNull() {
         gameWithAttributes.reserveReferee = null
     }
 
-    override fun setInspectorNull() {
+    private fun setInspectorNull() {
         gameWithAttributes.inspector = null
     }
 
     private fun updateUI() {
         Log.d(TAG, "updateUI() called")
-        val textViewList = listOf(
-            homeTeamAutoCompleteTextView,
-            guestTeamAutoCompleteTextView,
-            stadiumAutoCompleteTextView,
-            leagueAutoCompleteTextView,
-            chiefRefereeAutoCompleteTextView,
-            firstRefereeAutoCompleteTextView,
-            secondRefereeAutoCompleteTextView,
-            reserveRefereeAutoCompleteTextView,
-            inspectorAutoCompleteTextView
+        val textInputs = listOf(
+            homeTeamLayout,
+            guestTeamLayout,
+            stadiumLayout,
+            leagueLayout,
+            chiefRefereeLayout,
+            firstRefereeLayout,
+            secondRefereeLayout,
+            reserveRefereeLayout,
+            inspectorLayout
         )
         val attributesList = listOf(
             gameWithAttributes.homeTeam,
@@ -487,15 +518,14 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
             gameWithAttributes.inspector
         )
 
-        for (pair in textViewList.zip(attributesList)) {
-            val textView = pair.first
+        for (pair in textInputs.zip(attributesList)) {
+            val textInput = pair.first
             val attribute = pair.second
-            if (textView.text.isNullOrBlank())
-                textView.setText(attribute?.shortName)
+            if (textInput.currentText.isBlank())
+                textInput.setText(attribute?.shortName ?: "")
         }
-
-        dateButton.text = DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
-        timeButton.text = DateFormat.format(TIME_FORMAT, gameWithAttributes.game.date).toString()
+        updateDate()
+        updateTime()
 
         gamePaidCheckBox.apply {
             isChecked = gameWithAttributes.game.isPaid
@@ -507,15 +537,23 @@ class GameFragment : Fragment(), FragmentResultListener, TextInputLayoutWatcher.
         }
     }
 
+    private fun updateDate() {
+        dateButton.text = DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
+    }
+
+    private fun updateTime() {
+        timeButton.text = DateFormat.format(TIME_FORMAT, gameWithAttributes.game.date).toString()
+    }
+
     override fun onFragmentResult(requestKey: String, result: Bundle) {
-        when(requestKey) {
+        when (requestKey) {
             REQUEST_DATE -> {
                 gameWithAttributes.game.date = DatePickerFragment.getSelectedDate(result)
-                updateUI()
+                updateDate()
             }
             REQUEST_TIME -> {
                 gameWithAttributes.game.date = TimePickerFragment.getSelectedTime(result)
-                updateUI()
+                updateTime()
             }
 
             REQUEST_DELETE -> {
