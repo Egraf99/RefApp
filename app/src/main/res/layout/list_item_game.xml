@@ -71,4 +71,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:src="@drawable/ic_paiment_done"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/orange_very_light"
+        app:layout_constraintTop_toBottomOf="@id/img_check_gamePass"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

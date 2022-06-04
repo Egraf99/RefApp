@@ -14,13 +14,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.GameWithAttributes
+import com.egraf.refapp.databinding.FragmentGameListBinding
 import java.util.*
 
 private const val TAG = "GameListFragment"
-private const val DATE_FORMAT = "dd.MM.yyyy (EEEEEEEE) HH:mm"
+private const val DATE_FORMAT = "dd.MM.yyyy (EE) HH:mm"
 
 class GameListFragment : Fragment() {
     interface Callbacks {
@@ -28,13 +28,12 @@ class GameListFragment : Fragment() {
     }
 
     private var callbacks: Callbacks? = null
-    private lateinit var gameRecyclerView: RecyclerView
+    private var _binding: FragmentGameListBinding? = null
+    private val binding get() = _binding!!
     private var adapter: GameAdapter? = GameAdapter()
     private val gameListViewModel: GameListViewModel by lazy {
         ViewModelProvider(this).get(GameListViewModel::class.java)
     }
-    private lateinit var emptyListTextView: TextView
-    private lateinit var newGameButton: Button
 
 
     override fun onAttach(context: Context) {
@@ -57,16 +56,16 @@ class GameListFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_game_list, container, false)
-        gameRecyclerView = view.findViewById(R.id.game_recycle_view) as RecyclerView
-        gameRecyclerView.layoutManager = LinearLayoutManager(context)
-        gameRecyclerView.adapter = adapter
+    ): View {
+        _binding = FragmentGameListBinding.inflate(inflater, container, false)
+        binding.gameRecycleView.layoutManager = LinearLayoutManager(context)
+        binding.gameRecycleView.adapter = adapter
+        return binding.root
+    }
 
-        emptyListTextView = view.findViewById(R.id.empty_list_textview)
-        newGameButton = view.findViewById(R.id.new_game_button)
-
-        return view
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -93,12 +92,12 @@ class GameListFragment : Fragment() {
 
     private fun showEmptyListRepresent(count: Int) {
         if (count > 0) {
-            emptyListTextView.visibility = View.GONE
-            newGameButton.visibility = View.GONE
+            binding.emptyListTextview.visibility = View.GONE
+            binding.newGameButton.visibility = View.GONE
         } else {
-            emptyListTextView.visibility = View.VISIBLE
-            newGameButton.visibility = View.VISIBLE
-            newGameButton.setOnClickListener { addNewGame() }
+            binding.emptyListTextview.visibility = View.VISIBLE
+            binding.newGameButton.visibility = View.VISIBLE
+            binding.newGameButton.setOnClickListener { addNewGame() }
         }
     }
 
@@ -163,11 +162,17 @@ class GameListFragment : Fragment() {
 
     object GameDiffUtilCallback : DiffUtil.ItemCallback<GameWithAttributes>() {
 
-        override fun areItemsTheSame(oldGame: GameWithAttributes, newGame: GameWithAttributes): Boolean {
+        override fun areItemsTheSame(
+            oldGame: GameWithAttributes,
+            newGame: GameWithAttributes
+        ): Boolean {
             return oldGame.game.id == newGame.game.id
         }
 
-        override fun areContentsTheSame(oldGame: GameWithAttributes, newGame: GameWithAttributes): Boolean {
+        override fun areContentsTheSame(
+            oldGame: GameWithAttributes,
+            newGame: GameWithAttributes
+        ): Boolean {
             return oldGame.stadium?.name == newGame.stadium?.name &&
                     oldGame.league?.name == newGame.league?.name &&
                     oldGame.game.date == newGame.game.date &&

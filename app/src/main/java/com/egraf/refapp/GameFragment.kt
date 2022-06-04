@@ -18,6 +18,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.GameDetailViewModel
 import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.*
+import com.egraf.refapp.databinding.FragmentGameBinding
+import com.egraf.refapp.databinding.FragmentGameListBinding
 import com.egraf.refapp.dialogs.DatePickerFragment
 import com.egraf.refapp.dialogs.DeleteDialog
 import com.egraf.refapp.dialogs.TimePickerFragment
@@ -39,23 +41,9 @@ class GameFragment : Fragment(), FragmentResultListener {
     }
 
     private var callbacks: Callbacks? = null
+    private val binding get() = _binding!!
+    private var _binding: FragmentGameBinding? = null
     private lateinit var gameWithAttributes: GameWithAttributes
-
-    private lateinit var stadiumLayout: EntityTextInput
-    private lateinit var leagueLayout: EntityTextInput
-    private lateinit var homeTeamLayout: EntityTextInput
-    private lateinit var guestTeamLayout: EntityTextInput
-    private lateinit var chiefRefereeLayout: EntityTextInput
-    private lateinit var firstRefereeLayout: EntityTextInput
-    private lateinit var secondRefereeLayout: EntityTextInput
-    private lateinit var reserveRefereeLayout: EntityTextInput
-    private lateinit var inspectorLayout: EntityTextInput
-
-    private lateinit var dateButton: Button
-    private lateinit var timeButton: Button
-    private lateinit var gamePaidCheckBox: CheckBox
-    private lateinit var gamePassedCheckBox: CheckBox
-    private lateinit var buttonDelete: ImageButton
     private val gameDetailViewModel: GameDetailViewModel by lazy {
         ViewModelProvider(this).get(GameDetailViewModel::class.java)
     }
@@ -83,28 +71,15 @@ class GameFragment : Fragment(), FragmentResultListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_game, container, false)
+    ): View {
+        _binding = FragmentGameBinding.inflate(inflater, container, false)
+        return binding.root
 
-        // Init views
-        homeTeamLayout = view.findViewById(R.id.team_home_layout) as EntityTextInput
-        guestTeamLayout = view.findViewById(R.id.team_guest_layout) as EntityTextInput
-        stadiumLayout = view.findViewById(R.id.stadium_layout) as EntityTextInput
-        leagueLayout = view.findViewById(R.id.league_layout) as EntityTextInput
-        chiefRefereeLayout = view.findViewById(R.id.chief_referee_layout) as EntityTextInput
-        firstRefereeLayout = view.findViewById(R.id.first_referee_layout) as EntityTextInput
-        secondRefereeLayout = view.findViewById(R.id.second_referee_layout) as EntityTextInput
-        reserveRefereeLayout = view.findViewById(R.id.reserve_referee_layout) as EntityTextInput
-        inspectorLayout = view.findViewById(R.id.inspector_layout) as EntityTextInput
-        dateButton = view.findViewById(R.id.game_date) as Button
-        timeButton = view.findViewById(R.id.game_time) as Button
-        buttonDelete = view.findViewById(R.id.button_delete) as ImageButton
-        gamePaidCheckBox = view.findViewById(R.id.game_paid) as CheckBox
-        gamePassedCheckBox = view.findViewById(R.id.game_passed) as CheckBox
+    }
 
-        return view
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -116,24 +91,27 @@ class GameFragment : Fragment(), FragmentResultListener {
             }
         }
         gameDetailViewModel.stadiumListLiveData.observe(viewLifecycleOwner) { stadiums ->
-            stadiumLayout.setEntities(stadiums)
+            binding.stadiumLayout.setEntities(stadiums)
         }
         gameDetailViewModel.leagueListLiveData.observe(viewLifecycleOwner) { leagues ->
-            leagueLayout.setEntities(leagues)
+            binding.leagueLayout.setEntities(leagues)
         }
         gameDetailViewModel.teamListLiveData.observe(viewLifecycleOwner) { teams ->
-            for (textInput in listOf(homeTeamLayout, guestTeamLayout)) {
+            for (textInput in listOf(
+                binding.teamHomeLayout,
+                binding.teamGuestLayout
+            )) {
                 textInput.setEntities(teams)
             }
 
         }
         gameDetailViewModel.refereeListLiveData.observe(viewLifecycleOwner) { referee ->
             for (textInput in listOf(
-                chiefRefereeLayout,
-                firstRefereeLayout,
-                secondRefereeLayout,
-                reserveRefereeLayout,
-                inspectorLayout
+                binding.chiefRefereeLayout,
+                binding.firstRefereeLayout,
+                binding.secondRefereeLayout,
+                binding.reserveRefereeLayout,
+                binding.inspectorLayout
             )) {
                 textInput.setEntities(referee)
             }
@@ -145,7 +123,7 @@ class GameFragment : Fragment(), FragmentResultListener {
 
     override fun onStart() {
         super.onStart()
-        homeTeamLayout
+        binding.teamHomeLayout
             .whatDoWhenTextIsBlank { setHomeTeamNull() }
             .whatDoWhenTextMatchedEntity { team -> saveHomeTeam(team as Team) }
             .whatDoWhenAddClicked { text ->
@@ -172,7 +150,7 @@ class GameFragment : Fragment(), FragmentResultListener {
                     .show()
             }
 
-        guestTeamLayout
+        binding.teamGuestLayout
             .whatDoWhenTextIsBlank { setGuestTeamNull() }
             .whatDoWhenTextMatchedEntity { team -> saveGuestTeam(team as Team) }
             .whatDoWhenAddClicked { text ->
@@ -199,7 +177,7 @@ class GameFragment : Fragment(), FragmentResultListener {
                     .show()
             }
 
-        stadiumLayout
+        binding.stadiumLayout
             .whatDoWhenTextIsBlank { setStadiumNull() }
             .whatDoWhenTextMatchedEntity { stadium -> saveStadium(stadium as Stadium) }
             .whatDoWhenAddClicked { text ->
@@ -226,7 +204,7 @@ class GameFragment : Fragment(), FragmentResultListener {
                     .show()
             }
 
-        leagueLayout
+        binding.leagueLayout
             .whatDoWhenTextIsBlank { setLeagueNull() }
             .whatDoWhenTextMatchedEntity { league -> saveLeague(league as League) }
             .whatDoWhenAddClicked { text ->
@@ -253,7 +231,7 @@ class GameFragment : Fragment(), FragmentResultListener {
                     .show()
             }
 
-        chiefRefereeLayout
+        binding.chiefRefereeLayout
             .whatDoWhenTextIsBlank { setChiefRefereeNull() }
             .whatDoWhenTextMatchedEntity { referee -> saveChiefReferee(referee as Referee) }
             .whatDoWhenAddClicked { text ->
@@ -280,7 +258,7 @@ class GameFragment : Fragment(), FragmentResultListener {
                     .show()
             }
 
-        firstRefereeLayout
+        binding.firstRefereeLayout
             .whatDoWhenTextIsBlank { setFirstRefereeNull() }
             .whatDoWhenTextMatchedEntity { referee -> saveFirstReferee(referee as Referee) }
             .whatDoWhenAddClicked { text ->
@@ -307,7 +285,7 @@ class GameFragment : Fragment(), FragmentResultListener {
                     .show()
             }
 
-        secondRefereeLayout
+        binding.secondRefereeLayout
             .whatDoWhenTextIsBlank { setSecondRefereeNull() }
             .whatDoWhenTextMatchedEntity { referee -> saveSecondReferee(referee as Referee) }
             .whatDoWhenAddClicked { text ->
@@ -334,7 +312,7 @@ class GameFragment : Fragment(), FragmentResultListener {
                     .show()
             }
 
-        reserveRefereeLayout
+        binding.reserveRefereeLayout
             .whatDoWhenTextIsBlank { setReserveRefereeNull() }
             .whatDoWhenTextMatchedEntity { referee -> saveReserveReferee(referee as Referee) }
             .whatDoWhenAddClicked { text ->
@@ -361,7 +339,7 @@ class GameFragment : Fragment(), FragmentResultListener {
                     .show()
             }
 
-        inspectorLayout
+        binding.inspectorLayout
             .whatDoWhenTextIsBlank { setInspectorNull() }
             .whatDoWhenTextMatchedEntity { referee -> saveInspector(referee as Referee) }
             .whatDoWhenAddClicked { text ->
@@ -388,29 +366,29 @@ class GameFragment : Fragment(), FragmentResultListener {
                     .show()
             }
 
-        gamePaidCheckBox.apply {
+        binding.gamePaidCheckBox.apply {
             setOnCheckedChangeListener { _, isPaid -> gameWithAttributes.game.isPaid = isPaid }
         }
 
-        gamePassedCheckBox.apply {
+        binding.gamePassedCheckBox.apply {
             setOnCheckedChangeListener { _, isPassed ->
                 gameWithAttributes.game.isPassed = isPassed
             }
         }
 
-        dateButton.setOnClickListener {
+        binding.gameDateButton.setOnClickListener {
             DatePickerFragment
                 .newInstance(gameWithAttributes.game.date, REQUEST_DATE)
                 .show(parentFragmentManager, REQUEST_DATE)
         }
 
-        timeButton.setOnClickListener {
+        binding.gameTimeButton.setOnClickListener {
             TimePickerFragment
                 .newInstance(gameWithAttributes.game.date, REQUEST_TIME)
                 .show(parentFragmentManager, REQUEST_TIME)
         }
 
-        buttonDelete.setOnClickListener {
+        binding.deleteButton.setOnClickListener {
             DeleteDialog
                 .newInstance(REQUEST_DELETE)
                 .show(parentFragmentManager, REQUEST_DELETE)
@@ -502,15 +480,15 @@ class GameFragment : Fragment(), FragmentResultListener {
     private fun updateUI() {
         Log.d(TAG, "updateUI() called")
         val textInputs = listOf(
-            homeTeamLayout,
-            guestTeamLayout,
-            stadiumLayout,
-            leagueLayout,
-            chiefRefereeLayout,
-            firstRefereeLayout,
-            secondRefereeLayout,
-            reserveRefereeLayout,
-            inspectorLayout
+            binding.teamHomeLayout,
+            binding.teamGuestLayout,
+            binding.stadiumLayout,
+            binding.leagueLayout,
+            binding.chiefRefereeLayout,
+            binding.firstRefereeLayout,
+            binding.secondRefereeLayout,
+            binding.reserveRefereeLayout,
+            binding.inspectorLayout
         )
         val attributesList = listOf(
             gameWithAttributes.homeTeam,
@@ -533,22 +511,22 @@ class GameFragment : Fragment(), FragmentResultListener {
         updateDate()
         updateTime()
 
-        gamePaidCheckBox.apply {
+        binding.gamePaidCheckBox.apply {
             isChecked = gameWithAttributes.game.isPaid
             jumpDrawablesToCurrentState()
         }
-        gamePassedCheckBox.apply {
+        binding.gamePassedCheckBox.apply {
             isChecked = gameWithAttributes.game.isPassed
             jumpDrawablesToCurrentState()
         }
     }
 
     private fun updateDate() {
-        dateButton.text = DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
+        binding.gameDateButton.text = DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
     }
 
     private fun updateTime() {
-        timeButton.text = DateFormat.format(TIME_FORMAT, gameWithAttributes.game.date).toString()
+        binding.gameTimeButton.text = DateFormat.format(TIME_FORMAT, gameWithAttributes.game.date).toString()
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {

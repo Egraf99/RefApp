@@ -21,7 +21,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:hint="@string/home_team"
-            app:endIconMode="custom"
             app:layout_constraintEnd_toStartOf="@id/team_guest_layout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -42,7 +41,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:hint="@string/guest_team"
-            app:endIconMode="custom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/team_home_layout"
             app:layout_constraintTop_toTopOf="parent">
@@ -64,7 +62,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:hint="@string/stadium"
-            app:endIconMode="custom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/team_home_layout"
@@ -87,7 +84,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:hint="@string/league"
-            app:endIconMode="custom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/stadium_layout"
@@ -110,7 +106,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:hint="@string/chief_referee"
-            app:endIconMode="custom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/league_layout"
@@ -133,7 +128,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:hint="@string/first_assistant"
-            app:endIconMode="custom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/chief_referee_layout"
@@ -156,7 +150,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:hint="@string/second_assistant"
-            app:endIconMode="custom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/first_referee_layout"
@@ -180,7 +173,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:hint="@string/reserve_referee"
-            app:endIconMode="custom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/second_referee_layout"
@@ -203,7 +195,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:hint="@string/inspector"
-            app:endIconMode="custom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/reserve_referee_layout"
@@ -220,7 +211,7 @@
         </com.egraf.refapp.views.textInput.EntityTextInput>
 
         <CheckBox
-            android:id="@+id/game_paid"
+            android:id="@+id/game_paid_check_box"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -230,41 +221,41 @@
             app:layout_constraintWidth_percent="0.5" />
 
         <CheckBox
-            android:id="@+id/game_passed"
+            android:id="@+id/game_passed_check_box"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/gamePassedCheckBox"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/game_paid"
-            app:layout_constraintTop_toTopOf="@id/game_paid"
+            app:layout_constraintStart_toEndOf="@id/game_paid_check_box"
+            app:layout_constraintTop_toTopOf="@id/game_paid_check_box"
             app:layout_constraintWidth_percent="0.5"/>
 
         <Button
-            android:id="@+id/game_date"
+            android:id="@+id/game_date_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/game_paid"
+            app:layout_constraintTop_toBottomOf="@+id/game_paid_check_box"
             app:layout_constraintWidth_percent="0.5"
             tools:text="Wed Nov 14 2022" />
 
         <Button
-            android:id="@+id/game_time"
+            android:id="@+id/game_time_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/game_date"
-            app:layout_constraintTop_toTopOf="@id/game_date"
+            app:layout_constraintStart_toEndOf="@id/game_date_button"
+            app:layout_constraintTop_toTopOf="@id/game_date_button"
             app:layout_constraintWidth_percent="0.5"
             tools:text="12:00"/>
 
         <ImageButton
-            android:id="@+id/button_delete"
+            android:id="@+id/delete_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/red"
-            android:src="@drawable/ic_delete_forewer"
-            app:layout_constraintTop_toBottomOf="@id/game_time"
+            android:src="@drawable/ic_delete_forever"
+            app:layout_constraintTop_toBottomOf="@id/game_time_button"
             app:layout_constraintEnd_toEndOf="parent"
             android:contentDescription="@string/delete" />
 
