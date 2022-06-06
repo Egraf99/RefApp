@@ -4,41 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="4dp"
     android:layout_marginHorizontal="4dp"
-    android:padding="5dp"
-    android:background="@drawable/background_game_item">
+    android:layout_marginTop="4dp"
+    android:padding="5dp">
+    <!--    android:background="@drawable/background_game_item">-->
 
     <TextView
         android:id="@+id/date_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/img_check_gamePass"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/stadium_textview"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/stadium_textview"
+        app:layout_constraintEnd_toStartOf="@id/img_check_gamePass"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Date" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintGuide_percent="0.45"
-        android:orientation="vertical"/>
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.45" />
 
     <TextView
         android:id="@+id/stadium_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        app:layout_constraintTop_toBottomOf="@id/date_textview"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/date_textview"
         tools:text="Stadium" />
 
     <TextView
@@ -46,37 +46,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        app:layout_constraintTop_toTopOf="@id/stadium_textview"
-        app:layout_constraintBottom_toBottomOf="@id/stadium_textview"
-        app:layout_constraintStart_toEndOf="@id/guideline"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/stadium_textview"
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="@id/stadium_textview"
         tools:text="League" />
 
     <ImageView
         android:id="@+id/img_check_gamePass"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/img_check_isPaid"
-        tools:src="@drawable/ic_calendar_green"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_calendar_green" />
 
     <ImageView
         android:id="@+id/img_check_isPaid"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:src="@drawable/ic_paiment_done"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_paiment_done" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="4dp"
         android:background="@color/orange_very_light"
-        app:layout_constraintTop_toBottomOf="@id/img_check_gamePass"/>
+        app:layout_constraintTop_toBottomOf="@id/img_check_gamePass" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
