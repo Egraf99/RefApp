@@ -5,9 +5,6 @@ import android.os.Bundle
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
@@ -17,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.GameWithAttributes
 import com.egraf.refapp.databinding.FragmentGameListBinding
+import com.egraf.refapp.databinding.ListItemGameBinding
 import java.util.*
 
 private const val TAG = "GameListFragment"
@@ -108,14 +106,10 @@ class GameListFragment : Fragment() {
         callbacks?.onGameSelected(game.id)
     }
 
-    private inner class GameHolder(view: View) : RecyclerView.ViewHolder(view),
+    private inner class GameHolder(val binding: ListItemGameBinding) :
+        RecyclerView.ViewHolder(binding.root),
         View.OnClickListener {
         private lateinit var gameWithAttributes: GameWithAttributes
-        val stadiumTextView: TextView = itemView.findViewById(R.id.stadium_textview)
-        val leagueTextView: TextView = itemView.findViewById(R.id.league_textview)
-        val dateTextView: TextView = itemView.findViewById(R.id.date_textview)
-        val imgGamePaid: ImageView = itemView.findViewById(R.id.img_check_isPaid)
-        val imgGameDone: ImageView = itemView.findViewById(R.id.img_check_gamePass)
 
         init {
             itemView.setOnClickListener(this)
@@ -124,18 +118,18 @@ class GameListFragment : Fragment() {
         fun bind(game: GameWithAttributes) {
             gameWithAttributes = game
             Log.d(TAG, "bind() called with: game = $game")
-            stadiumTextView.text = gameWithAttributes.stadium?.name
-            leagueTextView.text = gameWithAttributes.league?.name
-            dateTextView.text =
+            binding.stadiumTextview.text = gameWithAttributes.stadium?.name
+            binding.leagueTextview.text = gameWithAttributes.league?.name
+            binding.dateTextview.text =
                 DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
 
             val resGamePaid =
-                if (gameWithAttributes.game.isPaid) R.drawable.ic_paiment_done else R.drawable.ic_paiment_wait
-            imgGamePaid.setBackgroundResource(resGamePaid)
+                if (gameWithAttributes.game.isPaid) R.drawable.ic_payment_done else R.drawable.ic_payment_wait
+            binding.imgCheckGamePaid.setBackgroundResource(resGamePaid)
 
             val resGamePassed =
                 if (gameWithAttributes.game.isPassed) R.drawable.ic_calendar_green else R.drawable.ic_calendar_yelow
-            imgGameDone.setBackgroundResource(resGamePassed)
+            binding.imgCheckGamePass.setBackgroundResource(resGamePassed)
         }
 
         override fun onClick(v: View?) {
@@ -147,8 +141,13 @@ class GameListFragment : Fragment() {
     private inner class GameAdapter :
         ListAdapter<GameWithAttributes, GameHolder>(GameDiffUtilCallback) {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameHolder {
-            val view = layoutInflater.inflate(R.layout.list_item_game, parent, false)
-            return GameHolder(view)
+            return GameHolder(
+                ListItemGameBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            )
         }
 
         override fun onBindViewHolder(holder: GameHolder, position: Int) {

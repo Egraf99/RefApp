@@ -24,6 +24,7 @@
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
+        tools:viewBindingIgnore="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -58,18 +59,18 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/img_check_isPaid"
+        app:layout_constraintEnd_toStartOf="@id/img_check_gamePaid"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/ic_calendar_green" />
 
     <ImageView
-        android:id="@+id/img_check_isPaid"
+        android:id="@+id/img_check_gamePaid"
         android:layout_width="36dp"
         android:layout_height="36dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_paiment_done" />
+        tools:src="@drawable/ic_payment_done" />
 
     <View
         android:layout_width="match_parent"
