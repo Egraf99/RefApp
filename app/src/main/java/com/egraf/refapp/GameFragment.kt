@@ -15,6 +15,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.egraf.refapp.GameDetailViewModel
 import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.*
@@ -36,26 +38,12 @@ private const val DATE_FORMAT = "EEE dd.MM.yyyy"
 private const val TIME_FORMAT = "HH:mm"
 
 class GameFragment : Fragment(), FragmentResultListener {
-    interface Callbacks {
-        fun remoteGameDetail()
-    }
 
-    private var callbacks: Callbacks? = null
     private val binding get() = _binding!!
     private var _binding: FragmentGameBinding? = null
     private lateinit var gameWithAttributes: GameWithAttributes
     private val gameDetailViewModel: GameDetailViewModel by lazy {
         ViewModelProvider(this, GameDetailViewModelFactory()).get(GameDetailViewModel::class.java)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        callbacks = context as Callbacks?
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        callbacks = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -546,7 +534,7 @@ class GameFragment : Fragment(), FragmentResultListener {
                 when (DeleteDialog.getDeleteAnswer(result)) {
                     AlertDialog.BUTTON_POSITIVE -> {
                         gameDetailViewModel.deleteGame(gameWithAttributes.game)
-                        callbacks?.remoteGameDetail()
+                        findNavController().popBackStack()
                     }
                 }
             }

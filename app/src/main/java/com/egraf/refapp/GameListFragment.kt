@@ -7,6 +7,9 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -21,27 +24,11 @@ private const val TAG = "GameListFragment"
 private const val DATE_FORMAT = "dd.MM.yyyy (EE) HH:mm"
 
 class GameListFragment : Fragment(), AddGameViewModel.Callbacks {
-    interface Callbacks {
-        fun onGameSelected(gameId: UUID)
-    }
-
-    private var callbacks: Callbacks? = null
     private var _binding: FragmentGameListBinding? = null
     private val binding get() = _binding!!
     private var adapter: GameAdapter? = GameAdapter()
     private val gameListViewModel: GameListViewModel by lazy {
         ViewModelProvider(this, GameListViewModelFactory()).get(GameListViewModel::class.java)
-    }
-
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        callbacks = context as Callbacks?
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        callbacks = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,15 +87,12 @@ class GameListFragment : Fragment(), AddGameViewModel.Callbacks {
         }
     }
 
-    private fun addNewGame() {
+    override fun addNewGame() {
         val game = Game()
         Log.d(TAG, "addNewGame() called")
         gameListViewModel.addGame(game)
-        callbacks?.onGameSelected(game.id)
-    }
-
-    override fun onGameSelected(gameId: UUID) {
-        callbacks?.onGameSelected(gameId)
+        val bundle = GameFragment.putGameId(game.id)
+        findNavController().navigate(R.id.action_gameListFragment_to_gameFragment, bundle)
     }
 
     private inner class GameHolder(val binding: ListItemGameBinding) :
@@ -138,7 +122,8 @@ class GameListFragment : Fragment(), AddGameViewModel.Callbacks {
         }
 
         override fun onClick(v: View?) {
-            callbacks?.onGameSelected(gameWithAttributes.game.id)
+            val bundle = GameFragment.putGameId(gameWithAttributes.game.id)
+            findNavController().navigate(R.id.action_gameListFragment_to_gameFragment, bundle)
         }
 
     }
