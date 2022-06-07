@@ -45,7 +45,7 @@ class GameFragment : Fragment(), FragmentResultListener {
     private var _binding: FragmentGameBinding? = null
     private lateinit var gameWithAttributes: GameWithAttributes
     private val gameDetailViewModel: GameDetailViewModel by lazy {
-        ViewModelProvider(this).get(GameDetailViewModel::class.java)
+        ViewModelProvider(this, GameDetailViewModelFactory()).get(GameDetailViewModel::class.java)
     }
 
     override fun onAttach(context: Context) {
@@ -522,11 +522,13 @@ class GameFragment : Fragment(), FragmentResultListener {
     }
 
     private fun updateDate() {
-        binding.gameDateButton.text = DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
+        binding.gameDateButton.text =
+            DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
     }
 
     private fun updateTime() {
-        binding.gameTimeButton.text = DateFormat.format(TIME_FORMAT, gameWithAttributes.game.date).toString()
+        binding.gameTimeButton.text =
+            DateFormat.format(TIME_FORMAT, gameWithAttributes.game.date).toString()
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
@@ -541,7 +543,7 @@ class GameFragment : Fragment(), FragmentResultListener {
             }
 
             REQUEST_DELETE -> {
-                when(DeleteDialog.getDeleteAnswer(result)) {
+                when (DeleteDialog.getDeleteAnswer(result)) {
                     AlertDialog.BUTTON_POSITIVE -> {
                         gameDetailViewModel.deleteGame(gameWithAttributes.game)
                         callbacks?.remoteGameDetail()

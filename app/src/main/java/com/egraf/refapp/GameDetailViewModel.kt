@@ -1,9 +1,6 @@
 package com.egraf.refapp
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.database.entities.*
 import java.util.*
@@ -165,5 +162,15 @@ class GameDetailViewModel : ViewModel() {
 
     fun deleteGame(game: Game) {
         gameRepository.deleteGame(game)
+    }
+}
+
+class GameDetailViewModelFactory(): ViewModelProvider.Factory{
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if(modelClass.isAssignableFrom(GameDetailViewModel::class.java)){
+            return GameDetailViewModel() as T
+        }
+
+        throw IllegalArgumentException("UnknownViewModel")
     }
 }

@@ -30,7 +30,7 @@ class GameListFragment : Fragment(), AddGameViewModel.Callbacks {
     private val binding get() = _binding!!
     private var adapter: GameAdapter? = GameAdapter()
     private val gameListViewModel: GameListViewModel by lazy {
-        ViewModelProvider(this).get(GameListViewModel::class.java)
+        ViewModelProvider(this, GameListViewModelFactory()).get(GameListViewModel::class.java)
     }
 
 
