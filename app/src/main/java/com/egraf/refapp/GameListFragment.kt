@@ -20,7 +20,7 @@ import java.util.*
 private const val TAG = "GameListFragment"
 private const val DATE_FORMAT = "dd.MM.yyyy (EE) HH:mm"
 
-class GameListFragment : Fragment() {
+class GameListFragment : Fragment(), AddGameViewModel.Callbacks {
     interface Callbacks {
         fun onGameSelected(gameId: UUID)
     }
@@ -58,6 +58,7 @@ class GameListFragment : Fragment() {
         _binding = FragmentGameListBinding.inflate(inflater, container, false)
         binding.gameRecycleView.layoutManager = LinearLayoutManager(context)
         binding.gameRecycleView.adapter = adapter
+        binding.viewModel = AddGameViewModel(this)
         return binding.root
     }
 
@@ -104,6 +105,10 @@ class GameListFragment : Fragment() {
         Log.d(TAG, "addNewGame() called")
         gameListViewModel.addGame(game)
         callbacks?.onGameSelected(game.id)
+    }
+
+    override fun onGameSelected(gameId: UUID) {
+        callbacks?.onGameSelected(gameId)
     }
 
     private inner class GameHolder(val binding: ListItemGameBinding) :

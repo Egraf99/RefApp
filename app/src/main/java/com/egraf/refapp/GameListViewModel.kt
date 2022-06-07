@@ -1,7 +1,6 @@
 package com.egraf.refapp
 
 import androidx.lifecycle.ViewModel
-import com.egraf.refapp.GameRepository
 import com.egraf.refapp.database.entities.Game
 
 class GameListViewModel: ViewModel() {
