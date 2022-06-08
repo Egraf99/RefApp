@@ -1,7 +1,6 @@
 package com.egraf.refapp
 
 import androidx.lifecycle.*
-import com.egraf.refapp.GameRepository
 import com.egraf.refapp.database.entities.*
 import java.util.*
 
@@ -165,7 +164,7 @@ class GameDetailViewModel : ViewModel() {
     }
 }
 
-class GameDetailViewModelFactory(): ViewModelProvider.Factory{
+class GameDetailViewModelFactory: ViewModelProvider.Factory{
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(GameDetailViewModel::class.java)){
             return GameDetailViewModel() as T

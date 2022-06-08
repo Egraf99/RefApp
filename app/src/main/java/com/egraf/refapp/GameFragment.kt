@@ -1,31 +1,21 @@
 package com.egraf.refapp
 
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.ImageButton
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import com.egraf.refapp.GameDetailViewModel
-import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.*
 import com.egraf.refapp.databinding.FragmentGameBinding
-import com.egraf.refapp.databinding.FragmentGameListBinding
 import com.egraf.refapp.dialogs.DatePickerFragment
 import com.egraf.refapp.dialogs.DeleteDialog
 import com.egraf.refapp.dialogs.TimePickerFragment
-import com.egraf.refapp.views.textInput.EntityTextInput
 import java.util.*
 
 private const val TAG = "GameFragment"
@@ -37,7 +27,7 @@ private const val REQUEST_DELETE = "DialogDelete"
 private const val DATE_FORMAT = "EEE dd.MM.yyyy"
 private const val TIME_FORMAT = "HH:mm"
 
-class GameFragment : Fragment(), FragmentResultListener {
+class GameFragment : FragmentToolbar(), FragmentResultListener {
 
     private val binding get() = _binding!!
     private var _binding: FragmentGameBinding? = null
@@ -72,6 +62,11 @@ class GameFragment : Fragment(), FragmentResultListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // init toolbar
+        setDisplayHomeAsUpEnabled(true)
+        setActionBarTitle(requireContext().getString(R.string.back))
+
+        // add observe to livedata
         gameDetailViewModel.gameLiveData.observe(viewLifecycleOwner) { game ->
             game?.let {
                 gameWithAttributes = game
@@ -105,6 +100,7 @@ class GameFragment : Fragment(), FragmentResultListener {
             }
         }
 
+        // set this Fragment parent for other fragments
         for (request in listOf(REQUEST_DATE, REQUEST_TIME, REQUEST_DELETE))
             parentFragmentManager.setFragmentResultListener(request, viewLifecycleOwner, this)
     }

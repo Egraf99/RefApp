@@ -1,15 +1,13 @@
 package com.egraf.refapp
 
-import android.content.Context
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.util.Log
-import android.view.*
-import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navOptions
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -18,23 +16,16 @@ import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.GameWithAttributes
 import com.egraf.refapp.databinding.FragmentGameListBinding
 import com.egraf.refapp.databinding.ListItemGameBinding
-import java.util.*
 
 private const val TAG = "GameListFragment"
 private const val DATE_FORMAT = "dd.MM.yyyy (EE) HH:mm"
 
-class GameListFragment : Fragment(), AddGameViewModel.Callbacks {
+class GameListFragment : FragmentToolbar(), AddGameViewModel.Callbacks {
     private var _binding: FragmentGameListBinding? = null
     private val binding get() = _binding!!
     private var adapter: GameAdapter? = GameAdapter()
     private val gameListViewModel: GameListViewModel by lazy {
         ViewModelProvider(this, GameListViewModelFactory()).get(GameListViewModel::class.java)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate() called")
-        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -170,19 +161,19 @@ class GameListFragment : Fragment(), AddGameViewModel.Callbacks {
         }
 
     }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.fragment_game_list, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.new_game -> {
-                addNewGame()
-                true
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
-    }
+//
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        super.onCreateOptionsMenu(menu, inflater)
+//        inflater.inflate(R.menu.fragment_game_list, menu)
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return when (item.itemId) {
+//            R.id.new_game -> {
+//                addNewGame()
+//                true
+//            }
+//            else -> return super.onOptionsItemSelected(item)
+//        }
+//    }
 }
