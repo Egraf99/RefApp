@@ -1,6 +1,7 @@
 package com.egraf.refapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 
 private const val TAG = "MainActivity"

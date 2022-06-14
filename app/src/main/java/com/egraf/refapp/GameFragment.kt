@@ -40,7 +40,6 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
         super.onCreate(savedInstanceState)
         val game = Game()
         gameWithAttributes = GameWithAttributes(game)
-        Log.d(TAG, "onCreate: $gameWithAttributes")
 
         val gameId = arguments?.getSerializable(ARG_GAME_ID) as UUID
         gameDetailViewModel.loadGame(gameId)
@@ -62,7 +61,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // init toolbar
+        // настройка тулбара
         setDisplayHomeAsUpEnabled(true)
         setActionBarTitle(requireContext().getString(R.string.back))
 
@@ -100,7 +99,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
             }
         }
 
-        // set this Fragment parent for other fragments
+        // установка этого фрагманта родителем для других фрагментов
         for (request in listOf(REQUEST_DATE, REQUEST_TIME, REQUEST_DELETE))
             parentFragmentManager.setFragmentResultListener(request, viewLifecycleOwner, this)
     }
@@ -112,9 +111,9 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
             .whatDoWhenTextMatchedEntity { team -> saveHomeTeam(team as Team) }
             .whatDoWhenAddClicked { text ->
                 run {
-                    // создаем новый стадион
+                    // создаем новый команды
                     val team = Team().setEntityName(text)
-                    // сохраняем стадион
+                    // сохраняем команды
                     saveHomeTeam(team)
                     // показываем сообщение
                     Toast.makeText(
@@ -122,10 +121,11 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                         getString(R.string.team_add_message, team.fullName),
                         Toast.LENGTH_SHORT
                     ).show()
+                    binding.teamHomeLayout.setText(team.shortName)
                 }
             }
             .whatDoWhenInfoClicked { team ->
-                // показываем сообщение с полным именем стадиона
+                // показываем сообщение с полным именем команды
                 Toast.makeText(
                     context,
                     team.fullName,
@@ -139,9 +139,9 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
             .whatDoWhenTextMatchedEntity { team -> saveGuestTeam(team as Team) }
             .whatDoWhenAddClicked { text ->
                 run {
-                    // создаем новый стадион
+                    // создаем новый команду
                     val team = Team().setEntityName(text)
-                    // сохраняем стадион
+                    // сохраняем команду
                     saveGuestTeam(team)
                     // показываем сообщение
                     Toast.makeText(
@@ -149,10 +149,11 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                         getString(R.string.team_add_message, team.fullName),
                         Toast.LENGTH_SHORT
                     ).show()
+                    binding.teamGuestLayout.setText(team.shortName)
                 }
             }
             .whatDoWhenInfoClicked { team ->
-                // показываем сообщение с полным именем стадиона
+                // показываем сообщение с полным именем команды
                 Toast.makeText(
                     context,
                     team.fullName,
@@ -176,6 +177,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                         getString(R.string.stadium_add_message, stadium.fullName),
                         Toast.LENGTH_SHORT
                     ).show()
+                    binding.stadiumLayout.setText(stadium.shortName)
                 }
             }
             .whatDoWhenInfoClicked { stadium ->
@@ -195,7 +197,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                 run {
                     // создаем новый лигу
                     val league = League().setEntityName(text)
-                    // сохраняем стадион
+                    // сохраняем лигу
                     saveLeague(league)
                     // показываем сообщение
                     Toast.makeText(
@@ -203,10 +205,11 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                         getString(R.string.league_add_message, league.fullName),
                         Toast.LENGTH_SHORT
                     ).show()
+                    binding.leagueLayout.setText(league.shortName)
                 }
             }
             .whatDoWhenInfoClicked { league ->
-                // показываем сообщение с полным именем стадиона
+                // показываем сообщение с полным именем лиги
                 Toast.makeText(
                     context,
                     league.fullName,
@@ -220,9 +223,9 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
             .whatDoWhenTextMatchedEntity { referee -> saveChiefReferee(referee as Referee) }
             .whatDoWhenAddClicked { text ->
                 run {
-                    // создаем новый стадион
+                    // создаем новый судью
                     val referee = Referee().setEntityName(text)
-                    // сохраняем стадион
+                    // сохраняем судью
                     saveChiefReferee(referee)
                     // показываем сообщение
                     Toast.makeText(
@@ -230,10 +233,11 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                         getString(R.string.referee_add_message, referee.fullName),
                         Toast.LENGTH_SHORT
                     ).show()
+                    binding.chiefRefereeLayout.setText(referee.shortName)
                 }
             }
             .whatDoWhenInfoClicked { referee ->
-                // показываем сообщение с полным именем стадиона
+                // показываем сообщение с полным именем судьи
                 Toast.makeText(
                     context,
                     referee.fullName,
@@ -247,9 +251,9 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
             .whatDoWhenTextMatchedEntity { referee -> saveFirstReferee(referee as Referee) }
             .whatDoWhenAddClicked { text ->
                 run {
-                    // создаем новый стадион
+                    // создаем новый судью
                     val referee = Referee().setEntityName(text)
-                    // сохраняем стадион
+                    // сохраняем судью
                     saveFirstReferee(referee)
                     // показываем сообщение
                     Toast.makeText(
@@ -257,10 +261,11 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                         getString(R.string.referee_add_message, referee.fullName),
                         Toast.LENGTH_SHORT
                     ).show()
+                    binding.firstRefereeLayout.setText(referee.shortName)
                 }
             }
             .whatDoWhenInfoClicked { referee ->
-                // показываем сообщение с полным именем стадиона
+                // показываем сообщение с полным именем судьи
                 Toast.makeText(
                     context,
                     referee.fullName,
@@ -274,9 +279,9 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
             .whatDoWhenTextMatchedEntity { referee -> saveSecondReferee(referee as Referee) }
             .whatDoWhenAddClicked { text ->
                 run {
-                    // создаем новый стадион
+                    // создаем новый судью
                     val referee = Referee().setEntityName(text)
-                    // сохраняем стадион
+                    // сохраняем судью
                     saveSecondReferee(referee)
                     // показываем сообщение
                     Toast.makeText(
@@ -284,10 +289,11 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                         getString(R.string.referee_add_message, referee.fullName),
                         Toast.LENGTH_SHORT
                     ).show()
+                    binding.secondRefereeLayout.setText(referee.shortName)
                 }
             }
             .whatDoWhenInfoClicked { referee ->
-                // показываем сообщение с полным именем стадиона
+                // показываем сообщение с полным именем судьи
                 Toast.makeText(
                     context,
                     referee.fullName,
@@ -301,9 +307,9 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
             .whatDoWhenTextMatchedEntity { referee -> saveReserveReferee(referee as Referee) }
             .whatDoWhenAddClicked { text ->
                 run {
-                    // создаем новый стадион
+                    // создаем новый судью
                     val referee = Referee().setEntityName(text)
-                    // сохраняем стадион
+                    // сохраняем судью
                     saveReserveReferee(referee)
                     // показываем сообщение
                     Toast.makeText(
@@ -311,10 +317,11 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                         getString(R.string.referee_add_message, referee.fullName),
                         Toast.LENGTH_SHORT
                     ).show()
+                    binding.reserveRefereeLayout.setText(referee.shortName)
                 }
             }
             .whatDoWhenInfoClicked { referee ->
-                // показываем сообщение с полным именем стадиона
+                // показываем сообщение с полным именем судьи
                 Toast.makeText(
                     context,
                     referee.fullName,
@@ -328,9 +335,9 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
             .whatDoWhenTextMatchedEntity { referee -> saveInspector(referee as Referee) }
             .whatDoWhenAddClicked { text ->
                 run {
-                    // создаем новый стадион
+                    // создаем нового судью
                     val referee = Referee().setEntityName(text)
-                    // сохраняем стадион
+                    // сохраняем судью
                     saveInspector(referee)
                     // показываем сообщение
                     Toast.makeText(
@@ -338,10 +345,11 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                         getString(R.string.referee_add_message, referee.fullName),
                         Toast.LENGTH_SHORT
                     ).show()
+                    binding.inspectorLayout.setText(referee.shortName)
                 }
             }
             .whatDoWhenInfoClicked { referee ->
-                // показываем сообщение с полным именем стадиона
+                // показываем сообщение с полным именем судьи
                 Toast.makeText(
                     context,
                     referee.fullName,

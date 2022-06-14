@@ -3,8 +3,6 @@ package com.egraf.refapp.views.textInput
 import android.R.layout.select_dialog_item
 import android.app.Activity
 import android.content.Context
-import android.graphics.Rect
-import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
@@ -15,10 +13,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.FrameLayout
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.view.forEach
 import com.egraf.refapp.database.entities.Entity
 import com.google.android.material.textfield.TextInputLayout
+import kotlin.math.max
 
 private const val TAG = "EntityTextInput"
 
@@ -53,7 +52,7 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
     private fun init() {
         if (initialize) return
         setChildTextInput()
-        // слушатель для AutoCompleteTextView
+        // слушатели для AutoCompleteTextView
         childTextInput.apply {
             setOnLongClickListener {
                 onLongClick(it)
@@ -111,7 +110,7 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
         // обновляем адаптер у AutoCompleteTextView
         setChildAdapter()
         childAdapter.clear()
-        childAdapter.addAll(entitiesList.map { it.fullName })
+        childAdapter.addAll(entitiesList.map { it.shortName })
         childAdapter.notifyDataSetChanged()
         return this
     }
@@ -163,7 +162,12 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
      */
     private fun checkTextMatchEntityName() {
         // проверяем, совпадет ли текст с entity из entitiesList
-        val matchedIndex = entitiesList.map { it.shortName }.indexOf(childTextInput.text.toString().trim())
+        val matchedIndex = max(
+            // есть ли совпадение по коротким именам (если нет - индекс равен -1)
+            entitiesList.map { it.shortName }.indexOf(childTextInput.text.toString().trim()),
+            // есть ли совпадение по длинным именам (если нет - индекс равен -1)
+            entitiesList.map { it.fullName }.indexOf(childTextInput.text.toString().trim())
+        )
         matchedEntity = entitiesList.getOrNull(matchedIndex)
 
         when {
@@ -188,7 +192,6 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
     private fun setEndIcon(
         type: TextEditIconType
     ) {
-        Log.d(TAG, "setEndIcon: ${childTextInput.isFocused}")
         // показываем иконку только при фокусе
         if (!childTextInput.isFocused) {
             hideEndIcon()
