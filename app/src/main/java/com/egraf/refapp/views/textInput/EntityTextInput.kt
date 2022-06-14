@@ -3,15 +3,19 @@ package com.egraf.refapp.views.textInput
 import android.R.layout.select_dialog_item
 import android.app.Activity
 import android.content.Context
+import android.graphics.Rect
+import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.Log
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.FrameLayout
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.egraf.refapp.database.entities.Entity
 import com.google.android.material.textfield.TextInputLayout
@@ -20,11 +24,8 @@ private const val TAG = "EntityTextInput"
 
 class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
     TextInputLayout(context, attrs), TextWatcher {
-    private var initialize = false
-    private lateinit var childTextInput: AutoCompleteTextView
+    lateinit var childTextInput: AutoCompleteTextView
     private lateinit var childAdapter: ArrayAdapter<String>
-    var currentText = ""
-        private set
     private var doWhenTextIsBlank: () -> Unit = {}
     private var doWhenInfoClicked: (Entity) -> Unit = {}
     private var doWhenAddClicked: (String) -> Unit = {}
@@ -44,18 +45,37 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
         ADD
     }
 
+    var initialize = false
+
     /**
      * Инициализирует EntityTextInput, находя и инициализируя при этом дочерний AutoCompleteTextView
      */
     private fun init() {
-        if (!initialize) {
+        if (initialize) return
+        setChildTextInput()
+        // слушатель для AutoCompleteTextView
+        childTextInput.apply {
             setOnLongClickListener {
-                setEndIcon(TextEditIconType.INFO)
-                false
+                onLongClick(it)
+                true
             }
-            setChildTextInput()
-            initialize = true
+            setOnFocusChangeListener { _, hasFocus ->
+                onFocusChange(hasFocus)
+            }
         }
+        initialize = true
+    }
+
+    private fun onFocusChange(hasFocus: Boolean) {
+        if (hasFocus)
+            checkTextMatchEntityName()
+        else
+            hideEndIcon()
+    }
+
+    private fun onLongClick(view: View) {
+//        focused()
+        Log.d(TAG, "onLongClick: long click on $view")
     }
 
     private fun setChildAdapter() {
@@ -71,7 +91,6 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
     private fun setChildTextInput() {
         val frame = getChildAt(0) as FrameLayout
         childTextInput = frame.getChildAt(1) as AutoCompleteTextView
-        Log.d(TAG, "init(): find $childTextInput")
 
         // настраиваем AutoCompleteTextView
         childTextInput.threshold = 1
@@ -86,6 +105,7 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
      * Устанавливает новый список Entities и обновляет адаптер AutoCompleteTextView
      */
     fun setEntities(entities: List<Entity>): EntityTextInput {
+        // необходимо для инициализации необходимых атрибутов
         init()
         entitiesList = entities
         // обновляем адаптер у AutoCompleteTextView
@@ -135,13 +155,19 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
     }
 
     override fun afterTextChanged(text: Editable?) {
-        currentText = text.toString()
+        checkTextMatchEntityName()
+    }
+
+    /**
+     * Проверяет совпадения текста с именами доступных Entity и устанавливает (или скрывает) соответсвующую иконку действия
+     */
+    private fun checkTextMatchEntityName() {
         // проверяем, совпадет ли текст с entity из entitiesList
-        val matchedIndex = entitiesList.map { it.shortName }.indexOf(text.toString().trim())
+        val matchedIndex = entitiesList.map { it.shortName }.indexOf(childTextInput.text.toString().trim())
         matchedEntity = entitiesList.getOrNull(matchedIndex)
 
         when {
-            text.isNullOrBlank() -> {
+            childTextInput.text.isBlank() -> {
                 doWhenTextIsBlank()
                 // при пустой строке убираем иконку
                 setEndIcon(TextEditIconType.DEFAULT)
@@ -154,7 +180,7 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
                 // есть совпадения по тексту
                 doWhenTextMatchEntity(matchedEntity!!)
                 childTextInput.dismissDropDown()
-                setEndIcon(TextEditIconType.DEFAULT)
+                setEndIcon(TextEditIconType.INFO)
             }
         }
     }
@@ -162,59 +188,101 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
     private fun setEndIcon(
         type: TextEditIconType
     ) {
-        when (type) {
-            TextEditIconType.DEFAULT -> {
-                // убираем иконку
-                isEndIconVisible = false
-                setEndIconOnClickListener(null)
-            }
+        Log.d(TAG, "setEndIcon: ${childTextInput.isFocused}")
+        // показываем иконку только при фокусе
+        if (!childTextInput.isFocused) {
+            hideEndIcon()
+            return
+        }
 
-            TextEditIconType.ADD -> {
-                // показываем иконку
-                isEndIconVisible = true
-                // иконка
-                setEndIconDrawable(com.egraf.refapp.R.drawable.ic_add_outline)
-                // цвет иконки
-                setEndIconTintList(
-                    ContextCompat.getColorStateList(
-                        context,
-                        com.egraf.refapp.R.color.green
-                    )
-                )
-                // задаем слушателя при нажатии на кнопку добавления
-                setEndIconOnClickListener {
-                    doWhenAddClicked(currentText)
-                    unfocused()
-                    setEndIcon(TextEditIconType.INFO)
-                }
-            }
+        when (type) {
+            TextEditIconType.DEFAULT ->
+                hideEndIcon()
+
+
+            TextEditIconType.ADD ->
+                setAddEndIcon()
+
 
             TextEditIconType.INFO -> {
-                // показываем иконку
-                isEndIconVisible = true
-                // иконка
-                setEndIconDrawable(com.egraf.refapp.R.drawable.ic_info)
-                // цвет иконки
-                setEndIconTintList(
-                    ContextCompat.getColorStateList(
-                        context,
-                        com.egraf.refapp.R.color.orange
-                    )
-                )
-                // задаем слушателя при нажатии на кнопку информации
-                setEndIconOnClickListener {
-                    doWhenInfoClicked(matchedEntity!!)
-                    unfocused()
-                }
+                setInfoEndIcon()
             }
         }
     }
 
+    /**
+     * Скрывает иконку действия
+     */
+    private fun hideEndIcon() {
+        // убираем иконку
+        isEndIconVisible = false
+        setEndIconOnClickListener(null)
+    }
+
+    /**
+     * Устанавливает иконку добавления (ADD ICON)
+     */
+    private fun setAddEndIcon() {
+        // показываем иконку
+        isEndIconVisible = true
+        // иконка
+        setEndIconDrawable(com.egraf.refapp.R.drawable.ic_add_outline)
+        // цвет иконки
+        setEndIconTintList(
+            ContextCompat.getColorStateList(
+                context,
+                com.egraf.refapp.R.color.green
+            )
+        )
+        // задаем слушателя при нажатии на кнопку добавления
+        setEndIconOnClickListener {
+            doWhenAddClicked(childTextInput.text.toString())
+            unfocused()
+            setEndIcon(TextEditIconType.INFO)
+        }
+    }
+
+    /**
+     * Устанавливает иконку информации (INFO ICON)
+     */
+    private fun setInfoEndIcon() {
+        // показываем иконку
+        isEndIconVisible = true
+        // иконка
+        setEndIconDrawable(com.egraf.refapp.R.drawable.ic_info)
+        // цвет иконки
+        setEndIconTintList(
+            ContextCompat.getColorStateList(
+                context,
+                com.egraf.refapp.R.color.orange
+            )
+        )
+        // задаем слушателя при нажатии на кнопку информации
+        setEndIconOnClickListener {
+            doWhenInfoClicked(matchedEntity!!)
+            unfocused()
+        }
+    }
+
     fun setText(text: String) {
+        // необходимо для инициализации необходимых атрибутов
         init()
         childTextInput.setText(text)
     }
 
+    /**
+     * Устанавливает фокус на EntityTextInput и показывает системную клавиатуру
+     */
+    private fun focused() {
+        val inputMethodManager =
+            context?.getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager
+        inputMethodManager?.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+        this.requestFocus()
+    }
+
+    /**
+     * Снимает фокус с EntityTextInput и скрывает системную клваиатуру
+     */
     private fun unfocused() {
         // скрываем клавиатуру
         val inputMethodManager =

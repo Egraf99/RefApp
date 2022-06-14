@@ -489,7 +489,9 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
         for (pair in textInputs.zip(attributesList)) {
             val textInput = pair.first
             val attribute = pair.second
-            if (textInput.currentText.isBlank())
+            if (!textInput.initialize)
+                continue
+            if (textInput.childTextInput.text.isBlank())
                 textInput.setText(attribute?.shortName ?: "")
         }
         updateDate()
