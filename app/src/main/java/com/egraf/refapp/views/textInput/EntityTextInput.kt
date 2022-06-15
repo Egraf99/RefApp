@@ -33,7 +33,7 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
     private var matchedEntity: Entity? = null
 
     /**
-     * Существующие типы иконок:
+     * Типы иконок:
      *      DEFAULT -> отсутсвие иконки
      *      INFO -> иконка информации
      *      ADD -> иконка добавления
@@ -188,6 +188,7 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
             }
         }
     }
+
 
     private fun setEndIcon(
         type: TextEditIconType

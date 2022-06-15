@@ -25,4 +25,9 @@
     <string name="inspector">Inspector</string>
     <string name="not_found">Not found</string>
     <string name="back">Back</string>
+    <string name="first_name">First name</string>
+    <string name="add_referee">Add referee</string>
+    <string name="save">Save</string>
+    <string name="second_name">Second name</string>
+    <string name="third_name">Third name</string>
 </resources>

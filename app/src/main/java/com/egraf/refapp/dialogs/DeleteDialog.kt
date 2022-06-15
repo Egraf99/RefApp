@@ -11,11 +11,11 @@ import com.egraf.refapp.R
 
 private const val TAG = "DeleteDialog"
 private const val RESULT_DELETE_KEY = "DeleteRequest"
-private const val ARG_REQUEST_CODE_DELETE = "requestCodeDate"
+private const val ARG_REQUEST_CODE_DELETE = "requestCodeDelete"
 
 class DeleteDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val positiveButtonListener =
+        val negativeButtonListener =
             DialogInterface.OnClickListener { _: DialogInterface, answer: Int ->
                 val result = Bundle().apply { putInt(RESULT_DELETE_KEY, answer) }
                 val resultRequestCode = requireArguments().getString(ARG_REQUEST_CODE_DELETE, "")
@@ -36,7 +36,7 @@ class DeleteDialog : DialogFragment() {
         val alertDialog = AlertDialog.Builder(activity)
             .setTitle(R.string.warning)
             .setMessage(R.string.warning_delete_text)
-            .setPositiveButton(R.string.delete, positiveButtonListener)
+            .setNegativeButton(R.string.delete, negativeButtonListener)
             .setNeutralButton(R.string.cancel, neutralButtonListener)
 
         return alertDialog.create()

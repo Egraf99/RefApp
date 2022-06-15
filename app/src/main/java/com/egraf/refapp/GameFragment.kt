@@ -15,6 +15,7 @@ import com.egraf.refapp.database.entities.*
 import com.egraf.refapp.databinding.FragmentGameBinding
 import com.egraf.refapp.dialogs.DatePickerFragment
 import com.egraf.refapp.dialogs.DeleteDialog
+import com.egraf.refapp.dialogs.RefereeAddDialog
 import com.egraf.refapp.dialogs.TimePickerFragment
 import java.util.*
 
@@ -24,6 +25,7 @@ private const val ARG_GAME_ID = "game_id"
 private const val REQUEST_DATE = "DialogDate"
 private const val REQUEST_TIME = "DialogTime"
 private const val REQUEST_DELETE = "DialogDelete"
+private const val REQUEST_ADD_REFEREE = "DialogAddReferee"
 private const val DATE_FORMAT = "EEE dd.MM.yyyy"
 private const val TIME_FORMAT = "HH:mm"
 
@@ -100,7 +102,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
         }
 
         // установка этого фрагманта родителем для других фрагментов
-        for (request in listOf(REQUEST_DATE, REQUEST_TIME, REQUEST_DELETE))
+        for (request in listOf(REQUEST_DATE, REQUEST_TIME, REQUEST_DELETE, REQUEST_ADD_REFEREE))
             parentFragmentManager.setFragmentResultListener(request, viewLifecycleOwner, this)
     }
 
@@ -130,8 +132,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                     context,
                     team.fullName,
                     Toast.LENGTH_SHORT
-                )
-                    .show()
+                ).show()
             }
 
         binding.teamGuestLayout
@@ -158,8 +159,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                     context,
                     team.fullName,
                     Toast.LENGTH_SHORT
-                )
-                    .show()
+                ).show()
             }
 
         binding.stadiumLayout
@@ -186,8 +186,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                     context,
                     stadium.fullName,
                     Toast.LENGTH_SHORT
-                )
-                    .show()
+                ).show()
             }
 
         binding.leagueLayout
@@ -214,27 +213,16 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                     context,
                     league.fullName,
                     Toast.LENGTH_SHORT
-                )
-                    .show()
+                ).show()
             }
 
         binding.chiefRefereeLayout
             .whatDoWhenTextIsBlank { setChiefRefereeNull() }
             .whatDoWhenTextMatchedEntity { referee -> saveChiefReferee(referee as Referee) }
             .whatDoWhenAddClicked { text ->
-                run {
-                    // создаем новый судью
-                    val referee = Referee().setEntityName(text)
-                    // сохраняем судью
-                    saveChiefReferee(referee)
-                    // показываем сообщение
-                    Toast.makeText(
-                        context,
-                        getString(R.string.referee_add_message, referee.fullName),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    binding.chiefRefereeLayout.setText(referee.shortName)
-                }
+                RefereeAddDialog
+                    .newInstance(REQUEST_ADD_REFEREE, text)
+                    .show(parentFragmentManager, REQUEST_ADD_REFEREE)
             }
             .whatDoWhenInfoClicked { referee ->
                 // показываем сообщение с полным именем судьи
@@ -242,8 +230,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                     context,
                     referee.fullName,
                     Toast.LENGTH_SHORT
-                )
-                    .show()
+                ).show()
             }
 
         binding.firstRefereeLayout
@@ -270,8 +257,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                     context,
                     referee.fullName,
                     Toast.LENGTH_SHORT
-                )
-                    .show()
+                ).show()
             }
 
         binding.secondRefereeLayout
@@ -298,8 +284,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                     context,
                     referee.fullName,
                     Toast.LENGTH_SHORT
-                )
-                    .show()
+                ).show()
             }
 
         binding.reserveRefereeLayout
@@ -326,8 +311,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                     context,
                     referee.fullName,
                     Toast.LENGTH_SHORT
-                )
-                    .show()
+                ).show()
             }
 
         binding.inspectorLayout
@@ -354,8 +338,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                     context,
                     referee.fullName,
                     Toast.LENGTH_SHORT
-                )
-                    .show()
+                ).show()
             }
 
         binding.gamePaidCheckBox.apply {
@@ -538,11 +521,29 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
 
             REQUEST_DELETE -> {
                 when (DeleteDialog.getDeleteAnswer(result)) {
-                    AlertDialog.BUTTON_POSITIVE -> {
+                    AlertDialog.BUTTON_NEGATIVE -> {
                         gameDetailViewModel.deleteGame(gameWithAttributes.game)
                         findNavController().popBackStack()
                     }
                 }
+            }
+            REQUEST_ADD_REFEREE -> {
+                // создаем судью, заполняя атрибуты данными из result
+                val referee = Referee().apply {
+                    firstName = RefereeAddDialog.getRefereeFirstName(result)
+                    secondName = RefereeAddDialog.getRefereeSecondName(result)
+                    thirdName = RefereeAddDialog.getRefereeThirdName(result)
+                }
+                // созраняем полученного судью
+                gameDetailViewModel.saveChiefReferee(gameWithAttributes, referee)
+                // показываем сообщение
+                Toast.makeText(
+                    context,
+                    getString(R.string.referee_add_message, referee.fullName),
+                    Toast.LENGTH_SHORT
+                ).show()
+                // устанавливаем текст в EditText
+                binding.chiefRefereeLayout.setText(referee.shortName)
             }
         }
     }
