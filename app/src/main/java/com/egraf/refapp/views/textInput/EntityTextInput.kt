@@ -14,37 +14,45 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
-import androidx.core.view.forEach
 import com.egraf.refapp.database.entities.Entity
 import com.google.android.material.textfield.TextInputLayout
 import kotlin.math.max
 
 private const val TAG = "EntityTextInput"
 
-class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
+open class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
     TextInputLayout(context, attrs), TextWatcher {
     lateinit var childTextInput: AutoCompleteTextView
     private lateinit var childAdapter: ArrayAdapter<String>
-    private var doWhenTextIsBlank: () -> Unit = {}
-    private var doWhenInfoClicked: (Entity) -> Unit = {}
-    private var doWhenAddClicked: (String) -> Unit = {}
-    private var doWhenTextMatchEntity: (Entity) -> Unit = {}
+    private var _doWhenTextIsBlank: () -> Unit = {}
+    private var _doWhenTextNotMatchEntity: () -> Unit = {}
+    private var _doWhenTextMatchEntity: (Entity) -> Unit = {}
     private var entitiesList: List<Entity> = emptyList()
-    private var matchedEntity: Entity? = null
+    protected var matchedEntity: Entity? = null
+
+    private var initialize = false
 
     /**
-     * Типы иконок:
-     *      DEFAULT -> отсутсвие иконки
-     *      INFO -> иконка информации
-     *      ADD -> иконка добавления
+     * Устанавливает функцию, которая выполняется при пустом тексте
      */
-    private enum class TextEditIconType {
-        DEFAULT,
-        INFO,
-        ADD
+    open fun whatDoWhenTextIsBlank(function: () -> Unit) {
+        _doWhenTextIsBlank = function
     }
 
-    var initialize = false
+    /**
+     * Устанавливает функцию, которая выполняется при несовпадении текста с entitiesList
+     */
+    open fun whatDoWhenTextNotMatchedEntity(function: () -> Unit) {
+        _doWhenTextNotMatchEntity = function
+    }
+
+    /**
+     * Устанавливает функцию, которая выполняется при совпадении текста с entitiesList
+     */
+    open fun whatDoWhenTextMatchedEntity(function: (Entity) -> Unit) {
+        _doWhenTextMatchEntity = function
+    }
+
 
     /**
      * Инициализирует EntityTextInput, находя и инициализируя при этом дочерний AutoCompleteTextView
@@ -65,28 +73,37 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
         initialize = true
     }
 
-    private fun onFocusChange(hasFocus: Boolean) {
-        if (hasFocus)
-            checkTextMatchEntityName()
-        else
-            hideEndIcon()
+    /**
+     * Функция, вызываемая при смены фокуса
+     */
+    protected open fun onFocusChange(hasFocus: Boolean) {
+        Log.d(TAG, "onFocusChange: focus is $hasFocus")
     }
 
+    /**
+     * Функция, вызываемая при долгом нажатии
+     */
     private fun onLongClick(view: View) {
-//        focused()
         Log.d(TAG, "onLongClick: long click on $view")
     }
 
+    /**
+     * Устанавливает адаптер для дочерней AutoCompleteTextView, значения берутся из entitiesList
+     */
     private fun setChildAdapter() {
         if (!this::childAdapter.isInitialized) {
             childAdapter = ArrayAdapter(
                 context,
                 select_dialog_item,
+                // отображаются полные имена Entity
                 entitiesList.map { it.fullName })
             childTextInput.setAdapter(childAdapter)
         }
     }
 
+    /**
+     * Находит и инитиализирует дочернюю AutoCompleteTextView
+     */
     private fun setChildTextInput() {
         val frame = getChildAt(0) as FrameLayout
         childTextInput = frame.getChildAt(1) as AutoCompleteTextView
@@ -95,9 +112,18 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
         childTextInput.threshold = 1
         //  добавляем адаптер с пустым листом
         setChildAdapter()
+        // устанавливаем слушатель при нажатие на item
+        setOnItemClickListener()
+        // устанавливает слушателя при изменении текста
+        childTextInput.addTextChangedListener(this)
+    }
+
+    /**
+     * Устанавливает слушетяля при нажатии на item
+     */
+    private fun setOnItemClickListener() {
         childTextInput.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, _, _ -> unfocused() }
-        childTextInput.addTextChangedListener(this)
     }
 
     /**
@@ -115,38 +141,6 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
         return this
     }
 
-    /**
-     * Устанавливает функцию, которая выполняется при пустом тексте
-     */
-    fun whatDoWhenTextIsBlank(function: () -> Unit): EntityTextInput {
-        doWhenTextIsBlank = function
-        return this
-    }
-
-    /**
-     * Устанавливает функцию, которая выполняется при совпадении текста с entitiesList
-     */
-    fun whatDoWhenTextMatchedEntity(function: (Entity) -> Unit): EntityTextInput {
-        doWhenTextMatchEntity = function
-        return this
-    }
-
-    /**
-     * Устанавливает функцию, которая выполняется при нажатии на кнопку информации
-     */
-    fun whatDoWhenInfoClicked(function: (Entity) -> Unit): EntityTextInput {
-        doWhenInfoClicked = function
-        return this
-    }
-
-    /**
-     * Устанавливает функцию, которая выполняется при нажатии на кнопку добавления
-     */
-    fun whatDoWhenAddClicked(function: (String) -> Unit): EntityTextInput {
-        doWhenAddClicked = function
-        return this
-    }
-
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
     }
 
@@ -160,7 +154,7 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
     /**
      * Проверяет совпадения текста с именами доступных Entity и устанавливает (или скрывает) соответсвующую иконку действия
      */
-    private fun checkTextMatchEntityName() {
+    protected fun checkTextMatchEntityName() {
         // проверяем, совпадет ли текст с entity из entitiesList
         val matchedIndex = max(
             // есть ли совпадение по коротким именам (если нет - индекс равен -1)
@@ -172,101 +166,35 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
 
         when {
             childTextInput.text.isBlank() -> {
+                _doWhenTextIsBlank()
                 doWhenTextIsBlank()
-                // при пустой строке убираем иконку
-                setEndIcon(TextEditIconType.DEFAULT)
             }
             matchedEntity == null -> {
-                // нет совпадений - показываем иконку добавления игры
-                setEndIcon(TextEditIconType.ADD)
+                _doWhenTextNotMatchEntity()
+                doWhenTextNotMatchEntity()
             }
             else -> {
-                // есть совпадения по тексту
+                _doWhenTextMatchEntity(matchedEntity!!)
                 doWhenTextMatchEntity(matchedEntity!!)
                 childTextInput.dismissDropDown()
-                setEndIcon(TextEditIconType.INFO)
-            }
-        }
-    }
-
-
-    private fun setEndIcon(
-        type: TextEditIconType
-    ) {
-        // показываем иконку только при фокусе
-        if (!childTextInput.isFocused) {
-            hideEndIcon()
-            return
-        }
-
-        when (type) {
-            TextEditIconType.DEFAULT ->
-                hideEndIcon()
-
-
-            TextEditIconType.ADD ->
-                setAddEndIcon()
-
-
-            TextEditIconType.INFO -> {
-                setInfoEndIcon()
             }
         }
     }
 
     /**
-     * Скрывает иконку действия
+     * Внутренняя реализация при остсутствии текста
      */
-    private fun hideEndIcon() {
-        // убираем иконку
-        isEndIconVisible = false
-        setEndIconOnClickListener(null)
-    }
+    protected open fun doWhenTextIsBlank() {}
 
     /**
-     * Устанавливает иконку добавления (ADD ICON)
+     * Внутренняя реализация при несовпадения текста с entitiesList
      */
-    private fun setAddEndIcon() {
-        // показываем иконку
-        isEndIconVisible = true
-        // иконка
-        setEndIconDrawable(com.egraf.refapp.R.drawable.ic_add_outline)
-        // цвет иконки
-        setEndIconTintList(
-            ContextCompat.getColorStateList(
-                context,
-                com.egraf.refapp.R.color.green
-            )
-        )
-        // задаем слушателя при нажатии на кнопку добавления
-        setEndIconOnClickListener {
-            doWhenAddClicked(childTextInput.text.toString())
-            unfocused()
-            setEndIcon(TextEditIconType.INFO)
-        }
-    }
+    protected open fun doWhenTextNotMatchEntity() {}
 
     /**
-     * Устанавливает иконку информации (INFO ICON)
+     * Внутренняя реализация при совпадении текста с entitiesList
      */
-    private fun setInfoEndIcon() {
-        // показываем иконку
-        isEndIconVisible = true
-        // иконка
-        setEndIconDrawable(com.egraf.refapp.R.drawable.ic_info)
-        // цвет иконки
-        setEndIconTintList(
-            ContextCompat.getColorStateList(
-                context,
-                com.egraf.refapp.R.color.orange
-            )
-        )
-        // задаем слушателя при нажатии на кнопку информации
-        setEndIconOnClickListener {
-            doWhenInfoClicked(matchedEntity!!)
-            unfocused()
-        }
-    }
+    protected open fun doWhenTextMatchEntity(entity: Entity) {}
 
     fun setText(text: String) {
         // необходимо для инициализации необходимых атрибутов
@@ -274,10 +202,17 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
         childTextInput.setText(text)
     }
 
+    fun getText(): String {
+        return if (this::childTextInput.isInitialized)
+            childTextInput.text.toString()
+        else
+            ""
+    }
+
     /**
      * Устанавливает фокус на EntityTextInput и показывает системную клавиатуру
      */
-    private fun focused() {
+    fun focused() {
         val inputMethodManager =
             context?.getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager
         inputMethodManager?.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
@@ -287,7 +222,7 @@ class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
     /**
      * Снимает фокус с EntityTextInput и скрывает системную клваиатуру
      */
-    private fun unfocused() {
+    fun unfocused() {
         // скрываем клавиатуру
         val inputMethodManager =
             context?.getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager

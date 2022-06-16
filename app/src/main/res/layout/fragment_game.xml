@@ -14,7 +14,7 @@
         android:focusableInTouchMode="true">
 
         <!--First line-->
-        <com.egraf.refapp.views.textInput.EntityTextInput
+        <com.egraf.refapp.views.textInput.ETIWithEndButton
             android:id="@+id/team_home_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
@@ -32,9 +32,9 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.egraf.refapp.views.textInput.EntityTextInput>
+        </com.egraf.refapp.views.textInput.ETIWithEndButton>
 
-        <com.egraf.refapp.views.textInput.EntityTextInput
+        <com.egraf.refapp.views.textInput.ETIWithEndButton
             android:id="@+id/team_guest_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
@@ -52,10 +52,10 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.egraf.refapp.views.textInput.EntityTextInput>
+        </com.egraf.refapp.views.textInput.ETIWithEndButton>
 
         <!--    Second line-->
-        <com.egraf.refapp.views.textInput.EntityTextInput
+        <com.egraf.refapp.views.textInput.ETIWithEndButton
             android:id="@+id/stadium_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -75,9 +75,9 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.egraf.refapp.views.textInput.EntityTextInput>
+        </com.egraf.refapp.views.textInput.ETIWithEndButton>
 
-        <com.egraf.refapp.views.textInput.EntityTextInput
+        <com.egraf.refapp.views.textInput.ETIWithEndButton
             android:id="@+id/league_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -97,9 +97,9 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.egraf.refapp.views.textInput.EntityTextInput>
+        </com.egraf.refapp.views.textInput.ETIWithEndButton>
 
-        <com.egraf.refapp.views.textInput.EntityTextInput
+        <com.egraf.refapp.views.textInput.ETIWithEndButton
             android:id="@+id/chief_referee_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -119,9 +119,9 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.egraf.refapp.views.textInput.EntityTextInput>
+        </com.egraf.refapp.views.textInput.ETIWithEndButton>
 
-        <com.egraf.refapp.views.textInput.EntityTextInput
+        <com.egraf.refapp.views.textInput.ETIWithEndButton
             android:id="@+id/first_referee_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -141,9 +141,9 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.egraf.refapp.views.textInput.EntityTextInput>
+        </com.egraf.refapp.views.textInput.ETIWithEndButton>
 
-        <com.egraf.refapp.views.textInput.EntityTextInput
+        <com.egraf.refapp.views.textInput.ETIWithEndButton
             android:id="@+id/second_referee_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -164,9 +164,9 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.egraf.refapp.views.textInput.EntityTextInput>
+        </com.egraf.refapp.views.textInput.ETIWithEndButton>
 
-        <com.egraf.refapp.views.textInput.EntityTextInput
+        <com.egraf.refapp.views.textInput.ETIWithEndButton
             android:id="@+id/reserve_referee_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -186,9 +186,9 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.egraf.refapp.views.textInput.EntityTextInput>
+        </com.egraf.refapp.views.textInput.ETIWithEndButton>
 
-        <com.egraf.refapp.views.textInput.EntityTextInput
+        <com.egraf.refapp.views.textInput.ETIWithEndButton
             android:id="@+id/inspector_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -208,7 +208,7 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="0dp"/>
 
-        </com.egraf.refapp.views.textInput.EntityTextInput>
+        </com.egraf.refapp.views.textInput.ETIWithEndButton>
 
         <CheckBox
             android:id="@+id/game_paid_check_box"
