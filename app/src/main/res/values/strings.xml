@@ -30,4 +30,6 @@
     <string name="save">Save</string>
     <string name="second_name">Second name</string>
     <string name="third_name">Third name</string>
+    <string name="name">Name</string>
+    <string name="add_team">Add team</string>
 </resources>

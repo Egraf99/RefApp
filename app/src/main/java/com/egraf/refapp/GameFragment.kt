@@ -3,6 +3,7 @@ package com.egraf.refapp
 import android.app.AlertDialog
 import android.os.Bundle
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.database.entities.*
 import com.egraf.refapp.databinding.FragmentGameBinding
-import com.egraf.refapp.dialogs.DatePickerFragment
-import com.egraf.refapp.dialogs.DeleteDialog
-import com.egraf.refapp.dialogs.RefereeAddDialog
-import com.egraf.refapp.dialogs.TimePickerFragment
+import com.egraf.refapp.dialogs.*
 import java.util.*
 
 private const val TAG = "GameFragment"
@@ -24,6 +22,8 @@ private const val ARG_GAME_ID = "game_id"
 private const val REQUEST_DATE = "DialogDate"
 private const val REQUEST_TIME = "DialogTime"
 private const val REQUEST_DELETE = "DialogDelete"
+private const val REQUEST_ADD_HOME_TEAM = "DialogAddHomeTeam"
+private const val REQUEST_ADD_GUEST_TEAM = "DialogAddGuestTeam"
 private const val REQUEST_ADD_CHIEF_REFEREE = "DialogAddChiefReferee"
 private const val REQUEST_ADD_FIRST_REFEREE = "DialogAddFirstReferee"
 private const val REQUEST_ADD_SECOND_REFEREE = "DialogAddSecondReferee"
@@ -109,6 +109,8 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
             REQUEST_DATE,
             REQUEST_TIME,
             REQUEST_DELETE,
+            REQUEST_ADD_HOME_TEAM,
+            REQUEST_ADD_GUEST_TEAM,
             REQUEST_ADD_CHIEF_REFEREE,
             REQUEST_ADD_FIRST_REFEREE,
             REQUEST_ADD_SECOND_REFEREE,
@@ -122,19 +124,9 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
         super.onStart()
         with(binding.teamHomeLayout) {
             whatDoWhenAddClicked { text ->
-                run {
-                    // создаем новый команды
-                    val team = Team().setEntityName(text)
-                    // сохраняем команды
-                    saveHomeTeam(team)
-                    // показываем сообщение
-                    Toast.makeText(
-                        context,
-                        getString(R.string.team_add_message, team.fullName),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    binding.teamHomeLayout.setText(team.shortName)
-                }
+                TeamAddDialog()
+                    .addName(REQUEST_ADD_HOME_TEAM, text)
+                    .show(parentFragmentManager, REQUEST_ADD_HOME_TEAM)
             }
             whatDoWhenInfoClicked { team ->
                 // показываем сообщение с полным именем команды
@@ -150,19 +142,9 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
 
         with(binding.teamGuestLayout) {
             whatDoWhenAddClicked { text ->
-                run {
-                    // создаем новый команду
-                    val team = Team().setEntityName(text)
-                    // сохраняем команду
-                    saveGuestTeam(team)
-                    // показываем сообщение
-                    Toast.makeText(
-                        context,
-                        getString(R.string.team_add_message, team.fullName),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    binding.teamGuestLayout.setText(team.shortName)
-                }
+                TeamAddDialog()
+                    .addName(REQUEST_ADD_GUEST_TEAM, text)
+                    .show(parentFragmentManager, REQUEST_ADD_GUEST_TEAM)
             }
             whatDoWhenInfoClicked { team ->
                 // показываем сообщение с полным именем команды
@@ -234,8 +216,8 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
 
         with(binding.chiefRefereeLayout) {
             whatDoWhenAddClicked { text ->
-                RefereeAddDialog
-                    .newInstance(REQUEST_ADD_CHIEF_REFEREE, text)
+                RefereeAddDialog()
+                    .addName(REQUEST_ADD_CHIEF_REFEREE, text)
                     .show(parentFragmentManager, REQUEST_ADD_CHIEF_REFEREE)
             }
             whatDoWhenInfoClicked { referee ->
@@ -252,8 +234,8 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
 
         with(binding.firstRefereeLayout) {
             whatDoWhenAddClicked { text ->
-                RefereeAddDialog
-                    .newInstance(REQUEST_ADD_FIRST_REFEREE, text)
+                RefereeAddDialog()
+                    .addName(REQUEST_ADD_FIRST_REFEREE, text)
                     .show(parentFragmentManager, REQUEST_ADD_FIRST_REFEREE)
             }
             whatDoWhenInfoClicked { referee ->
@@ -270,8 +252,8 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
 
         with(binding.secondRefereeLayout) {
             whatDoWhenAddClicked { text ->
-                RefereeAddDialog
-                    .newInstance(REQUEST_ADD_SECOND_REFEREE, text)
+                RefereeAddDialog()
+                    .addName(REQUEST_ADD_SECOND_REFEREE, text)
                     .show(parentFragmentManager, REQUEST_ADD_SECOND_REFEREE)
             }
             whatDoWhenInfoClicked { referee ->
@@ -288,8 +270,8 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
 
         with(binding.reserveRefereeLayout) {
             whatDoWhenAddClicked { text ->
-                RefereeAddDialog
-                    .newInstance(REQUEST_ADD_RESERVE_REFEREE, text)
+                RefereeAddDialog()
+                    .addName(REQUEST_ADD_RESERVE_REFEREE, text)
                     .show(parentFragmentManager, REQUEST_ADD_RESERVE_REFEREE)
             }
             whatDoWhenInfoClicked { referee ->
@@ -306,8 +288,8 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
 
         with(binding.inspectorLayout) {
             whatDoWhenAddClicked { text ->
-                RefereeAddDialog
-                    .newInstance(REQUEST_ADD_INSPECTOR, text)
+                RefereeAddDialog()
+                    .addName(REQUEST_ADD_INSPECTOR, text)
                     .show(parentFragmentManager, REQUEST_ADD_INSPECTOR)
             }
             whatDoWhenInfoClicked { referee ->
@@ -492,6 +474,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
+        Log.d(TAG, "onFragmentResult: $requestKey")
         when (requestKey) {
             REQUEST_DATE -> {
                 gameWithAttributes.game.date = DatePickerFragment.getSelectedDate(result)
@@ -509,6 +492,24 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                         findNavController().popBackStack()
                     }
                 }
+            }
+            REQUEST_ADD_HOME_TEAM -> {
+                val team = createTeamFromResult(result)
+                // созраняем полученного судью
+                gameDetailViewModel.saveHomeTeam(gameWithAttributes, team)
+                // показываем сообщение
+                showAddTeamToast(team)
+                // устанавливаем текст в AutoCompleteTextView
+                binding.teamHomeLayout.setText(team.shortName)
+            }
+            REQUEST_ADD_GUEST_TEAM -> {
+                val team = createTeamFromResult(result)
+                // созраняем полученного судью
+                gameDetailViewModel.saveGuestTeam(gameWithAttributes, team)
+                // показываем сообщение
+                showAddTeamToast(team)
+                // устанавливаем текст в AutoCompleteTextView
+                binding.teamGuestLayout.setText(team.shortName)
             }
             REQUEST_ADD_CHIEF_REFEREE -> {
                 val referee = createRefereeFromResult(result)
@@ -565,6 +566,24 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
         Toast.makeText(
             context,
             getString(R.string.referee_add_message, referee.fullName),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    /**
+     * Возвразает Team, созданное из полей Bundle
+     */
+    private fun createTeamFromResult(result: Bundle): Team {
+        // создаем команду, заполняя атрибуты данными из result
+        return Team().apply {
+            name = TeamAddDialog.getTeamName(result)
+        }
+    }
+
+    private fun showAddTeamToast(team: Team) {
+        Toast.makeText(
+            context,
+            getString(R.string.team_add_message, team.fullName),
             Toast.LENGTH_SHORT
         ).show()
     }

@@ -132,8 +132,8 @@ class ETIWithEndButton(context: Context, attrs: AttributeSet? = null) :
         )
         // задаем слушателя при нажатии на кнопку информации
         setEndIconOnClickListener {
-            _doWhenInfoClicked(matchedEntity!!)
             unfocused()
+            _doWhenInfoClicked(matchedEntity!!)
         }
     }
 
