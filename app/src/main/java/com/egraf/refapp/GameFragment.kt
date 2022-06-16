@@ -24,7 +24,11 @@ private const val ARG_GAME_ID = "game_id"
 private const val REQUEST_DATE = "DialogDate"
 private const val REQUEST_TIME = "DialogTime"
 private const val REQUEST_DELETE = "DialogDelete"
-private const val REQUEST_ADD_REFEREE = "DialogAddReferee"
+private const val REQUEST_ADD_CHIEF_REFEREE = "DialogAddChiefReferee"
+private const val REQUEST_ADD_FIRST_REFEREE = "DialogAddFirstReferee"
+private const val REQUEST_ADD_SECOND_REFEREE = "DialogAddSecondReferee"
+private const val REQUEST_ADD_RESERVE_REFEREE = "DialogAddThirdReferee"
+private const val REQUEST_ADD_INSPECTOR = "DialogAddInspector"
 private const val DATE_FORMAT = "EEE dd.MM.yyyy"
 private const val TIME_FORMAT = "HH:mm"
 
@@ -101,7 +105,16 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
         }
 
         // установка этого фрагманта родителем для других фрагментов
-        for (request in listOf(REQUEST_DATE, REQUEST_TIME, REQUEST_DELETE, REQUEST_ADD_REFEREE))
+        for (request in listOf(
+            REQUEST_DATE,
+            REQUEST_TIME,
+            REQUEST_DELETE,
+            REQUEST_ADD_CHIEF_REFEREE,
+            REQUEST_ADD_FIRST_REFEREE,
+            REQUEST_ADD_SECOND_REFEREE,
+            REQUEST_ADD_RESERVE_REFEREE,
+            REQUEST_ADD_INSPECTOR
+        ))
             parentFragmentManager.setFragmentResultListener(request, viewLifecycleOwner, this)
     }
 
@@ -222,8 +235,8 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
         with(binding.chiefRefereeLayout) {
             whatDoWhenAddClicked { text ->
                 RefereeAddDialog
-                    .newInstance(REQUEST_ADD_REFEREE, text)
-                    .show(parentFragmentManager, REQUEST_ADD_REFEREE)
+                    .newInstance(REQUEST_ADD_CHIEF_REFEREE, text)
+                    .show(parentFragmentManager, REQUEST_ADD_CHIEF_REFEREE)
             }
             whatDoWhenInfoClicked { referee ->
                 // показываем сообщение с полным именем судьи
@@ -239,19 +252,9 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
 
         with(binding.firstRefereeLayout) {
             whatDoWhenAddClicked { text ->
-                run {
-                    // создаем новый судью
-                    val referee = Referee().setEntityName(text)
-                    // сохраняем судью
-                    saveFirstReferee(referee)
-                    // показываем сообщение
-                    Toast.makeText(
-                        context,
-                        getString(R.string.referee_add_message, referee.fullName),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    binding.firstRefereeLayout.setText(referee.shortName)
-                }
+                RefereeAddDialog
+                    .newInstance(REQUEST_ADD_FIRST_REFEREE, text)
+                    .show(parentFragmentManager, REQUEST_ADD_FIRST_REFEREE)
             }
             whatDoWhenInfoClicked { referee ->
                 // показываем сообщение с полным именем судьи
@@ -267,19 +270,9 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
 
         with(binding.secondRefereeLayout) {
             whatDoWhenAddClicked { text ->
-                run {
-                    // создаем новый судью
-                    val referee = Referee().setEntityName(text)
-                    // сохраняем судью
-                    saveSecondReferee(referee)
-                    // показываем сообщение
-                    Toast.makeText(
-                        context,
-                        getString(R.string.referee_add_message, referee.fullName),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    binding.secondRefereeLayout.setText(referee.shortName)
-                }
+                RefereeAddDialog
+                    .newInstance(REQUEST_ADD_SECOND_REFEREE, text)
+                    .show(parentFragmentManager, REQUEST_ADD_SECOND_REFEREE)
             }
             whatDoWhenInfoClicked { referee ->
                 // показываем сообщение с полным именем судьи
@@ -295,19 +288,9 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
 
         with(binding.reserveRefereeLayout) {
             whatDoWhenAddClicked { text ->
-                run {
-                    // создаем новый судью
-                    val referee = Referee().setEntityName(text)
-                    // сохраняем судью
-                    saveReserveReferee(referee)
-                    // показываем сообщение
-                    Toast.makeText(
-                        context,
-                        getString(R.string.referee_add_message, referee.fullName),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    binding.reserveRefereeLayout.setText(referee.shortName)
-                }
+                RefereeAddDialog
+                    .newInstance(REQUEST_ADD_RESERVE_REFEREE, text)
+                    .show(parentFragmentManager, REQUEST_ADD_RESERVE_REFEREE)
             }
             whatDoWhenInfoClicked { referee ->
                 // показываем сообщение с полным именем судьи
@@ -323,19 +306,9 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
 
         with(binding.inspectorLayout) {
             whatDoWhenAddClicked { text ->
-                run {
-                    // создаем нового судью
-                    val referee = Referee().setEntityName(text)
-                    // сохраняем судью
-                    saveInspector(referee)
-                    // показываем сообщение
-                    Toast.makeText(
-                        context,
-                        getString(R.string.referee_add_message, referee.fullName),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    binding.inspectorLayout.setText(referee.shortName)
-                }
+                RefereeAddDialog
+                    .newInstance(REQUEST_ADD_INSPECTOR, text)
+                    .show(parentFragmentManager, REQUEST_ADD_INSPECTOR)
             }
             whatDoWhenInfoClicked { referee ->
                 // показываем сообщение с полным именем судьи
@@ -537,25 +510,63 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                     }
                 }
             }
-            REQUEST_ADD_REFEREE -> {
-                // создаем судью, заполняя атрибуты данными из result
-                val referee = Referee().apply {
-                    firstName = RefereeAddDialog.getRefereeFirstName(result)
-                    secondName = RefereeAddDialog.getRefereeSecondName(result)
-                    thirdName = RefereeAddDialog.getRefereeThirdName(result)
-                }
+            REQUEST_ADD_CHIEF_REFEREE -> {
+                val referee = createRefereeFromResult(result)
                 // созраняем полученного судью
                 gameDetailViewModel.saveChiefReferee(gameWithAttributes, referee)
                 // показываем сообщение
-                Toast.makeText(
-                    context,
-                    getString(R.string.referee_add_message, referee.fullName),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showAddRefereeToast(referee)
                 // устанавливаем текст в AutoCompleteTextView
                 binding.chiefRefereeLayout.setText(referee.shortName)
             }
+            REQUEST_ADD_FIRST_REFEREE -> {
+                val referee = createRefereeFromResult(result)
+                // созраняем полученного судью
+                gameDetailViewModel.saveFirstReferee(gameWithAttributes, referee)
+                // показываем сообщение
+                showAddRefereeToast(referee)
+                // устанавливаем текст в AutoCompleteTextView
+                binding.firstRefereeLayout.setText(referee.shortName)
+            }
+            REQUEST_ADD_SECOND_REFEREE -> {
+                val referee = createRefereeFromResult(result)
+                // созраняем полученного судью
+                gameDetailViewModel.saveSecondReferee(gameWithAttributes, referee)
+                // показываем сообщение
+                showAddRefereeToast(referee)
+                // устанавливаем текст в AutoCompleteTextView
+                binding.secondRefereeLayout.setText(referee.shortName)
+            }
+            REQUEST_ADD_INSPECTOR -> {
+                val referee = createRefereeFromResult(result)
+                // созраняем полученного судью
+                gameDetailViewModel.saveInspector(gameWithAttributes, referee)
+                // показываем сообщение
+                showAddRefereeToast(referee)
+                // устанавливаем текст в AutoCompleteTextView
+                binding.inspectorLayout.setText(referee.shortName)
+            }
         }
+    }
+
+    /**
+     * Возвразает Referee, созданное из полей Bundle
+     */
+    private fun createRefereeFromResult(result: Bundle): Referee {
+        // создаем судью, заполняя атрибуты данными из result
+        return Referee().apply {
+            firstName = RefereeAddDialog.getRefereeFirstName(result)
+            secondName = RefereeAddDialog.getRefereeSecondName(result)
+            thirdName = RefereeAddDialog.getRefereeThirdName(result)
+        }
+    }
+
+    private fun showAddRefereeToast(referee: Referee) {
+        Toast.makeText(
+            context,
+            getString(R.string.referee_add_message, referee.fullName),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     companion object {
