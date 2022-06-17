@@ -24,6 +24,8 @@ private const val REQUEST_TIME = "DialogTime"
 private const val REQUEST_DELETE = "DialogDelete"
 private const val REQUEST_ADD_HOME_TEAM = "DialogAddHomeTeam"
 private const val REQUEST_ADD_GUEST_TEAM = "DialogAddGuestTeam"
+private const val REQUEST_ADD_STADIUM = "DialogAddStadium"
+private const val REQUEST_ADD_LEAGUE = "DialogAddLeague"
 private const val REQUEST_ADD_CHIEF_REFEREE = "DialogAddChiefReferee"
 private const val REQUEST_ADD_FIRST_REFEREE = "DialogAddFirstReferee"
 private const val REQUEST_ADD_SECOND_REFEREE = "DialogAddSecondReferee"
@@ -111,6 +113,8 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
             REQUEST_DELETE,
             REQUEST_ADD_HOME_TEAM,
             REQUEST_ADD_GUEST_TEAM,
+            REQUEST_ADD_STADIUM,
+            REQUEST_ADD_LEAGUE,
             REQUEST_ADD_CHIEF_REFEREE,
             REQUEST_ADD_FIRST_REFEREE,
             REQUEST_ADD_SECOND_REFEREE,
@@ -160,19 +164,9 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
 
         with(binding.stadiumLayout) {
             whatDoWhenAddClicked { text ->
-                run {
-                    // создаем новый стадион
-                    val stadium = Stadium().setEntityName(text)
-                    // сохраняем стадион
-                    saveStadium(stadium)
-                    // показываем сообщение
-                    Toast.makeText(
-                        context,
-                        getString(R.string.stadium_add_message, stadium.fullName),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    binding.stadiumLayout.setText(stadium.shortName)
-                }
+                StadiumAddDialog()
+                    .addName(REQUEST_ADD_STADIUM, text)
+                    .show(parentFragmentManager, REQUEST_ADD_STADIUM)
             }
             whatDoWhenInfoClicked { stadium ->
                 // показываем сообщение с полным именем стадиона
@@ -188,19 +182,9 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
 
         with(binding.leagueLayout) {
             whatDoWhenAddClicked { text ->
-                run {
-                    // создаем новый лигу
-                    val league = League().setEntityName(text)
-                    // сохраняем лигу
-                    saveLeague(league)
-                    // показываем сообщение
-                    Toast.makeText(
-                        context,
-                        getString(R.string.league_add_message, league.fullName),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    binding.leagueLayout.setText(league.shortName)
-                }
+                LeagueAddDialog()
+                    .addName(REQUEST_ADD_LEAGUE, text)
+                    .show(parentFragmentManager, REQUEST_ADD_LEAGUE)
             }
             whatDoWhenInfoClicked { league ->
                 // показываем сообщение с полным именем лиги
@@ -511,6 +495,24 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                 // устанавливаем текст в AutoCompleteTextView
                 binding.teamGuestLayout.setText(team.shortName)
             }
+            REQUEST_ADD_STADIUM -> {
+                val stadium = createStadiumFromResult(result)
+                // созраняем полученного судью
+                gameDetailViewModel.saveStadium(gameWithAttributes, stadium)
+                // показываем сообщение
+                showAddStadiumToast(stadium)
+                // устанавливаем текст в AutoCompleteTextView
+                binding.stadiumLayout.setText(stadium.shortName)
+            }
+            REQUEST_ADD_LEAGUE -> {
+                val league = createLeagueFromResult(result)
+                // созраняем полученного судью
+                gameDetailViewModel.saveLeague(gameWithAttributes, league)
+                // показываем сообщение
+                showAddLeagueToast(league)
+                // устанавливаем текст в AutoCompleteTextView
+                binding.leagueLayout.setText(league.shortName)
+            }
             REQUEST_ADD_CHIEF_REFEREE -> {
                 val referee = createRefereeFromResult(result)
                 // созраняем полученного судью
@@ -537,6 +539,15 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
                 showAddRefereeToast(referee)
                 // устанавливаем текст в AutoCompleteTextView
                 binding.secondRefereeLayout.setText(referee.shortName)
+            }
+            REQUEST_ADD_RESERVE_REFEREE -> {
+                val referee = createRefereeFromResult(result)
+                // созраняем полученного судью
+                gameDetailViewModel.saveReserveReferee(gameWithAttributes, referee)
+                // показываем сообщение
+                showAddRefereeToast(referee)
+                // устанавливаем текст в AutoCompleteTextView
+                binding.reserveRefereeLayout.setText(referee.shortName)
             }
             REQUEST_ADD_INSPECTOR -> {
                 val referee = createRefereeFromResult(result)
@@ -586,6 +597,42 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
             getString(R.string.team_add_message, team.fullName),
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    private fun showAddStadiumToast(stadium: Stadium) {
+        Toast.makeText(
+            context,
+            getString(R.string.stadium_add_message, stadium.fullName),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    /**
+     * Возвразает Stadium, созданное из полей Bundle
+     */
+    private fun createStadiumFromResult(result: Bundle): Stadium {
+        // создаем команду, заполняя атрибуты данными из result
+        return Stadium().apply {
+            name = StadiumAddDialog.getStadiumName(result)
+        }
+    }
+
+    private fun showAddLeagueToast(league: League) {
+        Toast.makeText(
+            context,
+            getString(R.string.league_add_message, league.fullName),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    /**
+     * Возвразает Stadium, созданное из полей Bundle
+     */
+    private fun createLeagueFromResult(result: Bundle): League {
+        // создаем команду, заполняя атрибуты данными из result
+        return League().apply {
+            name = LeagueAddDialog.getLeagueName(result)
+        }
     }
 
     companion object {

@@ -28,6 +28,8 @@
     <string name="first_name">Имя</string>
     <string name="add_referee">Добавление судьи</string>
     <string name="add_team">Добавление команды</string>
+    <string name="add_stadium">Добавление стадиона</string>
+    <string name="add_league">Добавление лиги</string>
     <string name="save">Сохранить</string>
     <string name="second_name">Фамилия</string>
     <string name="third_name">Отчество</string>
