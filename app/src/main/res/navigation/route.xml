@@ -5,8 +5,12 @@
     app:startDestination="@id/gameListFragment">
 
     <fragment
+        android:id="@+id/gameFragment"
+        android:name="com.egraf.refapp.ui.game_details.GameFragment"
+        android:label="GameFragment" />
+    <fragment
         android:id="@+id/gameListFragment"
-        android:name="com.egraf.refapp.GameListFragment"
+        android:name="com.egraf.refapp.ui.game_list.GameListFragment"
         android:label="GameListFragment" >
         <action
             android:id="@+id/action_gameListFragment_to_gameFragment"
@@ -16,8 +20,4 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
-    <fragment
-        android:id="@+id/gameFragment"
-        android:name="com.egraf.refapp.GameFragment"
-        android:label="GameFragment" />
 </navigation>

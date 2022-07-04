@@ -106,7 +106,7 @@ open class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
      */
     private fun setChildTextInput() {
         val frame = getChildAt(0) as FrameLayout
-        childTextInput = frame.getChildAt(1) as AutoCompleteTextView
+        childTextInput = frame.getChildAt(0) as AutoCompleteTextView
 
         // настраиваем AutoCompleteTextView
         childTextInput.threshold = 1

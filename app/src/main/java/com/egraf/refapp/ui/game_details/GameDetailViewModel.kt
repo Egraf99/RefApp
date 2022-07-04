@@ -1,6 +1,7 @@
-package com.egraf.refapp
+package com.egraf.refapp.ui.game_details
 
 import androidx.lifecycle.*
+import com.egraf.refapp.GameRepository
 import com.egraf.refapp.database.entities.*
 import java.util.*
 
@@ -70,7 +71,7 @@ class GameDetailViewModel : ViewModel() {
         }
 
         if (gameWithAttributes.firstReferee != null) {
-            // добавляем главного судью и обновляем id главного судьи в игре
+            // добавляем первого помощника и обновляем id первого помощника в игре
             gameWithAttributes.game.firstRefereeId = gameWithAttributes.firstReferee!!.id
             gameRepository.addReferee(gameWithAttributes.firstReferee!!)
         } else {
@@ -78,7 +79,7 @@ class GameDetailViewModel : ViewModel() {
         }
 
         if (gameWithAttributes.secondReferee != null) {
-            // добавляем главного судью и обновляем id главного судьи в игре
+            // добавляем второго помощника и обновляем id второго помощника в игре
             gameWithAttributes.game.secondRefereeId = gameWithAttributes.secondReferee!!.id
             gameRepository.addReferee(gameWithAttributes.secondReferee!!)
         } else {
@@ -86,7 +87,7 @@ class GameDetailViewModel : ViewModel() {
         }
 
         if (gameWithAttributes.reserveReferee != null) {
-            // добавляем главного судью и обновляем id главного судьи в игре
+            // добавляем резервного судью и обновляем id резервного судьи в игре
             gameWithAttributes.game.reserveRefereeId = gameWithAttributes.reserveReferee!!.id
             gameRepository.addReferee(gameWithAttributes.reserveReferee!!)
         } else {
@@ -94,7 +95,7 @@ class GameDetailViewModel : ViewModel() {
         }
 
         if (gameWithAttributes.inspector != null) {
-            // добавляем главного судью и обновляем id главного судьи в игре
+            // добавляем инспектора и обновляем id инспектора в игре
             gameWithAttributes.game.inspectorId = gameWithAttributes.inspector!!.id
             gameRepository.addReferee(gameWithAttributes.inspector!!)
         } else {
@@ -165,7 +166,7 @@ class GameDetailViewModel : ViewModel() {
 }
 
 class GameDetailViewModelFactory: ViewModelProvider.Factory{
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(GameDetailViewModel::class.java)){
             return GameDetailViewModel() as T
         }

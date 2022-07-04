@@ -1,4 +1,4 @@
-package com.egraf.refapp
+package com.egraf.refapp.ui.game_details
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -11,6 +11,8 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.egraf.refapp.FragmentToolbar
+import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.*
 import com.egraf.refapp.databinding.FragmentGameBinding
 import com.egraf.refapp.dialogs.*

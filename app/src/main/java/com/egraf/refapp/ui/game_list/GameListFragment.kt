@@ -1,4 +1,4 @@
-package com.egraf.refapp
+package com.egraf.refapp.ui.game_list
 
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -12,15 +12,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.egraf.refapp.*
 import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.GameWithAttributes
 import com.egraf.refapp.databinding.FragmentGameListBinding
 import com.egraf.refapp.databinding.ListItemGameBinding
+import com.egraf.refapp.ui.game_details.GameFragment
 
 private const val TAG = "GameListFragment"
 private const val DATE_FORMAT = "dd.MM.yyyy (EE) HH:mm"
 
-class GameListFragment : FragmentToolbar(), AddGameViewModel.Callbacks {
+class GameListFragment : FragmentToolbar() {
     private var _binding: FragmentGameListBinding? = null
     private val binding get() = _binding!!
     private var adapter: GameAdapter? = GameAdapter()
@@ -36,7 +38,9 @@ class GameListFragment : FragmentToolbar(), AddGameViewModel.Callbacks {
         _binding = FragmentGameListBinding.inflate(inflater, container, false)
         binding.gameRecycleView.layoutManager = LinearLayoutManager(context)
         binding.gameRecycleView.adapter = adapter
-        binding.viewModel = AddGameViewModel(this)
+        binding.newGameButton.setOnClickListener {
+            addNewGame()
+        }
         return binding.root
     }
 
@@ -78,7 +82,7 @@ class GameListFragment : FragmentToolbar(), AddGameViewModel.Callbacks {
         }
     }
 
-    override fun addNewGame() {
+    private fun addNewGame() {
         val game = Game()
         Log.d(TAG, "addNewGame() called")
         gameListViewModel.addGame(game)

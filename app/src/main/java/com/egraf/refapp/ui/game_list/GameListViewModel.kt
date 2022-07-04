@@ -1,7 +1,8 @@
-package com.egraf.refapp
+package com.egraf.refapp.ui.game_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.egraf.refapp.GameRepository
 import com.egraf.refapp.database.entities.Game
 
 class GameListViewModel: ViewModel() {
@@ -14,8 +15,8 @@ class GameListViewModel: ViewModel() {
     }
 }
 
-class GameListViewModelFactory(): ViewModelProvider.Factory{
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+class GameListViewModelFactory: ViewModelProvider.Factory{
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(GameListViewModel::class.java)){
             return GameListViewModel() as T
         }
