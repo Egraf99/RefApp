@@ -9,9 +9,10 @@ class GameDetailViewModel : ViewModel() {
     private val gameRepository = GameRepository.get()
     private val gameIdLiveData = MutableLiveData<UUID>()
 
-    val gameLiveData: LiveData<GameWithAttributes?> = Transformations.switchMap(gameIdLiveData) { gameId ->
-        gameRepository.getGame(gameId)
-    }
+    val gameLiveData: LiveData<GameWithAttributes?> =
+        Transformations.switchMap(gameIdLiveData) { gameId ->
+            gameRepository.getGame(gameId)
+        }
     val stadiumListLiveData: LiveData<List<Stadium>> = Transformations.switchMap(gameIdLiveData) {
         gameRepository.getStadiums()
     }
@@ -162,15 +163,5 @@ class GameDetailViewModel : ViewModel() {
 
     fun deleteGame(game: Game) {
         gameRepository.deleteGame(game)
-    }
-}
-
-class GameDetailViewModelFactory: ViewModelProvider.Factory{
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if(modelClass.isAssignableFrom(GameDetailViewModel::class.java)){
-            return GameDetailViewModel() as T
-        }
-
-        throw IllegalArgumentException("UnknownViewModel")
     }
 }

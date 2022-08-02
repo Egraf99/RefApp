@@ -1,11 +1,17 @@
 package com.egraf.refapp.ui.game_list
 
+import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.GameRepository
+import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.Game
+import com.egraf.refapp.ui.game_details.GameFragment
 
-class GameListViewModel: ViewModel() {
+open class GameListViewModel: ViewModel() {
     private val gameRepository = GameRepository.get()
     val gamesListLiveData = gameRepository.getGames()
     val countGamesLiveData = gameRepository.countGames()
@@ -13,13 +19,8 @@ class GameListViewModel: ViewModel() {
     fun addGame(game: Game) {
         gameRepository.addGame(game)
     }
-}
 
-class GameListViewModelFactory: ViewModelProvider.Factory{
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if(modelClass.isAssignableFrom(GameListViewModel::class.java)){
-            return GameListViewModel() as T
-        }
-        throw IllegalArgumentException("UnknownViewModel")
+    fun createNewGame(): Bundle {
+        return GameFragment.putGameId(Game().id)
     }
 }

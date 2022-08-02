@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.*
-import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.GameWithAttributes
 import com.egraf.refapp.databinding.FragmentGameListBinding
 import com.egraf.refapp.databinding.ListItemGameBinding
@@ -27,7 +26,7 @@ class GameListFragment : FragmentToolbar() {
     private val binding get() = _binding!!
     private var adapter: GameAdapter? = GameAdapter()
     private val gameListViewModel: GameListViewModel by lazy {
-        ViewModelProvider(this, GameListViewModelFactory()).get(GameListViewModel::class.java)
+        ViewModelProvider(requireActivity()).get(GameListViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -38,9 +37,6 @@ class GameListFragment : FragmentToolbar() {
         _binding = FragmentGameListBinding.inflate(inflater, container, false)
         binding.gameRecycleView.layoutManager = LinearLayoutManager(context)
         binding.gameRecycleView.adapter = adapter
-        binding.newGameButton.setOnClickListener {
-            addNewGame()
-        }
         return binding.root
     }
 
@@ -64,6 +60,8 @@ class GameListFragment : FragmentToolbar() {
         ) { count ->
             showEmptyListRepresent(count)
         }
+
+        binding.newGameFloatingButton.setOnClickListener { addNewGame() }
     }
 
     private fun updateUI(games: List<GameWithAttributes>) {
@@ -74,20 +72,16 @@ class GameListFragment : FragmentToolbar() {
     private fun showEmptyListRepresent(count: Int) {
         if (count > 0) {
             binding.emptyListTextview.visibility = View.GONE
-            binding.newGameButton.visibility = View.GONE
         } else {
             binding.emptyListTextview.visibility = View.VISIBLE
-            binding.newGameButton.visibility = View.VISIBLE
-            binding.newGameButton.setOnClickListener { addNewGame() }
         }
-    }
+        }
 
     private fun addNewGame() {
-        val game = Game()
-        Log.d(TAG, "addNewGame() called")
-        gameListViewModel.addGame(game)
-        val bundle = GameFragment.putGameId(game.id)
-        findNavController().navigate(R.id.action_gameListFragment_to_gameFragment, bundle)
+        findNavController().navigate(
+            R.id.action_gameListFragment_to_gameFragment,
+            gameListViewModel.createNewGame()
+        )
     }
 
     private inner class GameHolder(val binding: ListItemGameBinding) :
