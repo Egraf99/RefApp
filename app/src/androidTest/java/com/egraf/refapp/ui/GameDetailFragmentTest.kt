@@ -25,6 +25,7 @@ import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.Team
 import com.egraf.refapp.ui.game_details.GameDetailViewModel
 import com.egraf.refapp.views.textInput.ETIWithEndButton
+import io.mockk.MockK
 import io.mockk.every
 import io.mockk.mockk
 
@@ -37,6 +38,8 @@ class GameDetailFragmentTest {
 
     @Before
     fun setUp() {
+        gameDetailViewModel = mockk()
+
         instrumentationContext = InstrumentationRegistry.getInstrumentation().targetContext
         GameRepository.initialize(instrumentationContext)
     }
@@ -63,6 +66,10 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeExistHomeTeamInTeamETI_showInfoEndIcon() {
+        every { gameDetailViewModel.teamListLiveData } returns MutableLiveData(
+            listOf(Team(name = "ТестоваяКоманда"))
+        )
+
         val bundle = GameDetailFragment.putGameId(Game().id)
         launchFragmentInContainer<GameDetailFragment>(
             themeResId = R.style.Theme_RefApp,
@@ -70,7 +77,7 @@ class GameDetailFragmentTest {
         )
         onView(withId(R.id.team_home_layout)).perform(
             click(),
-            TextInputLayoutActions.replaceText("Луч")
+            TextInputLayoutActions.replaceText("ТестоваяКоманда")
         )
         onView(withId(R.id.team_home_layout)).check(
             matches(
@@ -84,10 +91,10 @@ class GameDetailFragmentTest {
     @Test
     fun writeDoNotExistGuestTeamInTeamETI_showAddEndIcon() {
         val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
+        launchFragmentInContainer(
             themeResId = R.style.Theme_RefApp,
             fragmentArgs = bundle
-        )
+        ) {GameDetailFragment(gameDetailViewModel)}
         onView(withId(R.id.team_guest_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("НесущКоманда")

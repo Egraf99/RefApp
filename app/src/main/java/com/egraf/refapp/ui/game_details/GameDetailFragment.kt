@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.FragmentResultListener
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.FragmentToolbar
@@ -21,6 +22,7 @@ import java.util.*
 private const val TAG = "GameDetailFragment"
 
 private const val ARG_GAME_ID = "game_id"
+private const val ARG_VIEW_MODEL = "view_model"
 private const val REQUEST_DATE = "DialogDate"
 private const val REQUEST_TIME = "DialogTime"
 private const val REQUEST_DELETE = "DialogDelete"
@@ -36,17 +38,21 @@ private const val REQUEST_ADD_INSPECTOR = "DialogAddInspector"
 private const val DATE_FORMAT = "EEE dd.MM.yyyy"
 private const val TIME_FORMAT = "HH:mm"
 
-class GameDetailFragment : FragmentToolbar(), FragmentResultListener {
+class GameDetailFragment(private var viewModel: GameDetailViewModel? = null) :
+    FragmentToolbar(), FragmentResultListener {
 
+    private lateinit var gameDetailViewModel: GameDetailViewModel
     private val binding get() = _binding!!
     private var _binding: FragmentGameBinding? = null
     private lateinit var gameWithAttributes: GameWithAttributes
-    private val gameDetailViewModel: GameDetailViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(GameDetailViewModel::class.java)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        gameDetailViewModel = viewModel ?: ViewModelProvider(requireActivity()).get(
+            GameDetailViewModel::class.java
+        )
+
         val game = Game()
         gameWithAttributes = GameWithAttributes(game)
 
@@ -641,8 +647,9 @@ class GameDetailFragment : FragmentToolbar(), FragmentResultListener {
         /**
          * Возвращает bundle с вложенным значением gameId
          */
-        fun putGameId(gameId: UUID): Bundle {
-            return Bundle().apply { putSerializable(ARG_GAME_ID, gameId) }
+        fun putGameId(gameId: UUID, bundle: Bundle? = null): Bundle {
+            val bundle_ = bundle ?: Bundle()
+            return bundle_.apply { putSerializable(ARG_GAME_ID, gameId) }
         }
     }
 }
