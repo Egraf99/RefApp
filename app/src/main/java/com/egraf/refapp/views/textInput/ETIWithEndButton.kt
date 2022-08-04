@@ -9,8 +9,7 @@ class ETIWithEndButton(context: Context, attrs: AttributeSet? = null) :
     EntityTextInput(context, attrs) {
     private var _doWhenInfoClicked: (Entity) -> Unit = {}
     private var _doWhenAddClicked: (String) -> Unit = {}
-
-
+    var typeEndIcon: TextEditIconType = TextEditIconType.DEFAULT
 
     /**
      * Типы иконок:
@@ -18,7 +17,7 @@ class ETIWithEndButton(context: Context, attrs: AttributeSet? = null) :
      *      INFO -> иконка информации
      *      ADD -> иконка добавления
      */
-    private enum class TextEditIconType {
+    enum class TextEditIconType {
         DEFAULT,
         INFO,
         ADD
@@ -64,6 +63,7 @@ class ETIWithEndButton(context: Context, attrs: AttributeSet? = null) :
     private fun setEndIcon(
         type: TextEditIconType
     ) {
+        typeEndIcon = type
         // показываем иконку только при фокусе
         if (!childTextInput.isFocused) {
             hideEndIcon()

@@ -18,7 +18,7 @@ import com.egraf.refapp.databinding.FragmentGameBinding
 import com.egraf.refapp.dialogs.*
 import java.util.*
 
-private const val TAG = "GameFragment"
+private const val TAG = "GameDetailFragment"
 
 private const val ARG_GAME_ID = "game_id"
 private const val REQUEST_DATE = "DialogDate"
@@ -36,7 +36,7 @@ private const val REQUEST_ADD_INSPECTOR = "DialogAddInspector"
 private const val DATE_FORMAT = "EEE dd.MM.yyyy"
 private const val TIME_FORMAT = "HH:mm"
 
-class GameFragment : FragmentToolbar(), FragmentResultListener {
+class GameDetailFragment : FragmentToolbar(), FragmentResultListener {
 
     private val binding get() = _binding!!
     private var _binding: FragmentGameBinding? = null

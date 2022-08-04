@@ -16,7 +16,7 @@ import com.egraf.refapp.*
 import com.egraf.refapp.database.entities.GameWithAttributes
 import com.egraf.refapp.databinding.FragmentGameListBinding
 import com.egraf.refapp.databinding.ListItemGameBinding
-import com.egraf.refapp.ui.game_details.GameFragment
+import com.egraf.refapp.ui.game_details.GameDetailFragment
 
 private const val TAG = "GameListFragment"
 private const val DATE_FORMAT = "dd.MM.yyyy (EE) HH:mm"
@@ -111,7 +111,7 @@ class GameListFragment : FragmentToolbar() {
         }
 
         override fun onClick(v: View?) {
-            val bundle = GameFragment.putGameId(gameWithAttributes.game.id)
+            val bundle = GameDetailFragment.putGameId(gameWithAttributes.game.id)
             findNavController().navigate(R.id.action_gameListFragment_to_gameFragment, bundle)
         }
 
