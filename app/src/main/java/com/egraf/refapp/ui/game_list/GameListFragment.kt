@@ -79,8 +79,7 @@ class GameListFragment : FragmentToolbar() {
 
     private fun addNewGame() {
         findNavController().navigate(
-            R.id.action_gameListFragment_to_gameFragment,
-            gameListViewModel.createNewGame()
+            R.id.action_gameListFragment_to_gameFragment
         )
     }
 

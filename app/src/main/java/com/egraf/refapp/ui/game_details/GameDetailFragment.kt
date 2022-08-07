@@ -56,8 +56,9 @@ class GameDetailFragment(private var viewModel: GameDetailViewModel? = null) :
         val game = Game()
         gameWithAttributes = GameWithAttributes(game)
 
-        val gameId = arguments?.getSerializable(ARG_GAME_ID) as UUID
-        gameDetailViewModel.loadGame(gameId)
+        val gameId = arguments?.getSerializable(ARG_GAME_ID) as UUID?
+        if (gameId != null)
+            gameDetailViewModel.loadGame(gameId)
     }
 
     override fun onCreateView(
@@ -134,6 +135,7 @@ class GameDetailFragment(private var viewModel: GameDetailViewModel? = null) :
 
     override fun onStart() {
         super.onStart()
+
         with(binding.teamHomeLayout) {
             whatDoWhenAddClicked { text ->
                 TeamAddDialog()

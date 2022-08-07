@@ -6,11 +6,9 @@ import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
-import androidx.core.content.res.ResourcesCompat
 import com.egraf.refapp.views.textInput.ETIWithEndButton
 import org.hamcrest.Description
 import org.hamcrest.TypeSafeMatcher
-import com.egraf.refapp.R
 
 
 class DrawableAssertions {
@@ -51,7 +49,7 @@ private class DrawableMatcher(val expectedId: Int) : TypeSafeMatcher<View>() {
     }
 }
 
-class EndIconTypeMatcher(val type: ETIWithEndButton.TextEditIconType) : TypeSafeMatcher<View>() {
+class EndIconTypeMatcher(private val type: ETIWithEndButton.TextEditIconType) : TypeSafeMatcher<View>() {
     override fun describeTo(description: Description) {
         description.appendText("end icon with type: ")
         description.appendValue(type)

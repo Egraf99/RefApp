@@ -1,56 +1,46 @@
 package com.egraf.refapp.ui
 
-import android.content.Context
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.internal.inject.InstrumentationContext
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.filters.MediumTest
 import androidx.test.filters.SmallTest
-import androidx.test.platform.app.InstrumentationRegistry
 import com.egraf.refapp.GameRepository
-import com.egraf.refapp.ui.game_details.GameDetailFragment
-import dagger.hilt.android.testing.HiltAndroidTest
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Before
-import org.junit.Test
 import com.egraf.refapp.R
 import com.egraf.refapp.actions.DrawableAssertions.Companion.withEndIconType
 import com.egraf.refapp.actions.TextInputLayoutActions
-import com.egraf.refapp.database.entities.Game
-import com.egraf.refapp.database.entities.Team
-import com.egraf.refapp.ui.game_details.GameDetailViewModel
+import com.egraf.refapp.database.source.FakeGameDataSource
+import com.egraf.refapp.ui.game_details.GameDetailFragment
 import com.egraf.refapp.views.textInput.ETIWithEndButton
-import io.mockk.MockK
-import io.mockk.every
-import io.mockk.mockk
+import dagger.hilt.android.testing.HiltAndroidTest
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
 
 @ExperimentalCoroutinesApi
 @SmallTest
-@HiltAndroidTest
+@RunWith(JUnitParamsRunner::class)
 class GameDetailFragmentTest {
-    private lateinit var instrumentationContext: Context
-    private lateinit var gameDetailViewModel: GameDetailViewModel
+    @Rule
+    @JvmField
+    var mInstantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun setUp() {
-        gameDetailViewModel = mockk()
-
-        instrumentationContext = InstrumentationRegistry.getInstrumentation().targetContext
-        GameRepository.initialize(instrumentationContext)
+        GameRepository.initialize(FakeGameDataSource())
     }
 
     @Test
     fun writeDoNotExistHomeTeamInTeamETI_showAddEndIcon() {
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        )
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.team_home_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("НесущКоманда")
@@ -66,18 +56,10 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeExistHomeTeamInTeamETI_showInfoEndIcon() {
-        every { gameDetailViewModel.teamListLiveData } returns MutableLiveData(
-            listOf(Team(name = "ТестоваяКоманда"))
-        )
-
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        )
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.team_home_layout)).perform(
             click(),
-            TextInputLayoutActions.replaceText("ТестоваяКоманда")
+            TextInputLayoutActions.replaceText("Команда")
         )
         onView(withId(R.id.team_home_layout)).check(
             matches(
@@ -90,11 +72,7 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeDoNotExistGuestTeamInTeamETI_showAddEndIcon() {
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        ) {GameDetailFragment(gameDetailViewModel)}
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.team_guest_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("НесущКоманда")
@@ -110,14 +88,10 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeExistGuestTeamInTeamETI_showInfoEndIcon() {
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        )
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.team_guest_layout)).perform(
             click(),
-            TextInputLayoutActions.replaceText("Луч")
+            TextInputLayoutActions.replaceText("Команда")
         )
         onView(withId(R.id.team_guest_layout)).check(
             matches(
@@ -130,11 +104,7 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeDoNotExistStadiumInStadiumETI_showAddEndIcon() {
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        )
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.stadium_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("НесущСтадион")
@@ -150,14 +120,10 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeExistStadiumTeamInStadiumETI_showInfoEndIcon() {
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        )
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.stadium_layout)).perform(
             click(),
-            TextInputLayoutActions.replaceText("Лужники")
+            TextInputLayoutActions.replaceText("Стадион")
         )
         onView(withId(R.id.stadium_layout)).check(
             matches(
@@ -170,11 +136,7 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeDoNotExistLeagueInLeagueETI_showAddEndIcon() {
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        )
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.league_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("НесущЛига")
@@ -190,14 +152,10 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeExistLeagueInLeagueETI_showInfoEndIcon() {
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        )
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.league_layout)).perform(
             click(),
-            TextInputLayoutActions.replaceText("МПР")
+            TextInputLayoutActions.replaceText("Лига")
         )
         onView(withId(R.id.league_layout)).check(
             matches(
@@ -210,11 +168,7 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeDoNotExistRefereeInChiefRefereeETI_showAddEndIcon() {
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        )
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.chief_referee_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("НесущСудья")
@@ -230,14 +184,10 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeExistRefereeInChiefRefereeETI_showInfoEndIcon() {
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        )
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.chief_referee_layout)).perform(
             click(),
-            TextInputLayoutActions.replaceText("Ходин Егор")
+            TextInputLayoutActions.replaceText("Фамилия Имя")
         )
         onView(withId(R.id.chief_referee_layout)).check(
             matches(
@@ -250,11 +200,7 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeDoNotExistRefereeInFirstRefereeETI_showAddEndIcon() {
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        )
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.first_referee_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("НесущСудья")
@@ -270,14 +216,10 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeExistRefereeInFirstRefereeETI_showInfoEndIcon() {
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        )
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.first_referee_layout)).perform(
             click(),
-            TextInputLayoutActions.replaceText("Ходин Егор")
+            TextInputLayoutActions.replaceText("Фамилия Имя")
         )
         onView(withId(R.id.first_referee_layout)).check(
             matches(
@@ -290,11 +232,7 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeDoNotExistRefereeInSecondRefereeETI_showAddEndIcon() {
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        )
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.second_referee_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("НесущСудья")
@@ -310,14 +248,10 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeExistRefereeInSecondRefereeETI_showInfoEndIcon() {
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        )
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.second_referee_layout)).perform(
             click(),
-            TextInputLayoutActions.replaceText("Ходин Егор")
+            TextInputLayoutActions.replaceText("Фамилия Имя")
         )
         onView(withId(R.id.second_referee_layout)).check(
             matches(
@@ -330,11 +264,7 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeDoNotExistRefereeInReserveRefereeETI_showAddEndIcon() {
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        )
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.reserve_referee_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("НесущСудья")
@@ -350,14 +280,10 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeExistRefereeInReserveRefereeETI_showInfoEndIcon() {
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        )
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.reserve_referee_layout)).perform(
             click(),
-            TextInputLayoutActions.replaceText("Ходин Егор")
+            TextInputLayoutActions.replaceText("Фамилия Имя")
         )
         onView(withId(R.id.reserve_referee_layout)).check(
             matches(
@@ -370,11 +296,7 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeDoNotExistRefereeInInspectorETI_showAddEndIcon() {
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        )
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.inspector_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("НесущСудья")
@@ -389,15 +311,11 @@ class GameDetailFragmentTest {
     }
 
     @Test
-    fun writeExistRefereeInInspectorTI_showInfoEndIcon() {
-        val bundle = GameDetailFragment.putGameId(Game().id)
-        launchFragmentInContainer<GameDetailFragment>(
-            themeResId = R.style.Theme_RefApp,
-            fragmentArgs = bundle
-        )
+    fun writeExistRefereeInInspectorETI_showInfoEndIcon() {
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.inspector_layout)).perform(
             click(),
-            TextInputLayoutActions.replaceText("Ходин Егор")
+            TextInputLayoutActions.replaceText("Фамилия Имя")
         )
         onView(withId(R.id.inspector_layout)).check(
             matches(

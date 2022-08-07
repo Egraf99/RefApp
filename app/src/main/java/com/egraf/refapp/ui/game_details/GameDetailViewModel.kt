@@ -13,18 +13,10 @@ class GameDetailViewModel : ViewModel() {
         Transformations.switchMap(gameIdLiveData) { gameId ->
             gameRepository.getGame(gameId)
         }
-    val stadiumListLiveData: LiveData<List<Stadium>> = Transformations.switchMap(gameIdLiveData) {
-        gameRepository.getStadiums()
-    }
-    val leagueListLiveData: LiveData<List<League>> = Transformations.switchMap(gameIdLiveData) {
-        gameRepository.getLeagues()
-    }
-    val teamListLiveData: LiveData<List<Team>> = Transformations.switchMap(gameIdLiveData) {
-        gameRepository.getTeams()
-    }
-    val refereeListLiveData: LiveData<List<Referee>> = Transformations.switchMap(gameIdLiveData) {
-        gameRepository.getReferees()
-    }
+    val stadiumListLiveData: LiveData<List<Stadium>> = gameRepository.getStadiums()
+    val leagueListLiveData: LiveData<List<League>> = gameRepository.getLeagues()
+    val teamListLiveData: LiveData<List<Team>> = gameRepository.getTeams()
+    val refereeListLiveData: LiveData<List<Referee>> = gameRepository.getReferees()
 
     fun loadGame(gameId: UUID) {
         gameIdLiveData.value = gameId

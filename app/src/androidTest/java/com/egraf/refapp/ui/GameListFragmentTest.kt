@@ -12,6 +12,7 @@ import androidx.test.filters.MediumTest
 import androidx.test.platform.app.InstrumentationRegistry
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
+import com.egraf.refapp.database.source.FakeGameDataSource
 import com.egraf.refapp.ui.game_list.GameListFragment
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -23,12 +24,10 @@ import org.junit.Test
 @MediumTest
 @HiltAndroidTest
 class GameListFragmentTest {
-    lateinit var instrumentationContext: Context
 
     @Before
     fun setup() {
-        instrumentationContext = InstrumentationRegistry.getInstrumentation().targetContext
-        GameRepository.initialize(instrumentationContext)
+        GameRepository.initialize(FakeGameDataSource())
     }
 
     @Test

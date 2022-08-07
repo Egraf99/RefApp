@@ -14,8 +14,4 @@ open class GameListViewModel: ViewModel() {
     fun addGame(game: Game) {
         gameRepository.addGame(game)
     }
-
-    fun createNewGame(): Bundle {
-        return GameDetailFragment.putGameId(Game().id)
-    }
 }
