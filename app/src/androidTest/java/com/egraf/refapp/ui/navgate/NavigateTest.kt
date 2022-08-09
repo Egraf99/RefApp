@@ -1,7 +1,7 @@
-package com.egraf.refapp.ui
+package com.egraf.refapp.ui.navgate
 
-import android.content.Context
 import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
@@ -9,12 +9,11 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.MediumTest
-import androidx.test.platform.app.InstrumentationRegistry
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
 import com.egraf.refapp.database.source.FakeGameDataSource
 import com.egraf.refapp.ui.game_list.GameListFragment
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
@@ -23,20 +22,18 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 @MediumTest
 @HiltAndroidTest
-class GameListFragmentTest {
+class NavigateTest {
+
+    private lateinit var navController:NavController
 
     @Before
-    fun setup() {
+    fun setUp() {
         GameRepository.initialize(FakeGameDataSource())
-    }
 
-    @Test
-    fun addButtonClick_navigateToGameFragment() {
         // Create` a TestNavHostController
-        val navController = TestNavHostController(
+        navController = TestNavHostController(
             ApplicationProvider.getApplicationContext()
         )
-
         val gameListScenario =
             launchFragmentInContainer<GameListFragment>(themeResId = R.style.Theme_RefApp)
 
@@ -48,7 +45,12 @@ class GameListFragmentTest {
             Navigation.setViewNavController(fragment.requireView(), navController)
         }
 
-        onView(withId(R.id.new_game_floating_button)).perform(click())
-        assertThat(navController.currentDestination?.id).isEqualTo(R.id.gameFragment)
     }
+
+    @Test
+    fun addButtonClick_navigateToGameFragment() {
+        onView(withId(R.id.new_game_floating_button)).perform(click())
+        Truth.assertThat(navController.currentDestination?.id).isEqualTo(R.id.gameFragment)
+    }
+
 }

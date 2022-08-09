@@ -1,4 +1,4 @@
-package com.egraf.refapp.ui
+package com.egraf.refapp.ui.detail_fragment
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.testing.launchFragmentInContainer
@@ -28,7 +28,7 @@ import org.junit.runners.Parameterized
 @ExperimentalCoroutinesApi
 @SmallTest
 @RunWith(JUnitParamsRunner::class)
-class GameDetailFragmentTest {
+class EndIconInEditTextTest {
     @Rule
     @JvmField
     var mInstantTaskExecutorRule = InstantTaskExecutorRule()
@@ -36,11 +36,12 @@ class GameDetailFragmentTest {
     @Before
     fun setUp() {
         GameRepository.initialize(FakeGameDataSource())
+
+        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
     }
 
     @Test
     fun writeDoNotExistHomeTeamInTeamETI_showAddEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.team_home_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("НесущКоманда")
@@ -56,39 +57,14 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeExistHomeTeamInTeamETI_showInfoEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
-        onView(withId(R.id.team_home_layout)).perform(
-            click(),
-            TextInputLayoutActions.replaceText("Команда")
-        )
-        onView(withId(R.id.team_home_layout)).check(
-            matches(
-                withEndIconType(
-                    ETIWithEndButton.TextEditIconType.INFO
-                )
-            )
-        )
     }
 
     @Test
     fun writeDoNotExistGuestTeamInTeamETI_showAddEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
-        onView(withId(R.id.team_guest_layout)).perform(
-            click(),
-            TextInputLayoutActions.replaceText("НесущКоманда")
-        )
-        onView(withId(R.id.team_guest_layout)).check(
-            matches(
-                withEndIconType(
-                    ETIWithEndButton.TextEditIconType.ADD
-                )
-            )
-        )
     }
 
     @Test
     fun writeExistGuestTeamInTeamETI_showInfoEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.team_guest_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("Команда")
@@ -104,23 +80,10 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeDoNotExistStadiumInStadiumETI_showAddEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
-        onView(withId(R.id.stadium_layout)).perform(
-            click(),
-            TextInputLayoutActions.replaceText("НесущСтадион")
-        )
-        onView(withId(R.id.stadium_layout)).check(
-            matches(
-                withEndIconType(
-                    ETIWithEndButton.TextEditIconType.ADD
-                )
-            )
-        )
     }
 
     @Test
     fun writeExistStadiumTeamInStadiumETI_showInfoEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.stadium_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("Стадион")
@@ -136,7 +99,6 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeDoNotExistLeagueInLeagueETI_showAddEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.league_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("НесущЛига")
@@ -152,7 +114,6 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeExistLeagueInLeagueETI_showInfoEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.league_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("Лига")
@@ -168,7 +129,6 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeDoNotExistRefereeInChiefRefereeETI_showAddEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.chief_referee_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("НесущСудья")
@@ -184,7 +144,6 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeExistRefereeInChiefRefereeETI_showInfoEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.chief_referee_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("Фамилия Имя")
@@ -200,7 +159,6 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeDoNotExistRefereeInFirstRefereeETI_showAddEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.first_referee_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("НесущСудья")
@@ -216,7 +174,6 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeExistRefereeInFirstRefereeETI_showInfoEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.first_referee_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("Фамилия Имя")
@@ -232,7 +189,6 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeDoNotExistRefereeInSecondRefereeETI_showAddEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.second_referee_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("НесущСудья")
@@ -248,7 +204,6 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeExistRefereeInSecondRefereeETI_showInfoEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.second_referee_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("Фамилия Имя")
@@ -264,7 +219,6 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeDoNotExistRefereeInReserveRefereeETI_showAddEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.reserve_referee_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("НесущСудья")
@@ -280,7 +234,6 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeExistRefereeInReserveRefereeETI_showInfoEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.reserve_referee_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("Фамилия Имя")
@@ -296,7 +249,6 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeDoNotExistRefereeInInspectorETI_showAddEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.inspector_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("НесущСудья")
@@ -312,7 +264,6 @@ class GameDetailFragmentTest {
 
     @Test
     fun writeExistRefereeInInspectorETI_showInfoEndIcon() {
-        launchFragmentInContainer<GameDetailFragment>(themeResId = R.style.Theme_RefApp)
         onView(withId(R.id.inspector_layout)).perform(
             click(),
             TextInputLayoutActions.replaceText("Фамилия Имя")

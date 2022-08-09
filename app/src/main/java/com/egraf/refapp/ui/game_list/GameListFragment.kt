@@ -50,15 +50,10 @@ class GameListFragment : FragmentToolbar() {
         gameListViewModel.gamesListLiveData.observe(
             viewLifecycleOwner
         ) { games ->
+            showEmptyListRepresent(games.size)
             games?.let {
                 updateUI(games)
             }
-        }
-
-        gameListViewModel.countGamesLiveData.observe(
-            viewLifecycleOwner
-        ) { count ->
-            showEmptyListRepresent(count)
         }
 
         binding.newGameFloatingButton.setOnClickListener { addNewGame() }

@@ -6,39 +6,42 @@ import com.egraf.refapp.database.entities.*
 import java.util.*
 
 class FakeGameDataSource : GameDataSource {
-    private val games = mutableListOf<GameWithAttributes>()
+    private val games = MutableLiveData(mutableListOf<GameWithAttributes>())
     private val teams = mutableListOf(Team(name = "Команда"))
     private val stadiums = mutableListOf(Stadium(name = "Стадион"))
     private val leagues = mutableListOf(League(name = "Лига"))
     private val referees = mutableListOf(Referee(firstName = "Имя", secondName = "Фамилия", thirdName = "Отчество"))
 
     // games block
-    override fun getGames(): LiveData<List<GameWithAttributes>> = MutableLiveData(games)
-    override fun countGames(): LiveData<Int> = MutableLiveData(games.count())
+    override fun getGames(): LiveData<List<GameWithAttributes>> = MutableLiveData(games.value)
+    override fun countGames(): LiveData<Int> = MutableLiveData(games.value?.count())
     override fun getGame(id: UUID): LiveData<GameWithAttributes?> {
-        games.forEach { game -> if (game.game.id == id) return MutableLiveData(game) }
+        games.value?.forEach { game -> if (game.game.id == id) return MutableLiveData(game) }
         return MutableLiveData(null)
     }
 
     override fun updateGame(game: Game) {
-        games.forEachIndexed { index, gameWithAttributes ->
-            if (gameWithAttributes.game.id == game.id) {
-                games.removeAt(index)
-                games.add(index, gameWithAttributes)
-            }
-        }
+//        games.value?.forEachIndexed { index, gameWithAttributes ->
+//            if (gameWithAttributes.game.id == game.id) {
+//                games.value?.removeAt(index)
+//                games.value?.add(index, gameWithAttributes)
+//            }
+//        }
     }
 
     override fun addGame(game: Game) {
-        games.add(GameWithAttributes(game = game))
+        games.value?.add(GameWithAttributes(game = game))
+//        val games_ = games.value as MutableList
+//        games_.add(GameWithAttributes(game = game))
+//        games.postValue(games_)
     }
 
     override fun deleteGame(game: Game) {
-        games.forEachIndexed { index, gameWithAttributes ->
-            if (gameWithAttributes.game.id == game.id) {
-                games.removeAt(index)
-            }
-        }
+//        games.value?.forEachIndexed { index, gameWithAttributes ->
+//            if (gameWithAttributes.game.id == game.id) {
+//                games.value?.removeAt(index)
+//            }
+//        }
     }
 
     // stadium block
