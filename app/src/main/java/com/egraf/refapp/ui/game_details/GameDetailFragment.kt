@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.FragmentResultListener
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.FragmentToolbar
@@ -53,12 +52,8 @@ class GameDetailFragment(private var viewModel: GameDetailViewModel? = null) :
             GameDetailViewModel::class.java
         )
 
-        val game = Game()
-        gameWithAttributes = GameWithAttributes(game)
-
         val gameId = arguments?.getSerializable(ARG_GAME_ID) as UUID?
-        if (gameId != null)
-            gameDetailViewModel.loadGame(gameId)
+        gameDetailViewModel.loadGame(gameId)
     }
 
     override fun onCreateView(
@@ -83,10 +78,8 @@ class GameDetailFragment(private var viewModel: GameDetailViewModel? = null) :
 
         // add observe to livedata
         gameDetailViewModel.gameLiveData.observe(viewLifecycleOwner) { game ->
-            game?.let {
-                gameWithAttributes = game
-                updateUI()
-            }
+            gameWithAttributes = game ?: GameWithAttributes(Game())
+            updateUI()
         }
         gameDetailViewModel.stadiumListLiveData.observe(viewLifecycleOwner) { stadiums ->
             binding.stadiumLayout.setEntities(stadiums)
@@ -409,6 +402,16 @@ class GameDetailFragment(private var viewModel: GameDetailViewModel? = null) :
     }
 
     private fun updateUI() {
+        updateText()
+        updateDate()
+        updateTime()
+        updateCheckbox()
+    }
+
+    /**
+     * Устанавливает текст для всех EditTextInput
+     */
+    private fun updateText() {
         val textInputs = listOf(
             binding.teamHomeLayout,
             binding.teamGuestLayout,
@@ -435,19 +438,7 @@ class GameDetailFragment(private var viewModel: GameDetailViewModel? = null) :
         for (pair in textInputs.zip(attributesList)) {
             val textInput = pair.first
             val attribute = pair.second
-            if (textInput.getText().isBlank())
-                textInput.setText(attribute?.shortName ?: "")
-        }
-        updateDate()
-        updateTime()
-
-        binding.gamePaidCheckBox.apply {
-            isChecked = gameWithAttributes.game.isPaid
-            jumpDrawablesToCurrentState()
-        }
-        binding.gamePassedCheckBox.apply {
-            isChecked = gameWithAttributes.game.isPassed
-            jumpDrawablesToCurrentState()
+            textInput.setText(attribute?.shortName ?: "")
         }
     }
 
@@ -457,6 +448,20 @@ class GameDetailFragment(private var viewModel: GameDetailViewModel? = null) :
     private fun updateDate() {
         binding.gameDateButton.text =
             DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
+    }
+
+    /**
+     * Устанавливает необходимые чек-боксы
+     */
+    private fun updateCheckbox() {
+        binding.gamePaidCheckBox.apply {
+            isChecked = gameWithAttributes.game.isPaid
+            jumpDrawablesToCurrentState()
+        }
+        binding.gamePassedCheckBox.apply {
+            isChecked = gameWithAttributes.game.isPassed
+            jumpDrawablesToCurrentState()
+        }
     }
 
     /**

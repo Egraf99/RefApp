@@ -7,10 +7,14 @@ import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.filters.MediumTest
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
+import com.egraf.refapp.database.entities.League
+import com.egraf.refapp.database.entities.Team
 import com.egraf.refapp.database.source.FakeGameDataSource
 import com.egraf.refapp.ui.game_list.GameListFragment
 import com.google.common.truth.Truth
@@ -28,7 +32,7 @@ class NavigateTest {
 
     @Before
     fun setUp() {
-        GameRepository.initialize(FakeGameDataSource())
+        setUpRepository()
 
         // Create` a TestNavHostController
         navController = TestNavHostController(
@@ -45,6 +49,15 @@ class NavigateTest {
             Navigation.setViewNavController(fragment.requireView(), navController)
         }
 
+    }
+
+    fun setUpRepository() {
+        GameRepository.initialize(FakeGameDataSource())
+        val gameRepository = GameRepository.get()
+        val testTeam = Team(name="Команда")
+        val testLeague = League(name = "Лига")
+        gameRepository.addTeam(testTeam)
+        gameRepository.addLeague(testLeague)
     }
 
     @Test

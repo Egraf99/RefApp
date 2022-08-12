@@ -6,6 +6,7 @@ import com.egraf.refapp.database.entities.*
 import java.util.*
 
 class GameDetailViewModel : ViewModel() {
+    private val nullGameId = UUID.randomUUID()
     private val gameRepository = GameRepository.get()
     private val gameIdLiveData = MutableLiveData<UUID>()
 
@@ -18,8 +19,8 @@ class GameDetailViewModel : ViewModel() {
     val teamListLiveData: LiveData<List<Team>> = gameRepository.getTeams()
     val refereeListLiveData: LiveData<List<Referee>> = gameRepository.getReferees()
 
-    fun loadGame(gameId: UUID) {
-        gameIdLiveData.value = gameId
+    fun loadGame(gameId: UUID?) {
+        gameIdLiveData.value = gameId ?: nullGameId
     }
 
     fun saveGame(gameWithAttributes: GameWithAttributes) {
