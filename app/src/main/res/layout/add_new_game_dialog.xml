@@ -9,9 +9,9 @@
         android:id="@+id/add_game_fragment_container"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="500dp"
         app:defaultNavHost="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/add_game_nav" />
+        app:navGraph="@navigation/add_new_game_nav" />
 </androidx.constraintlayout.widget.ConstraintLayout>

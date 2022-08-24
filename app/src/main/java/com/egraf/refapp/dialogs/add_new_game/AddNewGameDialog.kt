@@ -2,6 +2,7 @@ package com.egraf.refapp.dialogs.add_new_game
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.DialogFragment
@@ -34,15 +35,16 @@ class AddNewGameDialog: DialogFragment() {
         val dialog = AlertDialog.Builder(activity)
             .setTitle(R.string.add_game)
             .setView(binding!!.root)
-            .setPositiveButton("Next"
-            ) { dialog, which ->
-                run {
-                    Log.d(TAG, "onCreateDialog: fragment = ${binding!!.addGameFragmentContainer.getFragment<DateChooseFragment>()}")
-                    addNewGameViewModel.showNextFragment()
-                }
-            }
+            .setPositiveButton("Next", null)
+            .create()
 
-        return dialog.create()
+        dialog.setOnShowListener {
+            val button = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
+            button.setOnClickListener {
+                addNewGameViewModel.showNextFragment()
+            }
+        }
+        return dialog
     }
 
     override fun onDestroy() {
