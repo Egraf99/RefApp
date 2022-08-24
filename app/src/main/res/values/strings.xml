@@ -22,6 +22,7 @@
     <string name="league_add_message">League %1$s added</string>
     <string name="referee_add_message">Referee %1$s added</string>
     <string name="date">Date</string>
+    <string name="time">Time</string>
     <string name="inspector">Inspector</string>
     <string name="not_found">Not found</string>
     <string name="back">Back</string>

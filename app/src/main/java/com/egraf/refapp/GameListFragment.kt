@@ -6,26 +6,29 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.GameWithAttributes
 import com.egraf.refapp.databinding.FragmentGameListBinding
 import com.egraf.refapp.databinding.ListItemGameBinding
+import com.egraf.refapp.dialogs.add_new_game.AddNewGameDialog
+import com.egraf.refapp.dialogs.add_new_game.DateChooseFragment
 
 private const val TAG = "GameListFragment"
 private const val DATE_FORMAT = "dd.MM.yyyy (EE) HH:mm"
+private const val ADD_GAME_DIALOG = "AddGameDialog"
 
-class GameListFragment : FragmentToolbar(), AddGameViewModel.Callbacks {
+class GameListFragment : FragmentToolbar(), AddGameViewModel.Callbacks, FragmentResultListener {
     private var _binding: FragmentGameListBinding? = null
     private val binding get() = _binding!!
     private var adapter: GameAdapter? = GameAdapter()
     private val gameListViewModel: GameListViewModel by lazy {
-        ViewModelProvider(this, GameListViewModelFactory()).get(GameListViewModel::class.java)
+        ViewModelProvider(this).get(GameListViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -60,6 +63,8 @@ class GameListFragment : FragmentToolbar(), AddGameViewModel.Callbacks {
         ) { count ->
             showEmptyListRepresent(count)
         }
+
+        parentFragmentManager.setFragmentResultListener(ADD_GAME_DIALOG, viewLifecycleOwner, this)
     }
 
     private fun updateUI(games: List<GameWithAttributes>) {
@@ -79,11 +84,8 @@ class GameListFragment : FragmentToolbar(), AddGameViewModel.Callbacks {
     }
 
     override fun addNewGame() {
-        val game = Game()
         Log.d(TAG, "addNewGame() called")
-        gameListViewModel.addGame(game)
-        val bundle = GameFragment.putGameId(game.id)
-        findNavController().navigate(R.id.action_gameListFragment_to_gameFragment, bundle)
+        AddNewGameDialog().show(parentFragmentManager, ADD_GAME_DIALOG)
     }
 
     private inner class GameHolder(val binding: ListItemGameBinding) :
@@ -160,6 +162,9 @@ class GameListFragment : FragmentToolbar(), AddGameViewModel.Callbacks {
                     oldGame.game.isPassed == newGame.game.isPassed
         }
 
+    }
+
+    override fun onFragmentResult(requestKey: String, result: Bundle) {
     }
 //
 //    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

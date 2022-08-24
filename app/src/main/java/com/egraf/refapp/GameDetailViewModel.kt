@@ -163,13 +163,3 @@ class GameDetailViewModel : ViewModel() {
         gameRepository.deleteGame(game)
     }
 }
-
-class GameDetailViewModelFactory: ViewModelProvider.Factory{
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if(modelClass.isAssignableFrom(GameDetailViewModel::class.java)){
-            return GameDetailViewModel() as T
-        }
-
-        throw IllegalArgumentException("UnknownViewModel")
-    }
-}

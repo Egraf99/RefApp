@@ -40,7 +40,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
     private var _binding: FragmentGameBinding? = null
     private lateinit var gameWithAttributes: GameWithAttributes
     private val gameDetailViewModel: GameDetailViewModel by lazy {
-        ViewModelProvider(this, GameDetailViewModelFactory()).get(GameDetailViewModel::class.java)
+        ViewModelProvider(this).get(GameDetailViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

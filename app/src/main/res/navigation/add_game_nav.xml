@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/add_game_nav"
+    app:startDestination="@id/dateChooseFragment">
+    <fragment
+        android:id="@+id/dateChooseFragment"
+        android:name="com.egraf.refapp.dialogs.add_new_game.DateChooseFragment"
+        android:label="DateChooseFragment" >
+        <action
+            android:id="@+id/action_choose_date_to_team"
+            app:destination="@id/teamChooseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/teamChooseFragment"
+        android:name="com.egraf.refapp.dialogs.add_new_game.TeamChooseFragment"
+        android:label="TeamChooseFragment" />
+</navigation>

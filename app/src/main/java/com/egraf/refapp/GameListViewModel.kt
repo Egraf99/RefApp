@@ -13,12 +13,3 @@ class GameListViewModel: ViewModel() {
         gameRepository.addGame(game)
     }
 }
-
-class GameListViewModelFactory(): ViewModelProvider.Factory{
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if(modelClass.isAssignableFrom(GameListViewModel::class.java)){
-            return GameListViewModel() as T
-        }
-        throw IllegalArgumentException("UnknownViewModel")
-    }
-}
