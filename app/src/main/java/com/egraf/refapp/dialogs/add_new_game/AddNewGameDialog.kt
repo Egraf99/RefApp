@@ -22,8 +22,10 @@ class AddNewGameDialog: DialogFragment() {
         super.onCreate(savedInstanceState)
         addNewGameViewModel.destination.observe(this) { destination ->
             if (destination == null) return@observe
-            if (destination.res == 0)
-                binding!!.addGameFragmentContainer.findNavController().popBackStack()
+            if (destination.res == -1) {
+                addNewGameViewModel.addRandomGame()
+                this.dismiss()
+            }
             else
                 binding!!.addGameFragmentContainer.findNavController().navigate(destination.res)
         }
