@@ -10,7 +10,8 @@ import com.egraf.refapp.database.entities.Game
 enum class AddGameDestination(val res: Int) {
     DATE_CHOOSE(0),
     TEAM_CHOOSE(R.id.action_choose_date_to_team),
-    CLOSE(-1)
+    REFEREE_CHOSE(R.id.action_choose_team_to_referee),
+    CLOSE(-1),
 }
 
 class AddNewGameViewModel: ViewModel() {

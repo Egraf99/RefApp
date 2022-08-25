@@ -14,5 +14,13 @@
     <fragment
         android:id="@+id/teamChooseFragment"
         android:name="com.egraf.refapp.dialogs.add_new_game.TeamChooseFragment"
-        android:label="TeamChooseFragment" />
+        android:label="TeamChooseFragment" >
+        <action
+            android:id="@+id/action_choose_team_to_referee"
+            app:destination="@id/refereeChooseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/refereeChooseFragment"
+        android:name="com.egraf.refapp.dialogs.add_new_game.RefereeChooseFragment"
+        android:label="RefereeChooseFragment" />
 </navigation>
