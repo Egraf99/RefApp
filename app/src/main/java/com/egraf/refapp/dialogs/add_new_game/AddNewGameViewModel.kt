@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.Game
+import java.util.*
 
 enum class AddGameDestination(val res: Int) {
     DATE_CHOOSE(0),
@@ -18,6 +19,8 @@ class AddNewGameViewModel: ViewModel() {
     private val gameRepository = GameRepository.get()
     var currentPosition = 0
         private set
+    val date get() = createdGame.date
+    private val createdGame = Game()
     val destination: LiveData<AddGameDestination?> get() = _destination
     private val _destination = MutableLiveData<AddGameDestination?>(null)
 
@@ -28,5 +31,9 @@ class AddNewGameViewModel: ViewModel() {
 
     fun addRandomGame() {
         gameRepository.addGame(Game())
+    }
+
+    fun setNewDate(date: Date) {
+        createdGame.date = date
     }
 }

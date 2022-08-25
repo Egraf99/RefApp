@@ -17,10 +17,10 @@
         app:navGraph="@navigation/add_new_game_nav" />
 
     <Button
-        android:id="@+id/next"
+        android:id="@+id/next_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/next"
-        app:layout_constraintBottom_toBottomOf="@id/add_game_fragment_container"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/add_game_fragment_container" />
 </androidx.constraintlayout.widget.ConstraintLayout>

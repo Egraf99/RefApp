@@ -36,8 +36,12 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = AddNewGameDialogBinding.inflate(inflater)
-        binding.next.setOnClickListener { addNewGameViewModel.showNextFragment()}
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.nextButton.setOnClickListener { addNewGameViewModel.showNextFragment() }
     }
 
     override fun onDestroy() {
