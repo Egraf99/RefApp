@@ -35,4 +35,5 @@
     <string name="second_name">Фамилия</string>
     <string name="third_name">Отчество</string>
     <string name="name">Название</string>
+    <string name="next">Далее</string>
 </resources>

@@ -12,7 +12,9 @@
         android:hint="@string/chief_referee"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:startIconDrawable="@drawable/ic_whistle"
+        app:startIconTint="@color/orange">
 
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:layout_width="match_parent"

@@ -16,8 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.database.entities.GameWithAttributes
 import com.egraf.refapp.databinding.FragmentGameListBinding
 import com.egraf.refapp.databinding.ListItemGameBinding
-import com.egraf.refapp.dialogs.add_new_game.AddNewGameDialog
-import com.egraf.refapp.dialogs.add_new_game.DateChooseFragment
 
 private const val TAG = "GameListFragment"
 private const val DATE_FORMAT = "dd.MM.yyyy (EE) HH:mm"
@@ -28,7 +26,7 @@ class GameListFragment : FragmentToolbar(), AddGameViewModel.Callbacks, Fragment
     private val binding get() = _binding!!
     private var adapter: GameAdapter? = GameAdapter()
     private val gameListViewModel: GameListViewModel by lazy {
-        ViewModelProvider(this).get(GameListViewModel::class.java)
+        ViewModelProvider(this)[GameListViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -85,7 +83,7 @@ class GameListFragment : FragmentToolbar(), AddGameViewModel.Callbacks, Fragment
 
     override fun addNewGame() {
         Log.d(TAG, "addNewGame() called")
-        AddNewGameDialog().show(parentFragmentManager, ADD_GAME_DIALOG)
+        findNavController().navigate(R.id.action_gameListFragment_to_addNewGame)
     }
 
     private inner class GameHolder(val binding: ListItemGameBinding) :

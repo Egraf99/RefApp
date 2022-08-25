@@ -15,9 +15,16 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_gameListFragment_to_addNewGame"
+            app:destination="@id/addNewGameBottomDialog" />
     </fragment>
     <fragment
         android:id="@+id/gameFragment"
         android:name="com.egraf.refapp.GameFragment"
         android:label="GameFragment" />
+    <dialog
+        android:id="@+id/addNewGameBottomDialog"
+        android:name="com.egraf.refapp.dialogs.add_new_game.AddNewGameBottomDialog"
+        android:label="AddNewGameBottomDialog" />
 </navigation>
