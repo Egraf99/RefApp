@@ -19,8 +19,7 @@ class AddNewGameViewModel: ViewModel() {
     private val gameRepository = GameRepository.get()
     var currentPosition = 0
         private set
-    val date get() = createdGame.date
-    private val createdGame = Game()
+    val createdGame = Game()
     val destination: LiveData<AddGameDestination?> get() = _destination
     private val _destination = MutableLiveData<AddGameDestination?>(null)
 
@@ -31,9 +30,5 @@ class AddNewGameViewModel: ViewModel() {
 
     fun addRandomGame() {
         gameRepository.addGame(Game())
-    }
-
-    fun setNewDate(date: Date) {
-        createdGame.date = date
     }
 }

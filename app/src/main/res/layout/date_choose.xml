@@ -4,14 +4,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.egraf.refapp.views.textInput.ETIWithEndButton
+        android:id="@+id/stadium_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:hint="@string/stadium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:startIconDrawable="@drawable/ic_stadium"
+        app:startIconTint="@color/orange">
+
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:inputType="textImeMultiLine"
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp"/>
+
+    </com.egraf.refapp.views.textInput.ETIWithEndButton>
+
     <Button
         android:id="@+id/date_choose_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@id/time_choose_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stadium_layout"
         android:text="@string/date"/>
 
     <Button
@@ -20,7 +41,23 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/date_choose_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/date_choose_button"
+        app:layout_constraintBottom_toBottomOf="@id/date_choose_button"
         android:text="@string/time"/>
+
+    <CheckBox
+        android:id="@+id/game_passed_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/date_choose_button"
+        android:text="@string/gamePassedCheckBox"/>
+
+    <CheckBox
+        android:id="@+id/game_paid_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/game_passed_check_box"
+        android:text="@string/gamePaidCheckbox"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,7 +13,9 @@
         android:hint="@string/guest_team"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:startIconDrawable="@drawable/ic_polo_team"
+        app:startIconTint="@color/orange">
 
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:layout_width="match_parent"
@@ -33,7 +35,9 @@
         android:hint="@string/guest_team"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/team_home_layout">
+        app:layout_constraintTop_toBottomOf="@id/team_home_layout"
+        app:startIconDrawable="@drawable/ic_polo_team"
+        app:startIconTint="@color/orange">
 
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:layout_width="match_parent"
@@ -41,6 +45,28 @@
             android:inputType="textImeMultiLine"
             android:paddingStart="8dp"
             android:paddingEnd="0dp" />
+
+    </com.egraf.refapp.views.textInput.ETIWithEndButton>
+
+    <com.egraf.refapp.views.textInput.ETIWithEndButton
+        android:id="@+id/league_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:hint="@string/league"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/team_guest_layout"
+        app:startIconDrawable="@drawable/ic_football_ball"
+        app:startIconTint="@color/orange">
+
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:inputType="textImeMultiLine"
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp"/>
 
     </com.egraf.refapp.views.textInput.ETIWithEndButton>
 

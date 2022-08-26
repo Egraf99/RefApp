@@ -31,6 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:hint="@string/first_assistant"
+        app:startIconDrawable="@drawable/ic_flag"
+        app:startIconTint="@color/orange"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/chief_referee_layout">
@@ -50,6 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:hint="@string/second_assistant"
+        app:startIconDrawable="@drawable/ic_flag"
+        app:startIconTint="@color/orange"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/first_referee_layout">
@@ -70,6 +74,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:hint="@string/reserve_referee"
+        app:startIconDrawable="@drawable/ic_scoreboard"
+        app:startIconTint="@color/orange"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/second_referee_layout">
@@ -90,6 +96,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:hint="@string/inspector"
+        app:startIconDrawable="@drawable/ic_inspectors_list"
+        app:startIconTint="@color/orange"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/reserve_referee_layout">

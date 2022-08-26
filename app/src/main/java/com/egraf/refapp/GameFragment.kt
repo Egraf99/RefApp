@@ -288,15 +288,8 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
             whatDoWhenTextMatchedEntity { referee -> saveInspector(referee as Referee) }
         }
 
-        binding.gamePaidCheckBox.apply {
-            setOnCheckedChangeListener { _, isPaid -> gameWithAttributes.game.isPaid = isPaid }
-        }
-
-        binding.gamePassedCheckBox.apply {
-            setOnCheckedChangeListener { _, isPassed ->
-                gameWithAttributes.game.isPassed = isPassed
-            }
-        }
+        binding.gamePaidCheckBox.setOnCheckedChangeListener { _, isPaid -> gameWithAttributes.game.isPaid = isPaid }
+        binding.gamePassedCheckBox.setOnCheckedChangeListener { _, isPassed -> gameWithAttributes.game.isPassed = isPassed }
 
         binding.gameDateButton.setOnClickListener {
             DatePickerFragment

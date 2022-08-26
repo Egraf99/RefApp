@@ -45,24 +45,26 @@ class DateChooseFragment : Fragment(), FragmentResultListener {
         super.onStart()
         binding.dateChooseButton.setOnClickListener {
             DatePickerFragment
-                .newInstance(addNewGameViewModel.date, REQUEST_DATE)
+                .newInstance(addNewGameViewModel.createdGame.date, REQUEST_DATE)
                 .show(parentFragmentManager, REQUEST_DATE)
         }
         binding.timeChooseButton.setOnClickListener {
             TimePickerFragment
-                .newInstance(addNewGameViewModel.date, REQUEST_TIME)
+                .newInstance(addNewGameViewModel.createdGame.date, REQUEST_TIME)
                 .show(parentFragmentManager, REQUEST_TIME)
         }
+        binding.gamePaidCheckBox.setOnCheckedChangeListener { _, isChecked -> addNewGameViewModel.createdGame.isPaid = isChecked }
+        binding.gamePassedCheckBox.setOnCheckedChangeListener { _, isChecked -> addNewGameViewModel.createdGame.isPassed = isChecked }
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         when (requestKey) {
             REQUEST_DATE -> {
-                addNewGameViewModel.setNewDate(DatePickerFragment.getSelectedDate(result))
+                addNewGameViewModel.createdGame.date = DatePickerFragment.getSelectedDate(result)
                 updateDate()
             }
             REQUEST_TIME -> {
-                addNewGameViewModel.setNewDate(TimePickerFragment.getSelectedTime(result))
+                addNewGameViewModel.createdGame.date = TimePickerFragment.getSelectedTime(result)
                 updateDate()
             }
         }
@@ -75,8 +77,8 @@ class DateChooseFragment : Fragment(), FragmentResultListener {
 
     private fun updateDate() {
         binding.dateChooseButton.text =
-            DateFormat.format(DATE_FORMAT, addNewGameViewModel.date).toString()
+            DateFormat.format(DATE_FORMAT, addNewGameViewModel.createdGame.date).toString()
         binding.timeChooseButton.text =
-            DateFormat.format(TIME_FORMAT, addNewGameViewModel.date).toString()
+            DateFormat.format(TIME_FORMAT, addNewGameViewModel.createdGame.date).toString()
     }
 }
