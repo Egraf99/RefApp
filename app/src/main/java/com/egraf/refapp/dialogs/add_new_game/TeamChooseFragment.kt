@@ -12,7 +12,7 @@ class TeamChooseFragment: Fragment() {
     private val binding get() = _binding!!
     private var _binding: TeamChooseBinding? = null
     private val addNewGameViewModel: AddNewGameViewModel by lazy {
-        ViewModelProvider(this).get(AddNewGameViewModel::class.java)
+        ViewModelProvider(this)[AddNewGameViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -20,7 +20,9 @@ class TeamChooseFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = TeamChooseBinding.inflate(inflater)
+        _binding = TeamChooseBinding.inflate(inflater).apply {
+            teamHomeLayout.init(viewLifecycleOwner)
+        }
         return binding.root
     }
 

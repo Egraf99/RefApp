@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import androidx.core.content.ContextCompat
 import com.egraf.refapp.database.entities.Entity
 
-class ETIWithEndButton(context: Context, attrs: AttributeSet? = null) :
+open class ETIWithEndButton(context: Context, attrs: AttributeSet? = null) :
     EntityTextInput(context, attrs) {
     private var _doWhenInfoClicked: (Entity) -> Unit = {}
     private var _doWhenAddClicked: (String) -> Unit = {}

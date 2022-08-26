@@ -57,7 +57,7 @@ open class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
     /**
      * Инициализирует EntityTextInput, находя и инициализируя при этом дочерний AutoCompleteTextView
      */
-    private fun init() {
+    protected open fun init() {
         if (initialize) return
         setChildTextInput()
         // слушатели для AutoCompleteTextView
