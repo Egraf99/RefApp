@@ -2,18 +2,27 @@ package com.egraf.refapp.views.textInput
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.lifecycle.LifecycleOwner
-import com.egraf.refapp.GameRepository
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.egraf.refapp.dialogs.TeamAddDialog
+import com.egraf.refapp.interface_viewmodel.TeamAddInterface
+import com.egraf.refapp.listeners.TeamListener
 
 class TeamETI(context: Context, attrs: AttributeSet? = null) :
     ETIWithEndButton(context, attrs) {
-    private val gameRepository = GameRepository.get()
-    private val teamsListLiveData = gameRepository.getTeams()
 
-    fun init(lifecycleOwner: LifecycleOwner) {
+    fun init(fragment: Fragment, viewModel: TeamAddInterface) {
         super.init()
-        teamsListLiveData.observe(lifecycleOwner) {teams ->
+        viewModel.getTeams().observe(fragment.viewLifecycleOwner) {teams ->
            setEntities(teams)
+        }
+        whatDoWhenInfoClicked { team ->
+            Toast.makeText(context, team.fullName, Toast.LENGTH_SHORT).show()
+        }
+        whatDoWhenAddClicked { text ->
+            TeamAddDialog()
+                .addName(TeamListener.REQUEST_ADD_TEAM_IN_DB, text)
+                .show(fragment.parentFragmentManager, TeamListener.REQUEST_ADD_TEAM_IN_DB)
         }
     }
 }

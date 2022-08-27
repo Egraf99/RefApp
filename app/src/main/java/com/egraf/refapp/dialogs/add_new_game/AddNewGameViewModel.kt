@@ -1,12 +1,15 @@
 package com.egraf.refapp.dialogs.add_new_game
 
+import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.Game
-import java.util.*
+import com.egraf.refapp.database.entities.Team
+import com.egraf.refapp.dialogs.TeamAddDialog
+import com.egraf.refapp.interface_viewmodel.TeamAddInterface
 
 enum class AddGameDestination(val res: Int) {
     DATE_CHOOSE(0),
@@ -15,7 +18,7 @@ enum class AddGameDestination(val res: Int) {
     CLOSE(-1),
 }
 
-class AddNewGameViewModel: ViewModel() {
+class AddNewGameViewModel: ViewModel(), TeamAddInterface {
     private val gameRepository = GameRepository.get()
     var currentPosition = 0
         private set
@@ -30,5 +33,23 @@ class AddNewGameViewModel: ViewModel() {
 
     fun addRandomGame() {
         gameRepository.addGame(Game())
+    }
+
+    override fun addTeam(team: Team) {
+        gameRepository.addTeam(team)
+    }
+
+    override fun addTeam(bundle: Bundle) {
+        gameRepository.addTeam(
+            TeamAddDialog.getTeam(bundle)
+        )
+    }
+
+    override fun getTeams(): LiveData<List<Team>> {
+        return gameRepository.getTeams()
+    }
+
+    override fun getTeamFromBundle(bundle: Bundle): Team {
+        return TeamAddDialog.getTeam(bundle)
     }
 }

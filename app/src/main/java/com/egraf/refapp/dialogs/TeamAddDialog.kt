@@ -53,10 +53,10 @@ class TeamAddDialog: EntityAddDialog() {
 
     companion object {
         /**
-         * Возвращает название команды из переданного bundle
+         * Возвращает команду из Bundle
          */
-        fun getTeamName(bundle: Bundle): String {
-            return bundle.getString(RESULT_ADD_TEAM_NAME, "")
+        fun getTeam(bundle: Bundle): Team {
+            return Team( name = bundle.getString(RESULT_ADD_TEAM_NAME, ""))
         }
     }
 }

@@ -579,9 +579,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
      */
     private fun createTeamFromResult(result: Bundle): Team {
         // создаем команду, заполняя атрибуты данными из result
-        return Team().apply {
-            name = TeamAddDialog.getTeamName(result)
-        }
+        return TeamAddDialog.getTeam(result)
     }
 
     private fun showAddTeamToast(team: Team) {

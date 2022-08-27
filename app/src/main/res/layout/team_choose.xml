@@ -26,7 +26,7 @@
 
     </com.egraf.refapp.views.textInput.TeamETI>
 
-    <com.egraf.refapp.views.textInput.ETIWithEndButton
+    <com.egraf.refapp.views.textInput.TeamETI
         android:id="@+id/team_guest_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
@@ -46,7 +46,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="0dp" />
 
-    </com.egraf.refapp.views.textInput.ETIWithEndButton>
+    </com.egraf.refapp.views.textInput.TeamETI>
 
     <com.egraf.refapp.views.textInput.ETIWithEndButton
         android:id="@+id/league_layout"
