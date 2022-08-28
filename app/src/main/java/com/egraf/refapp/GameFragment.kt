@@ -16,7 +16,6 @@ import com.egraf.refapp.databinding.FragmentGameBinding
 import com.egraf.refapp.dialogs.*
 import com.egraf.refapp.dialogs.entity_add_dialog.LeagueAddDialog
 import com.egraf.refapp.dialogs.entity_add_dialog.RefereeAddDialog
-import com.egraf.refapp.dialogs.entity_add_dialog.StadiumAddDialog
 import com.egraf.refapp.dialogs.entity_add_dialog.TeamAddDialog
 import java.util.*
 
@@ -130,170 +129,23 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
 
     override fun onStart() {
         super.onStart()
-        with(binding.teamHomeLayout) {
-            whatDoWhenAddClicked { text ->
-                TeamAddDialog()
-                    .addName(REQUEST_ADD_HOME_TEAM, text)
-                    .show(parentFragmentManager, REQUEST_ADD_HOME_TEAM)
-            }
-            whatDoWhenInfoClicked { team ->
-                // показываем сообщение с полным именем команды
-                Toast.makeText(
-                    context,
-                    team.fullName,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            whatDoWhenTextIsBlank { setHomeTeamNull() }
-            whatDoWhenTextMatchedEntity { team -> saveHomeTeam(team as Team) }
-        }
+        // TODO: неправильно устанавливается имя судьи и разобраться с неиспользуемым кодом
+        binding.teamHomeLayout.init(this, gameDetailViewModel)
+        binding.teamGuestLayout.init(this, gameDetailViewModel)
+        binding.stadiumLayout.init(this, gameDetailViewModel)
+        binding.leagueLayout.init(this, gameDetailViewModel)
+        binding.chiefRefereeLayout.init(this, gameDetailViewModel)
+        binding.firstRefereeLayout.init(this, gameDetailViewModel)
+        binding.secondRefereeLayout.init(this, gameDetailViewModel)
+        binding.reserveRefereeLayout.init(this, gameDetailViewModel)
+        binding.inspectorLayout.init(this, gameDetailViewModel)
 
-        with(binding.teamGuestLayout) {
-            whatDoWhenAddClicked { text ->
-                TeamAddDialog()
-                    .addName(REQUEST_ADD_GUEST_TEAM, text)
-                    .show(parentFragmentManager, REQUEST_ADD_GUEST_TEAM)
-            }
-            whatDoWhenInfoClicked { team ->
-                // показываем сообщение с полным именем команды
-                Toast.makeText(
-                    context,
-                    team.fullName,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            whatDoWhenTextIsBlank { setGuestTeamNull() }
-            whatDoWhenTextMatchedEntity { team -> saveGuestTeam(team as Team) }
+        binding.gamePaidCheckBox.setOnCheckedChangeListener { _, isPaid ->
+            gameWithAttributes.game.isPaid = isPaid
         }
-
-        with(binding.stadiumLayout) {
-            whatDoWhenAddClicked { text ->
-                StadiumAddDialog()
-                    .addName(REQUEST_ADD_STADIUM, text)
-                    .show(parentFragmentManager, REQUEST_ADD_STADIUM)
-            }
-            whatDoWhenInfoClicked { stadium ->
-                // показываем сообщение с полным именем стадиона
-                Toast.makeText(
-                    context,
-                    stadium.fullName,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            whatDoWhenTextIsBlank { setStadiumNull() }
-            whatDoWhenTextMatchedEntity { stadium -> saveStadium(stadium as Stadium) }
+        binding.gamePassedCheckBox.setOnCheckedChangeListener { _, isPassed ->
+            gameWithAttributes.game.isPassed = isPassed
         }
-
-        with(binding.leagueLayout) {
-            whatDoWhenAddClicked { text ->
-                LeagueAddDialog()
-                    .addName(REQUEST_ADD_LEAGUE, text)
-                    .show(parentFragmentManager, REQUEST_ADD_LEAGUE)
-            }
-            whatDoWhenInfoClicked { league ->
-                // показываем сообщение с полным именем лиги
-                Toast.makeText(
-                    context,
-                    league.fullName,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            whatDoWhenTextIsBlank { setLeagueNull() }
-            whatDoWhenTextMatchedEntity { league -> saveLeague(league as League) }
-        }
-
-        with(binding.chiefRefereeLayout) {
-            whatDoWhenAddClicked { text ->
-                RefereeAddDialog()
-                    .addName(REQUEST_ADD_CHIEF_REFEREE, text)
-                    .show(parentFragmentManager, REQUEST_ADD_CHIEF_REFEREE)
-            }
-            whatDoWhenInfoClicked { referee ->
-                // показываем сообщение с полным именем судьи
-                Toast.makeText(
-                    context,
-                    referee.fullName,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            whatDoWhenTextIsBlank { setChiefRefereeNull() }
-            whatDoWhenTextMatchedEntity { referee -> saveChiefReferee(referee as Referee) }
-        }
-
-        with(binding.firstRefereeLayout) {
-            whatDoWhenAddClicked { text ->
-                RefereeAddDialog()
-                    .addName(REQUEST_ADD_FIRST_REFEREE, text)
-                    .show(parentFragmentManager, REQUEST_ADD_FIRST_REFEREE)
-            }
-            whatDoWhenInfoClicked { referee ->
-                // показываем сообщение с полным именем судьи
-                Toast.makeText(
-                    context,
-                    referee.fullName,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            whatDoWhenTextIsBlank { setFirstRefereeNull() }
-            whatDoWhenTextMatchedEntity { referee -> saveFirstReferee(referee as Referee) }
-        }
-
-        with(binding.secondRefereeLayout) {
-            whatDoWhenAddClicked { text ->
-                RefereeAddDialog()
-                    .addName(REQUEST_ADD_SECOND_REFEREE, text)
-                    .show(parentFragmentManager, REQUEST_ADD_SECOND_REFEREE)
-            }
-            whatDoWhenInfoClicked { referee ->
-                // показываем сообщение с полным именем судьи
-                Toast.makeText(
-                    context,
-                    referee.fullName,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            whatDoWhenTextIsBlank { setSecondRefereeNull() }
-            whatDoWhenTextMatchedEntity { referee -> saveSecondReferee(referee as Referee) }
-        }
-
-        with(binding.reserveRefereeLayout) {
-            whatDoWhenAddClicked { text ->
-                RefereeAddDialog()
-                    .addName(REQUEST_ADD_RESERVE_REFEREE, text)
-                    .show(parentFragmentManager, REQUEST_ADD_RESERVE_REFEREE)
-            }
-            whatDoWhenInfoClicked { referee ->
-                // показываем сообщение с полным именем судьи
-                Toast.makeText(
-                    context,
-                    referee.fullName,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            whatDoWhenTextIsBlank { setReserveRefereeNull() }
-            whatDoWhenTextMatchedEntity { referee -> saveReserveReferee(referee as Referee) }
-        }
-
-        with(binding.inspectorLayout) {
-            whatDoWhenAddClicked { text ->
-                RefereeAddDialog()
-                    .addName(REQUEST_ADD_INSPECTOR, text)
-                    .show(parentFragmentManager, REQUEST_ADD_INSPECTOR)
-            }
-            whatDoWhenInfoClicked { referee ->
-                // показываем сообщение с полным именем судьи
-                Toast.makeText(
-                    context,
-                    referee.fullName,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            whatDoWhenTextIsBlank { setInspectorNull() }
-            whatDoWhenTextMatchedEntity { referee -> saveInspector(referee as Referee) }
-        }
-
-        binding.gamePaidCheckBox.setOnCheckedChangeListener { _, isPaid -> gameWithAttributes.game.isPaid = isPaid }
-        binding.gamePassedCheckBox.setOnCheckedChangeListener { _, isPassed -> gameWithAttributes.game.isPassed = isPassed }
 
         binding.gameDateButton.setOnClickListener {
             DatePickerFragment
@@ -583,7 +435,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
      */
     private fun createTeamFromResult(result: Bundle): Team {
         // создаем команду, заполняя атрибуты данными из result
-        return TeamAddDialog.getTeam(result)
+        return Team(name = TeamAddDialog.getTeamFullName(result))
     }
 
     private fun showAddTeamToast(team: Team) {
@@ -606,7 +458,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
      * Возвразает Stadium, созданное из полей Bundle
      */
     private fun createStadiumFromResult(result: Bundle): Stadium {
-        return StadiumAddDialog.getStadium(result)
+        return Stadium(name = LeagueAddDialog.getLeagueFullName(result))
     }
 
     private fun showAddLeagueToast(league: League) {
@@ -622,9 +474,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
      */
     private fun createLeagueFromResult(result: Bundle): League {
         // создаем команду, заполняя атрибуты данными из result
-        return League().apply {
-            name = LeagueAddDialog.getLeagueName(result)
-        }
+        return League(name = LeagueAddDialog.getLeagueFullName(result))
     }
 
     companion object {

@@ -6,13 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
-import com.egraf.refapp.database.entities.Game
-import com.egraf.refapp.database.entities.Stadium
-import com.egraf.refapp.database.entities.Team
+import com.egraf.refapp.database.entities.*
 import com.egraf.refapp.dialogs.entity_add_dialog.StadiumAddDialog
 import com.egraf.refapp.dialogs.entity_add_dialog.TeamAddDialog
-import com.egraf.refapp.interface_viewmodel.StadiumAddInterface
-import com.egraf.refapp.interface_viewmodel.TeamAddInterface
+import com.egraf.refapp.interface_viewmodel.add.StadiumAddInterface
+import com.egraf.refapp.interface_viewmodel.add.TeamAddInterface
+import com.egraf.refapp.interface_viewmodel.all.LeagueInterface
+import com.egraf.refapp.interface_viewmodel.all.RefereeInterface
+import com.egraf.refapp.interface_viewmodel.all.StadiumInterface
+import com.egraf.refapp.interface_viewmodel.all.TeamInterface
 
 enum class AddGameDestination(val res: Int) {
     DATE_CHOOSE(0),
@@ -22,7 +24,7 @@ enum class AddGameDestination(val res: Int) {
 }
 
 class AddNewGameViewModel: ViewModel(),
-    TeamAddInterface, StadiumAddInterface {
+    TeamInterface, StadiumInterface, LeagueInterface, RefereeInterface {
     private val gameRepository = GameRepository.get()
     var currentPosition = 0
         private set
@@ -39,14 +41,18 @@ class AddNewGameViewModel: ViewModel(),
     fun addRandomGame() { gameRepository.addGame(Game()) }
 
     // team block
-    override fun addTeam(team: Team) { gameRepository.addTeam(team) }
-    override fun addTeam(bundle: Bundle) { gameRepository.addTeam( TeamAddDialog.getTeam(bundle) ) }
-    override fun getTeams(): LiveData<List<Team>> { return gameRepository.getTeams() }
-    override fun getTeamFromBundle(bundle: Bundle): Team { return TeamAddDialog.getTeam(bundle) }
+    override fun addTeamToDB(team: Team) { gameRepository.addTeam(team) }
+    override fun getTeamsFromDB(): LiveData<List<Team>> { return gameRepository.getTeams() }
 
     // stadium block
-    override fun addStadium(stadium: Stadium) { gameRepository.addStadium(stadium) }
-    override fun addStadium(bundle: Bundle) { gameRepository.addStadium( StadiumAddDialog.getStadium(bundle)) }
-    override fun getStadiums(): LiveData<List<Stadium>> { return gameRepository.getStadiums() }
-    override fun getStadiumFromBundle(bundle: Bundle): Stadium { return StadiumAddDialog.getStadium(bundle) }
+    override fun addStadiumToDB(stadium: Stadium) { gameRepository.addStadium(stadium) }
+    override fun getStadiumsFromDB(): LiveData<List<Stadium>> { return gameRepository.getStadiums() }
+
+    // league block
+    override fun addLeagueToDB(league: League) { gameRepository.addLeague(league) }
+    override fun getLeagueFromDB(): LiveData<List<League>> { return gameRepository.getLeagues() }
+
+    // referee block
+    override fun addRefereeToDB(referee: Referee) { gameRepository.addReferee(referee) }
+    override fun getRefereeFromDB(): LiveData<List<Referee>> { return gameRepository.getReferees() }
 }

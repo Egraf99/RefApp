@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.databinding.TeamChooseBinding
-import com.egraf.refapp.listeners.TeamListener
 
 class TeamChooseFragment : Fragment() {
     private val binding get() = _binding!!
@@ -30,16 +29,9 @@ class TeamChooseFragment : Fragment() {
                 this@TeamChooseFragment,
                 addNewGameViewModel
             )
+            leagueLayout.init(this@TeamChooseFragment, addNewGameViewModel)
         }
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val listener = TeamListener(addNewGameViewModel)
-        parentFragmentManager.setFragmentResultListener(
-            TeamListener.REQUEST_ADD_TEAM_IN_DB, viewLifecycleOwner, listener
-        )
     }
 
     override fun onDestroyView() {

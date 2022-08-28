@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.View
 import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.Stadium
-import com.egraf.refapp.database.entities.Team
 import com.egraf.refapp.databinding.StadiumDetailsBinding
-import com.egraf.refapp.databinding.TeamDetailsBinding
+import com.egraf.refapp.interface_viewmodel.add.StadiumAddInterface
 
+private const val RESULT_ADD_STADIUM_SHORT_NAME = "resultAddStadiumShortName"
 private const val RESULT_ADD_STADIUM_NAME = "resultAddStadiumName"
 
-class StadiumAddDialog: EntityAddDialog() {
+class StadiumAddDialog(override val viewModel: StadiumAddInterface): EntityAddDialog() {
     private val binding get() = _binding!!
     private var _binding: StadiumDetailsBinding? = null
     private lateinit var stadium: Stadium
@@ -35,30 +35,42 @@ class StadiumAddDialog: EntityAddDialog() {
     override fun getBindingRoot(): View = binding.root
 
     override fun createThis(args: Bundle): StadiumAddDialog {
-        return StadiumAddDialog().apply { arguments = args }
+        return this.apply { arguments = args }
     }
 
     /**
-     * Возвращает реквест с обновленным именем referee
+     * Возвращает реквест с обновленным именем stadium
      */
-    override fun returnEntityToFragment() {
+    override fun returnEntityNameToFragment() {
         // обновляем атрибуты referee
         stadium.name = binding.name.childTextInput.text.toString()
 
         // создаем отправляемый пакет
         val bundle = Bundle().apply {
-            putString(RESULT_ADD_STADIUM_NAME, stadium.name)
+            putString(RESULT_ADD_STADIUM_SHORT_NAME, stadium.shortName)
+            putString(RESULT_ADD_STADIUM_NAME, stadium.fullName)
         }
 //        отправляем пакет
         returnRequest(bundle)
     }
 
+    override fun saveEntity() {
+        viewModel.addStadiumToDB(stadium)
+    }
+
     companion object {
         /**
-         * Возвращает стадион из Bundle
+         * Возвращает имя стадиона из Bundle
+         */
+        fun getStadiumShortName(bundle: Bundle): String {
+            return bundle.getString(RESULT_ADD_STADIUM_SHORT_NAME, "")
+        }
+
+        /**
+         * Возвращает имя стадиона из Bundle
          */
         fun getStadium(bundle: Bundle): Stadium {
-            return Stadium(name = bundle.getString(RESULT_ADD_STADIUM_NAME) ?: "")
+            return Stadium(name = bundle.getString(RESULT_ADD_STADIUM_NAME, ""))
         }
     }
 }

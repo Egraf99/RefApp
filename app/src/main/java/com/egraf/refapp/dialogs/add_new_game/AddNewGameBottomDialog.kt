@@ -14,7 +14,7 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
     private val binding get() = _binding!!
     private var _binding: AddNewGameDialogBinding? = null
     private val addNewGameViewModel: AddNewGameViewModel by lazy {
-        ViewModelProvider(this).get(AddNewGameViewModel::class.java)
+        ViewModelProvider(this)[AddNewGameViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -48,7 +48,7 @@
 
     </com.egraf.refapp.views.textInput.TeamETI>
 
-    <com.egraf.refapp.views.textInput.ETIWithEndButton
+    <com.egraf.refapp.views.textInput.LeagueETI
         android:id="@+id/league_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
@@ -68,6 +68,6 @@
             android:paddingStart="8dp"
             android:paddingEnd="0dp"/>
 
-    </com.egraf.refapp.views.textInput.ETIWithEndButton>
+    </com.egraf.refapp.views.textInput.LeagueETI>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

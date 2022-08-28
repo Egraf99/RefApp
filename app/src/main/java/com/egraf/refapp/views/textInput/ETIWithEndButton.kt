@@ -3,14 +3,13 @@ package com.egraf.refapp.views.textInput
 import android.content.Context
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.egraf.refapp.database.entities.Entity
 
-open class ETIWithEndButton(context: Context, attrs: AttributeSet? = null) :
+abstract class ETIWithEndButton(context: Context, attrs: AttributeSet? = null) :
     EntityTextInput(context, attrs) {
     private var _doWhenInfoClicked: (Entity) -> Unit = {}
     private var _doWhenAddClicked: (String) -> Unit = {}
-
-
 
     /**
      * Типы иконок:
@@ -137,5 +136,6 @@ open class ETIWithEndButton(context: Context, attrs: AttributeSet? = null) :
         }
     }
 
+    abstract fun setParentFragmentManager(fragment: Fragment)
 
 }

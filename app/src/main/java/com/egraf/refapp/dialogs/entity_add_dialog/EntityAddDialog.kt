@@ -7,19 +7,21 @@ import android.view.View
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import com.egraf.refapp.R
+import com.egraf.refapp.interface_viewmodel.add.AddInterface
 
-const val ARG_ENTITY_NAME = "requestCodeEntityFullName"
+private const val ARG_ENTITY_NAME = "requestCodeEntityFullName"
 private const val ARG_REQUEST_CODE_ADD_ENTITY = "requestCodeAddEntity"
 
 
 abstract class EntityAddDialog : DialogFragment() {
     abstract val title: Int
+    abstract val viewModel: AddInterface
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // получаем переданное имя
         val entityName = arguments?.getString(ARG_ENTITY_NAME) ?: ""
-        // создаем нового судью и даем ему преданное имя
+        // создаем новоую Entity и задаем ему переданное имя
         createEntityFromFullName(entityName)
     }
 
@@ -29,7 +31,10 @@ abstract class EntityAddDialog : DialogFragment() {
             .setTitle(title)
             .setView(getBindingRoot())
             .setNeutralButton(R.string.cancel) { _, _ -> }
-            .setPositiveButton(R.string.save) { _, _ -> returnEntityToFragment() }
+            .setPositiveButton(R.string.save) { _, _ ->
+                saveEntity()
+                returnEntityNameToFragment()
+            }
             .create()
     }
 
@@ -39,10 +44,10 @@ abstract class EntityAddDialog : DialogFragment() {
      * @param requestCode - строка кода запроса
      * @param entityName - строка, содержащая название Entity
      */
-    fun addName(requestCode: String, entityName: String): EntityAddDialog {
+    fun putEntityName(entityName: String, requestCode: String): EntityAddDialog {
         val args = Bundle().apply {
-            putString(ARG_REQUEST_CODE_ADD_ENTITY, requestCode)
             putString(ARG_ENTITY_NAME, entityName)
+            putString(ARG_REQUEST_CODE_ADD_ENTITY, requestCode)
         }
         return createThis(args)
     }
@@ -72,7 +77,12 @@ abstract class EntityAddDialog : DialogFragment() {
     abstract fun createEntityFromFullName(entityName: String)
 
     /**
-     * Возвращает Entity вызывающему фрагменту
+     * Возвращает имя Entity вызывающему фрагменту
      */
-    abstract fun returnEntityToFragment()
+    abstract fun returnEntityNameToFragment()
+
+    /**
+     * Сохраняет Entity в БД
+     */
+    abstract fun saveEntity()
 }
