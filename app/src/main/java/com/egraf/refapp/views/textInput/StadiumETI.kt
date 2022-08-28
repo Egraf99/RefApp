@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.egraf.refapp.dialogs.StadiumAddDialog
+import com.egraf.refapp.dialogs.entity_add_dialog.StadiumAddDialog
 import com.egraf.refapp.interface_viewmodel.StadiumAddInterface
 import com.egraf.refapp.listeners.StadiumListener
 

@@ -1,4 +1,4 @@
-package com.egraf.refapp.dialogs
+package com.egraf.refapp.dialogs.entity_add_dialog
 
 import android.os.Bundle
 import android.view.View
@@ -37,10 +37,10 @@ class TeamAddDialog: EntityAddDialog() {
     }
 
     /**
-     * Возвращает реквест с обновленным именем referee
+     * Возвращает реквест с обновленным именем team
      */
     override fun returnEntityToFragment() {
-        // обновляем атрибуты referee
+        // обновляем атрибуты team
         team.name = binding.name.childTextInput.text.toString()
 
         // создаем отправляемый пакет

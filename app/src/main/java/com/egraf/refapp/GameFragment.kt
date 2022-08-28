@@ -14,6 +14,10 @@ import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.database.entities.*
 import com.egraf.refapp.databinding.FragmentGameBinding
 import com.egraf.refapp.dialogs.*
+import com.egraf.refapp.dialogs.entity_add_dialog.LeagueAddDialog
+import com.egraf.refapp.dialogs.entity_add_dialog.RefereeAddDialog
+import com.egraf.refapp.dialogs.entity_add_dialog.StadiumAddDialog
+import com.egraf.refapp.dialogs.entity_add_dialog.TeamAddDialog
 import java.util.*
 
 private const val TAG = "GameFragment"

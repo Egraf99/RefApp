@@ -1,4 +1,4 @@
-package com.egraf.refapp.dialogs
+package com.egraf.refapp.dialogs.entity_add_dialog
 
 import android.os.Bundle
 import android.view.View

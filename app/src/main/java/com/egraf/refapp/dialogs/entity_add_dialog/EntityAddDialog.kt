@@ -1,4 +1,4 @@
-package com.egraf.refapp.dialogs
+package com.egraf.refapp.dialogs.entity_add_dialog
 
 import android.app.AlertDialog
 import android.app.Dialog
