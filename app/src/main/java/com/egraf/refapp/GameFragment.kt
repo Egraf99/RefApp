@@ -602,10 +602,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
      * Возвразает Stadium, созданное из полей Bundle
      */
     private fun createStadiumFromResult(result: Bundle): Stadium {
-        // создаем команду, заполняя атрибуты данными из result
-        return Stadium().apply {
-            name = StadiumAddDialog.getStadiumName(result)
-        }
+        return StadiumAddDialog.getStadium(result)
     }
 
     private fun showAddLeagueToast(league: League) {

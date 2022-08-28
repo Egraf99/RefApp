@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.egraf.refapp.views.textInput.ETIWithEndButton
+    <com.egraf.refapp.views.textInput.StadiumETI
         android:id="@+id/stadium_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="0dp"/>
 
-    </com.egraf.refapp.views.textInput.ETIWithEndButton>
+    </com.egraf.refapp.views.textInput.StadiumETI>
 
     <Button
         android:id="@+id/date_choose_button"

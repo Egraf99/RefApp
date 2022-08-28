@@ -55,10 +55,10 @@ class StadiumAddDialog: EntityAddDialog() {
 
     companion object {
         /**
-         * Возвращает название команды из переданного bundle
+         * Возвращает стадион из Bundle
          */
-        fun getStadiumName(bundle: Bundle): String {
-            return bundle.getString(RESULT_ADD_STADIUM_NAME, "")
+        fun getStadium(bundle: Bundle): Stadium {
+            return Stadium(name = bundle.getString(RESULT_ADD_STADIUM_NAME) ?: "")
         }
     }
 }

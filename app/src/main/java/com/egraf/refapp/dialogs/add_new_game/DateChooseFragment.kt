@@ -30,7 +30,9 @@ class DateChooseFragment : Fragment(), FragmentResultListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = DateChooseBinding.inflate(inflater)
+        _binding = DateChooseBinding.inflate(inflater).apply {
+            stadiumLayout.init(this@DateChooseFragment, addNewGameViewModel)
+        }
         updateDate()
         return binding.root
     }
