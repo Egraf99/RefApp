@@ -6,7 +6,6 @@ import android.util.AttributeSet
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
-import com.egraf.refapp.dialogs.entity_add_dialog.LeagueAddDialog
 import com.egraf.refapp.dialogs.entity_add_dialog.StadiumAddDialog
 import com.egraf.refapp.interface_viewmodel.all.StadiumInterface
 
@@ -17,6 +16,8 @@ class StadiumETI(context: Context, attrs: AttributeSet? = null) :
 
     fun init(fragment: Fragment, viewModel: StadiumInterface) {
         super.init()
+        setParentFragmentManager(fragment)
+
         viewModel.getStadiumsFromDB().observe(fragment.viewLifecycleOwner) {stadiums ->
            setEntities(stadiums)
         }

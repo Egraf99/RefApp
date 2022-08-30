@@ -1,12 +1,11 @@
 package com.egraf.refapp.dialogs.entity_add_dialog
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import androidx.fragment.app.setFragmentResult
 import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.Referee
 import com.egraf.refapp.databinding.RefereeDetailsBinding
-import com.egraf.refapp.interface_viewmodel.add.AddInterface
 import com.egraf.refapp.interface_viewmodel.all.RefereeInterface
 
 private const val TAG = "RefereeAddDialog"
@@ -54,6 +53,7 @@ class RefereeAddDialog(override val viewModel: RefereeInterface) : EntityAddDial
         referee.firstName = binding.firstName.childTextInput.text.toString()
         referee.secondName = binding.secondName.childTextInput.text.toString()
         referee.thirdName = binding.thirdName.childTextInput.text.toString()
+        Log.d(TAG, "returnEntityNameToFragment: ${referee.shortName}")
 
         // создаем отправляемый пакет
         val bundle = Bundle().apply {

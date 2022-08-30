@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.GameWithAttributes
-import com.egraf.refapp.database.entities.League
-import com.egraf.refapp.database.entities.Stadium
 import java.util.*
 
 @Dao

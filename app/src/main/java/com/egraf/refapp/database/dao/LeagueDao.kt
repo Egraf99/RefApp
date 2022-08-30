@@ -3,7 +3,6 @@ package com.egraf.refapp.database.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.egraf.refapp.database.entities.League
-import com.egraf.refapp.database.entities.Stadium
 
 @Dao
 interface LeagueDao {

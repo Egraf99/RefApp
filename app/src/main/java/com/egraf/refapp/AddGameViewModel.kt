@@ -1,9 +1,6 @@
 package com.egraf.refapp
 
 import androidx.databinding.BaseObservable
-import androidx.navigation.Navigation
-import com.egraf.refapp.database.entities.Game
-import java.util.*
 
 private const val TAG = "AddGameViewModel"
 

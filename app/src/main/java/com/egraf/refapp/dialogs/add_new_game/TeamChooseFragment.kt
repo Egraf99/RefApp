@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.databinding.TeamChooseBinding
+import com.egraf.refapp.views.textInput.TeamETI
 
 class TeamChooseFragment : Fragment() {
     private val binding get() = _binding!!
@@ -23,11 +24,13 @@ class TeamChooseFragment : Fragment() {
         _binding = TeamChooseBinding.inflate(inflater).apply {
             teamHomeLayout.init(
                 this@TeamChooseFragment,
-                addNewGameViewModel
+                addNewGameViewModel,
+                TeamETI.TypeTeam.HOME_TEAM
             )
             teamGuestLayout.init(
                 this@TeamChooseFragment,
-                addNewGameViewModel
+                addNewGameViewModel,
+                TeamETI.TypeTeam.GUEST_TEAM
             )
             leagueLayout.init(this@TeamChooseFragment, addNewGameViewModel)
         }

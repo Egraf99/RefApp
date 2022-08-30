@@ -16,6 +16,8 @@ class LeagueETI(context: Context, attrs: AttributeSet? = null) :
 
     fun init(fragment: Fragment, viewModel: LeagueInterface) {
         super.init()
+        setParentFragmentManager(fragment)
+
         viewModel.getLeagueFromDB().observe(fragment.viewLifecycleOwner) {leagues ->
            setEntities(leagues)
         }

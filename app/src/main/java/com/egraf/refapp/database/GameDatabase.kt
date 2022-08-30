@@ -7,7 +7,6 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.egraf.refapp.database.dao.*
 import com.egraf.refapp.database.entities.*
-import java.util.*
 
 @Database(
     entities = [Game::class, Stadium::class, League::class, Team::class, Referee::class],

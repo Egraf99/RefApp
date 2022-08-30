@@ -1,16 +1,11 @@
 package com.egraf.refapp.dialogs.add_new_game
 
-import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.*
-import com.egraf.refapp.dialogs.entity_add_dialog.StadiumAddDialog
-import com.egraf.refapp.dialogs.entity_add_dialog.TeamAddDialog
-import com.egraf.refapp.interface_viewmodel.add.StadiumAddInterface
-import com.egraf.refapp.interface_viewmodel.add.TeamAddInterface
 import com.egraf.refapp.interface_viewmodel.all.LeagueInterface
 import com.egraf.refapp.interface_viewmodel.all.RefereeInterface
 import com.egraf.refapp.interface_viewmodel.all.StadiumInterface

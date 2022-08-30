@@ -13,7 +13,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.FrameLayout
-import androidx.core.content.ContextCompat
 import com.egraf.refapp.database.entities.Entity
 import com.google.android.material.textfield.TextInputLayout
 import kotlin.math.max

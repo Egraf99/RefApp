@@ -2,7 +2,6 @@ package com.egraf.refapp.database.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.Stadium
 import java.util.*
 

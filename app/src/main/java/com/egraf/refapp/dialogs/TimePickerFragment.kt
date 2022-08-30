@@ -1,9 +1,8 @@
 package com.egraf.refapp.dialogs
 
-import android.app.TimePickerDialog
 import android.app.Dialog
+import android.app.TimePickerDialog
 import android.os.Bundle
-import android.util.Log
 import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult

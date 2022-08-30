@@ -13,10 +13,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.database.entities.*
 import com.egraf.refapp.databinding.FragmentGameBinding
-import com.egraf.refapp.dialogs.*
+import com.egraf.refapp.dialogs.DatePickerFragment
+import com.egraf.refapp.dialogs.DeleteDialog
+import com.egraf.refapp.dialogs.TimePickerFragment
 import com.egraf.refapp.dialogs.entity_add_dialog.LeagueAddDialog
 import com.egraf.refapp.dialogs.entity_add_dialog.RefereeAddDialog
 import com.egraf.refapp.dialogs.entity_add_dialog.TeamAddDialog
+import com.egraf.refapp.views.textInput.RefereeETI
+import com.egraf.refapp.views.textInput.TeamETI
 import java.util.*
 
 private const val TAG = "GameFragment"
@@ -43,7 +47,7 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
     private var _binding: FragmentGameBinding? = null
     private lateinit var gameWithAttributes: GameWithAttributes
     private val gameDetailViewModel: GameDetailViewModel by lazy {
-        ViewModelProvider(this).get(GameDetailViewModel::class.java)
+        ViewModelProvider(this)[GameDetailViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -129,16 +133,16 @@ class GameFragment : FragmentToolbar(), FragmentResultListener {
 
     override fun onStart() {
         super.onStart()
-        // TODO: неправильно устанавливается имя судьи и разобраться с неиспользуемым кодом
-        binding.teamHomeLayout.init(this, gameDetailViewModel)
-        binding.teamGuestLayout.init(this, gameDetailViewModel)
+        // TODO: разобраться с неиспользуемым кодом
+        binding.teamHomeLayout.init(this, gameDetailViewModel, TeamETI.TypeTeam.HOME_TEAM)
+        binding.teamGuestLayout.init(this, gameDetailViewModel, TeamETI.TypeTeam.GUEST_TEAM)
         binding.stadiumLayout.init(this, gameDetailViewModel)
         binding.leagueLayout.init(this, gameDetailViewModel)
-        binding.chiefRefereeLayout.init(this, gameDetailViewModel)
-        binding.firstRefereeLayout.init(this, gameDetailViewModel)
-        binding.secondRefereeLayout.init(this, gameDetailViewModel)
-        binding.reserveRefereeLayout.init(this, gameDetailViewModel)
-        binding.inspectorLayout.init(this, gameDetailViewModel)
+        binding.chiefRefereeLayout.init(this, gameDetailViewModel, RefereeETI.TypeReferee.CHIEF_REFEREE)
+        binding.firstRefereeLayout.init(this, gameDetailViewModel, RefereeETI.TypeReferee.FIRST_REFEREE)
+        binding.secondRefereeLayout.init(this, gameDetailViewModel, RefereeETI.TypeReferee.SECOND_REFEREE)
+        binding.reserveRefereeLayout.init(this, gameDetailViewModel, RefereeETI.TypeReferee.RESERVE_REFEREE)
+        binding.inspectorLayout.init(this, gameDetailViewModel, RefereeETI.TypeReferee.INSPECTOR)
 
         binding.gamePaidCheckBox.setOnCheckedChangeListener { _, isPaid ->
             gameWithAttributes.game.isPaid = isPaid

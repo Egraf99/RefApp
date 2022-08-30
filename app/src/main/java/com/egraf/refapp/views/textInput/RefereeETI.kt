@@ -6,17 +6,33 @@ import android.util.AttributeSet
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
-import com.egraf.refapp.R
 import com.egraf.refapp.dialogs.entity_add_dialog.RefereeAddDialog
 import com.egraf.refapp.interface_viewmodel.all.RefereeInterface
 
-private const val REQUEST_ADD_REFEREE = "requestAddReferee"
+private const val TAG = "RefereeETI"
+private const val REQUEST_ADD_CHIEF_REFEREE = "requestAddChiefReferee"
+private const val REQUEST_ADD_FIRST_REFEREE = "requestAddFirstReferee"
+private const val REQUEST_ADD_SECOND_REFEREE = "requestAddSecondReferee"
+private const val REQUEST_ADD_RESERVE_REFEREE = "requestAddReserveReferee"
+private const val REQUEST_ADD_INSPECTOR = "requestAddInspector"
 
 class RefereeETI(context: Context, attrs: AttributeSet? = null) :
     ETIWithEndButton(context, attrs), FragmentResultListener {
+    enum class TypeReferee(val requestKey: String) {
+        CHIEF_REFEREE(REQUEST_ADD_CHIEF_REFEREE),
+        FIRST_REFEREE(REQUEST_ADD_FIRST_REFEREE),
+        SECOND_REFEREE(REQUEST_ADD_SECOND_REFEREE),
+        RESERVE_REFEREE(REQUEST_ADD_RESERVE_REFEREE),
+        INSPECTOR(REQUEST_ADD_INSPECTOR),
+    }
 
-    fun init(fragment: Fragment, viewModel: RefereeInterface) {
+    private lateinit var typeReferee: TypeReferee
+
+    fun init(fragment: Fragment, viewModel: RefereeInterface, typeReferee: TypeReferee) {
         super.init()
+        this.typeReferee = typeReferee
+        setParentFragmentManager(fragment)
+
         viewModel.getRefereeFromDB().observe(fragment.viewLifecycleOwner) {referee ->
            setEntities(referee)
         }
@@ -25,14 +41,14 @@ class RefereeETI(context: Context, attrs: AttributeSet? = null) :
         }
         whatDoWhenAddClicked { text ->
             RefereeAddDialog(viewModel)
-                .putEntityName(text, REQUEST_ADD_REFEREE)
-                .show(fragment.parentFragmentManager, REQUEST_ADD_REFEREE)
+                .putEntityName(text, typeReferee.requestKey)
+                .show(fragment.parentFragmentManager, typeReferee.requestKey)
         }
     }
 
     override fun setParentFragmentManager(fragment: Fragment) {
         fragment.parentFragmentManager.setFragmentResultListener(
-            REQUEST_ADD_REFEREE,
+            typeReferee.requestKey,
             fragment.viewLifecycleOwner,
             this
         )
@@ -40,7 +56,7 @@ class RefereeETI(context: Context, attrs: AttributeSet? = null) :
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         when(requestKey) {
-            REQUEST_ADD_REFEREE -> {
+            typeReferee.requestKey -> {
                 this.setText(RefereeAddDialog.getRefereeShortName(result))
             }
         }
