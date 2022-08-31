@@ -16,6 +16,8 @@ enum class AddGameDestination(val res: Int) {
     TEAM_CHOOSE(R.id.action_choose_date_to_team),
     REFEREE_CHOSE(R.id.action_choose_team_to_referee),
     CLOSE(-1),
+    // PREVIOUS должен быть последним в списке
+    PREVIOUS(-2)
 }
 
 class AddNewGameViewModel: ViewModel(),
@@ -23,9 +25,18 @@ class AddNewGameViewModel: ViewModel(),
     private val gameRepository = GameRepository.get()
     var currentPosition = 0
         private set
-    val createdGame = Game()
+    val createdGame = GameWithAttributes(Game())
     val destination: LiveData<AddGameDestination?> get() = _destination
     private val _destination = MutableLiveData<AddGameDestination?>(null)
+
+    fun setPosition(position: Int) {
+        currentPosition = position
+    }
+
+    fun showPreviousFragment() {
+        currentPosition -= 1
+        _destination.value = AddGameDestination.values().last() // PREVIOUS destination
+    }
 
     fun showNextFragment() {
         currentPosition += 1
@@ -33,7 +44,7 @@ class AddNewGameViewModel: ViewModel(),
     }
 
     // game block
-    fun addRandomGame() { gameRepository.addGame(Game()) }
+    fun addGameToDB() { gameRepository.addGame(createdGame.game) }
 
     // team block
     override fun addTeamToDB(team: Team) { gameRepository.addTeam(team) }

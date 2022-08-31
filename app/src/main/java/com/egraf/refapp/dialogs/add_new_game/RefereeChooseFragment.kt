@@ -28,7 +28,20 @@ class RefereeChooseFragment: Fragment() {
             reserveRefereeLayout.init(this@RefereeChooseFragment, addNewGameViewModel, RefereeETI.TypeReferee.RESERVE_REFEREE)
             inspectorLayout.init(this@RefereeChooseFragment, addNewGameViewModel, RefereeETI.TypeReferee.INSPECTOR)
         }
+        updateUI()
         return binding.root
+    }
+
+    private fun updateUI() {
+        updateETI()
+    }
+
+    private fun updateETI() {
+        binding.chiefRefereeLayout.setText(addNewGameViewModel.createdGame.chiefReferee?.shortName ?: "")
+        binding.firstRefereeLayout.setText(addNewGameViewModel.createdGame.firstReferee?.shortName ?: "")
+        binding.secondRefereeLayout.setText(addNewGameViewModel.createdGame.secondReferee?.shortName ?: "")
+        binding.reserveRefereeLayout.setText(addNewGameViewModel.createdGame.reserveReferee?.shortName ?: "")
+        binding.inspectorLayout.setText(addNewGameViewModel.createdGame.inspector?.shortName ?: "")
     }
 
     override fun onDestroyView() {

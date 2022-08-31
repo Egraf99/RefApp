@@ -36,4 +36,6 @@
     <string name="third_name">Отчество</string>
     <string name="name">Название</string>
     <string name="next">Далее</string>
+    <string name="previous">Назад</string>
+    <string name="create">Создать</string>
 </resources>

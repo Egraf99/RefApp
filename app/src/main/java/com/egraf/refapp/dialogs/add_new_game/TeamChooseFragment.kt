@@ -34,7 +34,18 @@ class TeamChooseFragment : Fragment() {
             )
             leagueLayout.init(this@TeamChooseFragment, addNewGameViewModel)
         }
+        updateUI()
         return binding.root
+    }
+
+    private fun updateUI() {
+        updateETI()
+    }
+
+    private fun updateETI() {
+        binding.teamGuestLayout.setText(addNewGameViewModel.createdGame.homeTeam?.shortName ?: "")
+        binding.teamGuestLayout.setText(addNewGameViewModel.createdGame.guestTeam?.shortName ?: "")
+        binding.leagueLayout.setText(addNewGameViewModel.createdGame.league?.shortName ?: "")
     }
 
     override fun onDestroyView() {

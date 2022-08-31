@@ -36,4 +36,6 @@
     <string name="add_stadium">Add stadium</string>
     <string name="add_league">Add league</string>
     <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="create">Create</string>
 </resources>
