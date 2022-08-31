@@ -28,7 +28,7 @@ class RefereeETI(context: Context, attrs: AttributeSet? = null) :
 
     private lateinit var typeReferee: TypeReferee
 
-    fun init(fragment: Fragment, viewModel: RefereeInterface, typeReferee: TypeReferee) {
+    fun init(fragment: Fragment, viewModel: RefereeInterface, typeReferee: TypeReferee): RefereeETI {
         super.init()
         this.typeReferee = typeReferee
         setParentFragmentManager(fragment)
@@ -36,14 +36,15 @@ class RefereeETI(context: Context, attrs: AttributeSet? = null) :
         viewModel.getRefereeFromDB().observe(fragment.viewLifecycleOwner) {referee ->
            setEntities(referee)
         }
-        whatDoWhenInfoClicked { referee ->
+        doWhenInfoClicked { referee ->
             Toast.makeText(context, referee.fullName, Toast.LENGTH_SHORT).show()
         }
-        whatDoWhenAddClicked { text ->
+        doWhenAddClicked { text ->
             RefereeAddDialog(viewModel)
                 .putEntityName(text, typeReferee.requestKey)
                 .show(fragment.parentFragmentManager, typeReferee.requestKey)
         }
+        return this
     }
 
     override fun setParentFragmentManager(fragment: Fragment) {

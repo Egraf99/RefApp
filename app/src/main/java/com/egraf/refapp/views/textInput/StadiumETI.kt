@@ -14,21 +14,22 @@ private const val REQUEST_ADD_STADIUM = "requestAddStadium"
 class StadiumETI(context: Context, attrs: AttributeSet? = null) :
     ETIWithEndButton(context, attrs), FragmentResultListener {
 
-    fun init(fragment: Fragment, viewModel: StadiumInterface) {
+    fun init(fragment: Fragment, viewModel: StadiumInterface): StadiumETI {
         super.init()
         setParentFragmentManager(fragment)
 
         viewModel.getStadiumsFromDB().observe(fragment.viewLifecycleOwner) {stadiums ->
            setEntities(stadiums)
         }
-        whatDoWhenInfoClicked { stadium ->
+        doWhenInfoClicked { stadium ->
             Toast.makeText(context, stadium.fullName, Toast.LENGTH_SHORT).show()
         }
-        whatDoWhenAddClicked { text ->
+        doWhenAddClicked { text ->
             StadiumAddDialog(viewModel)
                 .putEntityName(text, REQUEST_ADD_STADIUM)
                 .show(fragment.parentFragmentManager, REQUEST_ADD_STADIUM)
         }
+        return this
     }
 
     override fun setParentFragmentManager(fragment: Fragment) {

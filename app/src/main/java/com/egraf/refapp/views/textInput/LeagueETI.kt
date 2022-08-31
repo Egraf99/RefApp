@@ -14,21 +14,22 @@ private const val REQUEST_ADD_LEAGUE = "requestAddLeague"
 class LeagueETI(context: Context, attrs: AttributeSet? = null) :
     ETIWithEndButton(context, attrs), FragmentResultListener {
 
-    fun init(fragment: Fragment, viewModel: LeagueInterface) {
+    fun init(fragment: Fragment, viewModel: LeagueInterface): LeagueETI {
         super.init()
         setParentFragmentManager(fragment)
 
         viewModel.getLeagueFromDB().observe(fragment.viewLifecycleOwner) {leagues ->
            setEntities(leagues)
         }
-        whatDoWhenInfoClicked { league ->
+        doWhenInfoClicked { league ->
             Toast.makeText(context, league.fullName, Toast.LENGTH_SHORT).show()
         }
-        whatDoWhenAddClicked { text ->
+        doWhenAddClicked { text ->
             LeagueAddDialog(viewModel)
                 .putEntityName(text, REQUEST_ADD_LEAGUE)
                 .show(fragment.parentFragmentManager, REQUEST_ADD_LEAGUE)
         }
+        return this
     }
 
     override fun setParentFragmentManager(fragment: Fragment) {

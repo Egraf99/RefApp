@@ -34,22 +34,25 @@ open class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
     /**
      * Устанавливает функцию, которая выполняется при пустом тексте
      */
-    open fun whatDoWhenTextIsBlank(function: () -> Unit) {
+    open fun whatDoWhenTextIsBlank(function: () -> Unit): EntityTextInput {
         _doWhenTextIsBlank = function
+        return this
     }
 
     /**
      * Устанавливает функцию, которая выполняется при несовпадении текста с entitiesList
      */
-    open fun whatDoWhenTextNotMatchedEntity(function: () -> Unit) {
+    open fun whatDoWhenTextNotMatchedEntity(function: () -> Unit): EntityTextInput {
         _doWhenTextNotMatchEntity = function
+        return this
     }
 
     /**
      * Устанавливает функцию, которая выполняется при совпадении текста с entitiesList
      */
-    open fun whatDoWhenTextMatchedEntity(function: (Entity) -> Unit) {
+    open fun whatDoWhenTextMatchedEntity(function: (Entity) -> Unit): EntityTextInput {
         _doWhenTextMatchEntity = function
+        return this
     }
 
 

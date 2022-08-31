@@ -34,14 +34,14 @@ abstract class ETIWithEndButton(context: Context, attrs: AttributeSet? = null) :
     /**
      * Устанавливает функцию, которая выполняется при нажатии на кнопку информации
      */
-    fun whatDoWhenInfoClicked(function: (Entity) -> Unit) {
+    fun doWhenInfoClicked(function: (Entity) -> Unit) {
         _doWhenInfoClicked = function
     }
 
     /**
      * Устанавливает функцию, которая выполняется при нажатии на кнопку добавления
      */
-    fun whatDoWhenAddClicked(function: (String) -> Unit) {
+    fun doWhenAddClicked(function: (String) -> Unit) {
         _doWhenAddClicked = function
     }
 

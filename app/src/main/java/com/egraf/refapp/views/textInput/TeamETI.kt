@@ -20,7 +20,7 @@ class TeamETI(context: Context, attrs: AttributeSet? = null) :
     }
     private lateinit var typeTeam: TypeTeam
 
-    fun init(fragment: Fragment, viewModel: TeamInterface, typeTeam: TypeTeam) {
+    fun init(fragment: Fragment, viewModel: TeamInterface, typeTeam: TypeTeam): TeamETI {
         super.init()
         this.typeTeam = typeTeam
         setParentFragmentManager(fragment)
@@ -28,14 +28,15 @@ class TeamETI(context: Context, attrs: AttributeSet? = null) :
         viewModel.getTeamsFromDB().observe(fragment.viewLifecycleOwner) { teams ->
             setEntities(teams)
         }
-        whatDoWhenInfoClicked { team ->
+        doWhenInfoClicked { team ->
             Toast.makeText(context, team.fullName, Toast.LENGTH_SHORT).show()
         }
-        whatDoWhenAddClicked { text ->
+        doWhenAddClicked { text ->
             TeamAddDialog(viewModel)
                 .putEntityName(text, typeTeam.requestKey)
                 .show(fragment.parentFragmentManager, typeTeam.requestKey)
         }
+        return this
     }
 
     override fun setParentFragmentManager(fragment: Fragment) {
