@@ -2,14 +2,8 @@ package com.egraf.refapp.dialogs.add_new_game
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
-import com.egraf.refapp.database.entities.*
-import com.egraf.refapp.interface_viewmodel.all.LeagueInterface
-import com.egraf.refapp.interface_viewmodel.all.RefereeInterface
-import com.egraf.refapp.interface_viewmodel.all.StadiumInterface
-import com.egraf.refapp.interface_viewmodel.all.TeamInterface
+import com.egraf.refapp.ui.ViewModelWithEntitiesAndGame
 
 enum class AddGameDestination(val res: Int) {
     DATE_CHOOSE(0),
@@ -20,12 +14,9 @@ enum class AddGameDestination(val res: Int) {
     PREVIOUS(-2)
 }
 
-class AddNewGameViewModel: ViewModel(),
-    TeamInterface, StadiumInterface, LeagueInterface, RefereeInterface {
-    private val gameRepository = GameRepository.get()
+class AddNewGameViewModel: ViewModelWithEntitiesAndGame() {
     var currentPosition = 0
         private set
-    val createdGame = GameWithAttributes(Game())
     val destination: LiveData<AddGameDestination?> get() = _destination
     private val _destination = MutableLiveData<AddGameDestination?>(null)
 
@@ -42,23 +33,4 @@ class AddNewGameViewModel: ViewModel(),
         currentPosition += 1
         _destination.value = AddGameDestination.values()[currentPosition]
     }
-
-    // game block
-    fun addGameToDB() { gameRepository.addGame(createdGame.game) }
-
-    // team block
-    override fun addTeamToDB(team: Team) { gameRepository.addTeam(team) }
-    override fun getTeamsFromDB(): LiveData<List<Team>> { return gameRepository.getTeams() }
-
-    // stadium block
-    override fun addStadiumToDB(stadium: Stadium) { gameRepository.addStadium(stadium) }
-    override fun getStadiumsFromDB(): LiveData<List<Stadium>> { return gameRepository.getStadiums() }
-
-    // league block
-    override fun addLeagueToDB(league: League) { gameRepository.addLeague(league) }
-    override fun getLeagueFromDB(): LiveData<List<League>> { return gameRepository.getLeagues() }
-
-    // referee block
-    override fun addRefereeToDB(referee: Referee) { gameRepository.addReferee(referee) }
-    override fun getRefereeFromDB(): LiveData<List<Referee>> { return gameRepository.getReferees() }
 }

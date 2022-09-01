@@ -43,9 +43,9 @@ class TeamChooseFragment : Fragment() {
     }
 
     private fun updateETI() {
-        binding.teamGuestLayout.setText(addNewGameViewModel.createdGame.homeTeam?.shortName ?: "")
-        binding.teamGuestLayout.setText(addNewGameViewModel.createdGame.guestTeam?.shortName ?: "")
-        binding.leagueLayout.setText(addNewGameViewModel.createdGame.league?.shortName ?: "")
+        binding.teamGuestLayout.setText(addNewGameViewModel.gameWithAttributes.homeTeam?.shortName ?: "")
+        binding.teamGuestLayout.setText(addNewGameViewModel.gameWithAttributes.guestTeam?.shortName ?: "")
+        binding.leagueLayout.setText(addNewGameViewModel.gameWithAttributes.league?.shortName ?: "")
     }
 
     override fun onDestroyView() {

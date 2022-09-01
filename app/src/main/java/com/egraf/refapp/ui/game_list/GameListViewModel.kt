@@ -1,15 +1,8 @@
 package com.egraf.refapp.ui.game_list
 
-import androidx.lifecycle.ViewModel
-import com.egraf.refapp.GameRepository
-import com.egraf.refapp.database.entities.Game
+import com.egraf.refapp.ui.ViewModelWithGameRepo
 
-class GameListViewModel: ViewModel() {
-    private val gameRepository = GameRepository.get()
+class GameListViewModel: ViewModelWithGameRepo() {
     val gamesListLiveData = gameRepository.getGames()
     val countGamesLiveData = gameRepository.countGames()
-
-    fun addGame(game: Game) {
-        gameRepository.addGame(game)
-    }
 }

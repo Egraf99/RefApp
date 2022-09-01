@@ -47,26 +47,26 @@ class DateChooseFragment : Fragment(), FragmentResultListener {
         super.onStart()
         binding.dateChooseButton.setOnClickListener {
             DatePickerFragment
-                .newInstance(addNewGameViewModel.createdGame.game.date, REQUEST_DATE)
+                .newInstance(addNewGameViewModel.gameWithAttributes.game.date, REQUEST_DATE)
                 .show(parentFragmentManager, REQUEST_DATE)
         }
         binding.timeChooseButton.setOnClickListener {
             TimePickerFragment
-                .newInstance(addNewGameViewModel.createdGame.game.date, REQUEST_TIME)
+                .newInstance(addNewGameViewModel.gameWithAttributes.game.date, REQUEST_TIME)
                 .show(parentFragmentManager, REQUEST_TIME)
         }
-        binding.gamePaidCheckBox.setOnCheckedChangeListener { _, isChecked -> addNewGameViewModel.createdGame.game.isPaid = isChecked }
-        binding.gamePassedCheckBox.setOnCheckedChangeListener { _, isChecked -> addNewGameViewModel.createdGame.game.isPassed = isChecked }
+        binding.gamePaidCheckBox.setOnCheckedChangeListener { _, isChecked -> addNewGameViewModel.gameWithAttributes.game.isPaid = isChecked }
+        binding.gamePassedCheckBox.setOnCheckedChangeListener { _, isChecked -> addNewGameViewModel.gameWithAttributes.game.isPassed = isChecked }
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         when (requestKey) {
             REQUEST_DATE -> {
-                addNewGameViewModel.createdGame.game.date = DatePickerFragment.getSelectedDate(result)
+                addNewGameViewModel.gameWithAttributes.game.date = DatePickerFragment.getSelectedDate(result)
                 updateDate()
             }
             REQUEST_TIME -> {
-                addNewGameViewModel.createdGame.game.date = TimePickerFragment.getSelectedTime(result)
+                addNewGameViewModel.gameWithAttributes.game.date = TimePickerFragment.getSelectedTime(result)
                 updateTime()
             }
         }
@@ -85,16 +85,16 @@ class DateChooseFragment : Fragment(), FragmentResultListener {
     }
 
     private fun updateETI() {
-        binding.stadiumLayout.setText(addNewGameViewModel.createdGame.stadium?.shortName ?: "")
+        binding.stadiumLayout.setText(addNewGameViewModel.gameWithAttributes.stadium?.shortName ?: "")
     }
 
     private fun updateCheckBox() {
         binding.gamePassedCheckBox.apply {
-            isChecked = addNewGameViewModel.createdGame.game.isPassed
+            isChecked = addNewGameViewModel.gameWithAttributes.game.isPassed
             jumpDrawablesToCurrentState()
         }
         binding.gamePaidCheckBox.apply {
-            isChecked = addNewGameViewModel.createdGame.game.isPaid
+            isChecked = addNewGameViewModel.gameWithAttributes.game.isPaid
             jumpDrawablesToCurrentState()
         }
 
@@ -102,11 +102,11 @@ class DateChooseFragment : Fragment(), FragmentResultListener {
 
     private fun updateDate() {
         binding.dateChooseButton.text =
-            DateFormat.format(DATE_FORMAT, addNewGameViewModel.createdGame.game.date).toString()
+            DateFormat.format(DATE_FORMAT, addNewGameViewModel.gameWithAttributes.game.date).toString()
     }
 
     private fun updateTime() {
         binding.timeChooseButton.text =
-            DateFormat.format(TIME_FORMAT, addNewGameViewModel.createdGame.game.date).toString()
+            DateFormat.format(TIME_FORMAT, addNewGameViewModel.gameWithAttributes.game.date).toString()
     }
 }

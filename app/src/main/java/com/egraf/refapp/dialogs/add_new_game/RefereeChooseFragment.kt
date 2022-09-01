@@ -37,11 +37,11 @@ class RefereeChooseFragment: Fragment() {
     }
 
     private fun updateETI() {
-        binding.chiefRefereeLayout.setText(addNewGameViewModel.createdGame.chiefReferee?.shortName ?: "")
-        binding.firstRefereeLayout.setText(addNewGameViewModel.createdGame.firstReferee?.shortName ?: "")
-        binding.secondRefereeLayout.setText(addNewGameViewModel.createdGame.secondReferee?.shortName ?: "")
-        binding.reserveRefereeLayout.setText(addNewGameViewModel.createdGame.reserveReferee?.shortName ?: "")
-        binding.inspectorLayout.setText(addNewGameViewModel.createdGame.inspector?.shortName ?: "")
+        binding.chiefRefereeLayout.setText(addNewGameViewModel.gameWithAttributes.chiefReferee?.shortName ?: "")
+        binding.firstRefereeLayout.setText(addNewGameViewModel.gameWithAttributes.firstReferee?.shortName ?: "")
+        binding.secondRefereeLayout.setText(addNewGameViewModel.gameWithAttributes.secondReferee?.shortName ?: "")
+        binding.reserveRefereeLayout.setText(addNewGameViewModel.gameWithAttributes.reserveReferee?.shortName ?: "")
+        binding.inspectorLayout.setText(addNewGameViewModel.gameWithAttributes.inspector?.shortName ?: "")
     }
 
     override fun onDestroyView() {
