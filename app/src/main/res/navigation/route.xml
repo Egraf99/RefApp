@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/gameListFragment"
-        android:name="com.egraf.refapp.GameListFragment"
+        android:name="com.egraf.refapp.ui.game_list.GameListFragment"
         android:label="GameListFragment" >
         <action
             android:id="@+id/action_gameListFragment_to_gameFragment"

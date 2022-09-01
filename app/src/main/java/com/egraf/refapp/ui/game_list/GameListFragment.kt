@@ -1,4 +1,4 @@
-package com.egraf.refapp
+package com.egraf.refapp.ui.game_list
 
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -6,22 +6,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.egraf.refapp.FragmentToolbar
+import com.egraf.refapp.GameFragment
+import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.GameWithAttributes
 import com.egraf.refapp.databinding.FragmentGameListBinding
 import com.egraf.refapp.databinding.ListItemGameBinding
 
 private const val TAG = "GameListFragment"
 private const val DATE_FORMAT = "dd.MM.yyyy (EE) HH:mm"
-private const val ADD_GAME_DIALOG = "AddGameDialog"
 
-class GameListFragment : FragmentToolbar(), AddGameViewModel.Callbacks, FragmentResultListener {
+class GameListFragment : FragmentToolbar() {
     private var _binding: FragmentGameListBinding? = null
     private val binding get() = _binding!!
     private var adapter: GameAdapter? = GameAdapter()
@@ -37,7 +38,10 @@ class GameListFragment : FragmentToolbar(), AddGameViewModel.Callbacks, Fragment
         _binding = FragmentGameListBinding.inflate(inflater, container, false)
         binding.gameRecycleView.layoutManager = LinearLayoutManager(context)
         binding.gameRecycleView.adapter = adapter
-        binding.viewModel = AddGameViewModel(this)
+        binding.addNewGameButton.setOnClickListener {
+            Log.d(TAG, "onCreateView: click")
+            findNavController().navigate(R.id.action_gameListFragment_to_addNewGame)
+        }
         return binding.root
     }
 
@@ -61,8 +65,6 @@ class GameListFragment : FragmentToolbar(), AddGameViewModel.Callbacks, Fragment
         ) { count ->
             showEmptyListRepresent(count)
         }
-
-        parentFragmentManager.setFragmentResultListener(ADD_GAME_DIALOG, viewLifecycleOwner, this)
     }
 
     private fun updateUI(games: List<GameWithAttributes>) {
@@ -73,17 +75,9 @@ class GameListFragment : FragmentToolbar(), AddGameViewModel.Callbacks, Fragment
     private fun showEmptyListRepresent(count: Int) {
         if (count > 0) {
             binding.emptyListTextview.visibility = View.GONE
-            binding.newGameButton.visibility = View.GONE
         } else {
             binding.emptyListTextview.visibility = View.VISIBLE
-            binding.newGameButton.visibility = View.VISIBLE
-            binding.newGameButton.setOnClickListener { addNewGame() }
         }
-    }
-
-    override fun addNewGame() {
-        Log.d(TAG, "addNewGame() called")
-        findNavController().navigate(R.id.action_gameListFragment_to_addNewGame)
     }
 
     private inner class GameHolder(val binding: ListItemGameBinding) :
@@ -161,22 +155,4 @@ class GameListFragment : FragmentToolbar(), AddGameViewModel.Callbacks, Fragment
         }
 
     }
-
-    override fun onFragmentResult(requestKey: String, result: Bundle) {
-    }
-//
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        super.onCreateOptionsMenu(menu, inflater)
-//        inflater.inflate(R.menu.fragment_game_list, menu)
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        return when (item.itemId) {
-//            R.id.new_game -> {
-//                addNewGame()
-//                true
-//            }
-//            else -> return super.onOptionsItemSelected(item)
-//        }
-//    }
 }
