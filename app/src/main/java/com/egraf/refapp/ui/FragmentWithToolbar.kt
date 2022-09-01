@@ -18,9 +18,11 @@ abstract class FragmentWithToolbar : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        actionBar = (activity as AppCompatActivity).supportActionBar
-        setDisplayHomeAsUpEnabled(false)
-        setActionBarTitle(requireContext().getString(R.string.app_name))
+        if (requireActivity() is AppCompatActivity) {
+            actionBar = (activity as AppCompatActivity).supportActionBar
+            setDisplayHomeAsUpEnabled(false)
+            setActionBarTitle(requireContext().getString(R.string.app_name))
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
