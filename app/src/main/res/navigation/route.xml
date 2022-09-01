@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/gameFragment"
-        android:name="com.egraf.refapp.GameFragment"
+        android:name="com.egraf.refapp.ui.game_detail.GameDetailFragment"
         android:label="GameFragment" />
     <dialog
         android:id="@+id/addNewGameBottomDialog"

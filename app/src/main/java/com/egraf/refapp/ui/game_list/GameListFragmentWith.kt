@@ -12,17 +12,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.egraf.refapp.FragmentToolbar
-import com.egraf.refapp.GameFragment
 import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.GameWithAttributes
 import com.egraf.refapp.databinding.FragmentGameListBinding
 import com.egraf.refapp.databinding.ListItemGameBinding
+import com.egraf.refapp.ui.FragmentWithToolbar
+import com.egraf.refapp.ui.game_detail.GameDetailFragment
 
 private const val TAG = "GameListFragment"
 private const val DATE_FORMAT = "dd.MM.yyyy (EE) HH:mm"
 
-class GameListFragment : FragmentToolbar() {
+class GameListFragment: FragmentWithToolbar() {
     private var _binding: FragmentGameListBinding? = null
     private val binding get() = _binding!!
     private var adapter: GameAdapter? = GameAdapter()
@@ -107,7 +107,7 @@ class GameListFragment : FragmentToolbar() {
         }
 
         override fun onClick(v: View?) {
-            val bundle = GameFragment.putGameId(gameWithAttributes.game.id)
+            val bundle = GameDetailFragment.putGameId(gameWithAttributes.game.id)
             findNavController().navigate(R.id.action_gameListFragment_to_gameFragment, bundle)
         }
 

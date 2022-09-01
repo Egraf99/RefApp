@@ -1,9 +1,10 @@
-package com.egraf.refapp
+package com.egraf.refapp.ui.game_detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.egraf.refapp.GameRepository
 import com.egraf.refapp.database.entities.*
 import com.egraf.refapp.interface_viewmodel.all.LeagueInterface
 import com.egraf.refapp.interface_viewmodel.all.RefereeInterface

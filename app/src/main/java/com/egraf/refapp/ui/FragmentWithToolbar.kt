@@ -1,4 +1,4 @@
-package com.egraf.refapp
+package com.egraf.refapp.ui
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -7,8 +7,9 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.egraf.refapp.R
 
-abstract class FragmentToolbar : Fragment() {
+abstract class FragmentWithToolbar : Fragment() {
     private var actionBar: ActionBar? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

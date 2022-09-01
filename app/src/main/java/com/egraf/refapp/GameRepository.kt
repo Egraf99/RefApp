@@ -6,7 +6,6 @@ import androidx.room.Room
 import com.egraf.refapp.database.GameDatabase
 import com.egraf.refapp.database.entities.*
 import com.egraf.refapp.database.migration_1_2
-import java.lang.IllegalStateException
 import java.util.*
 import java.util.concurrent.Executors
 

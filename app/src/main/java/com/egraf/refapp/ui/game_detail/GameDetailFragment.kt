@@ -1,4 +1,4 @@
-package com.egraf.refapp
+package com.egraf.refapp.ui.game_detail
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.League
 import com.egraf.refapp.database.entities.Referee
 import com.egraf.refapp.database.entities.Stadium
@@ -18,6 +19,7 @@ import com.egraf.refapp.databinding.FragmentGameBinding
 import com.egraf.refapp.dialogs.DatePickerFragment
 import com.egraf.refapp.dialogs.DeleteDialog
 import com.egraf.refapp.dialogs.TimePickerFragment
+import com.egraf.refapp.ui.FragmentWithToolbar
 import com.egraf.refapp.views.textInput.RefereeETI
 import com.egraf.refapp.views.textInput.TeamETI
 import java.util.*
@@ -31,7 +33,7 @@ private const val REQUEST_DELETE = "DialogDelete"
 private const val DATE_FORMAT = "EEE dd.MM.yyyy"
 private const val TIME_FORMAT = "HH:mm"
 
-class GameFragment : FragmentToolbar(), FragmentResultListener {
+class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
 
     private val binding get() = _binding!!
     private var _binding: FragmentGameBinding? = null
