@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.egraf.refapp.database.entities.Referee
 import com.egraf.refapp.databinding.RefereeChooseBinding
 import com.egraf.refapp.views.textInput.RefereeETI
 
@@ -23,10 +24,40 @@ class RefereeChooseFragment: Fragment() {
     ): View {
         _binding = RefereeChooseBinding.inflate(inflater).apply {
             chiefRefereeLayout.init(this@RefereeChooseFragment, addNewGameViewModel, RefereeETI.TypeReferee.CHIEF_REFEREE)
+                .whatDoWhenTextMatchedEntity { referee ->
+                    addNewGameViewModel.setChiefReferee(referee as Referee?)
+                }
+                .whatDoWhenTextIsBlank {
+                    addNewGameViewModel.setChiefReferee(null)
+                }
             firstRefereeLayout.init(this@RefereeChooseFragment, addNewGameViewModel, RefereeETI.TypeReferee.FIRST_REFEREE)
+                .whatDoWhenTextMatchedEntity { referee ->
+                    addNewGameViewModel.setFirstReferee(referee as Referee?)
+                }
+                .whatDoWhenTextIsBlank {
+                    addNewGameViewModel.setFirstReferee(null)
+                }
             secondRefereeLayout.init(this@RefereeChooseFragment, addNewGameViewModel, RefereeETI.TypeReferee.SECOND_REFEREE)
+                .whatDoWhenTextMatchedEntity { referee ->
+                    addNewGameViewModel.setSecondReferee(referee as Referee?)
+                }
+                .whatDoWhenTextIsBlank {
+                    addNewGameViewModel.setSecondReferee(null)
+                }
             reserveRefereeLayout.init(this@RefereeChooseFragment, addNewGameViewModel, RefereeETI.TypeReferee.RESERVE_REFEREE)
+                .whatDoWhenTextMatchedEntity { referee ->
+                    addNewGameViewModel.setReserveReferee(referee as Referee?)
+                }
+                .whatDoWhenTextIsBlank {
+                    addNewGameViewModel.setReserveReferee(null)
+                }
             inspectorLayout.init(this@RefereeChooseFragment, addNewGameViewModel, RefereeETI.TypeReferee.INSPECTOR)
+                .whatDoWhenTextMatchedEntity { referee ->
+                    addNewGameViewModel.setInspector(referee as Referee?)
+                }
+                .whatDoWhenTextIsBlank {
+                    addNewGameViewModel.setInspector(null)
+                }
         }
         updateUI()
         return binding.root

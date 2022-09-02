@@ -2,21 +2,24 @@ package com.egraf.refapp.dialogs.add_new_game
 
 import android.os.Bundle
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
+import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.DateChooseBinding
 import com.egraf.refapp.dialogs.DatePickerFragment
 import com.egraf.refapp.dialogs.TimePickerFragment
 
-private const val TAG = "DateChooseFragment"
 private const val REQUEST_DATE = "DialogDate"
 private const val REQUEST_TIME = "DialogTime"
 private const val DATE_FORMAT = "EEE dd.MM.yyyy"
 private const val TIME_FORMAT = "HH:mm"
+
+private const val TAG = "AddGame"
 
 class DateChooseFragment : Fragment(), FragmentResultListener {
     private val binding get() = _binding!!
@@ -32,6 +35,12 @@ class DateChooseFragment : Fragment(), FragmentResultListener {
     ): View {
         _binding = DateChooseBinding.inflate(inflater).apply {
             stadiumLayout.init(this@DateChooseFragment, addNewGameViewModel)
+                .whatDoWhenTextMatchedEntity { stadium ->
+                    addNewGameViewModel.setStadium(stadium as Stadium?)
+                }
+                .whatDoWhenTextIsBlank {
+                    addNewGameViewModel.setStadium(null)
+                }
         }
         updateUI()
         return binding.root
@@ -85,6 +94,7 @@ class DateChooseFragment : Fragment(), FragmentResultListener {
     }
 
     private fun updateETI() {
+        Log.d(TAG, "updateETI: ${addNewGameViewModel.gameWithAttributes.game}")
         binding.stadiumLayout.setText(addNewGameViewModel.gameWithAttributes.stadium?.shortName ?: "")
     }
 
