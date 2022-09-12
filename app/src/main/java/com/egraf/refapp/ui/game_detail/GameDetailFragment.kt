@@ -3,7 +3,6 @@ package com.egraf.refapp.ui.game_detail
 import android.app.AlertDialog
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -75,6 +74,10 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
                 updateUI()
             }
         }
+
+        parentFragmentManager.setFragmentResultListener(REQUEST_DATE, viewLifecycleOwner, this)
+        parentFragmentManager.setFragmentResultListener(REQUEST_TIME, viewLifecycleOwner, this)
+        parentFragmentManager.setFragmentResultListener(REQUEST_DELETE, viewLifecycleOwner, this)
     }
 
     override fun onStart() {
@@ -259,7 +262,6 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
-        Log.d(TAG, "onFragmentResult: $requestKey")
         when (requestKey) {
             REQUEST_DATE -> {
                 gameDetailViewModel.gameWithAttributes.game.date =
