@@ -6,9 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
-import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.DateChooseBinding
 import com.egraf.refapp.dialogs.DatePickerFragment
@@ -21,11 +19,8 @@ private const val TIME_FORMAT = "HH:mm"
 
 private const val TAG = "AddGame"
 
-class DateChooseFragment : Fragment(), FragmentResultListener {
+class DateChooseFragment : ChooserFragment(), FragmentResultListener {
     private val binding get() = _binding!!
-    private val addNewGameViewModel: AddNewGameViewModel by lazy {
-        ViewModelProvider(this)[AddNewGameViewModel::class.java]
-    }
     private var _binding: DateChooseBinding? = null
 
     override fun onCreateView(
@@ -86,7 +81,7 @@ class DateChooseFragment : Fragment(), FragmentResultListener {
         _binding = null
     }
 
-    private fun updateUI() {
+    override fun updateUI() {
         updateETI()
         updateCheckBox()
         updateDate()

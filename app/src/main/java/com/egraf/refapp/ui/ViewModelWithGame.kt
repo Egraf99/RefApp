@@ -3,7 +3,7 @@ package com.egraf.refapp.ui
 import android.util.Log
 import com.egraf.refapp.database.entities.*
 
-private const val TAG = "AddNewGame"
+private const val TAG = "AddGame"
 
 open class ViewModelWithGame: ViewModelWithGameRepo() {
     var gameWithAttributes = GameWithAttributes(Game())

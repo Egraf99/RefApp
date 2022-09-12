@@ -4,18 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.database.entities.Referee
 import com.egraf.refapp.databinding.RefereeChooseBinding
 import com.egraf.refapp.views.textInput.RefereeETI
 
-class RefereeChooseFragment: Fragment() {
+class RefereeChooseFragment: ChooserFragment() {
     private val binding get() = _binding!!
     private var _binding: RefereeChooseBinding? = null
-    private val addNewGameViewModel: AddNewGameViewModel by lazy {
-        ViewModelProvider(this)[AddNewGameViewModel::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,7 +58,7 @@ class RefereeChooseFragment: Fragment() {
         return binding.root
     }
 
-    private fun updateUI() {
+    override fun updateUI() {
         updateETI()
     }
 

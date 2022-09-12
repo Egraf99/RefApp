@@ -1,9 +1,12 @@
 package com.egraf.refapp.database.entities
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
+@Parcelize
 @Entity
 data class Game(
     @PrimaryKey
@@ -20,7 +23,7 @@ data class Game(
     var secondRefereeId: UUID? = null,
     var reserveRefereeId: UUID? = null,
     var inspectorId: UUID? = null
-) : com.egraf.refapp.database.entities.Entity {
+) : com.egraf.refapp.database.entities.Entity, Parcelable {
     override val shortName: String
         get() = "id=$id homeTeamId=$homeTeamId guestTeamId=$guestTeamId"
     override val fullName: String

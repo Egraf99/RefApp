@@ -1,9 +1,12 @@
 package com.egraf.refapp.database.entities
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
+@Parcelize
 @Entity
 data class Referee(
     @PrimaryKey
@@ -11,7 +14,7 @@ data class Referee(
     var firstName: String = "",
     var secondName: String = "",
     var thirdName: String = "",
-) : com.egraf.refapp.database.entities.Entity {
+) : com.egraf.refapp.database.entities.Entity, Parcelable {
     override val shortName: String
         get() = arrayListOf(secondName, firstName).joinToString(" ").trim()
     override val fullName: String

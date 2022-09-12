@@ -5,19 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.database.entities.Team
 import com.egraf.refapp.databinding.TeamChooseBinding
 import com.egraf.refapp.views.textInput.TeamETI
 
 private const val TAG = "AddGame"
-class TeamChooseFragment : Fragment() {
+class TeamChooseFragment : ChooserFragment() {
     private val binding get() = _binding!!
     private var _binding: TeamChooseBinding? = null
-    private val addNewGameViewModel: AddNewGameViewModel by lazy {
-        ViewModelProvider(this)[AddNewGameViewModel::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,13 +48,13 @@ class TeamChooseFragment : Fragment() {
         return binding.root
     }
 
-    private fun updateUI() {
+    override fun updateUI() {
         updateETI()
     }
 
     private fun updateETI() {
-        Log.d(TAG, "updateETI: ${addNewGameViewModel.gameWithAttributes.game}")
-        binding.teamGuestLayout.setText(addNewGameViewModel.gameWithAttributes.homeTeam?.shortName ?: "")
+        Log.d(TAG, "TeamChooseFragment updateETI: ${addNewGameViewModel.gameWithAttributes.homeTeam}")
+        binding.teamHomeLayout.setText(addNewGameViewModel.gameWithAttributes.homeTeam?.shortName ?: "")
         binding.teamGuestLayout.setText(addNewGameViewModel.gameWithAttributes.guestTeam?.shortName ?: "")
         binding.leagueLayout.setText(addNewGameViewModel.gameWithAttributes.league?.shortName ?: "")
     }

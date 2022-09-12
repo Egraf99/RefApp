@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.egraf.refapp.R
 import com.egraf.refapp.databinding.AddNewGameDialogBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -24,15 +25,24 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
         addNewGameViewModel.destination.observe(this) { destination ->
             if (destination == null) return@observe
             // TODO: неправильно реализован переход к предыдущему фрагменту, заменить через наследование AddGameDestination
+            val fragment =
+                binding.addGameFragmentContainer.getFragment<NavHostFragment>().childFragmentManager.fragments[0] as ChooserFragment
             when (destination.res) {
-                -1 -> { // сохранение игры и закрытие окна
-                    addNewGameViewModel.addGameToDB()
+                -1 -> // сохранение игры и закрытие окна
+                {
+                    fragment.addGameToDB()
                     this.dismiss()
                 }
                 -2 -> // переход к предыдущему фрагменту
+                {
+                    fragment.putGameInBundle()
                     binding.addGameFragmentContainer.findNavController().popBackStack()
+                }
                 else -> // переход к фрагменту по action id
-                    binding.addGameFragmentContainer.findNavController().navigate(destination.res)
+                    binding.addGameFragmentContainer.findNavController().navigate(
+                        destination.res,
+                        fragment.putGameWithAttributes()
+                    )
             }
             checkCurrentFragmentPosition()
         }
