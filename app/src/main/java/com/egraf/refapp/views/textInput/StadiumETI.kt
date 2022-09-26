@@ -44,5 +44,6 @@ class StadiumETI(context: Context, attrs: AttributeSet? = null) :
         when (requestKey) {
             REQUEST_ADD_STADIUM -> this.setText(StadiumAddDialog.getStadiumShortName(result))
         }
+        super.onFragmentResult(requestKey, result)
     }
 }

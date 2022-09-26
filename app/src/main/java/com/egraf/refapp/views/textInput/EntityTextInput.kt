@@ -3,6 +3,7 @@ package com.egraf.refapp.views.textInput
 import android.R.layout.select_dialog_item
 import android.app.Activity
 import android.content.Context
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
@@ -13,6 +14,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.FrameLayout
+import androidx.fragment.app.FragmentResultListener
 import com.egraf.refapp.database.entities.Entity
 import com.google.android.material.textfield.TextInputLayout
 import kotlin.math.max
@@ -20,7 +22,7 @@ import kotlin.math.max
 private const val TAG = "EntityTextInput"
 
 open class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
-    TextInputLayout(context, attrs), TextWatcher {
+    TextInputLayout(context, attrs), TextWatcher, FragmentResultListener {
     lateinit var childTextInput: AutoCompleteTextView
     private lateinit var childAdapter: ArrayAdapter<String>
     private var _doWhenTextIsBlank: () -> Unit = {}
@@ -76,7 +78,7 @@ open class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
     }
 
     /**
-     * Функция, вызываемая при смены фокуса
+     * Функция, вызываемая при смене фокуса
      */
     protected open fun onFocusChange(hasFocus: Boolean) {
         Log.d(TAG, "onFocusChange: focus is $hasFocus")
@@ -231,5 +233,12 @@ open class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
         inputMethodManager?.hideSoftInputFromWindow(this.windowToken, 0)
         // снимаем фокус
         this.clearFocus()
+    }
+
+    //TODO: при сохранении новой Entity база данных не успевает обновлять entitiesList, matchedEntity не находится и doWhenTextMatchedEntity не срабатывает
+    //      Необходимо добавить загрузку при добавлении новой Entity
+    override fun onFragmentResult(requestKey: String, result: Bundle) {
+        Log.d(TAG, "onFragmentResult: fragmentResult")
+        checkTextMatchEntityName()
     }
 }

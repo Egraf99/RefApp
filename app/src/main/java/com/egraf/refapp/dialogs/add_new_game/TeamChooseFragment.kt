@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.egraf.refapp.database.entities.League
 import com.egraf.refapp.database.entities.Team
 import com.egraf.refapp.databinding.TeamChooseBinding
 import com.egraf.refapp.views.textInput.TeamETI
@@ -43,6 +44,12 @@ class TeamChooseFragment : ChooserFragment() {
                     addNewGameViewModel.setGuestTeam(null)
                 }
             leagueLayout.init(this@TeamChooseFragment, addNewGameViewModel)
+                .whatDoWhenTextMatchedEntity { league ->
+                    addNewGameViewModel.setLeague(league as League)
+                }
+                .whatDoWhenTextIsBlank {
+                    addNewGameViewModel.setLeague(null)
+                }
         }
         updateUI()
         return binding.root

@@ -51,5 +51,6 @@ class TeamETI(context: Context, attrs: AttributeSet? = null) :
         when (requestKey) {
             typeTeam.requestKey -> this.setText(TeamAddDialog.getTeamShortName(result))
         }
+        super.onFragmentResult(requestKey, result)
     }
 }

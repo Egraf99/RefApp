@@ -44,5 +44,6 @@ class LeagueETI(context: Context, attrs: AttributeSet? = null) :
         when (requestKey) {
             REQUEST_ADD_LEAGUE -> this.setText(LeagueAddDialog.getLeagueShortName(result))
         }
+        super.onFragmentResult(requestKey, result)
     }
 }

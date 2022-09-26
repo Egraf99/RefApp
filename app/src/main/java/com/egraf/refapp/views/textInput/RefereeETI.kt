@@ -61,5 +61,6 @@ class RefereeETI(context: Context, attrs: AttributeSet? = null) :
                 this.setText(RefereeAddDialog.getRefereeShortName(result))
             }
         }
+        super.onFragmentResult(requestKey, result)
     }
 }
