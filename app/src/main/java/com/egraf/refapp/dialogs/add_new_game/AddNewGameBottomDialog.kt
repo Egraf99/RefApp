@@ -1,6 +1,7 @@
 package com.egraf.refapp.dialogs.add_new_game
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,17 +25,17 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
         addNewGameViewModel.setPosition(0)
         addNewGameViewModel.destination.observe(this) { destination ->
             if (destination == null) return@observe
-            // TODO: неправильно реализован переход к предыдущему фрагменту, заменить через наследование AddGameDestination
             val fragment =
                 binding.addGameFragmentContainer.getFragment<NavHostFragment>().childFragmentManager.fragments[0] as ChooserFragment
-            when (destination.res) {
-                -1 -> // сохранение игры и закрытие окна
-                {
+            when (destination) {
+                AddGameDestination.CREATE -> { // сохранение игры и закрытие окна
                     fragment.addGameToDB()
                     this.dismiss()
                 }
-                -2 -> // переход к предыдущему фрагменту
-                {
+                AddGameDestination.CANCEL -> { // закрытие окна добавления игры
+                    this.dismiss()
+                }
+                AddGameDestination.PREVIOUS -> { // переход к предыдущему фрагменту
                     fragment.putGameInBundle()
                     binding.addGameFragmentContainer.findNavController().popBackStack()
                 }
@@ -70,11 +71,15 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
     }
 
     private fun checkCurrentFragmentPosition() {
-        // выключаем кнопку previous, если показывается первый фрагмент
-        binding.previousButton.isEnabled = addNewGameViewModel.currentPosition != 0
+        Log.d(TAG, "checkCurrentFragmentPosition: ${addNewGameViewModel.currentPosition}")
+        //  меняем текст на кнопке previous, если показывается первый фрагмент
+        if (addNewGameViewModel.currentPosition == 0)
+            binding.previousButton.setText(R.string.cancel)
+        else
+            binding.previousButton.setText(R.string.previous)
 
         // меняем текст на кнопке next, если показывается последний фрагмент
-        if (addNewGameViewModel.currentPosition == AddGameDestination.values().size-3)
+        if (addNewGameViewModel.currentPosition == AddGameDestination.values().size-1 - 3)
             binding.nextButton.setText(R.string.create)
         else
             binding.nextButton.setText(R.string.next)

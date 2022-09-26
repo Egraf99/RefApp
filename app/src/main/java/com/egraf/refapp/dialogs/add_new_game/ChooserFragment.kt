@@ -21,10 +21,9 @@ private const val ARG_RESERVE_REF = "ReserveRefereeBundleKey"
 private const val ARG_INSPECTOR = "InspectorBundleKey"
 
 private const val TAG = "AddGame"
+private const val BUNDLE_KEY = "BundleKey"
 
 abstract class ChooserFragment : Fragment() {
-    private val BUNDLE_KEY = "BundleKey"
-
     abstract fun updateUI()
 
     protected val addNewGameViewModel: AddNewGameViewModel by lazy {
