@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.egraf.refapp.R
-import com.egraf.refapp.ScreenMetricsCompat
 import com.egraf.refapp.databinding.AddNewGameDialogBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -61,7 +60,6 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupFullHeight()
         binding.previousButton.setOnClickListener { addNewGameViewModel.showPreviousFragment() }
         binding.nextButton.setOnClickListener { addNewGameViewModel.showNextFragment() }
     }
@@ -69,13 +67,6 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-    }
-
-    private fun setupFullHeight() {
-        val windowHeight = ScreenMetricsCompat.getScreenSize(requireContext()).height
-        val params = binding.bottomSheet.layoutParams
-        params.height = windowHeight
-        binding.bottomSheet.layoutParams = params
     }
 
     private fun checkCurrentFragmentPosition() {
