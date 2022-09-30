@@ -36,7 +36,7 @@ class AddNewGameViewModel: ViewModelWithEntitiesAndGame() {
 
     fun showNextFragment() {
         currentPosition += 1
-        if (currentPosition >= AddGameDestination.values().size-1 - 3)
+        if (currentPosition > AddGameDestination.values().size-1 - 3)
             _destination.value = AddGameDestination.CREATE
         else
             _destination.value = AddGameDestination.values()[currentPosition]
