@@ -1,10 +1,11 @@
 package com.egraf.refapp
 
 import android.app.Application
+import com.egraf.refapp.database.source.LocalGameDataSource
 
 class RefIntentApplication: Application() {
     override fun onCreate() {
         super.onCreate()
-        GameRepository.initialize(this)
+        GameRepository.initialize(LocalGameDataSource(this))
     }
 }
