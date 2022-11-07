@@ -12,12 +12,6 @@ class FakeGameDataSource : GameDataSource {
     private val leagues = mutableListOf<League>()
     private val referees = mutableListOf<Referee>()
 
-    init {
-        teams.add(Team(name = "Команда"))
-        stadiums.add(Stadium(name = "Стадион"))
-        leagues.add(League(name = "Лига"))
-        referees.add(Referee(firstName = "Имя", secondName = "Фамилия", thirdName = "Отчество"))
-    }
     // games block
     override fun getGames(): LiveData<List<GameWithAttributes>> = MutableLiveData(games)
     override fun countGames(): LiveData<Int> = MutableLiveData(games.size)

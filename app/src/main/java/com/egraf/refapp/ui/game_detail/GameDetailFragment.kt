@@ -21,6 +21,7 @@ import com.egraf.refapp.dialogs.TimePickerFragment
 import com.egraf.refapp.ui.FragmentWithToolbar
 import com.egraf.refapp.views.textInput.RefereeETI
 import com.egraf.refapp.views.textInput.TeamETI
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 private const val TAG = "GameFragment"
@@ -32,6 +33,7 @@ private const val REQUEST_DELETE = "DialogDelete"
 private const val DATE_FORMAT = "EEE dd.MM.yyyy"
 private const val TIME_FORMAT = "HH:mm"
 
+@AndroidEntryPoint
 class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
 
     private val binding get() = _binding!!

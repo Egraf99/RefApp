@@ -9,9 +9,12 @@ import com.egraf.refapp.interface_viewmodel.all.RefereeInterface
 import com.egraf.refapp.interface_viewmodel.all.StadiumInterface
 import com.egraf.refapp.interface_viewmodel.all.TeamInterface
 import com.egraf.refapp.ui.ViewModelWithGame
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
+import javax.inject.Inject
 
-class GameDetailViewModel : ViewModelWithGame(),
+@HiltViewModel
+class GameDetailViewModel @Inject constructor(): ViewModelWithGame(),
 TeamInterface, LeagueInterface, StadiumInterface, RefereeInterface {
     private val gameIdLiveData = MutableLiveData<UUID>()
 
