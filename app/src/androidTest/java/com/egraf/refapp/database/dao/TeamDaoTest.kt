@@ -2,9 +2,13 @@ package com.egraf.refapp.database.dao
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
+import com.egraf.refapp.GameRepository
 import com.egraf.refapp.database.GameDatabase
 import com.egraf.refapp.database.entities.Team
+import com.egraf.refapp.database.source.FakeGameDataSource
 import com.egraf.refapp.getOrAwaitValue
+import com.egraf.refapp.launchFragmentInHiltContainer
+import com.egraf.refapp.ui.game_list.GameListFragment
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -35,6 +39,7 @@ class TeamDaoTest {
 
     @Before
     fun setup() {
+        GameRepository.initialize(FakeGameDataSource())
         hiltRule.inject()
         teamDao = database.teamDao()
     }
@@ -42,6 +47,11 @@ class TeamDaoTest {
     @After
     fun teardown() {
         database.close()
+    }
+
+    @Test
+    fun testLaunchFragmentHiltContainer() {
+        launchFragmentInHiltContainer<GameListFragment> {  }
     }
 
     @Test
