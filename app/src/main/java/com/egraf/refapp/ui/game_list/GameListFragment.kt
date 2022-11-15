@@ -82,7 +82,7 @@ class GameListFragment: FragmentWithToolbar() {
         }
     }
 
-    private inner class GameHolder(val binding: ListItemGameBinding) :
+    public inner class GameHolder(val binding: ListItemGameBinding) :
         RecyclerView.ViewHolder(binding.root),
         View.OnClickListener {
         private lateinit var gameWithAttributes: GameWithAttributes

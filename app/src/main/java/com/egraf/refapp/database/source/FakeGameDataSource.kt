@@ -5,12 +5,21 @@ import androidx.lifecycle.MutableLiveData
 import com.egraf.refapp.database.entities.*
 import java.util.*
 
-class FakeGameDataSource : GameDataSource {
+class FakeGameDataSource(private val initFakeData: Boolean = false) : GameDataSource {
     private val games = mutableListOf<GameWithAttributes>()
     private val teams = mutableListOf<Team>()
     private val stadiums = mutableListOf<Stadium>()
     private val leagues = mutableListOf<League>()
     private val referees = mutableListOf<Referee>()
+    val fillFakeData = {
+        val fakeGame = Game(id = fakeUUID)
+        addGame(fakeGame)
+    }
+
+    init {
+        if (initFakeData) fillFakeData()
+    }
+
 
     // games block
     override fun getGames(): LiveData<List<GameWithAttributes>> = MutableLiveData(games)
@@ -94,5 +103,9 @@ class FakeGameDataSource : GameDataSource {
     override fun getReferees(): LiveData<List<Referee>> = MutableLiveData(referees)
     override fun addReferee(referee: Referee) {
         referees.add(referee)
+    }
+
+    companion object {
+        val fakeUUID = UUID.randomUUID()
     }
 }
