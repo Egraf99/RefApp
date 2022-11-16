@@ -87,7 +87,7 @@ open class EntityTextInput(context: Context, attrs: AttributeSet? = null) :
     /**
      * Функция, вызываемая при долгом нажатии
      */
-    private fun onLongClick(view: View) {
+    protected open fun onLongClick(view: View) {
         Log.d(TAG, "onLongClick: long click on $view")
     }
 

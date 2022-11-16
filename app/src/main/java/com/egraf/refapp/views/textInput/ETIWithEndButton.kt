@@ -136,6 +136,9 @@ abstract class ETIWithEndButton(context: Context, attrs: AttributeSet? = null) :
         }
     }
 
-    abstract fun setParentFragmentManager(fragment: Fragment)
+    protected lateinit var parentFragment: Fragment
+    protected open fun setParentFragmentManager(fragment: Fragment) {
+        parentFragment = fragment
+    }
 
 }

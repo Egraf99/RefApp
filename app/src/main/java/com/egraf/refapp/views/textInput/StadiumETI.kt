@@ -33,6 +33,7 @@ class StadiumETI(context: Context, attrs: AttributeSet? = null) :
     }
 
     override fun setParentFragmentManager(fragment: Fragment) {
+        super.setParentFragmentManager(fragment)
         fragment.parentFragmentManager.setFragmentResultListener(
             REQUEST_ADD_STADIUM,
             fragment.viewLifecycleOwner,

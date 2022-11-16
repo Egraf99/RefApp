@@ -40,6 +40,7 @@ class TeamETI(context: Context, attrs: AttributeSet? = null) :
     }
 
     override fun setParentFragmentManager(fragment: Fragment) {
+        super.setParentFragmentManager(fragment)
         fragment.parentFragmentManager.setFragmentResultListener(
             typeTeam.requestKey,
             fragment.viewLifecycleOwner,
