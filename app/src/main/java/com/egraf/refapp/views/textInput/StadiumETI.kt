@@ -3,9 +3,11 @@ package com.egraf.refapp.views.textInput
 import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
+import com.egraf.refapp.InputFragment
 import com.egraf.refapp.dialogs.entity_add_dialog.StadiumAddDialog
 import com.egraf.refapp.interface_viewmodel.all.StadiumInterface
 
@@ -39,6 +41,11 @@ class StadiumETI(context: Context, attrs: AttributeSet? = null) :
             fragment.viewLifecycleOwner,
             this
         )
+    }
+
+    override fun onLongClick(view: View) {
+        super.onLongClick(view)
+        InputFragment("Stadium", listOf()).show(parentFragment.parentFragmentManager, null)
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {

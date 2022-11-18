@@ -38,7 +38,7 @@ class LeagueETI(context: Context, attrs: AttributeSet? = null) :
     override fun onLongClick(view: View) {
         super.onLongClick(view)
         Log.d(TAG, "longClick")
-        InputFragment().show(parentFragment.parentFragmentManager, null)
+        InputFragment("League", listOf("One element")).show(parentFragment.parentFragmentManager, null)
     }
 
     override fun setParentFragmentManager(fragment: Fragment) {

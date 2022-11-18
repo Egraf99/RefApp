@@ -25,7 +25,7 @@ private const val DATE_FORMAT = "dd.MM.yyyy (EE) HH:mm"
 class GameListFragment: FragmentWithToolbar() {
     private var _binding: FragmentGameListBinding? = null
     private val binding get() = _binding!!
-    private var adapter: GameAdapter? = GameAdapter()
+    private var adapter: GameAdapter = GameAdapter()
     private val gameListViewModel: GameListViewModel by lazy {
         ViewModelProvider(this)[GameListViewModel::class.java]
     }
@@ -69,7 +69,7 @@ class GameListFragment: FragmentWithToolbar() {
 
     private fun updateUI(games: List<GameWithAttributes>) {
         Log.d(TAG, "updateUI() called with: games = $games")
-        adapter?.submitList(games)
+        adapter.submitList(games)
     }
 
     private fun showEmptyListRepresent(count: Int) {
