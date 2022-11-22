@@ -10,7 +10,7 @@ import java.util.*
 @Entity
 data class Referee(
     @PrimaryKey
-    var id: UUID = UUID.randomUUID(),
+    override var id: UUID = UUID.randomUUID(),
     var firstName: String = "",
     var secondName: String = "",
     var thirdName: String = "",

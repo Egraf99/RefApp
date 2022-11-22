@@ -10,7 +10,7 @@ import java.util.*
 @Entity
 data class Stadium(
     @PrimaryKey
-    var id: UUID = UUID.randomUUID(),
+    override var id: UUID = UUID.randomUUID(),
     var name: String = ""
 ): com.egraf.refapp.database.entities.Entity, Parcelable {
     override val shortName: String

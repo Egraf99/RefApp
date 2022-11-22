@@ -10,7 +10,7 @@ import java.util.*
 @Entity
 data class Game(
     @PrimaryKey
-    var id: UUID = UUID.randomUUID(),
+    override var id: UUID = UUID.randomUUID(),
     var date: Date = Date(),
     var homeTeamId: UUID? = null,
     var guestTeamId: UUID? = null,
@@ -32,38 +32,5 @@ data class Game(
 
     override fun setEntityName(text: String): Game {
         return this
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (other !is Game) return false
-        return this.id == other.id &&
-                this.homeTeamId == other.homeTeamId &&
-                this.guestTeamId == other.guestTeamId &&
-                this.stadiumId == other.stadiumId &&
-                this.leagueId == other.leagueId &&
-                this.isPaid == other.isPaid &&
-                this.isPassed == other.isPassed &&
-                this.chiefRefereeId == other.chiefRefereeId &&
-                this.firstRefereeId == other.firstRefereeId &&
-                this.secondRefereeId == other.secondRefereeId &&
-                this.reserveRefereeId == other.reserveRefereeId &&
-                this.inspectorId == other.inspectorId
-    }
-
-    override fun hashCode(): Int {
-        var result = id.hashCode()
-        result = 31 * result + date.hashCode()
-        result = 31 * result + (homeTeamId?.hashCode() ?: 0)
-        result = 31 * result + (guestTeamId?.hashCode() ?: 0)
-        result = 31 * result + (stadiumId?.hashCode() ?: 0)
-        result = 31 * result + (leagueId?.hashCode() ?: 0)
-        result = 31 * result + isPaid.hashCode()
-        result = 31 * result + isPassed.hashCode()
-        result = 31 * result + (chiefRefereeId?.hashCode() ?: 0)
-        result = 31 * result + (firstRefereeId?.hashCode() ?: 0)
-        result = 31 * result + (secondRefereeId?.hashCode() ?: 0)
-        result = 31 * result + (reserveRefereeId?.hashCode() ?: 0)
-        result = 31 * result + (inspectorId?.hashCode() ?: 0)
-        return result
     }
 }
