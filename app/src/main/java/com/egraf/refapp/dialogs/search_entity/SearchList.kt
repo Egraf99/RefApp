@@ -12,13 +12,20 @@ sealed class SearchList<out E> {
         other.javaClass == this.javaClass -> Companion.equals(this, other as SearchList<E>)
         else -> false
     }
+
     override fun hashCode(): Int {
         return javaClass.hashCode()
     }
 
+    fun filter(p: (E) -> Boolean): SearchList<E> = foldLeft(Nil as SearchList<E>) { acc ->
+        { e -> if (p(e)) acc.cons(e) else acc }
+    }.reverse()
 
     fun cons(e: @UnsafeVariance E): SearchList<E> = Cons(e, this)
     fun toList(): List<E> = toList(this, listOf())
+    fun reverse(): SearchList<E> =
+        this.foldLeft(Nil as SearchList<E>) { acc -> { e -> acc.cons(e) } }
+
     fun <B> foldLeft(identity: B, f: (B) -> (E) -> B): B {
         tailrec fun foldLeft(acc: B, sl: SearchList<E>, f: (B) -> (E) -> B): B = when (sl) {
             is Nil -> acc

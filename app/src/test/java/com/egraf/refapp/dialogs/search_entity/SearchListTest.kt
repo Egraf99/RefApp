@@ -8,11 +8,13 @@ import org.junit.Test
 class SearchListTest {
     private lateinit var l1: League
     private lateinit var l2: League
+    private lateinit var l3: League
 
     @Before
     fun setup() {
         l1 = League(name = "Some")
         l2 = League(name = "Body")
+        l3 = League(name = "Was")
     }
 
     // toString()
@@ -54,9 +56,30 @@ class SearchListTest {
         assertThat(sl1 == sl2).isTrue()
     }
     @Test
-    fun `equals() should return false if not all elements are same`() {
+    fun `equals() should return false if one sList are shorter than other`() {
         val sl1 = SearchList(l1)
         val sl2 = SearchList(l1, l2)
         assertThat(sl1 == sl2).isFalse()
+    }
+    @Test
+    fun `equals() should return false if not all elements are same`() {
+        val sl1 = SearchList(l1, l3)
+        val sl2 = SearchList(l1, l2)
+        assertThat(sl1 == sl2).isFalse()
+    }
+    @Test
+    fun `equals() should return false if one sList is empty`() {
+        val sl1 = SearchList<League>()
+        val sl2 = SearchList(l1, l2)
+        assertThat(sl1 == sl2).isFalse()
+    }
+
+    // filter()
+    @Test
+    fun `sList_filter() should return filtering sList by predicate`() {
+        val sl = SearchList(l1, l2, l3)
+        val slFilter = sl.filter { it.name != "Some" }
+        val slCheck = SearchList(l2, l3)
+        assertThat(slFilter).isEqualTo(slCheck)
     }
 }
