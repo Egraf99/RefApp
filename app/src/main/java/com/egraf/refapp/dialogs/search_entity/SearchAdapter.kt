@@ -11,7 +11,7 @@ import com.egraf.refapp.database.entities.Entity
 import com.egraf.refapp.databinding.SearchEntityItemBinding
 import com.egraf.refapp.databinding.SearchNewEntityItemBinding
 
-private const val TAG = "InputFragment"
+private const val TAG = "SearchAdapter"
 
 class SearchAdapter :
     ListAdapter<Entity, SearchHolder>(SearchDiffUtil) {

@@ -1,6 +1,7 @@
 package com.egraf.refapp.dialogs.search_entity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.Entity
+import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.SearchEntityFragmentBinding
 
 private const val ARG_TITLE = "TitleBundleKey"
@@ -34,10 +36,17 @@ class SearchDialogFragment :
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.liveDataListStadium().observe(viewLifecycleOwner) { stadiums: List<Stadium> ->
+            viewModel.setItems(stadiums)
+            adapter.submitList(stadiums)
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         binding.txtTitle.text = arguments?.getString(ARG_TITLE)
-        adapter.submitList(viewModel.listItems())
         binding.updateButton.setOnClickListener {
             adapter.submitList(viewModel.shortListItems())
         }
