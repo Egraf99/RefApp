@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.get
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +23,7 @@ class SearchDialogFragment(private val title: String, private val items: SearchL
     DialogFragment(R.layout.search_entity_fragment) {
 
     private val viewModel: SearchViewModel by lazy {
-        ViewModelProvider(this)[SearchViewModel::class.java]
+        ViewModelProvider(this, SearchViewModelFactory(items))[SearchViewModel::class.java]
     }
     private val binding get() = _binding!!
     private var _binding: SearchEntityFragmentBinding? = null
@@ -42,9 +43,9 @@ class SearchDialogFragment(private val title: String, private val items: SearchL
     override fun onStart() {
         super.onStart()
         binding.txtTitle.text = title
-        adapter.submitList(items.toList())
+        adapter.submitList(viewModel.listItems())
         binding.updateButton.setOnClickListener {
-            adapter.submitList(items.toList())
+            adapter.submitList(viewModel.listItems())
         }
     }
 
