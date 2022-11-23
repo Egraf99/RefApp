@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import com.egraf.refapp.dialogs.entity_add_dialog.LeagueAddDialog
-import com.egraf.refapp.dialogs.search_entity.InputFragment
 import com.egraf.refapp.interface_viewmodel.all.LeagueInterface
 
 private const val REQUEST_ADD_LEAGUE = "requestAddLeague"
@@ -38,7 +37,6 @@ class LeagueETI(context: Context, attrs: AttributeSet? = null) :
     override fun onLongClick(view: View) {
         super.onLongClick(view)
         Log.d(TAG, "longClick")
-        InputFragment("League", listOf("One element")).show(parentFragment.parentFragmentManager, null)
     }
 
     override fun setParentFragmentManager(fragment: Fragment) {

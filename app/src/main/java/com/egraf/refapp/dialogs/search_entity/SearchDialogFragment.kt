@@ -13,11 +13,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.R
+import com.egraf.refapp.database.entities.Entity
 import com.egraf.refapp.database.entities.League
 import com.egraf.refapp.databinding.SearchEntityFragmentBinding
 import com.egraf.refapp.databinding.SearchEntityItemBinding
 
-class InputFragment(private val title: String, private val items: List<String>) :
+class SearchDialogFragment(private val title: String, private val items: SearchList<Entity>) :
     DialogFragment(R.layout.search_entity_fragment) {
 
     private val viewModel: SearchViewModel by lazy {
@@ -41,9 +42,9 @@ class InputFragment(private val title: String, private val items: List<String>) 
     override fun onStart() {
         super.onStart()
         binding.txtTitle.text = title
-        adapter.submitList(viewModel.getTestList())
+        adapter.submitList(items.toList())
         binding.updateButton.setOnClickListener {
-            adapter.submitList(viewModel.getUpdateTestList())
+            adapter.submitList(items.toList())
         }
     }
 
