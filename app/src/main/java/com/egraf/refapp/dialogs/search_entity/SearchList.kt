@@ -1,7 +1,21 @@
 package com.egraf.refapp.dialogs.search_entity
 
+import com.egraf.refapp.database.entities.League
+
+fun <E> List<E>.toSearchList(): SearchList<E> =
+    this.foldRight(SearchList.Nil as SearchList<E>) { e, acc -> acc.cons(e) }
+
 sealed class SearchList<out E> {
     abstract fun isEmpty(): Boolean
+    override fun equals(other: Any?): Boolean = when {
+        other == null -> false
+        other.javaClass == this.javaClass -> Companion.equals(this, other as SearchList<E>)
+        else -> false
+    }
+    override fun hashCode(): Int {
+        return javaClass.hashCode()
+    }
+
 
     fun cons(e: @UnsafeVariance E): SearchList<E> = Cons(e, this)
     fun toList(): List<E> = toList(this, listOf())
@@ -14,7 +28,7 @@ sealed class SearchList<out E> {
     }
 
 
-    private object Nil : SearchList<Nothing>() {
+    internal object Nil : SearchList<Nothing>() {
         override fun isEmpty(): Boolean = false
         override fun toString(): String = "[NIL]"
     }
@@ -44,5 +58,23 @@ sealed class SearchList<out E> {
                     l + listOf(e)
                 }
             }
+        tailrec fun <E> equals(sl1: SearchList<E>, sl2: SearchList<E>): Boolean = when (sl1) {
+            is Nil -> when (sl2) {
+                is Nil -> true
+                is Cons -> false
+            }
+            is Cons -> when (sl2) {
+                is Nil -> false
+                is Cons -> when {
+                    sl1.head != sl2.head -> false
+                    else -> equals(sl1.tail, sl2.tail)
+                }
+            }
+        }
     }
+}
+
+fun main() {
+    val ls = listOf(League(name = "Some"), League(name = "Body"))
+    println(ls.toSearchList())
 }
