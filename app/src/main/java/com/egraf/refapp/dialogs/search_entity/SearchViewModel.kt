@@ -1,23 +1,29 @@
 package com.egraf.refapp.dialogs.search_entity
 
-import android.util.Log
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.database.entities.Entity
+import com.egraf.refapp.database.entities.League
+import com.egraf.refapp.ui.ViewModelWithGameRepo
 
 private const val TAG = "SearchViewModel"
 
-class SearchViewModel(private val items: SearchList<Entity>) : ViewModel() {
-    fun listItems(): List<Entity> = items.toList()
+val getTestList: () -> SearchList<League> = {
+    SearchList(
+        League(name = "Third"),
+        League(name = "Second"),
+        League(name = "Third"),
+        League(name = "Some"),
+        League(name = "Body"),
+        League(name = "Was"),
+        League(name = "Told"),
+    )
+}
+val getUpdateTestList: () -> SearchList<League> = {
+    SearchList(
+        League(name = "Update"),
+    )
 }
 
-class SearchViewModelFactory(private val items: SearchList<Entity>): ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(SearchViewModel::class.java)) {
-            return SearchViewModel(items) as T
-        }
-        throw IllegalArgumentException("ViewModel class not found")
-    }
-
+class SearchViewModel : ViewModelWithGameRepo() {
+    fun listItems(): List<Entity> = getTestList().toList()
+    fun shortListItems(): List<Entity> = getUpdateTestList().toList()
 }

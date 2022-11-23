@@ -1,29 +1,23 @@
 package com.egraf.refapp.dialogs.search_entity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.get
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.Entity
-import com.egraf.refapp.database.entities.League
 import com.egraf.refapp.databinding.SearchEntityFragmentBinding
-import com.egraf.refapp.databinding.SearchEntityItemBinding
 
-class SearchDialogFragment(private val title: String, private val items: SearchList<Entity>) :
+private const val ARG_TITLE = "TitleBundleKey"
+
+class SearchDialogFragment :
     DialogFragment(R.layout.search_entity_fragment) {
 
     private val viewModel: SearchViewModel by lazy {
-        ViewModelProvider(this, SearchViewModelFactory(items))[SearchViewModel::class.java]
+        ViewModelProvider(this)[SearchViewModel::class.java]
     }
     private val binding get() = _binding!!
     private var _binding: SearchEntityFragmentBinding? = null
@@ -42,10 +36,10 @@ class SearchDialogFragment(private val title: String, private val items: SearchL
 
     override fun onStart() {
         super.onStart()
-        binding.txtTitle.text = title
+        binding.txtTitle.text = arguments?.getString(ARG_TITLE)
         adapter.submitList(viewModel.listItems())
         binding.updateButton.setOnClickListener {
-            adapter.submitList(viewModel.listItems())
+            adapter.submitList(viewModel.shortListItems())
         }
     }
 
@@ -54,4 +48,15 @@ class SearchDialogFragment(private val title: String, private val items: SearchL
         _binding = null
     }
 
+    companion object {
+        fun newInstance(title: String):SearchDialogFragment {
+            val args = Bundle().apply {
+                putString(ARG_TITLE, title)
+            }
+
+            return SearchDialogFragment().apply {
+                arguments = args
+            }
+        }
+    }
 }

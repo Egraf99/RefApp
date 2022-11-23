@@ -45,27 +45,10 @@ class StadiumETI(context: Context, attrs: AttributeSet? = null) :
         )
     }
 
-    val getTestList: () -> SearchList<League> = {
-        SearchList(
-            League(name = "Third"),
-            League(name = "Second"),
-            League(name = "Third"),
-            League(name = "Some"),
-            League(name = "Body"),
-            League(name = "Was"),
-            League(name = "Told"),
-        )
-    }
-    val getUpdateTestList: () -> List<League> = {
-        listOf(
-            League(name = "Update"),
-        )
-    }
-
-
     override fun onLongClick(view: View) {
         super.onLongClick(view)
-        SearchDialogFragment("Stadium", getTestList()).show(parentFragment.parentFragmentManager, null)
+        SearchDialogFragment.newInstance("Stadium")
+            .show(parentFragment.parentFragmentManager, null)
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
