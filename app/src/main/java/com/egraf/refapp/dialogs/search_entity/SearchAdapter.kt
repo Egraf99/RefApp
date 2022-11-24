@@ -14,9 +14,13 @@ import com.egraf.refapp.databinding.SearchNewEntityItemBinding
 private const val TAG = "SearchAdapter"
 
 class SearchAdapter :
-    ListAdapter<Entity, SearchHolder>(SearchDiffUtil) {
+    RecyclerView.Adapter<SearchHolder>() {
 
-    private val countOfSpecialItems = 1
+    private var searchItems = emptyList<SearchItem>()
+
+    fun setSearchItems(items: List<SearchItem>) {
+        searchItems = items
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchHolder =
         when (viewType) {
@@ -29,37 +33,37 @@ class SearchAdapter :
                     )
                 )
 
-//            R.layout.search_new_entity_item ->
-//                SearchHolder.AddNewEntityHolder(
-//                    SearchNewEntityItemBinding.inflate(
-//                        LayoutInflater.from(parent.context),
-//                        parent,
-//                        false
-//                    )
-//                )
-            else -> throw IllegalStateException("Invalid ViewType provider")
+            R.layout.search_new_entity_item ->
+                SearchHolder.AddNewEntityHolder(
+                    SearchNewEntityItemBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                )
+            else -> throw IllegalStateException("Invalid ViewType provider: $viewType")
         }
 
     override fun onBindViewHolder(holder: SearchHolder, position: Int) {
         when (holder) {
             is SearchHolder.AddNewEntityHolder -> {}
             is SearchHolder.EntityHolder -> {
-                val entity = currentList[position]
-                Log.d(TAG, "binding $entity")
-                holder.bind(entity)
+                val entityItem = searchItems[position] as SearchItem.EntityItem
+                Log.d(TAG, "binding $entityItem")
+                holder.bind(entityItem)
             }
         }
     }
 
-    override fun getItemCount() = currentList.size
-    override fun getItemViewType(position: Int): Int = when (position) {
-//        0 -> R.layout.search_new_entity_item
-        else -> R.layout.search_entity_item
+    override fun getItemCount() = searchItems.size
+    override fun getItemViewType(position: Int): Int = when (searchItems[position]) {
+        is SearchItem.AddNewItem -> R.layout.search_new_entity_item
+        is SearchItem.EntityItem -> R.layout.search_entity_item
     }
 }
 
 
-private object SearchDiffUtil : DiffUtil.ItemCallback<Entity>() {
-    override fun areItemsTheSame(oldItem: Entity, newItem: Entity): Boolean = oldItem.id == newItem.id
-    override fun areContentsTheSame(oldItem: Entity, newItem: Entity): Boolean = oldItem == newItem
-}
+//private object SearchDiffUtil : DiffUtil.ItemCallback<SearchItem>() {
+//    override fun areItemsTheSame(oldItem: Entity, newItem: Entity): Boolean = oldItem.id == newItem.id
+//    override fun areContentsTheSame(oldItem: Entity, newItem: Entity): Boolean = oldItem == newItem
+//}
