@@ -1,6 +1,8 @@
 package com.egraf.refapp.dialogs.search_entity
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +17,7 @@ import com.egraf.refapp.databinding.SearchEntityFragmentBinding
 
 private const val ARG_TITLE = "TitleBundleKey"
 private const val TAG = "SearchDialogFragment"
+private const val LENGTH_TEXT_BEFORE_FILTER: Int = 0
 
 class SearchDialogFragment :
     DialogFragment(R.layout.search_entity_fragment) {
@@ -53,11 +56,22 @@ class SearchDialogFragment :
     override fun onStart() {
         super.onStart()
         binding.titleTv.text = arguments?.getString(ARG_TITLE)
-        binding.updateButton.setOnClickListener {
-            val items = viewModel.filterItems(binding.searchInput.text.toString()).toList()
-            Log.d(TAG, "receive list: $items")
-            updateItems(adapter, items)
-        }
+        binding.searchInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s == null) return
+                if (s.length > LENGTH_TEXT_BEFORE_FILTER) {
+                    val filteringItems = viewModel.filterItems(s.toString()).toList()
+                    Log.d(TAG, "update RV after items after filtering: $filteringItems")
+                    updateItems(adapter, filteringItems)
+                } else {
+                    Log.d(TAG, "update RV with all items: ${viewModel.items}")
+                    updateItems(adapter, viewModel.items)
+                }
+            }
+        })
     }
 
     override fun onDestroy() {
