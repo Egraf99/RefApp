@@ -14,56 +14,35 @@ import com.egraf.refapp.databinding.SearchNewEntityItemBinding
 private const val TAG = "SearchAdapter"
 
 class SearchAdapter :
-    RecyclerView.Adapter<SearchHolder>() {
+    RecyclerView.Adapter<EntityHolder>() {
 
-    private var searchItems = emptyList<SearchItem>()
+    private var searchItems = emptyList<Entity>()
 
-    fun setSearchItems(items: List<SearchItem>) {
+    fun setSearchItems(items: List<Entity>) {
         searchItems = items
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchHolder =
-        when (viewType) {
-            R.layout.search_entity_item ->
-                SearchHolder.EntityHolder(
-                    SearchEntityItemBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                    )
-                )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EntityHolder =
+        EntityHolder(
+            SearchEntityItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
 
-            R.layout.search_new_entity_item ->
-                SearchHolder.AddNewEntityHolder(
-                    SearchNewEntityItemBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                    )
-                )
-            else -> throw IllegalStateException("Invalid ViewType provider: $viewType")
-        }
-
-    override fun onBindViewHolder(holder: SearchHolder, position: Int) {
-        when (holder) {
-            is SearchHolder.AddNewEntityHolder -> {}
-            is SearchHolder.EntityHolder -> {
-                val entityItem = searchItems[position] as SearchItem.EntityItem
-                Log.d(TAG, "binding $entityItem")
-                holder.bind(entityItem)
-            }
-        }
+    override fun onBindViewHolder(holder: EntityHolder, position: Int) {
+        val entityItem = searchItems[position]
+        Log.d(TAG, "binding $entityItem")
+        holder.bind(entityItem)
     }
 
     override fun getItemCount() = searchItems.size
-    override fun getItemViewType(position: Int): Int = when (searchItems[position]) {
-        is SearchItem.AddNewItem -> R.layout.search_new_entity_item
-        is SearchItem.EntityItem -> R.layout.search_entity_item
-    }
 }
 
-
-//private object SearchDiffUtil : DiffUtil.ItemCallback<SearchItem>() {
-//    override fun areItemsTheSame(oldItem: Entity, newItem: Entity): Boolean = oldItem.id == newItem.id
-//    override fun areContentsTheSame(oldItem: Entity, newItem: Entity): Boolean = oldItem == newItem
-//}
+class EntityHolder(private val binding: SearchEntityItemBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+    fun bind(item: Entity) {
+        binding.textView.text = item.shortName
+    }
+}

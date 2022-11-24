@@ -40,13 +40,12 @@ class SearchDialogFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.liveDataListStadium().observe(viewLifecycleOwner) { stadiums: List<Stadium> ->
-            val searchList = viewModel.toSearchItem(stadiums).addNewItem()
-            viewModel.setItems(searchList)
-            updateItems(adapter, searchList)
+            viewModel.items = stadiums
+            updateItems(adapter, stadiums)
         }
     }
 
-    private fun updateItems(adapter: SearchAdapter, items: List<SearchItem>) {
+    private fun updateItems(adapter: SearchAdapter, items: List<Entity>) {
         adapter.setSearchItems(items)
         binding.itemsRv.adapter = adapter
     }
