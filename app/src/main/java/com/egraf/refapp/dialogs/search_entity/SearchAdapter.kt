@@ -29,14 +29,14 @@ class SearchAdapter :
                     )
                 )
 
-            R.layout.search_new_entity_item ->
-                SearchHolder.AddNewEntityHolder(
-                    SearchNewEntityItemBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                    )
-                )
+//            R.layout.search_new_entity_item ->
+//                SearchHolder.AddNewEntityHolder(
+//                    SearchNewEntityItemBinding.inflate(
+//                        LayoutInflater.from(parent.context),
+//                        parent,
+//                        false
+//                    )
+//                )
             else -> throw IllegalStateException("Invalid ViewType provider")
         }
 
@@ -44,16 +44,16 @@ class SearchAdapter :
         when (holder) {
             is SearchHolder.AddNewEntityHolder -> {}
             is SearchHolder.EntityHolder -> {
-                val entity = currentList[position - countOfSpecialItems]
+                val entity = currentList[position]
                 Log.d(TAG, "binding $entity")
                 holder.bind(entity)
             }
         }
     }
 
-    override fun getItemCount() = currentList.size + countOfSpecialItems
+    override fun getItemCount() = currentList.size
     override fun getItemViewType(position: Int): Int = when (position) {
-        0 -> R.layout.search_new_entity_item
+//        0 -> R.layout.search_new_entity_item
         else -> R.layout.search_entity_item
     }
 }

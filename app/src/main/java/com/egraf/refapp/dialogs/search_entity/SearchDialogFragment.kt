@@ -14,6 +14,7 @@ import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.SearchEntityFragmentBinding
 
 private const val ARG_TITLE = "TitleBundleKey"
+private const val TAG = "SearchDialogFragment"
 
 class SearchDialogFragment :
     DialogFragment(R.layout.search_entity_fragment) {
@@ -31,8 +32,8 @@ class SearchDialogFragment :
         savedInstanceState: Bundle?
     ): View {
         _binding = SearchEntityFragmentBinding.inflate(inflater)
-        binding.rvItems.layoutManager = LinearLayoutManager(context)
-        binding.rvItems.adapter = adapter
+        binding.itemsRv.layoutManager = LinearLayoutManager(context)
+        binding.itemsRv.adapter = adapter
         return binding.root
     }
 
@@ -46,9 +47,11 @@ class SearchDialogFragment :
 
     override fun onStart() {
         super.onStart()
-        binding.txtTitle.text = arguments?.getString(ARG_TITLE)
+        binding.titleTv.text = arguments?.getString(ARG_TITLE)
         binding.updateButton.setOnClickListener {
-            adapter.submitList(viewModel.shortListItems())
+            val list = viewModel.filterItems(binding.searchInput.text.toString()).toList()
+            Log.d(TAG, "receive list: $list")
+            adapter.submitList(list)
         }
     }
 
