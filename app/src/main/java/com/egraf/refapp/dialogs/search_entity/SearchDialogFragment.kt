@@ -44,12 +44,17 @@ class SearchDialogFragment :
         super.onViewCreated(view, savedInstanceState)
         viewModel.liveDataListStadium().observe(viewLifecycleOwner) { stadiums: List<Stadium> ->
             viewModel.items = stadiums
-            updateItems(adapter, stadiums)
+            // сразу фильтруем по тексту
+            // (если в searchInput сохранился текст при изменении конфигурации)
+            updateItems(adapter, viewModel.filterItems(binding.searchInput.text.toString()))
         }
     }
 
     private fun updateItems(adapter: SearchAdapter, items: List<Entity>) {
-        adapter.setSearchItems(items)
+        if (items.isEmpty())
+            adapter.setSearchItems(viewModel.emptyItemList)
+        else
+            adapter.setSearchItems(items)
         binding.itemsRv.adapter = adapter
     }
 

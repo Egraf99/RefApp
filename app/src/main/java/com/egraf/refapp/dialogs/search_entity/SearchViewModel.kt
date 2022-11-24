@@ -9,6 +9,7 @@ private const val TAG = "SearchViewModel"
 
 class SearchViewModel : ViewModelWithGameRepo() {
     var items = listOf<Entity>()
+    val emptyItemList = listOf<Entity>(Entity.Companion.Empty)
 
     fun liveDataListStadium(): LiveData<List<Stadium>> = gameRepository.getStadiums()
     fun filterItems(str: String): List<Entity> =
