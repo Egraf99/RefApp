@@ -52,9 +52,9 @@ class SearchDialogFragment :
 
     private fun updateItems(adapter: SearchAdapter, items: List<Entity>) {
         if (items.isEmpty())
-            adapter.setSearchItems(viewModel.emptyItemList)
+            adapter.submitList(viewModel.emptyItemList)
         else
-            adapter.setSearchItems(items)
+            adapter.submitList(items)
         binding.itemsRv.adapter = adapter
     }
 

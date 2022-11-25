@@ -3,6 +3,8 @@ package com.egraf.refapp.dialogs.search_entity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.egraf.refapp.R
@@ -13,13 +15,7 @@ import com.egraf.refapp.databinding.SearchEntityItemBinding
 private const val TAG = "SearchAdapter"
 
 class SearchAdapter :
-    RecyclerView.Adapter<SearchHolder>() {
-
-    private var searchItems = emptyList<Entity>()
-
-    fun setSearchItems(items: List<Entity>) {
-        searchItems = items
-    }
+    ListAdapter<Entity, SearchHolder>(SearchDU()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchHolder =
         when (viewType) {
@@ -43,7 +39,7 @@ class SearchAdapter :
     override fun onBindViewHolder(holder: SearchHolder, position: Int) {
         when (holder) {
             is SearchHolder.EntityHolder -> {
-                val entityItem = searchItems[position]
+                val entityItem = currentList[position]
                 Log.d(TAG, "binding $entityItem")
                 holder.bind(entityItem)
             }
@@ -51,12 +47,17 @@ class SearchAdapter :
         }
     }
 
-    override fun getItemCount() = searchItems.size
+    override fun getItemCount() = currentList.size
     override fun getItemViewType(position: Int): Int =
-        when (searchItems[position]) {
+        when (currentList[position]) {
             is Entity.Companion.Empty -> R.layout.search_empty_item
             else -> R.layout.search_entity_item
         }
+}
+
+class SearchDU: DiffUtil.ItemCallback<Entity>() {
+    override fun areItemsTheSame(oldItem: Entity, newItem: Entity): Boolean = oldItem.id == newItem.id
+    override fun areContentsTheSame(oldItem: Entity, newItem: Entity): Boolean = oldItem == newItem
 }
 
 sealed class SearchHolder(binding: ViewBinding):RecyclerView.ViewHolder(binding.root){
