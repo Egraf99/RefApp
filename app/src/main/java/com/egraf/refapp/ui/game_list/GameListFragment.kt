@@ -18,10 +18,12 @@ import com.egraf.refapp.databinding.FragmentGameListBinding
 import com.egraf.refapp.databinding.ListItemGameBinding
 import com.egraf.refapp.ui.FragmentWithToolbar
 import com.egraf.refapp.ui.game_detail.GameDetailFragment
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "GameListFragment"
 private const val DATE_FORMAT = "dd.MM.yyyy (EE) HH:mm"
 
+@AndroidEntryPoint
 class GameListFragment: FragmentWithToolbar() {
     private var _binding: FragmentGameListBinding? = null
     private val binding get() = _binding!!
@@ -80,7 +82,7 @@ class GameListFragment: FragmentWithToolbar() {
         }
     }
 
-    private inner class GameHolder(val binding: ListItemGameBinding) :
+    public inner class GameHolder(val binding: ListItemGameBinding) :
         RecyclerView.ViewHolder(binding.root),
         View.OnClickListener {
         private lateinit var gameWithAttributes: GameWithAttributes

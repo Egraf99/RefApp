@@ -5,18 +5,27 @@ import androidx.lifecycle.MutableLiveData
 import com.egraf.refapp.database.entities.*
 import java.util.*
 
-class FakeGameDataSource : GameDataSource {
-    private val games = MutableLiveData(mutableListOf<GameWithAttributes>())
-    private val teams = mutableListOf(Team(name = "Команда"))
-    private val stadiums = mutableListOf(Stadium(name = "Стадион"))
-    private val leagues = mutableListOf(League(name = "Лига"))
-    private val referees = mutableListOf(Referee(firstName = "Имя", secondName = "Фамилия", thirdName = "Отчество"))
+class FakeGameDataSource(private val initFakeData: Boolean = false) : GameDataSource {
+    private val games = mutableListOf<GameWithAttributes>()
+    private val teams = mutableListOf<Team>()
+    private val stadiums = mutableListOf<Stadium>()
+    private val leagues = mutableListOf<League>()
+    private val referees = mutableListOf<Referee>()
+    val fillFakeData = {
+        val fakeGame = Game(id = fakeUUID)
+        addGame(fakeGame)
+    }
+
+    init {
+        if (initFakeData) fillFakeData()
+    }
+
 
     // games block
-    override fun getGames(): LiveData<List<GameWithAttributes>> = MutableLiveData(games.value)
-    override fun countGames(): LiveData<Int> = MutableLiveData(games.value?.count())
+    override fun getGames(): LiveData<List<GameWithAttributes>> = MutableLiveData(games)
+    override fun countGames(): LiveData<Int> = MutableLiveData(games.size)
     override fun getGame(id: UUID): LiveData<GameWithAttributes?> {
-        games.value?.forEach { game -> if (game.game.id == id) return MutableLiveData(game) }
+        games.forEach { game -> if (game.game.id == id) return MutableLiveData(game) }
         return MutableLiveData(null)
     }
 
@@ -30,7 +39,7 @@ class FakeGameDataSource : GameDataSource {
     }
 
     override fun addGame(game: Game) {
-        games.value?.add(GameWithAttributes(game = game))
+        games.add(GameWithAttributes(game = game))
 //        val games_ = games.value as MutableList
 //        games_.add(GameWithAttributes(game = game))
 //        games.postValue(games_)
@@ -94,5 +103,9 @@ class FakeGameDataSource : GameDataSource {
     override fun getReferees(): LiveData<List<Referee>> = MutableLiveData(referees)
     override fun addReferee(referee: Referee) {
         referees.add(referee)
+    }
+
+    companion object {
+        val fakeUUID = UUID.randomUUID()
     }
 }

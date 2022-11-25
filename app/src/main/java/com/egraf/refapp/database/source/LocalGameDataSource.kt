@@ -11,7 +11,7 @@ import java.util.concurrent.Executors
 
 private const val DATABASE_NAME = "referee.sqlite"
 
-class RemoteGameDataSource(context: Context) : GameDataSource {
+class LocalGameDataSource(context: Context) : GameDataSource {
     private val database: GameDatabase =
         Room.databaseBuilder(context.applicationContext, GameDatabase::class.java, DATABASE_NAME)
             .addMigrations(migration_1_2)
