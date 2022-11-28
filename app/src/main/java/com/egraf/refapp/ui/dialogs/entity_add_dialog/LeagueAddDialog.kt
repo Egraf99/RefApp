@@ -11,7 +11,7 @@ private const val RESULT_ADD_LEAGUE_FULL_NAME = "resultAddLeagueFullName"
 private const val RESULT_ADD_LEAGUE_SHORT_NAME = "resultAddLeagueShortName"
 
 class LeagueAddDialog(
-    override val viewModel: LeagueAddInterface,
+    val viewModel: LeagueAddInterface,
 
     ): EntityAddDialog() {
     private val binding get() = _binding!!

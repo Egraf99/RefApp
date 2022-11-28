@@ -10,7 +10,7 @@ import com.egraf.refapp.interface_viewmodel.add.TeamAddInterface
 private const val RESULT_ADD_TEAM_SHORT_NAME = "resultAddTeamShortName"
 private const val RESULT_ADD_TEAM_FULL_NAME = "resultAddTeamFullName"
 
-class TeamAddDialog(override val viewModel: TeamAddInterface): EntityAddDialog() {
+class TeamAddDialog(val viewModel: TeamAddInterface): EntityAddDialog() {
     private val binding get() = _binding!!
     private var _binding: TeamDetailsBinding? = null
     private lateinit var team: Team

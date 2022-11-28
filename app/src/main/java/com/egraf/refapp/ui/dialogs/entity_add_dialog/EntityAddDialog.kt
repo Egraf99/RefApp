@@ -15,7 +15,6 @@ private const val ARG_REQUEST_CODE_ADD_ENTITY = "requestCodeAddEntity"
 
 abstract class EntityAddDialog : DialogFragment() {
     abstract val title: Int
-    abstract val viewModel: AddInterface
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

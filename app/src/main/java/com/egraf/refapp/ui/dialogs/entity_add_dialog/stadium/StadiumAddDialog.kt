@@ -1,18 +1,24 @@
-package com.egraf.refapp.ui.dialogs.entity_add_dialog
+package com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.StadiumDetailsBinding
 import com.egraf.refapp.interface_viewmodel.add.StadiumAddInterface
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.EntityAddDialog
 
 private const val RESULT_ADD_STADIUM_SHORT_NAME = "resultAddStadiumShortName"
 private const val RESULT_ADD_STADIUM_NAME = "resultAddStadiumName"
 
-class StadiumAddDialog(override val viewModel: StadiumAddInterface): EntityAddDialog() {
+class StadiumAddDialog: EntityAddDialog() {
     private val binding get() = _binding!!
     private var _binding: StadiumDetailsBinding? = null
+
+    private val viewModel: StadiumAddViewModel by lazy {
+        ViewModelProvider(this)[StadiumAddViewModel::class.java]
+    }
     private lateinit var stadium: Stadium
     override val title: Int = R.string.add_stadium
 

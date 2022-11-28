@@ -3,6 +3,7 @@ package com.egraf.refapp.ui.dialogs.search_entity
 import androidx.lifecycle.LiveData
 import com.egraf.refapp.database.entities.Entity
 import com.egraf.refapp.database.entities.Stadium
+import com.egraf.refapp.interface_viewmodel.add.StadiumAddInterface
 import com.egraf.refapp.ui.ViewModelWithGameRepo
 
 private const val TAG = "SearchViewModel"

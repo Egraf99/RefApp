@@ -15,7 +15,7 @@ private const val RESULT_ADD_REFEREE_THIRD_NAME = "resultAddRefereeThirdName"
 private const val RESULT_ADD_REFEREE_FULL_NAME = "resultAddRefereeFullName"
 private const val RESULT_ADD_REFEREE_SHORT_NAME = "resultAddRefereeShortName"
 
-class RefereeAddDialog(override val viewModel: RefereeInterface) : EntityAddDialog() {
+class RefereeAddDialog(val viewModel: RefereeInterface) : EntityAddDialog() {
     private val binding get() = _binding!!
     private var _binding: RefereeDetailsBinding? = null
     private lateinit var referee: Referee

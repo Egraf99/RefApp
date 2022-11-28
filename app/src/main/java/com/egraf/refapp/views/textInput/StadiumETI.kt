@@ -7,9 +7,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
-import com.egraf.refapp.ui.dialogs.entity_add_dialog.StadiumAddDialog
 import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
 import com.egraf.refapp.interface_viewmodel.all.StadiumInterface
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.StadiumAddDialog
 
 private const val REQUEST_ADD_STADIUM = "requestAddStadium"
 private const val REQUEST_FILL_STADIUM = "requestFillStadium"
@@ -28,9 +28,9 @@ class StadiumETI(context: Context, attrs: AttributeSet? = null) :
             Toast.makeText(context, stadium.fullName, Toast.LENGTH_SHORT).show()
         }
         doWhenAddClicked { text ->
-            StadiumAddDialog(viewModel)
-                .putEntityName(text, REQUEST_ADD_STADIUM)
-                .show(fragment.parentFragmentManager, REQUEST_ADD_STADIUM)
+//            StadiumAddDialog(viewModel)
+//                .putEntityName(text, REQUEST_ADD_STADIUM)
+//                .show(fragment.parentFragmentManager, REQUEST_ADD_STADIUM)
         }
         return this
     }
