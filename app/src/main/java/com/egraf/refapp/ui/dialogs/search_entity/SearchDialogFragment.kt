@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,6 +38,9 @@ class SearchDialogFragment :
         _binding = SearchEntityFragmentBinding.inflate(inflater)
         binding.itemsRv.layoutManager = LinearLayoutManager(context)
         binding.itemsRv.adapter = adapter
+
+        binding.searchInput.requestFocus()
+        dialog?.window?.setSoftInputMode(SOFT_INPUT_STATE_VISIBLE)
         return binding.root
     }
 
