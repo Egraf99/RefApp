@@ -55,9 +55,12 @@ class SearchDialogFragment :
         binding.searchInput.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 val chooseEntity = adapter.getFirstEntity()
-                if (chooseEntity == Entity.Companion.Empty) return@setOnKeyListener false
-                sendRequestAndDismiss(chooseEntity)
-                this.dismiss()
+                if (chooseEntity == Entity.Companion.Empty)
+                    showAddNewEntityDialog()
+                else {
+                    sendRequestAndDismiss(chooseEntity)
+                    this.dismiss()
+                }
                 return@setOnKeyListener true
             }
             return@setOnKeyListener false
@@ -95,11 +98,7 @@ class SearchDialogFragment :
     override fun onStart() {
         super.onStart()
         binding.titleTv.text = arguments?.getString(ARG_TITLE)
-        binding.updateButton.setOnClickListener {
-            StadiumAddDialog()
-                .putEntityName(binding.searchInput.text.toString(), REQUEST_NEW_ENTITY)
-                .show(parentFragmentManager, REQUEST_NEW_ENTITY)
-        }
+        binding.updateButton.setOnClickListener { showAddNewEntityDialog() }
         binding.searchInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -116,6 +115,13 @@ class SearchDialogFragment :
                 }
             }
         })
+    }
+
+    private fun showAddNewEntityDialog() {
+        binding.searchInput.clearFocus()
+        StadiumAddDialog()
+            .putEntityName(binding.searchInput.text.toString(), REQUEST_NEW_ENTITY)
+            .show(parentFragmentManager, REQUEST_NEW_ENTITY)
     }
 
     override fun onDestroy() {
