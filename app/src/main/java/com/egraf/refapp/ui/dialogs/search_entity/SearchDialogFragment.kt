@@ -32,14 +32,14 @@ private const val LENGTH_TEXT_BEFORE_FILTER: Int = 0
 private const val TAG = "SearchDialogFragment"
 
 class SearchDialogFragment :
-    DialogFragment(R.layout.search_entity_fragment), FragmentResultListener {
+    DialogFragment(R.layout.search_entity_fragment), FragmentResultListener, SearchItemClickListener {
 
     private val viewModel: SearchViewModel by lazy {
         ViewModelProvider(this)[SearchViewModel::class.java]
     }
     private val binding get() = _binding!!
     private var _binding: SearchEntityFragmentBinding? = null
-    private val adapter = SearchAdapter()
+    private val adapter = SearchAdapter(this)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,13 +54,7 @@ class SearchDialogFragment :
         // set listener on ET
         binding.searchInput.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                val chooseEntity = adapter.getFirstEntity()
-                if (chooseEntity == Entity.Companion.Empty)
-                    showAddNewEntityDialog()
-                else {
-                    sendRequestAndDismiss(chooseEntity)
-                    this.dismiss()
-                }
+                sendRequestAndDismiss(adapter.getFirstEntity())
                 return@setOnKeyListener true
             }
             return@setOnKeyListener false
@@ -136,8 +130,14 @@ class SearchDialogFragment :
     }
 
     private fun sendRequestAndDismiss(entity: Entity) {
-        sendRequest(entity)
-        this.dismiss()
+        if (entity == Entity.Companion.Empty) {
+            Log.d(TAG, "don't request empty entity, show add dialog")
+            showAddNewEntityDialog()
+        } else {
+            Log.d(TAG, "return request with: $entity")
+            sendRequest(entity)
+            this.dismiss()
+        }
     }
 
     private fun sendRequest(entity: Entity) {
@@ -147,6 +147,10 @@ class SearchDialogFragment :
         }
         val resultRequestCode = requireArguments().getString(ARG_REQUEST_CODE, "")
         setFragmentResult(resultRequestCode, bundle)
+    }
+
+    override fun onSearchClickListener(entity: Entity) {
+        sendRequestAndDismiss(entity)
     }
 
     companion object {

@@ -2,6 +2,7 @@ package com.egraf.refapp.ui.dialogs.search_entity
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -14,7 +15,7 @@ import com.egraf.refapp.databinding.SearchEntityItemBinding
 
 private const val TAG = "SearchAdapter"
 
-class SearchAdapter :
+class SearchAdapter(private val onClickListener: SearchItemClickListener) :
     ListAdapter<Entity, SearchHolder>(SearchDU()) {
 
     val getFirstEntity = {currentList[0]}
@@ -26,14 +27,14 @@ class SearchAdapter :
                     LayoutInflater.from(parent.context),
                     parent,
                     false
-                )
+                ), onClickListener
             )
             R.layout.search_entity_item -> SearchHolder.EntityHolder(
                 SearchEntityItemBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
-                )
+                ), onClickListener
             )
             else -> throw IllegalStateException("Invalid ViewType")
         }
@@ -62,11 +63,21 @@ class SearchDU: DiffUtil.ItemCallback<Entity>() {
     override fun areContentsTheSame(oldItem: Entity, newItem: Entity): Boolean = oldItem == newItem
 }
 
-sealed class SearchHolder(binding: ViewBinding):RecyclerView.ViewHolder(binding.root){
-    class EntityHolder(private val binding: SearchEntityItemBinding) : SearchHolder(binding) {
+
+sealed class SearchHolder(binding: ViewBinding, private val onClickListener: SearchItemClickListener):RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+    init {
+        itemView.setOnClickListener(this)
+    }
+    protected var entity: Entity = Entity.Companion.Empty
+    override fun onClick(v: View?) {
+        onClickListener.onSearchClickListener(entity)
+    }
+
+    class EntityHolder(private val binding: SearchEntityItemBinding, onClickListener: SearchItemClickListener) : SearchHolder(binding, onClickListener) {
         fun bind(item: Entity) {
+            entity = item
             binding.textView.text = item.shortName
         }
     }
-    class EmptyHolder(binding: SearchEmptyItemBinding): SearchHolder(binding)
+    class EmptyHolder(binding: SearchEmptyItemBinding, onClickListener: SearchItemClickListener): SearchHolder(binding, onClickListener)
 }
