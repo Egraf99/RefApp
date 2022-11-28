@@ -17,6 +17,8 @@ private const val TAG = "SearchAdapter"
 class SearchAdapter :
     ListAdapter<Entity, SearchHolder>(SearchDU()) {
 
+    val getFirstEntity = {currentList[0]}
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchHolder =
         when (viewType) {
             R.layout.search_empty_item -> SearchHolder.EmptyHolder(

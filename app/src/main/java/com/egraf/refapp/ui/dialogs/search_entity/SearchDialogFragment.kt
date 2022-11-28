@@ -4,21 +4,28 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.Entity
 import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.SearchEntityFragmentBinding
+import java.util.*
 
 private const val ARG_TITLE = "TitleBundleKey"
-private const val TAG = "SearchDialogFragment"
+private const val ARG_SHORT_NAME = "NameBundleKey"
+private const val ARG_ID = "IdBundleKey"
+private const val ARG_REQUEST_CODE = "RequestCodeBundle"
 private const val LENGTH_TEXT_BEFORE_FILTER: Int = 0
+
+private const val TAG = "SearchDialogFragment"
 
 class SearchDialogFragment :
     DialogFragment(R.layout.search_entity_fragment) {
@@ -36,8 +43,21 @@ class SearchDialogFragment :
         savedInstanceState: Bundle?
     ): View {
         _binding = SearchEntityFragmentBinding.inflate(inflater)
+        // set RV adapter
         binding.itemsRv.layoutManager = LinearLayoutManager(context)
         binding.itemsRv.adapter = adapter
+
+        // set listener on ET
+        binding.searchInput.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                val chooseEntity = adapter.getFirstEntity()
+                if (chooseEntity == Entity.Companion.Empty) return@setOnKeyListener false
+                sendRequest(chooseEntity)
+                this.dismiss()
+                return@setOnKeyListener true
+            }
+            return@setOnKeyListener false
+        }
 
         binding.searchInput.requestFocus()
         dialog?.window?.setSoftInputMode(SOFT_INPUT_STATE_VISIBLE)
@@ -88,15 +108,28 @@ class SearchDialogFragment :
         _binding = null
     }
 
+    private fun sendRequest(entity: Entity) {
+        val bundle = Bundle().apply {
+            putString(ARG_SHORT_NAME, entity.shortName)
+            putSerializable(ARG_ID, entity.id)
+        }
+        val resultRequestCode = requireArguments().getString(ARG_REQUEST_CODE, "")
+        setFragmentResult(resultRequestCode, bundle)
+    }
+
     companion object {
-        fun newInstance(title: String):SearchDialogFragment {
+        fun newInstance(title: String, requestCode: String): SearchDialogFragment {
             val args = Bundle().apply {
                 putString(ARG_TITLE, title)
+                putString(ARG_REQUEST_CODE, requestCode)
             }
 
             return SearchDialogFragment().apply {
                 arguments = args
             }
         }
+
+        fun getShortName(result: Bundle) = result.getString(ARG_SHORT_NAME) ?: ""
+        fun getId(result: Bundle) = result.getSerializable(ARG_ID) as UUID
     }
 }

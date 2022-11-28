@@ -20,13 +20,14 @@
             android:paddingBottom="8dp"
             android:paddingTop="8dp">
 
-            <androidx.appcompat.widget.AppCompatEditText
+            <EditText
                 android:id="@+id/search_input"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="12dp"
                 android:layout_weight="1"
+                android:inputType="textImeMultiLine"
                 android:background="@android:color/transparent"
                 android:textSize="14sp" />
 
