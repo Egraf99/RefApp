@@ -23,7 +23,6 @@ import dagger.hilt.android.AndroidEntryPoint
 private const val TAG = "GameListFragment"
 private const val DATE_FORMAT = "dd.MM.yyyy (EE) HH:mm"
 
-@AndroidEntryPoint
 class GameListFragment: FragmentWithToolbar() {
     private var _binding: FragmentGameListBinding? = null
     private val binding get() = _binding!!

@@ -5,8 +5,7 @@ import com.egraf.refapp.ui.ViewModelWithGameRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-@HiltViewModel
-class GameListViewModel @Inject constructor(): ViewModelWithGameRepo() {
+class GameListViewModel: ViewModelWithGameRepo() {
     val gamesListLiveData = gameRepository.getGames()
     val countGamesLiveData = gameRepository.countGames()
 

@@ -25,7 +25,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "com.egraf.refapp.HiltTestRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.debug
     }
 

@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
-import com.egraf.refapp.dialogs.entity_add_dialog.RefereeAddDialog
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.RefereeAddDialog
 import com.egraf.refapp.interface_viewmodel.all.RefereeInterface
 
 private const val TAG = "RefereeETI"

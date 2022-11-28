@@ -7,10 +7,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
-import com.egraf.refapp.database.entities.League
-import com.egraf.refapp.dialogs.entity_add_dialog.StadiumAddDialog
-import com.egraf.refapp.dialogs.search_entity.SearchDialogFragment
-import com.egraf.refapp.dialogs.search_entity.SearchList
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.StadiumAddDialog
+import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
 import com.egraf.refapp.interface_viewmodel.all.StadiumInterface
 
 private const val REQUEST_ADD_STADIUM = "requestAddStadium"

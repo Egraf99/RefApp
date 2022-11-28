@@ -15,9 +15,9 @@ import com.egraf.refapp.database.entities.Referee
 import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.database.entities.Team
 import com.egraf.refapp.databinding.FragmentGameBinding
-import com.egraf.refapp.dialogs.DatePickerFragment
-import com.egraf.refapp.dialogs.DeleteDialog
-import com.egraf.refapp.dialogs.TimePickerFragment
+import com.egraf.refapp.ui.dialogs.DatePickerFragment
+import com.egraf.refapp.ui.dialogs.DeleteDialog
+import com.egraf.refapp.ui.dialogs.TimePickerFragment
 import com.egraf.refapp.ui.FragmentWithToolbar
 import com.egraf.refapp.views.textInput.RefereeETI
 import com.egraf.refapp.views.textInput.TeamETI
@@ -33,7 +33,6 @@ private const val REQUEST_DELETE = "DialogDelete"
 private const val DATE_FORMAT = "EEE dd.MM.yyyy"
 private const val TIME_FORMAT = "HH:mm"
 
-@AndroidEntryPoint
 class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
 
     private val binding get() = _binding!!

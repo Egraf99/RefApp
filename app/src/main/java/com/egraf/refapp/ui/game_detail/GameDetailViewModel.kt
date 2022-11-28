@@ -13,8 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
 
-@HiltViewModel
-class GameDetailViewModel @Inject constructor(): ViewModelWithGame(),
+class GameDetailViewModel: ViewModelWithGame(),
 TeamInterface, LeagueInterface, StadiumInterface, RefereeInterface {
     private val gameIdLiveData = MutableLiveData<UUID>()
 

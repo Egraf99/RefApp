@@ -5,7 +5,7 @@
     app:startDestination="@id/dateChooseFragment">
     <fragment
         android:id="@+id/dateChooseFragment"
-        android:name="com.egraf.refapp.dialogs.add_new_game.DateChooseFragment"
+        android:name="com.egraf.refapp.ui.dialogs.add_new_game.DateChooseFragment"
         android:label="DateChooseFragment" >
         <action
             android:id="@+id/action_choose_date_to_team"
@@ -13,7 +13,7 @@
     </fragment>
     <fragment
         android:id="@+id/teamChooseFragment"
-        android:name="com.egraf.refapp.dialogs.add_new_game.TeamChooseFragment"
+        android:name="com.egraf.refapp.ui.dialogs.add_new_game.TeamChooseFragment"
         android:label="TeamChooseFragment" >
         <action
             android:id="@+id/action_choose_team_to_referee"
@@ -21,6 +21,6 @@
     </fragment>
     <fragment
         android:id="@+id/refereeChooseFragment"
-        android:name="com.egraf.refapp.dialogs.add_new_game.RefereeChooseFragment"
+        android:name="com.egraf.refapp.ui.dialogs.add_new_game.RefereeChooseFragment"
         android:label="RefereeChooseFragment" />
 </navigation>

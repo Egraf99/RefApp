@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
-import com.egraf.refapp.dialogs.entity_add_dialog.LeagueAddDialog
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.LeagueAddDialog
 import com.egraf.refapp.interface_viewmodel.all.LeagueInterface
 
 private const val REQUEST_ADD_LEAGUE = "requestAddLeague"
