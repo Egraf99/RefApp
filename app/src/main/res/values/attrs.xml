@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="GameComponentInput">
+        <attr name="titleText" format="string" localization="suggested" />
+        <attr name="valueColor" format="color" />
+        <attr name="state" format="enum">
+            <enum name="empty"    value="0"/>
+            <enum name="fill"       value="1"/>
+        </attr>
+
+<!--  Enum for this values define in GameComponentInput.kt file  -->
+        <attr name="gameComponent" format="enum">
+            <enum name="stadium"    value="0"/>
+            <enum name="league"     value="1"/>
+            <enum name="homeTeam"   value="2"/>
+            <enum name="guestTeam"  value="3"/>
+            <enum name="date"       value="4"/>
+            <enum name="time"       value="5"/>
+        </attr>
+    </declare-styleable>
+</resources>

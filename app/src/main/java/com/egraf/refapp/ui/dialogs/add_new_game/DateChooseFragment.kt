@@ -29,13 +29,14 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
         savedInstanceState: Bundle?
     ): View {
         _binding = DateChooseBinding.inflate(inflater).apply {
-            stadiumLayout.init(this@DateChooseFragment, addNewGameViewModel)
-                .whatDoWhenTextMatchedEntity { stadium ->
-                    addNewGameViewModel.setStadium(stadium as Stadium?)
-                }
-                .whatDoWhenTextIsBlank {
-                    addNewGameViewModel.setStadium(null)
-                }
+//            stadiumLayout.initializeText()
+//            stadiumLayout.init(this@DateChooseFragment, addNewGameViewModel)
+//                .whatDoWhenTextMatchedEntity { stadium ->
+//                    addNewGameViewModel.setStadium(stadium as Stadium?)
+//                }
+//                .whatDoWhenTextIsBlank {
+//                    addNewGameViewModel.setStadium(null)
+//                }
         }
         updateUI()
         return binding.root
@@ -90,7 +91,7 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
 
     private fun updateETI() {
         Log.d(TAG, "updateETI: ${addNewGameViewModel.gameWithAttributes.game}")
-        binding.stadiumLayout.setText(addNewGameViewModel.gameWithAttributes.stadium?.shortName ?: "")
+//        binding.stadiumLayout.setText(addNewGameViewModel.gameWithAttributes.stadium?.shortName ?: "")
     }
 
     private fun updateCheckBox() {
