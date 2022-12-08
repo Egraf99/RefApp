@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="GameComponentInput">
-        <attr name="titleText" format="string" localization="suggested" />
-        <attr name="valueColor" format="color" />
+        <attr name="startIcon" format="integer" />
         <attr name="state" format="enum">
             <enum name="empty"    value="0"/>
             <enum name="fill"       value="1"/>
