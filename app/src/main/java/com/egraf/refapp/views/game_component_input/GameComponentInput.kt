@@ -2,6 +2,7 @@ package com.egraf.refapp.views.game_component_input
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.media.Image
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -11,17 +12,19 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorInt
+import androidx.appcompat.content.res.AppCompatResources
 import com.egraf.refapp.R
 import kotlin.properties.Delegates
 
 
-enum class GameComponent(val value: Int, val title: String) {
-    STADIUM(0, "Stadium"),
-    LEAGUE(1, "League"),
-    HOME_TEAM(2, "Home Team"),
-    GUEST_TEAM(3, "Guest Team"),
-    DATE(4, "Date"),
-    TIME(5, "Time");
+enum class GameComponent(val value: Int,
+                         val title: Int) {
+    STADIUM(0, R.string.stadium),
+    LEAGUE(1, R.string.league),
+    HOME_TEAM(2, R.string.home_team),
+    GUEST_TEAM(3, R.string.guest_team),
+    DATE(4, R.string.date),
+    TIME(5, R.string.time);
 
     companion object {
         fun getComponent(value: Int): GameComponent = when (value) {
@@ -58,7 +61,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : LinearLayout(c
                         )
                     )
                 @SuppressWarnings("ResourceAsColor")
-                valueColor = getColor(
+                valueColor = getInteger(
                     R.styleable.GameComponentInput_valueColor,
                     android.R.color.holo_blue_light
                 )
@@ -72,11 +75,16 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : LinearLayout(c
         val inflater = context
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.game_component_input, this, true)
-        val title = getChildAt(0) as TextView
-        title.text = gameComponent.title
-        val mValue = getChildAt(1)
-        mValue.setBackgroundColor(valueColor)
-        val mImage = getChildAt(2) as ImageView
+        val bracketOpen = getChildAt(0) as ImageView
+        bracketOpen.setBackgroundResource(R.drawable.ic_open_bracket)
+        val mIcon = getChildAt(1) as ImageView
+        mIcon.setBackgroundResource(R.drawable.ic_stadium)
+        val textView = getChildAt(2) as TextView
+        textView.text = context.getText(gameComponent.title)
+        val bracketClose = getChildAt(childCount - 1) as ImageView
+        bracketClose.setBackgroundResource(R.drawable.ic_close_bracket)
+
+        // clickable
         setOnClickListener(this)
     }
 

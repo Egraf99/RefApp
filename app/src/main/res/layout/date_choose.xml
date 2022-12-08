@@ -10,14 +10,9 @@
         custom:gameComponent="stadium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:hint="@string/stadium"
-        custom:valueColor="@android:color/holo_green_light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </com.egraf.refapp.views.game_component_input.GameComponentInput>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
         android:id="@+id/date_choose_button"
