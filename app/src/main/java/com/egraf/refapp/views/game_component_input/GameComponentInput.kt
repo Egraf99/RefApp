@@ -10,7 +10,11 @@ import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.FragmentManager
 import com.egraf.refapp.R
+import com.egraf.refapp.database.entities.Stadium
+import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
+import com.egraf.refapp.ui.dialogs.search_entity.SearchViewModel
 import java.util.*
 
 
@@ -48,6 +52,8 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
     private val disappearAnim: Animation
     private val leftUpAnim: Animation
     private val rightDownAnim: Animation
+
+    private lateinit var fragmentManager: FragmentManager
 
     init {
         context.theme.obtainStyledAttributes(
@@ -124,6 +130,8 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
                 override fun onAnimationEnd(animation: Animation?) {
                     animTextView.visibility = View.INVISIBLE
                     helpTextView.visibility = View.VISIBLE
+
+                    SearchDialogFragment(context.getString(gameComponent.title), "").show(fragmentManager, "")
                 }
 
                 override fun onAnimationRepeat(animation: Animation?) {}
@@ -196,6 +204,10 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         }
     }
 
+    fun bindFragmentManager(parentFragmentManager: FragmentManager) {
+        fragmentManager = parentFragmentManager
+    }
+
     private fun changeState() {
         if (isEmpty) {
             isEmpty = false
@@ -204,7 +216,6 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
             isEmpty = true
             empty()
         }
-
     }
 
 

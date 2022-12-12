@@ -29,14 +29,7 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
         savedInstanceState: Bundle?
     ): View {
         _binding = DateChooseBinding.inflate(inflater).apply {
-//            stadiumLayout.initializeText()
-//            stadiumLayout.init(this@DateChooseFragment, addNewGameViewModel)
-//                .whatDoWhenTextMatchedEntity { stadium ->
-//                    addNewGameViewModel.setStadium(stadium as Stadium?)
-//                }
-//                .whatDoWhenTextIsBlank {
-//                    addNewGameViewModel.setStadium(null)
-//                }
+            stadiumLayout.bindFragmentManager(this@DateChooseFragment.parentFragmentManager)
         }
         updateUI()
         return binding.root

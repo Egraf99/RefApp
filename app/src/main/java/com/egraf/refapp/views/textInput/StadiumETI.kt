@@ -50,9 +50,9 @@ class StadiumETI(context: Context, attrs: AttributeSet? = null) :
     }
 
     override fun onLongClick(view: View) {
-        super.onLongClick(view)
-        SearchDialogFragment.newInstance("Stadium", REQUEST_FILL_STADIUM)
-            .show(parentFragment.parentFragmentManager, null)
+//        super.onLongClick(view)
+//        SearchDialogFragment.newInstance("Stadium", REQUEST_FILL_STADIUM)
+//            .show(parentFragment.parentFragmentManager, null)
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {

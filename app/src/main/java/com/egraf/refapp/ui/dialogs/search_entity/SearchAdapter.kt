@@ -15,10 +15,10 @@ import com.egraf.refapp.databinding.SearchEntityItemBinding
 
 private const val TAG = "SearchAdapter"
 
-class SearchAdapter(private val onClickListener: SearchItemClickListener) :
-    ListAdapter<Entity, SearchHolder>(SearchDU()) {
+class SearchAdapter<E : Entity>(private val onClickListener: SearchItemClickListener) :
+    ListAdapter<E, SearchHolder>(SearchDU<E>()) {
 
-    val getFirstEntity = {currentList[0]}
+    val getFirstEntity = { currentList[0] as E }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchHolder =
         when (viewType) {
@@ -58,26 +58,42 @@ class SearchAdapter(private val onClickListener: SearchItemClickListener) :
         }
 }
 
-class SearchDU: DiffUtil.ItemCallback<Entity>() {
-    override fun areItemsTheSame(oldItem: Entity, newItem: Entity): Boolean = oldItem.id == newItem.id
-    override fun areContentsTheSame(oldItem: Entity, newItem: Entity): Boolean = oldItem == newItem
+class SearchDU<E : Entity> : DiffUtil.ItemCallback<E>() {
+    override fun areItemsTheSame(oldItem: E, newItem: E): Boolean = oldItem.id == newItem.id
+    override fun areContentsTheSame(oldItem: E, newItem: E): Boolean = oldItem == newItem
 }
 
 
-sealed class SearchHolder(binding: ViewBinding, private val onClickListener: SearchItemClickListener):RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+sealed class SearchHolder(
+    binding: ViewBinding,
+) : RecyclerView.ViewHolder(binding.root),
+    View.OnClickListener {
     init {
         itemView.setOnClickListener(this)
     }
-    protected var entity: Entity = Entity.Companion.Empty
-    override fun onClick(v: View?) {
-        onClickListener.onSearchClickListener(entity)
-    }
 
-    class EntityHolder(private val binding: SearchEntityItemBinding, onClickListener: SearchItemClickListener) : SearchHolder(binding, onClickListener) {
+    class EntityHolder(
+        private val binding: SearchEntityItemBinding,
+        private val onClickListener: SearchItemClickListener
+    ) : SearchHolder(binding) {
+        private var entity: Entity = Entity.Companion.Empty
         fun bind(item: Entity) {
             entity = item
             binding.textView.text = item.shortName
         }
+
+        override fun onClick(v: View?) {
+            onClickListener.onSearchClickListener(entity)
+        }
     }
-    class EmptyHolder(binding: SearchEmptyItemBinding, onClickListener: SearchItemClickListener): SearchHolder(binding, onClickListener)
+
+    class EmptyHolder(
+        binding: SearchEmptyItemBinding,
+        private val onClickListener: SearchItemClickListener
+    ) :
+        SearchHolder(binding) {
+        override fun onClick(v: View?) {
+            onClickListener.onSearchClickListener(Entity.Companion.Empty)
+        }
+    }
 }

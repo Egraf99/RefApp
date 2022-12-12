@@ -31,15 +31,15 @@ private const val LENGTH_TEXT_BEFORE_FILTER: Int = 0
 
 private const val TAG = "SearchDialogFragment"
 
-class SearchDialogFragment :
+class SearchDialogFragment private constructor() :
     DialogFragment(R.layout.search_entity_fragment), FragmentResultListener, SearchItemClickListener {
 
-    private val viewModel: SearchViewModel by lazy {
-        ViewModelProvider(this)[SearchViewModel::class.java]
+    private val viewModel: StadiumSearchViewModel by lazy {
+        ViewModelProvider(this)[StadiumSearchViewModel::class.java]
     }
     private val binding get() = _binding!!
     private var _binding: SearchEntityFragmentBinding? = null
-    private val adapter = SearchAdapter(this)
+    private val adapter = SearchAdapter<Stadium>(this)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -81,11 +81,8 @@ class SearchDialogFragment :
         )
     }
 
-    private fun updateItems(adapter: SearchAdapter, items: List<Entity>) {
-        if (items.isEmpty())
-            adapter.submitList(viewModel.emptyItemList)
-        else
-            adapter.submitList(items)
+    private fun updateItems(adapter: SearchAdapter<Stadium>, items: List<Stadium>) {
+        adapter.submitList(items)
         binding.itemsRv.adapter = adapter
     }
 
@@ -154,7 +151,7 @@ class SearchDialogFragment :
     }
 
     companion object {
-        fun newInstance(title: String, requestCode: String): SearchDialogFragment {
+        operator fun invoke (title: String, requestCode: String): SearchDialogFragment {
             val args = Bundle().apply {
                 putString(ARG_TITLE, title)
                 putString(ARG_REQUEST_CODE, requestCode)
