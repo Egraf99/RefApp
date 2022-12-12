@@ -2,10 +2,7 @@
 <resources>
     <declare-styleable name="GameComponentInput">
         <attr name="startIcon" format="integer" />
-        <attr name="state" format="enum">
-            <enum name="empty"    value="0"/>
-            <enum name="fill"       value="1"/>
-        </attr>
+        <attr name="fill" format="boolean"/>
 
 <!--  Enum for this values define in GameComponentInput.kt file  -->
         <attr name="gameComponent" format="enum">
