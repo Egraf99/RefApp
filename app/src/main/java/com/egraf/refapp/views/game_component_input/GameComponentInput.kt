@@ -5,6 +5,8 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -38,6 +40,9 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
     private val mState: Int
     private val gameComponent: GameComponent
     private val startIcon: Drawable?
+    private val animTextView: TextView
+    private val helpTextView: TextView
+    private val contentTextView: TextView
 
     init {
         context.theme.obtainStyledAttributes(
@@ -70,8 +75,17 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         val mIcon = getChildAt(1) as ImageView
         if (startIcon != null)
             mIcon.setImageDrawable(startIcon)
-        val textView = getChildAt(2) as TextView
-        textView.text = context.getText(gameComponent.title)
+
+        // search text views
+        helpTextView = getChildAt(2) as TextView
+        animTextView = getChildAt(3) as TextView
+        contentTextView = getChildAt(4) as TextView
+
+        // заполняем text views
+        helpTextView.text = context.getText(gameComponent.title)
+        animTextView.text = context.getText(gameComponent.title)
+        contentTextView.text = "Dinamo"
+
         val bracketClose = getChildAt(childCount - 1) as ImageView
         bracketClose.setBackgroundResource(R.drawable.ic_close_bracket)
 
@@ -90,6 +104,37 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
 //    }
 
     override fun onClick(v: View?) {
-        Toast.makeText(context, "Text", Toast.LENGTH_SHORT).show()
+        helpTextView.visibility = View.INVISIBLE
+        contentTextView.visibility = View.INVISIBLE
+        animTextView.visibility = View.VISIBLE
+
+        val scaleAnim = AnimationUtils.loadAnimation(context, R.anim.on_touch_textview_anim)
+        scaleAnim.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) { }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                animTextView.visibility = View.GONE
+                helpTextView.visibility = View.VISIBLE
+            }
+
+            override fun onAnimationRepeat(animation: Animation?) { }
+        })
+        val appearAnim = AnimationUtils.loadAnimation(context, R.anim.appearance_textview)
+        appearAnim.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) { }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                contentTextView.visibility = View.VISIBLE
+            }
+
+            override fun onAnimationRepeat(animation: Animation?) { }
+        })
+        scaleAnim.reset()
+        appearAnim.reset()
+        animTextView.clearAnimation()
+        animTextView.startAnimation(scaleAnim)
+
+        contentTextView.clearAnimation()
+        contentTextView.startAnimation(appearAnim)
     }
 }
