@@ -23,6 +23,7 @@ import com.egraf.refapp.utils.Status
 import java.util.*
 
 private const val ARG_TITLE = "TitleBundleKey"
+private const val ARG_ICON = "IconBundleKey"
 private const val ARG_SHORT_NAME = "NameBundleKey"
 private const val ARG_ID = "IdBundleKey"
 
@@ -113,8 +114,7 @@ class SearchDialogFragment private constructor() :
         binding.searchRv.visibility = View.VISIBLE
     }
 
-    private fun updateItems(adapter: SearchAdapter<Stadium>, items: List<Stadium>) {
-        viewModel.items = items
+    private fun updateItems(adapter: SearchAdapter<Stadium>, items: List<Triple<Int, Int, Stadium>>) {
         adapter.submitList(items)
         binding.searchRv.adapter = adapter
     }
@@ -122,6 +122,10 @@ class SearchDialogFragment private constructor() :
     override fun onStart() {
         super.onStart()
         binding.title.text = arguments?.getString(ARG_TITLE)
+        val iconRes = arguments?.getInt(ARG_ICON)
+        if (iconRes != null)
+            binding.icon.setImageResource(iconRes)
+
 //        binding.updateButton.setOnClickListener { showAddNewEntityDialog() }
         binding.edit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -129,14 +133,10 @@ class SearchDialogFragment private constructor() :
 
             override fun afterTextChanged(s: Editable?) {
                 if (s == null) return
-                if (s.length > LENGTH_TEXT_BEFORE_FILTER) {
-                    val filteringItems = viewModel.filterItems(s.toString()).toList()
-                    Log.d(TAG, "update RV after items after filtering: $filteringItems")
-                    updateItems(adapter, filteringItems)
-                } else {
-                    Log.d(TAG, "update RV with all items: ${viewModel.items}")
-                    updateItems(adapter, viewModel.items)
-                }
+                val searchSubstring = if (s.length > LENGTH_TEXT_BEFORE_FILTER) s.toString() else ""
+                val filteringItems = viewModel.filterItems(viewModel.items, searchSubstring).toList()
+                Log.d(TAG, "update RV after items after filtering: $filteringItems")
+                updateItems(adapter, filteringItems)
             }
         })
     }
@@ -184,18 +184,26 @@ class SearchDialogFragment private constructor() :
     }
 
     companion object {
-        operator fun invoke (title: String, requestCode: String): SearchDialogFragment {
-            val args = Bundle().apply {
-                putString(ARG_TITLE, title)
-                putString(ARG_REQUEST_CODE, requestCode)
-            }
-
-            return SearchDialogFragment().apply {
-                arguments = args
+        operator fun invoke(title: String, icon: Int, requestCode: String): SearchDialogFragment {
+            return invoke(title, requestCode).apply {
+                arguments = Bundle(arguments).apply {
+                    putInt(ARG_ICON, icon)
+                }
             }
         }
 
-        fun getShortName(result: Bundle) = result.getString(ARG_SHORT_NAME) ?: ""
-        fun getId(result: Bundle) = result.getSerializable(ARG_ID) as UUID
-    }
+        operator fun invoke(title: String, requestCode: String): SearchDialogFragment {
+                val args = Bundle().apply {
+                    putString(ARG_TITLE, title)
+                    putString(ARG_REQUEST_CODE, requestCode)
+                }
+
+                return SearchDialogFragment().apply {
+                    arguments = args
+                }
+            }
+
+            fun getShortName(result: Bundle) = result.getString(ARG_SHORT_NAME) ?: ""
+            fun getId(result: Bundle) = result.getSerializable(ARG_ID) as UUID
+        }
 }

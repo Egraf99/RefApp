@@ -1,7 +1,5 @@
 package com.egraf.refapp.ui.dialogs.search_entity
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.egraf.refapp.database.entities.Entity
 import com.egraf.refapp.database.entities.Stadium
@@ -23,13 +21,20 @@ abstract class SearchViewModel<E: Entity> : ViewModelWithGameRepo() {
             emit(Resource.error(data = null, message = e.message ?: "Unknown error occurred!"))
         }
     }
-    fun filterItems(items: List<E>, str: String): List<E> {
+    fun filterItems(items: List<E>, str: String): List<Triple<Int, Int, E>> {
         this.items = items
         return filterItems(str)
     }
 
-    fun filterItems(str: String): List<E> =
-        items.filter { it.shortName.lowercase().contains(str.lowercase()) }
+    fun filterItems(str: String): List<Triple<Int, Int, E>> =
+        items.fold(listOf()) {acc, e ->
+            val startIndex = e.shortName.lowercase().indexOf(str.lowercase())
+            if (startIndex == -1) {
+                acc
+            } else {
+                acc + listOf(Triple(startIndex, startIndex+str.length, e))
+            }
+        }
 }
 
 class StadiumSearchViewModel: SearchViewModel<Stadium>()

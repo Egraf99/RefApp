@@ -20,11 +20,11 @@ import com.egraf.refapp.databinding.SearchEntityItemBinding
 private const val TAG = "SearchAdapter"
 
 class SearchAdapter<E : Entity>(private val onClickListener: SearchItemClickListener) :
-    ListAdapter<E, SearchHolder>(SearchDU<E>()) {
+    ListAdapter<Triple<Int, Int, E>, SearchHolder<E>>(SearchDU<Triple<Int, Int, E>>()) {
 
     val getFirstEntity = { currentList[0] as E }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchHolder =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchHolder<E> =
         when (viewType) {
             R.layout.search_empty_item -> SearchHolder.EmptyHolder(
                 SearchEmptyItemBinding.inflate(
@@ -32,8 +32,8 @@ class SearchAdapter<E : Entity>(private val onClickListener: SearchItemClickList
                     parent,
                     false
                 ), onClickListener
-            )
-            R.layout.search_entity_item -> SearchHolder.EntityHolder(
+            ) as SearchHolder<E>
+            R.layout.search_entity_item -> SearchHolder.EntityHolder<E>(
                 SearchEntityItemBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
@@ -43,9 +43,9 @@ class SearchAdapter<E : Entity>(private val onClickListener: SearchItemClickList
             else -> throw IllegalStateException("Invalid ViewType")
         }
 
-    override fun onBindViewHolder(holder: SearchHolder, position: Int) {
+    override fun onBindViewHolder(holder: SearchHolder<E>, position: Int) {
         when (holder) {
-            is SearchHolder.EntityHolder -> {
+            is SearchHolder.EntityHolder<E> -> {
                 val entityItem = currentList[position]
                 holder.bind(entityItem)
             }
@@ -55,19 +55,22 @@ class SearchAdapter<E : Entity>(private val onClickListener: SearchItemClickList
 
     override fun getItemCount() = currentList.size
     override fun getItemViewType(position: Int): Int =
-        when (currentList[position]) {
+        when (currentList[position].third) {
             is Entity.Companion.Empty -> R.layout.search_empty_item
             else -> R.layout.search_entity_item
         }
 }
 
-class SearchDU<E : Entity> : DiffUtil.ItemCallback<E>() {
-    override fun areItemsTheSame(oldItem: E, newItem: E): Boolean = oldItem.id == newItem.id
-    override fun areContentsTheSame(oldItem: E, newItem: E): Boolean = oldItem == newItem
+class SearchDU<E : Triple<Int, Int, Entity>> : DiffUtil.ItemCallback<E>() {
+    override fun areItemsTheSame(oldItem: E, newItem: E): Boolean =
+        oldItem.third.id == newItem.third.id
+
+    override fun areContentsTheSame(oldItem: E, newItem: E): Boolean =
+        oldItem.first == newItem.first && oldItem.second == newItem.second
 }
 
 
-sealed class SearchHolder(
+sealed class SearchHolder<E>(
     binding: ViewBinding,
 ) : RecyclerView.ViewHolder(binding.root),
     View.OnClickListener {
@@ -75,25 +78,30 @@ sealed class SearchHolder(
         itemView.setOnClickListener(this)
     }
 
-    class EntityHolder(
+    class EntityHolder<E : Entity>(
         private val binding: SearchEntityItemBinding,
         private val onClickListener: SearchItemClickListener
-    ) : SearchHolder(binding) {
-        private var entity: Entity = Entity.Companion.Empty
-        fun bind(item: Entity) {
+    ) : SearchHolder<E>(binding) {
+        private var entity: Triple<Int, Int, E> = Triple(0, 0, Entity.Companion.Empty as E)
+        fun bind(item: Triple<Int, Int, E>) {
             entity = item
-            binding.textView.text = spanString(item.shortName)
+            binding.textView.text = spanItem(item)
         }
 
         override fun onClick(v: View?) {
-            onClickListener.onSearchClickListener(entity)
+            onClickListener.onSearchClickListener(entity.third)
         }
 
-        private fun spanString(text: String): SpannableString {
-            val spannableString = SpannableString(text)
-            if (text.length > 2) {
+        private fun spanItem(item: Triple<Int, Int, E>): SpannableString {
+            val spannableString = SpannableString(item.third.shortName)
+            if (!(item.first == 0 && item.second == 0)) {
                 val fColor = ForegroundColorSpan(Color.BLACK)
-                spannableString.setSpan(fColor, 0, 3, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+                spannableString.setSpan(
+                    fColor,
+                    item.first,
+                    item.second,
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                )
             }
             return spannableString
         }
@@ -103,7 +111,7 @@ sealed class SearchHolder(
         binding: SearchEmptyItemBinding,
         private val onClickListener: SearchItemClickListener
     ) :
-        SearchHolder(binding) {
+        SearchHolder<Nothing>(binding) {
         override fun onClick(v: View?) {
             onClickListener.onSearchClickListener(Entity.Companion.Empty)
         }

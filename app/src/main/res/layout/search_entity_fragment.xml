@@ -15,7 +15,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
-        android:text="Стадион"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +44,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="4dp"
         app:layout_constraintStart_toEndOf="@id/icon"
-        app:layout_constraintBaseline_toBottomOf="@id/icon"
+        app:layout_constraintTop_toTopOf="@id/icon"
+        app:layout_constraintBottom_toBottomOf="@id/icon"
         />
 
     <FrameLayout

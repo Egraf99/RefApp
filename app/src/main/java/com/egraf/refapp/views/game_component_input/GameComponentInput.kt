@@ -131,7 +131,11 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
                     animTextView.visibility = View.INVISIBLE
                     helpTextView.visibility = View.VISIBLE
 
-                    SearchDialogFragment(context.getString(gameComponent.title), "").show(fragmentManager, "")
+                    SearchDialogFragment(
+                        context.getString(gameComponent.title),
+                        R.drawable.ic_stadium,
+                        ""
+                    ).show(fragmentManager, "")
                 }
 
                 override fun onAnimationRepeat(animation: Animation?) {}
