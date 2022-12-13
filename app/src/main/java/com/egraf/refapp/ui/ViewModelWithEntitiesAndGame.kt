@@ -26,7 +26,7 @@ open class ViewModelWithEntitiesAndGame : ViewModelWithGame(),
         gameRepository.addStadium(stadium)
     }
 
-    override fun getStadiumsFromDB(): LiveData<List<Stadium>> {
+    override fun getStadiumsFromDB(): List<Stadium> {
         return gameRepository.getStadiums()
     }
 

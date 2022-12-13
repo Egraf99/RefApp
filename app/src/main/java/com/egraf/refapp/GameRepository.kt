@@ -18,7 +18,7 @@ class GameRepository private constructor(private val dataSource: GameDataSource)
     //    stadium block
     fun addStadium(stadium: Stadium) = dataSource.addStadium(stadium)
 
-    fun getStadiums(): LiveData<List<Stadium>> = dataSource.getStadiums()
+    fun getStadiums(): List<Stadium> = dataSource.getStadiums()
     fun getStadium(id: UUID): LiveData<Stadium?> = dataSource.getStadium(id)
     fun updateStadium(stadium: Stadium) = dataSource.updateStadium(stadium)
 

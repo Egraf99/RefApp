@@ -4,5 +4,5 @@ import androidx.lifecycle.LiveData
 import com.egraf.refapp.database.entities.Stadium
 
 interface StadiumGetInterface: GetInterface {
-    fun getStadiumsFromDB(): LiveData<List<Stadium>>
+    fun getStadiumsFromDB(): List<Stadium>
 }

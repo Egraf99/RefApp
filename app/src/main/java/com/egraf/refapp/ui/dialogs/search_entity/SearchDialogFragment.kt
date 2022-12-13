@@ -1,13 +1,12 @@
 package com.egraf.refapp.ui.dialogs.search_entity
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentResultListener
@@ -19,6 +18,8 @@ import com.egraf.refapp.database.entities.Entity
 import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.SearchEntityFragmentBinding
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.StadiumAddDialog
+import com.egraf.refapp.utils.Resource
+import com.egraf.refapp.utils.Status
 import java.util.*
 
 private const val ARG_TITLE = "TitleBundleKey"
@@ -47,12 +48,14 @@ class SearchDialogFragment private constructor() :
         savedInstanceState: Bundle?
     ): View {
         _binding = SearchEntityFragmentBinding.inflate(inflater)
+        setBackgroundTransparent()
+
         // set RV adapter
-        binding.itemsRv.layoutManager = LinearLayoutManager(context)
-        binding.itemsRv.adapter = adapter
+        binding.searchRv.layoutManager = LinearLayoutManager(context)
+        binding.searchRv.adapter = adapter
 
         // set listener on ET
-        binding.searchInput.setOnKeyListener { _, keyCode, event ->
+        binding.edit.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 sendRequestAndDismiss(adapter.getFirstEntity())
                 return@setOnKeyListener true
@@ -60,18 +63,35 @@ class SearchDialogFragment private constructor() :
             return@setOnKeyListener false
         }
 
-        binding.searchInput.requestFocus()
+        binding.edit.requestFocus()
         dialog?.window?.setSoftInputMode(SOFT_INPUT_STATE_VISIBLE)
         return binding.root
     }
 
+    private fun setBackgroundTransparent() {
+        // Set transparent background and no title
+        if (dialog != null && dialog!!.window != null) {
+            dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+            dialog!!.window!!.requestFeature(Window.FEATURE_NO_TITLE);
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.liveDataListStadium().observe(viewLifecycleOwner) { stadiums: List<Stadium> ->
-            viewModel.items = stadiums
-            // сразу фильтруем по тексту
-            // (если в searchInput сохранился текст при изменении конфигурации)
-            updateItems(adapter, viewModel.filterItems(binding.searchInput.text.toString()))
+        viewModel.getStadiums().observe(viewLifecycleOwner) { resource ->
+            when (resource.status) {
+                Status.LOADING -> showLoading()
+                Status.SUCCESS -> {
+                    showRecycleView()
+                    resource.data?.let {
+                        updateItems(
+                            adapter,
+                            viewModel.filterItems(it, binding.edit.text.toString())
+                        )
+                    }
+                }
+                Status.ERROR -> Log.d(TAG, "Don't receive stadiums by: ${resource.message}")
+            }
         }
 
         parentFragmentManager.setFragmentResultListener(
@@ -81,16 +101,29 @@ class SearchDialogFragment private constructor() :
         )
     }
 
+    private fun showLoading() {
+        binding.progressBar.visibility = View.VISIBLE
+        binding.txtHint.visibility = View.INVISIBLE
+        binding.searchRv.visibility = View.INVISIBLE
+    }
+
+    private fun showRecycleView() {
+        binding.progressBar.visibility = View.GONE
+        binding.txtHint.visibility = View.INVISIBLE
+        binding.searchRv.visibility = View.VISIBLE
+    }
+
     private fun updateItems(adapter: SearchAdapter<Stadium>, items: List<Stadium>) {
+        viewModel.items = items
         adapter.submitList(items)
-        binding.itemsRv.adapter = adapter
+        binding.searchRv.adapter = adapter
     }
 
     override fun onStart() {
         super.onStart()
-        binding.titleTv.text = arguments?.getString(ARG_TITLE)
-        binding.updateButton.setOnClickListener { showAddNewEntityDialog() }
-        binding.searchInput.addTextChangedListener(object : TextWatcher {
+        binding.title.text = arguments?.getString(ARG_TITLE)
+//        binding.updateButton.setOnClickListener { showAddNewEntityDialog() }
+        binding.edit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
@@ -109,9 +142,9 @@ class SearchDialogFragment private constructor() :
     }
 
     private fun showAddNewEntityDialog() {
-        binding.searchInput.clearFocus()
+        binding.edit.clearFocus()
         StadiumAddDialog()
-            .putEntityName(binding.searchInput.text.toString(), REQUEST_NEW_ENTITY)
+            .putEntityName(binding.edit.text.toString(), REQUEST_NEW_ENTITY)
             .show(parentFragmentManager, REQUEST_NEW_ENTITY)
     }
 

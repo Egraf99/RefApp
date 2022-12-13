@@ -51,7 +51,7 @@ class LocalGameDataSource(context: Context) : GameDataSource {
         }
     }
 
-    override fun getStadiums(): LiveData<List<Stadium>> = stadiumDao.getStadiums()
+    override fun getStadiums(): List<Stadium> = stadiumDao.getStadiums()
     override fun getStadium(id: UUID): LiveData<Stadium?> = stadiumDao.getStadium(id)
     override fun updateStadium(stadium: Stadium) {
         executor.execute {

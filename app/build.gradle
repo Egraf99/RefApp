@@ -66,12 +66,17 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
+    //LifeCycle
+    implementation 'androidx.lifecycle:lifecycle-common:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
     //Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:2.5.2"
     implementation "androidx.navigation:navigation-ui-ktx:2.5.2"
     androidTestImplementation "androidx.navigation:navigation-testing:2.5.3"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation "androidx.room:room-runtime:2.4.3"
     implementation "io.reactivex.rxjava2:rxjava:2.1.9"

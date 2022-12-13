@@ -21,9 +21,9 @@ class StadiumETI(context: Context, attrs: AttributeSet? = null) :
         super.init()
         setParentFragmentManager(fragment)
 
-        viewModel.getStadiumsFromDB().observe(fragment.viewLifecycleOwner) { stadiums ->
-           setEntities(stadiums)
-        }
+//        viewModel.getStadiumsFromDB().observe(fragment.viewLifecycleOwner) { stadiums ->
+//           setEntities(stadiums)
+//        }
         doWhenInfoClicked { stadium ->
             Toast.makeText(context, stadium.fullName, Toast.LENGTH_SHORT).show()
         }

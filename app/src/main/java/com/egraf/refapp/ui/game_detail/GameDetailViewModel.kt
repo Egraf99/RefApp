@@ -50,7 +50,7 @@ TeamInterface, LeagueInterface, StadiumInterface, RefereeInterface {
         return gameRepository.getLeagues()
     }
 
-    override fun getStadiumsFromDB(): LiveData<List<Stadium>> {
+    override fun getStadiumsFromDB(): List<Stadium> {
         return gameRepository.getStadiums()
     }
 

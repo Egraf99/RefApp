@@ -8,7 +8,7 @@ import java.util.*
 @Dao
 interface StadiumDao {
     @Query("SELECT * FROM Stadium")
-    fun getStadiums(): LiveData<List<Stadium>>
+    fun getStadiums(): List<Stadium>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addStadium(stadium: Stadium)

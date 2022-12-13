@@ -15,7 +15,7 @@ interface GameDataSource {
 
     //    stadium block
     fun addStadium(stadium: Stadium)
-    fun getStadiums(): LiveData<List<Stadium>>
+    fun getStadiums(): List<Stadium>
     fun getStadium(id: UUID): LiveData<Stadium?>
     fun updateStadium(stadium: Stadium)
 

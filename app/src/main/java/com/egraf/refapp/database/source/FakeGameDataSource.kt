@@ -57,7 +57,7 @@ class FakeGameDataSource(private val initFakeData: Boolean = false) : GameDataSo
     override fun addStadium(stadium: Stadium) {
         stadiums.add(stadium)
     }
-    override fun getStadiums(): LiveData<List<Stadium>> = MutableLiveData(stadiums)
+    override fun getStadiums(): List<Stadium> = listOf()
     override fun getStadium(id: UUID): LiveData<Stadium?> {
         stadiums.forEach { stadium -> if (stadium.id == id) return MutableLiveData(stadium) }
         return MutableLiveData(null)
