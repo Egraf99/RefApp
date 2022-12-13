@@ -1,5 +1,9 @@
 package com.egraf.refapp.ui.dialogs.search_entity
 
+import android.graphics.Color
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -43,7 +47,6 @@ class SearchAdapter<E : Entity>(private val onClickListener: SearchItemClickList
         when (holder) {
             is SearchHolder.EntityHolder -> {
                 val entityItem = currentList[position]
-                Log.d(TAG, "binding $entityItem")
                 holder.bind(entityItem)
             }
             is SearchHolder.EmptyHolder -> Log.d(TAG, "not binding because empty holder")
@@ -79,11 +82,20 @@ sealed class SearchHolder(
         private var entity: Entity = Entity.Companion.Empty
         fun bind(item: Entity) {
             entity = item
-            binding.textView.text = item.shortName
+            binding.textView.text = spanString(item.shortName)
         }
 
         override fun onClick(v: View?) {
             onClickListener.onSearchClickListener(entity)
+        }
+
+        private fun spanString(text: String): SpannableString {
+            val spannableString = SpannableString(text)
+            if (text.length > 2) {
+                val fColor = ForegroundColorSpan(Color.BLACK)
+                spannableString.setSpan(fColor, 0, 3, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+            }
+            return spannableString
         }
     }
 
