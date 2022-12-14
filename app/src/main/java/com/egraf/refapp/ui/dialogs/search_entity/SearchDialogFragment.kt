@@ -14,6 +14,7 @@ import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.egraf.refapp.R
+import com.egraf.refapp.ScreenMetricsCompat
 import com.egraf.refapp.database.entities.Entity
 import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.SearchEntityFragmentBinding
@@ -48,7 +49,7 @@ class SearchDialogFragment private constructor() :
         savedInstanceState: Bundle?
     ): View {
         _binding = SearchEntityFragmentBinding.inflate(inflater)
-        setBackgroundTransparent()
+        initDialog()
 
         // set RV adapter
         binding.searchRv.layoutManager = LinearLayoutManager(context)
@@ -64,15 +65,17 @@ class SearchDialogFragment private constructor() :
         }
 
         binding.edit.requestFocus()
-        dialog?.window?.setSoftInputMode(SOFT_INPUT_STATE_VISIBLE)
         return binding.root
     }
 
-    private fun setBackgroundTransparent() {
-        // Set transparent background and no title
+    private fun initDialog() {
         if (dialog != null && dialog!!.window != null) {
-            dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
-            dialog!!.window!!.requestFeature(Window.FEATURE_NO_TITLE);
+            dialog!!.window!!.apply {
+                setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+                requestFeature(Window.FEATURE_NO_TITLE)
+                setGravity(Gravity.TOP)
+                setSoftInputMode(SOFT_INPUT_STATE_VISIBLE)
+            }
         }
     }
 
