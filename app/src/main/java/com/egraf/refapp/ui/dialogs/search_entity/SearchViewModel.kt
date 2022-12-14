@@ -27,14 +27,14 @@ abstract class SearchViewModel<E: Entity> : ViewModelWithGameRepo() {
     }
 
     fun filterItems(str: String): List<Triple<Int, Int, E>> =
-        items.fold(listOf()) {acc, e ->
+        items.fold<E, List<Triple<Int, Int, E>>>(listOf()) { acc, e ->
             val startIndex = e.shortName.lowercase().indexOf(str.lowercase())
             if (startIndex == -1) {
                 acc
             } else {
                 acc + listOf(Triple(startIndex, startIndex+str.length, e))
             }
-        }
+        }.sortedBy { it.first }
 }
 
 class StadiumSearchViewModel: SearchViewModel<Stadium>()
