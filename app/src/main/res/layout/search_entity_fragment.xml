@@ -49,6 +49,8 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/search_entity_item"
             android:id="@+id/search_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

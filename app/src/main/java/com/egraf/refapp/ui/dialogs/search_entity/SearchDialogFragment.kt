@@ -36,7 +36,7 @@ private const val LENGTH_TEXT_BEFORE_FILTER: Int = 0
 
 private const val TAG = "SearchDialogFragment"
 
-class SearchDialogFragment private constructor() :
+class SearchDialogFragment:
     DialogFragment(R.layout.search_entity_fragment), FragmentResultListener, SearchItemClickListener<Stadium> {
 
     private val viewModel: StadiumSearchViewModel by lazy {
@@ -55,7 +55,6 @@ class SearchDialogFragment private constructor() :
         initDialog()
 
         // set RV adapter
-        binding.searchRv.layoutManager = LinearLayoutManager(context)
         binding.searchRv.adapter = adapter
         // set RV divider
         val divider = DividerItemDecoration(requireContext(), RecyclerView.VERTICAL)
@@ -95,8 +94,9 @@ class SearchDialogFragment private constructor() :
                 Status.SUCCESS -> {
                     showRecycleView()
                     resource.data?.let {
+                        viewModel.items = it
                         updateItems(
-                            viewModel.filterItems(it, binding.edit.text.toString())
+                            viewModel.filterItems(viewModel.items, binding.edit.text.toString())
                         )
                     }
                 }
@@ -136,15 +136,14 @@ class SearchDialogFragment private constructor() :
         }
     }
 
-    private fun showRV() {
+    private fun hideHintTextAndShowRV() {
         binding.searchRv.visibility = View.VISIBLE
         binding.txtHint.visibility = View.INVISIBLE
     }
 
     private fun showRVWithItems(items: List<Triple<Int, Int, Stadium>>) {
         adapter.submitList(items)
-        binding.searchRv.adapter = adapter
-        showRV()
+        hideHintTextAndShowRV()
     }
 
     override fun onStart() {
@@ -161,9 +160,9 @@ class SearchDialogFragment private constructor() :
 
             override fun afterTextChanged(s: Editable?) {
                 if (s == null) return
+                Log.d(TAG, "\ntext changed: $s")
                 val searchSubstring = if (s.length > LENGTH_TEXT_BEFORE_FILTER) s.toString() else ""
-                val filteringItems = viewModel.filterItems(viewModel.items, searchSubstring).toList()
-                Log.d(TAG, "update RV after items after filtering: $filteringItems")
+                val filteringItems = viewModel.filterItems(viewModel.items, searchSubstring)
                 updateItems(filteringItems)
             }
         })

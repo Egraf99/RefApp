@@ -25,33 +25,33 @@ class SearchAdapter<E : Entity>(private val onClickListener: SearchItemClickList
     val getFirstEntity = { currentList[0] }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchHolder<E> =
-            SearchHolder(
-                SearchEntityItemBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                ), onClickListener
-            )
+        SearchHolder(
+            SearchEntityItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            ), onClickListener
+        )
 
     override fun onBindViewHolder(holder: SearchHolder<E>, position: Int) {
-                val entityItem = currentList[position]
-                holder.bind(entityItem)
+        Log.d(TAG, "onBindViewHolder: ${currentList[position]}")
+        val entityItem = currentList[position]
+        holder.bind(entityItem)
     }
 
     override fun getItemCount() = currentList.size
-    override fun getItemViewType(position: Int): Int =
-        when (currentList[position].third) {
-            is Entity.Companion.Empty -> R.layout.search_empty_item
-            else -> R.layout.search_entity_item
-        }
 }
 
-class SearchDU<E : Triple<Int, Int, Entity>> : DiffUtil.ItemCallback<E>() {
-    override fun areItemsTheSame(oldItem: E, newItem: E): Boolean =
-        oldItem.third.id == newItem.third.id
+class SearchDU<T : Triple<Int, Int, Entity>> : DiffUtil.ItemCallback<T>() {
+    override fun areItemsTheSame(oldItem: T, newItem: T): Boolean =
+        oldItem.first == newItem.first &&
+        oldItem.second == newItem.second &&
+        oldItem.third.shortName == newItem.third.shortName
 
-    override fun areContentsTheSame(oldItem: E, newItem: E): Boolean =
-        oldItem.first == newItem.first && oldItem.second == newItem.second
+    override fun areContentsTheSame(oldItem: T, newItem: T): Boolean =
+        oldItem.first == newItem.first &&
+        oldItem.second == newItem.second &&
+        oldItem.third.shortName == newItem.third.shortName
 }
 
 

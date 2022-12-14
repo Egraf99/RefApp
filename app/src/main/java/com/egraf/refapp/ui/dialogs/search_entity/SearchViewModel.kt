@@ -11,6 +11,9 @@ private const val TAG = "SearchViewModel"
 
 abstract class SearchViewModel<E: Entity> : ViewModelWithGameRepo() {
     var items = listOf<E>()
+    val itemsTriple = items.fold(listOf()) { acc: List<Triple<Int, Int, E>>, e: E ->
+        acc + listOf(Triple(0, 0, e))
+    }
     val emptyItemList = listOf<Entity>(Entity.Companion.Empty)
 
     fun getStadiums() = liveData(Dispatchers.IO) {
@@ -21,18 +24,20 @@ abstract class SearchViewModel<E: Entity> : ViewModelWithGameRepo() {
             emit(Resource.error(data = null, message = e.message ?: "Unknown error occurred!"))
         }
     }
-    fun filterItems(items: List<E>, str: String): List<Triple<Int, Int, E>> {
-        this.items = items
-        return filterItems(str)
-    }
 
-    fun filterItems(str: String): List<Triple<Int, Int, E>> =
+    /**
+     * Фильтрует [items] по заданной [str] и возвращает список List(Triple(start, end, item)), где:
+     *      entity - Entity, в name которой присутствует [str];
+     *      start - индекс превого совпадения с [str];
+     *      end - индукс последнего совпадения с [str];
+     */
+    fun filterItems(items: List<E>, str: String): List<Triple<Int, Int, E>> =
         items.fold<E, List<Triple<Int, Int, E>>>(listOf()) { acc, e ->
             val startIndex = e.shortName.lowercase().indexOf(str.lowercase())
             if (startIndex == -1) {
                 acc
             } else {
-                acc + listOf(Triple(startIndex, startIndex+str.length, e))
+                acc + listOf(Triple(startIndex, startIndex + str.length, e))
             }
         }.sortedBy { it.first }
 }
