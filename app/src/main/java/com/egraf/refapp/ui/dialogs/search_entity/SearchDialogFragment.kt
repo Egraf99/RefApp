@@ -34,7 +34,7 @@ private const val LENGTH_TEXT_BEFORE_FILTER: Int = 0
 private const val TAG = "SearchDialogFragment"
 
 class SearchDialogFragment private constructor() :
-    DialogFragment(R.layout.search_entity_fragment), FragmentResultListener, SearchItemClickListener {
+    DialogFragment(R.layout.search_entity_fragment), FragmentResultListener, SearchItemClickListener<Stadium> {
 
     private val viewModel: StadiumSearchViewModel by lazy {
         ViewModelProvider(this)[StadiumSearchViewModel::class.java]
@@ -179,13 +179,13 @@ class SearchDialogFragment private constructor() :
         setFragmentResult(resultRequestCode, bundle)
     }
 
-    override fun onSearchClickListener(entity: Entity) {
-        sendRequestAndDismiss(entity)
+    override fun onSearchClickListener(e: Stadium) {
+        sendRequestAndDismiss(e)
     }
 
     companion object {
         operator fun invoke(title: String, icon: Int, requestCode: String): SearchDialogFragment {
-            return invoke(title, requestCode).apply {
+            return SearchDialogFragment(title, requestCode).apply {
                 arguments = Bundle(arguments).apply {
                     putInt(ARG_ICON, icon)
                 }
