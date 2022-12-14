@@ -18,7 +18,6 @@ import com.egraf.refapp.database.entities.Entity
 import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.SearchEntityFragmentBinding
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.StadiumAddDialog
-import com.egraf.refapp.utils.Resource
 import com.egraf.refapp.utils.Status
 import java.util.*
 
@@ -86,7 +85,6 @@ class SearchDialogFragment private constructor() :
                     showRecycleView()
                     resource.data?.let {
                         updateItems(
-                            adapter,
                             viewModel.filterItems(it, binding.edit.text.toString())
                         )
                     }
@@ -114,9 +112,28 @@ class SearchDialogFragment private constructor() :
         binding.searchRv.visibility = View.VISIBLE
     }
 
-    private fun updateItems(adapter: SearchAdapter<Stadium>, items: List<Triple<Int, Int, Stadium>>) {
+    private fun updateItems(items: List<Triple<Int, Int, Stadium>>) {
+        if (items.isEmpty()) showItemsEmptyText()
+        else showRVWithItems(items)
+    }
+
+    private fun showItemsEmptyText() {
+        binding.searchRv.visibility = View.INVISIBLE
+        binding.txtHint.apply {
+            visibility = View.VISIBLE
+            text = context.getString(R.string.no_matches_found)
+        }
+    }
+
+    private fun showRV() {
+        binding.searchRv.visibility = View.VISIBLE
+        binding.txtHint.visibility = View.INVISIBLE
+    }
+
+    private fun showRVWithItems(items: List<Triple<Int, Int, Stadium>>) {
         adapter.submitList(items)
         binding.searchRv.adapter = adapter
+        showRV()
     }
 
     override fun onStart() {
@@ -136,7 +153,7 @@ class SearchDialogFragment private constructor() :
                 val searchSubstring = if (s.length > LENGTH_TEXT_BEFORE_FILTER) s.toString() else ""
                 val filteringItems = viewModel.filterItems(viewModel.items, searchSubstring).toList()
                 Log.d(TAG, "update RV after items after filtering: $filteringItems")
-                updateItems(adapter, filteringItems)
+                updateItems(filteringItems)
             }
         })
     }
