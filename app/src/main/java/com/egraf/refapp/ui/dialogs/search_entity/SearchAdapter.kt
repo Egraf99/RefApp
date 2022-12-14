@@ -22,7 +22,7 @@ private const val TAG = "SearchAdapter"
 class SearchAdapter<E : Entity>(private val onClickListener: SearchItemClickListener<E>) :
     ListAdapter<Triple<Int, Int, E>, SearchHolder<E>>(SearchDU<Triple<Int, Int, E>>()) {
 
-    val getFirstEntity = { currentList[0] as E }
+    val getFirstEntity = { currentList[0] }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchHolder<E> =
             SearchHolder(
@@ -75,17 +75,17 @@ class SearchHolder<E : Entity>(
         onClickListener.onSearchClickListener(entity.third)
     }
 
-        private fun spanItem(item: Triple<Int, Int, E>): SpannableString {
-            val spannableString = SpannableString(item.third.shortName)
-            if (!(item.first == 0 && item.second == 0)) {
-                val fColor = ForegroundColorSpan(Color.BLACK)
-                spannableString.setSpan(
-                    fColor,
-                    item.first,
-                    item.second,
-                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
-                )
-            }
-            return spannableString
+    private fun spanItem(item: Triple<Int, Int, E>): SpannableString {
+        val spannableString = SpannableString(item.third.shortName)
+        if (!(item.first == 0 && item.second == 0)) {
+            val fColor = ForegroundColorSpan(Color.BLACK)
+            spannableString.setSpan(
+                fColor,
+                item.first,
+                item.second,
+                Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+            )
         }
+        return spannableString
+    }
     }

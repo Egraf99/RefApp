@@ -29,7 +29,6 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="4dp"
-            android:background="@drawable/ic_stadium"
             tools:background="@drawable/ic_stadium" />
 
         <EditText
@@ -53,6 +52,7 @@
             android:id="@+id/search_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edit" />

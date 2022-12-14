@@ -8,11 +8,14 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.R
 import com.egraf.refapp.ScreenMetricsCompat
 import com.egraf.refapp.database.entities.Entity
@@ -54,11 +57,16 @@ class SearchDialogFragment private constructor() :
         // set RV adapter
         binding.searchRv.layoutManager = LinearLayoutManager(context)
         binding.searchRv.adapter = adapter
+        // set RV divider
+        val divider = DividerItemDecoration(requireContext(), RecyclerView.VERTICAL)
+        AppCompatResources.getDrawable(requireContext(), R.drawable.divider)
+            ?.let { divider.setDrawable(it) }
+        binding.searchRv.addItemDecoration(divider)
 
         // set listener on ET
         binding.edit.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                sendRequestAndDismiss(adapter.getFirstEntity())
+                sendRequestAndDismiss(adapter.getFirstEntity().third)
                 return@setOnKeyListener true
             }
             return@setOnKeyListener false
