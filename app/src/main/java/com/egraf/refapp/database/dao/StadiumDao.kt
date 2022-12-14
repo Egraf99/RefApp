@@ -7,7 +7,7 @@ import java.util.*
 
 @Dao
 interface StadiumDao {
-    @Query("SELECT * FROM Stadium")
+    @Query("SELECT * FROM Stadium ORDER BY name ASC")
     fun getStadiums(): List<Stadium>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
