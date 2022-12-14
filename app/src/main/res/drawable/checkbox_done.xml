@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:top="1dp" android:bottom="3dp" android:right="3dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="10dp"
+                android:centerY="0.6"
+                android:startColor="@color/black"
+                />
+
+
+            <corners android:radius="40dp" />
+        </shape>
+    </item>
+    <item android:bottom="4dp" android:drawable="@drawable/ic_checkbox_done"/>
+
+
+
+
+</layer-list>

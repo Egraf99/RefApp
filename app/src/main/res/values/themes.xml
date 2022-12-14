@@ -13,8 +13,12 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="editTextStyle">@style/CustomEditText</item>
+        <item name="checkboxStyle">@style/CustomCheckbox</item>
     </style>
     <style name="CustomEditText" parent="@android:style/Widget.EditText">
         <item name="android:backgroundTint">@color/orange</item>
+    </style>
+    <style name="CustomCheckbox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/custom_check_box</item>
     </style>
 </resources>
