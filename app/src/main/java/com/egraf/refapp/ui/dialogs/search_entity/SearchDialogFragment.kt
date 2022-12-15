@@ -25,7 +25,8 @@ import com.egraf.refapp.views.game_component_input.GameComponent
 import java.util.*
 
 private const val ARG_TITLE = "TitleBundleKey"
-private const val ARG_GAME_COMPONENT_ORDINAL = "IconBundleKey"
+private const val ARG_GAME_COMPONENT_ORDINAL = "GameComponentBundleKey"
+private const val ARG_SEARCH_STRING = "SearchStingBundleKey"
 private const val ARG_SHORT_NAME = "NameBundleKey"
 private const val ARG_ID = "IdBundleKey"
 
@@ -70,6 +71,7 @@ class SearchDialogFragment:
             return@setOnKeyListener false
         }
 
+        binding.edit.setText(arguments?.getString(ARG_SEARCH_STRING) ?: "")
         binding.edit.requestFocus()
         return binding.root
     }
@@ -212,10 +214,16 @@ class SearchDialogFragment:
     }
 
     companion object {
-        operator fun invoke(title: String, gameComponentOrdinal: Int, requestCode: String): SearchDialogFragment {
+        operator fun invoke(
+            title: String,
+            gameComponentOrdinal: Int,
+            searchString: String = "",
+            requestCode: String
+        ): SearchDialogFragment {
             return SearchDialogFragment(title, requestCode).apply {
                 arguments = Bundle(arguments).apply {
                     putInt(ARG_GAME_COMPONENT_ORDINAL, gameComponentOrdinal)
+                    putString(ARG_SEARCH_STRING, searchString)
                 }
             }
         }

@@ -94,7 +94,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         val title = gameComponent.title
         helpTextView.text = context.getText(title)
         animTextView.text = context.getText(title)
-        contentTextView.text = "Очень длинное название стадиона"
+        contentTextView.text = "Авангард"
 
         // init animations
         appearAnim = AnimationUtils.loadAnimation(context, R.anim.appeare_textview).apply {
@@ -151,6 +151,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
             SearchDialogFragment(
                 context.getString(gameComponent.title),
                 gameComponent.ordinal,
+                contentTextView.text.toString(),
                 ""
             ).show(fragmentManager, "")
         }
