@@ -20,5 +20,6 @@
     </style>
     <style name="CustomCheckbox" parent="Widget.AppCompat.CompoundButton.CheckBox">
         <item name="android:button">@drawable/custom_check_box</item>
+        <item name="android:textSize">22sp</item>
     </style>
 </resources>

@@ -18,23 +18,22 @@ import com.egraf.refapp.ui.dialogs.search_entity.SearchViewModel
 import java.util.*
 
 
-enum class GameComponent(val value: Int,
-                         val title: Int) {
-    STADIUM(0, R.string.stadium),
-    LEAGUE(1, R.string.league),
-    HOME_TEAM(2, R.string.home_team),
-    GUEST_TEAM(3, R.string.guest_team),
-    DATE(4, R.string.date),
-    TIME(5, R.string.time);
+enum class GameComponent(val title: Int) {
+    STADIUM(R.string.stadium),
+    LEAGUE(R.string.league),
+    HOME_TEAM( R.string.home_team),
+    GUEST_TEAM(R.string.guest_team),
+    DATE(R.string.date),
+    TIME(R.string.time);
 
     companion object {
         fun getComponent(value: Int): GameComponent = when (value) {
-            0 -> STADIUM
-            1 -> LEAGUE
-            2 -> HOME_TEAM
-            3 -> GUEST_TEAM
-            4 -> DATE
-            5 -> TIME
+            STADIUM.ordinal -> STADIUM
+            LEAGUE.ordinal -> LEAGUE
+            HOME_TEAM.ordinal -> HOME_TEAM
+            GUEST_TEAM.ordinal -> GUEST_TEAM
+            DATE.ordinal -> DATE
+            TIME.ordinal -> TIME
             else -> throw IllegalStateException("Unknown value: $value")
         }
     }
