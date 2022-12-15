@@ -4,14 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
+<!--    Open bracket -->
     <ImageView
         android:layout_height="match_parent"
         android:layout_width="wrap_content"
         android:layout_gravity="start"
+        android:background="@drawable/ic_open_bracket"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+<!--    Icon -->
     <ImageView
         android:id="@+id/icon"
         android:layout_width="30dp"
@@ -46,18 +49,35 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:maxLines="1"
         android:layout_weight="1"
         android:layout_marginStart="12dp"
         android:textSize="22sp"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintEnd_toStartOf="@id/infoButton"
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"/>
 
+    <!--    Info button -->
+    <ImageButton
+        android:id="@+id/infoButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:background="@drawable/info_image_button"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+<!--    Close bracket -->
     <ImageView
         android:layout_height="match_parent"
         android:layout_width="wrap_content"
         android:layout_gravity="end"
+        android:background="@drawable/ic_close_bracket"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

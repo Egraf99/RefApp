@@ -3,28 +3,30 @@ package com.egraf.refapp.views.game_component_input
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentManager
 import com.egraf.refapp.R
-import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
-import com.egraf.refapp.ui.dialogs.search_entity.SearchViewModel
+import kotlinx.android.synthetic.main.game_component_input.view.*
 import java.util.*
 
 
-enum class GameComponent(val title: Int) {
-    STADIUM(R.string.stadium),
-    LEAGUE(R.string.league),
-    HOME_TEAM( R.string.home_team),
-    GUEST_TEAM(R.string.guest_team),
-    DATE(R.string.date),
-    TIME(R.string.time);
+enum class GameComponent(val title: Int, val icon: Int) {
+    STADIUM(R.string.stadium, R.drawable.ic_stadium),
+    LEAGUE(R.string.league, R.drawable.ic_stadium),
+    HOME_TEAM( R.string.home_team, R.drawable.ic_stadium),
+    GUEST_TEAM(R.string.guest_team, R.drawable.ic_stadium),
+    DATE(R.string.date, R.drawable.ic_stadium),
+    TIME(R.string.time, R.drawable.ic_stadium);
 
     companion object {
         fun getComponent(value: Int): GameComponent = when (value) {
@@ -42,10 +44,10 @@ enum class GameComponent(val title: Int) {
 class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), View.OnClickListener {
     private var isEmpty: Boolean
     private val gameComponent: GameComponent
-    private val startIcon: Drawable?
     private val animTextView: TextView
     private val helpTextView: TextView
     private val contentTextView: TextView
+    private val infoButton: ImageButton
 
     private val appearAnim: Animation
     private val disappearAnim: Animation
@@ -70,8 +72,6 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
                             0
                         )
                     )
-                startIcon = getDrawable( R.styleable.GameComponentInput_startIcon )
-
             } finally {
                 recycle()
             }
@@ -80,22 +80,21 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.game_component_input, this, true)
 
-        val bracketOpen = getChildAt(0) as ImageView
-        bracketOpen.setBackgroundResource(R.drawable.ic_open_bracket)
+        // set receive icon
         val mIcon = getChildAt(1) as ImageView
-        if (startIcon != null)
-            mIcon.setImageDrawable(startIcon)
+        mIcon.setImageResource(gameComponent.icon)
 
         // search text views
         helpTextView = getChildAt(2) as TextView
         animTextView = getChildAt(3) as TextView
         contentTextView = getChildAt(4) as TextView
+        infoButton = getChildAt(5) as ImageButton
 
         // заполняем text views
         val title = gameComponent.title
         helpTextView.text = context.getText(title)
         animTextView.text = context.getText(title)
-        contentTextView.text = "Dinamo"
+        contentTextView.text = "Очень длинное название стадиона"
 
         // init animations
         appearAnim = AnimationUtils.loadAnimation(context, R.anim.appeare_textview).apply {
@@ -127,14 +126,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
                 override fun onAnimationStart(animation: Animation?) {}
 
                 override fun onAnimationEnd(animation: Animation?) {
-                    animTextView.visibility = View.INVISIBLE
-                    helpTextView.visibility = View.VISIBLE
-
-                    SearchDialogFragment(
-                        context.getString(gameComponent.title),
-                        R.drawable.ic_stadium,
-                        ""
-                    ).show(fragmentManager, "")
+                    setContentFill()
                 }
 
                 override fun onAnimationRepeat(animation: Animation?) {}
@@ -145,27 +137,29 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
                 override fun onAnimationStart(animation: Animation?) {}
 
                 override fun onAnimationEnd(animation: Animation?) {
-                    animTextView.visibility = View.VISIBLE
-                    helpTextView.visibility = View.INVISIBLE
+                    setContentEmpty()
                 }
 
                 override fun onAnimationRepeat(animation: Animation?) {}
             })
         }
-
-        val bracketClose = getChildAt(childCount - 1) as ImageView
-        bracketClose.setBackgroundResource(R.drawable.ic_close_bracket)
-
         // clickable
+        contentTextView.setOnClickListener(this)
+        icon.setOnClickListener(this)
         setOnClickListener(this)
+        infoButton.setOnClickListener {
+            SearchDialogFragment(
+                context.getString(gameComponent.title),
+                gameComponent.ordinal,
+                ""
+            ).show(fragmentManager, "")
+        }
 
         // set content
         setState(isEmpty)
     }
 
     private fun fill() {
-        setContentEmpty()
-
         leftUpAnim.reset()
         appearAnim.reset()
         animTextView.clearAnimation()
@@ -176,8 +170,6 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
     }
 
     private fun empty() {
-        setContentFill()
-
         rightDownAnim.reset()
         disappearAnim.reset()
         helpTextView.clearAnimation()
@@ -190,12 +182,14 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
     private fun setContentEmpty() {
         helpTextView.visibility = View.INVISIBLE
         contentTextView.visibility = View.INVISIBLE
+        infoButton.visibility = View.INVISIBLE
         animTextView.visibility = View.VISIBLE
     }
 
     private fun setContentFill() {
         helpTextView.visibility = View.VISIBLE
         contentTextView.visibility = View.VISIBLE
+        infoButton.visibility = View.VISIBLE
         animTextView.visibility = View.INVISIBLE
     }
 

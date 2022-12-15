@@ -14,19 +14,18 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.R
-import com.egraf.refapp.ScreenMetricsCompat
 import com.egraf.refapp.database.entities.Entity
 import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.SearchEntityFragmentBinding
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.StadiumAddDialog
 import com.egraf.refapp.utils.Status
+import com.egraf.refapp.views.game_component_input.GameComponent
 import java.util.*
 
 private const val ARG_TITLE = "TitleBundleKey"
-private const val ARG_ICON = "IconBundleKey"
+private const val ARG_GAME_COMPONENT_ORDINAL = "IconBundleKey"
 private const val ARG_SHORT_NAME = "NameBundleKey"
 private const val ARG_ID = "IdBundleKey"
 
@@ -148,10 +147,12 @@ class SearchDialogFragment:
 
     override fun onStart() {
         super.onStart()
-        binding.title.text = arguments?.getString(ARG_TITLE)
-        val iconRes = arguments?.getInt(ARG_ICON)
-        if (iconRes != null)
-            binding.icon.setImageResource(iconRes)
+        val componentInt = arguments?.getInt(ARG_GAME_COMPONENT_ORDINAL)
+        if (componentInt != null) {
+            val component = GameComponent.getComponent(componentInt)
+            binding.title.text = getText(component.title)
+            binding.icon.setImageResource(component.icon)
+        }
 
 //        binding.updateButton.setOnClickListener { showAddNewEntityDialog() }
         binding.edit.addTextChangedListener(object : TextWatcher {
@@ -211,10 +212,10 @@ class SearchDialogFragment:
     }
 
     companion object {
-        operator fun invoke(title: String, icon: Int, requestCode: String): SearchDialogFragment {
+        operator fun invoke(title: String, gameComponentOrdinal: Int, requestCode: String): SearchDialogFragment {
             return SearchDialogFragment(title, requestCode).apply {
                 arguments = Bundle(arguments).apply {
-                    putInt(ARG_ICON, icon)
+                    putInt(ARG_GAME_COMPONENT_ORDINAL, gameComponentOrdinal)
                 }
             }
         }
