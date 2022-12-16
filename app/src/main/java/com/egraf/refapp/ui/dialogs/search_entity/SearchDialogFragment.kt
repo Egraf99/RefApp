@@ -19,6 +19,7 @@ import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.Entity
 import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.SearchEntityFragmentBinding
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.AddEntityAlertDialog
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.StadiumAddDialog
 import com.egraf.refapp.utils.Status
 import com.egraf.refapp.views.game_component_input.GameComponent
@@ -29,6 +30,7 @@ private const val ARG_GAME_COMPONENT_ORDINAL = "GameComponentBundleKey"
 private const val ARG_SEARCH_STRING = "SearchStingBundleKey"
 private const val ARG_SHORT_NAME = "NameBundleKey"
 private const val ARG_ID = "IdBundleKey"
+private const val ADD_NEW_ENTITY_TO_DB_REQUEST_CODE = "AddNewEntityCode"
 
 private const val REQUEST_NEW_ENTITY = "RequestAddEntityKey"
 private const val ARG_REQUEST_CODE = "RequestCodeBundle"
@@ -36,8 +38,20 @@ private const val LENGTH_TEXT_BEFORE_FILTER: Int = 0
 
 private const val TAG = "SearchDialogFragment"
 
-class SearchDialogFragment:
-    DialogFragment(R.layout.search_entity_fragment), FragmentResultListener, SearchItemClickListener<Stadium> {
+fun DialogFragment.setCustomBackground(gravity: Int = Gravity.CENTER) {
+    if (this.dialog != null && this.dialog!!.window != null) {
+        this.dialog!!.window!!.apply {
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            requestFeature(Window.FEATURE_NO_TITLE)
+            setGravity(gravity)
+            setSoftInputMode(SOFT_INPUT_STATE_VISIBLE)
+        }
+    }
+}
+
+class SearchDialogFragment :
+    DialogFragment(R.layout.search_entity_fragment), FragmentResultListener,
+    SearchItemClickListener<Stadium> {
 
     private val viewModel: StadiumSearchViewModel by lazy {
         ViewModelProvider(this)[StadiumSearchViewModel::class.java]
@@ -52,7 +66,7 @@ class SearchDialogFragment:
         savedInstanceState: Bundle?
     ): View {
         _binding = SearchEntityFragmentBinding.inflate(inflater)
-        initDialog()
+        setCustomBackground(gravity = Gravity.TOP)
 
         // set RV adapter
         binding.searchRv.adapter = adapter
@@ -76,16 +90,6 @@ class SearchDialogFragment:
         return binding.root
     }
 
-    private fun initDialog() {
-        if (dialog != null && dialog!!.window != null) {
-            dialog!!.window!!.apply {
-                setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                requestFeature(Window.FEATURE_NO_TITLE)
-                setGravity(Gravity.TOP)
-                setSoftInputMode(SOFT_INPUT_STATE_VISIBLE)
-            }
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -151,12 +155,14 @@ class SearchDialogFragment:
         super.onStart()
         val componentInt = arguments?.getInt(ARG_GAME_COMPONENT_ORDINAL)
         if (componentInt != null) {
-            val component = GameComponent.getComponent(componentInt)
-            binding.title.text = getText(component.title)
-            binding.icon.setImageResource(component.icon)
+            viewModel.component = GameComponent.getComponent(componentInt)
+            binding.title.text = getText(viewModel.component.title)
+            binding.icon.setImageResource(viewModel.component.icon)
+        } else {
+            throw IllegalStateException("Not receive type of component")
         }
 
-//        binding.updateButton.setOnClickListener { showAddNewEntityDialog() }
+        binding.plusButton.setOnClickListener { showAddNewEntityDialog() }
         binding.edit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -172,10 +178,20 @@ class SearchDialogFragment:
     }
 
     private fun showAddNewEntityDialog() {
-        binding.edit.clearFocus()
-        StadiumAddDialog()
-            .putEntityName(binding.edit.text.toString(), REQUEST_NEW_ENTITY)
-            .show(parentFragmentManager, REQUEST_NEW_ENTITY)
+        val text: String = getString(R.string.add_entity_to_db, binding.edit.text.toString())
+
+        AddEntityAlertDialog(
+            getText(viewModel.component.title).toString(),
+            text,
+            viewModel.component.ordinal,
+            ADD_NEW_ENTITY_TO_DB_REQUEST_CODE
+        ).show(parentFragmentManager, "")
+
+    }
+
+
+    private fun saveEntityToDB() {
+        Log.d(TAG, "saveEntity")
     }
 
     override fun onDestroy() {

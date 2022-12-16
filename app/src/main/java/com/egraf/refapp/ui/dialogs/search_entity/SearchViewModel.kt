@@ -5,11 +5,13 @@ import com.egraf.refapp.database.entities.Entity
 import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.ui.ViewModelWithGameRepo
 import com.egraf.refapp.utils.Resource
+import com.egraf.refapp.views.game_component_input.GameComponent
 import kotlinx.coroutines.Dispatchers
 
 private const val TAG = "SearchViewModel"
 
 abstract class SearchViewModel<E: Entity> : ViewModelWithGameRepo() {
+    lateinit var component: GameComponent
     var items = listOf<E>()
     val itemsTriple = items.fold(listOf()) { acc: List<Triple<Int, Int, E>>, e: E ->
         acc + listOf(Triple(0, 0, e))

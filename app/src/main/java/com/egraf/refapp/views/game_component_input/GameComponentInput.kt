@@ -23,13 +23,15 @@ import java.util.*
 enum class GameComponent(val title: Int, val icon: Int) {
     STADIUM(R.string.stadium, R.drawable.ic_stadium),
     LEAGUE(R.string.league, R.drawable.ic_stadium),
-    HOME_TEAM( R.string.home_team, R.drawable.ic_stadium),
+    HOME_TEAM(R.string.home_team, R.drawable.ic_stadium),
     GUEST_TEAM(R.string.guest_team, R.drawable.ic_stadium),
     DATE(R.string.date, R.drawable.ic_stadium),
-    TIME(R.string.time, R.drawable.ic_stadium);
+    TIME(R.string.time, R.drawable.ic_stadium),
+    NULL(0, 0);
 
     companion object {
-        fun getComponent(value: Int): GameComponent = when (value) {
+        fun getComponent(value: Int?): GameComponent = when (value) {
+            null -> NULL
             STADIUM.ordinal -> STADIUM
             LEAGUE.ordinal -> LEAGUE
             HOME_TEAM.ordinal -> HOME_TEAM

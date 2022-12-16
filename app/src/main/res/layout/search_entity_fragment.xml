@@ -6,7 +6,7 @@
     android:minWidth="350dp"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/search_background"
+    android:background="@drawable/fragment_background"
     android:paddingHorizontal="18dp">
 
 

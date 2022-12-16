@@ -3,6 +3,7 @@
     <string name="gamePaidCheckbox">Оплачена</string>
     <string name="new_game">Новая игра</string>
     <string name="add_game">Добавить новую игру</string>
+    <string name="add">Добавить</string>
     <string name="home_team">Команда хозяев</string>
     <string name="guest_team">Команда гостей</string>
     <string name="stadium">Стадион</string>
@@ -39,4 +40,7 @@
     <string name="previous">Назад</string>
     <string name="create">Создать</string>
     <string name="no_matches_found">Совпадений не найдено</string>
+    <string name="no">Нет</string>
+    <string name="yes">Да</string>
+    <string name="add_entity_to_db">Добавить &lt;b>%1$s&lt;/b> в базу?</string>
 </resources>
