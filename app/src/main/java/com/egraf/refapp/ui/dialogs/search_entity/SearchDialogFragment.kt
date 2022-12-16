@@ -79,7 +79,7 @@ class SearchDialogFragment:
     private fun initDialog() {
         if (dialog != null && dialog!!.window != null) {
             dialog!!.window!!.apply {
-                setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+                setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 requestFeature(Window.FEATURE_NO_TITLE)
                 setGravity(Gravity.TOP)
                 setSoftInputMode(SOFT_INPUT_STATE_VISIBLE)

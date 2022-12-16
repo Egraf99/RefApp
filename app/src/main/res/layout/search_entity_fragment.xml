@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:minWidth="350dp"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/search_background"
-    android:gravity="top"
     android:paddingHorizontal="18dp">
 
 
@@ -26,18 +26,26 @@
 
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             tools:background="@drawable/ic_stadium" />
 
         <EditText
             android:id="@+id/edit"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:ems="10"
+            android:layout_marginHorizontal="8dp"
+            android:layout_weight="1"
             android:inputType="textImeMultiLine" />
+
+        <ImageButton
+            android:id="@+id/plus_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/plus_image_button" />
+
     </LinearLayout>
 
     <FrameLayout
@@ -68,7 +76,9 @@
 
         <TextView
             android:id="@+id/txt_hint"
-            tools:text = "Hint text"
+            android:layout_marginTop="12dp"
+            android:textSize="20sp"
+            tools:text="Hint text"
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
