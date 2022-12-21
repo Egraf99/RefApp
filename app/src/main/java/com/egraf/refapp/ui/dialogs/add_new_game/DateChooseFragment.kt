@@ -28,8 +28,15 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d(TAG, "create")
         _binding = DateChooseBinding.inflate(inflater).apply {
-            stadiumLayout.bindFragmentManager(this@DateChooseFragment.parentFragmentManager)
+            stadiumComponentInput
+                .bindFragmentManager(this@DateChooseFragment.parentFragmentManager)
+                .setOnSearchItemClickListener { _, searchItemInterface ->
+                    Log.d(
+                        TAG,
+                        "fragment click: ${searchItemInterface.title}"
+                    ) }
         }
         updateUI()
         return binding.root

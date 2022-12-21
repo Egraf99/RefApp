@@ -89,6 +89,12 @@ class SearchDialogFragment(private val searchComponent: SearchComponent? = null)
         }
         return this
     }
+
+    fun setOnAddClickListener(listener: OnAddClickListener?): SearchDialogFragment {
+        onAddClickListener = listener
+        return this
+    }
+
     fun setOnInfoClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): SearchDialogFragment {
         onInfoClickListener = object : OnInfoClickListener {
             override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) =
@@ -96,11 +102,22 @@ class SearchDialogFragment(private val searchComponent: SearchComponent? = null)
         }
         return this
     }
+
+    fun setOnInfoClickListener(listener: OnInfoClickListener?): SearchDialogFragment {
+        onInfoClickListener = listener
+        return this
+    }
+
     fun setOnSearchItemClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): SearchDialogFragment {
         onSearchItemClickListener = object : OnSearchItemClickListener {
             override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) =
                 f(dialog, searchItem)
         }
+        return this
+    }
+
+    fun setOnSearchItemClickListener(listener: OnSearchItemClickListener?): SearchDialogFragment {
+        onSearchItemClickListener = listener
         return this
     }
 

@@ -1,6 +1,7 @@
 package com.egraf.refapp.views.game_component_input
 
 import android.content.Context
+import android.text.Editable
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,21 +12,16 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
-import com.egraf.refapp.ui.dialogs.search_entity.SearchComponent
-import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
-import com.egraf.refapp.ui.dialogs.search_entity.SearchItemInterface
-import com.egraf.refapp.utils.Resource
+import com.egraf.refapp.ui.dialogs.search_entity.*
 import kotlinx.android.synthetic.main.game_component_input.view.*
-import kotlinx.coroutines.Dispatchers
 
 private const val TAG = "GameComponent"
 
-enum class GameComponent(
+enum class GameComponentInputType(
     override val title: Int = SearchComponent.noTitle,
     override val icon: Int = SearchComponent.noIcon,
     override val getData: () -> List<SearchItemInterface> = { listOf() }
@@ -40,7 +36,7 @@ enum class GameComponent(
     NULL(0, 0, { listOf() });
 
     companion object {
-        fun getComponent(value: Int?): GameComponent = when (value) {
+        fun getComponent(value: Int?): GameComponentInputType = when (value) {
             null -> NULL
             STADIUM.ordinal -> STADIUM
             LEAGUE.ordinal -> LEAGUE
@@ -55,7 +51,7 @@ enum class GameComponent(
 
 class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), View.OnClickListener {
     private var isEmpty: Boolean
-    private val gameComponent: GameComponent
+    private val gameComponent: GameComponentInputType
     private val animTextView: TextView
     private val helpTextView: TextView
     private val contentTextView: TextView
@@ -68,7 +64,37 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
 
     private lateinit var fragmentManager: FragmentManager
 
+    // listeners
+    var onAddClickListener: OnAddClickListener? = null
+    var onInfoClickListener: OnInfoClickListener? = null
+    var onSearchItemClickListener: OnSearchItemClickListener? = null
+
+    fun setOnAddClickListener(f: (DialogFragment, Editable) -> Unit): GameComponentInput {
+        onAddClickListener = object : OnAddClickListener {
+            override fun onClick(dialog: DialogFragment, inputText: Editable) = f(dialog, inputText)
+        }
+        updateShowSearchDialogListener()
+        return this
+    }
+
+    fun setOnInfoClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): GameComponentInput {
+        onInfoClickListener = object : OnInfoClickListener {
+            override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) = f(dialog, searchItem)
+        }
+        updateShowSearchDialogListener()
+        return this
+    }
+
+    fun setOnSearchItemClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): GameComponentInput {
+        onSearchItemClickListener = object : OnSearchItemClickListener {
+            override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) = f(dialog, searchItem)
+        }
+        updateShowSearchDialogListener()
+        return this
+    }
+
     init {
+        Log.d(TAG, "create")
         context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.GameComponentInput,
@@ -78,7 +104,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
             try {
                 isEmpty = !getBoolean(R.styleable.GameComponentInput_fill, false)
                 gameComponent =
-                    GameComponent.getComponent(
+                    GameComponentInputType.getComponent(
                         getInteger(
                             R.styleable.GameComponentInput_gameComponent,
                             0
@@ -159,30 +185,39 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         contentTextView.setOnClickListener(this)
         icon.setOnClickListener(this)
         setOnClickListener(this)
+        updateShowSearchDialogListener()
+
+        // set content
+        setState(isEmpty)
+    }
+
+    private fun updateShowSearchDialogListener() {
         infoButton.setOnClickListener {
             SearchDialogFragment(
                 gameComponent,
                 contentTextView.text.toString(),
             )
-                .setOnAddClickListener { _, editable -> Log.d(TAG, "add click: $editable") }
+                .setOnAddClickListener { dialog, editable ->
+                    Log.d(TAG, "gc add click: $editable")
+                    onAddClickListener?.onClick(dialog, editable)
+                }
                 .setOnInfoClickListener { dialog, searchItem ->
                     dialog.dismiss()
                     Log.d(
                         TAG,
-                        "info click: ${searchItem.title}"
+                        "gc info click: ${searchItem.title}"
                     )
+                    onInfoClickListener?.onClick(dialog, searchItem)
                 }
-                .setOnSearchItemClickListener { _, searchItem ->
+                .setOnSearchItemClickListener { dialog, searchItem ->
                     Log.d(
                         TAG,
-                        "item click: ${searchItem.title}"
+                        "gc item click: ${searchItem.title}"
                     )
+                    onSearchItemClickListener?.onClick(dialog, searchItem)
                 }
                 .show(fragmentManager, "")
         }
-
-        // set content
-        setState(isEmpty)
     }
 
     private fun fill() {
@@ -227,8 +262,9 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         }
     }
 
-    fun bindFragmentManager(parentFragmentManager: FragmentManager) {
+    fun bindFragmentManager(parentFragmentManager: FragmentManager): GameComponentInput {
         fragmentManager = parentFragmentManager
+        return this
     }
 
     private fun changeState() {

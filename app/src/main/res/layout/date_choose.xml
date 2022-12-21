@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <com.egraf.refapp.views.game_component_input.GameComponentInput
-        android:id="@+id/stadium_layout"
+        android:id="@+id/stadium_component_input"
         custom:gameComponent="stadium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@id/time_choose_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stadium_layout"
+        app:layout_constraintTop_toBottomOf="@id/stadium_component_input"
         android:text="@string/date"/>
 
     <Button

@@ -10,7 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.egraf.refapp.databinding.AddStadiumFragmentBinding
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
-import com.egraf.refapp.views.game_component_input.GameComponent
+import com.egraf.refapp.views.game_component_input.GameComponentInputType
 
 private const val ARG_TITLE = "ArgTitle"
 private const val ARG_MESSAGE = "ArgMessage"
@@ -23,13 +23,13 @@ class AddEntityAlertDialog: Fragment() {
 
     private lateinit var title: String
     private lateinit var message: String
-    private lateinit var component: GameComponent
+    private lateinit var component: GameComponentInputType
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         title = arguments?.getString(ARG_TITLE) ?: ""
         message = arguments?.getString(ARG_MESSAGE) ?: ""
-        component = GameComponent.getComponent(arguments?.getInt(ARG_COMPONENT_ORDER))
+        component = GameComponentInputType.getComponent(arguments?.getInt(ARG_COMPONENT_ORDER))
     }
 
     override fun onCreateView(
