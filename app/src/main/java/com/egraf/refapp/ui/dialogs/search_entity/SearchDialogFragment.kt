@@ -8,18 +8,15 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+import android.widget.SearchView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentResultListener
-import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.Entity
-import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.SearchEntityFragmentBinding
-import com.egraf.refapp.ui.dialogs.entity_add_dialog.AddEntityAlertDialog
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.StadiumAddDialog
 import com.egraf.refapp.utils.Status
 import com.egraf.refapp.views.game_component_input.GameComponent
@@ -30,7 +27,6 @@ private const val ARG_GAME_COMPONENT_ORDINAL = "GameComponentBundleKey"
 private const val ARG_SEARCH_STRING = "SearchStingBundleKey"
 private const val ARG_SHORT_NAME = "NameBundleKey"
 private const val ARG_ID = "IdBundleKey"
-private const val ADD_NEW_ENTITY_TO_DB_REQUEST_CODE = "AddNewEntityCode"
 
 private const val REQUEST_NEW_ENTITY = "RequestAddEntityKey"
 private const val ARG_REQUEST_CODE = "RequestCodeBundle"
@@ -49,16 +45,22 @@ fun DialogFragment.setCustomBackground(gravity: Int = Gravity.CENTER) {
     }
 }
 
-class SearchDialogFragment :
-    DialogFragment(R.layout.search_entity_fragment), FragmentResultListener,
-    SearchItemClickListener<Stadium> {
+class SearchDialogFragment(private val searchInterface: SearchInterface? = null) :
+    DialogFragment(R.layout.search_entity_fragment), FragmentResultListener {
 
-    private val viewModel: StadiumSearchViewModel by lazy {
-        ViewModelProvider(this)[StadiumSearchViewModel::class.java]
+    private val viewModel: SearchViewModel by lazy {
+        ViewModelProvider(this)[SearchViewModel::class.java]
     }
     private val binding get() = _binding!!
     private var _binding: SearchEntityFragmentBinding? = null
-    private val adapter = SearchAdapter<Stadium>(this)
+    private val adapter = SearchAdapter()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) // первое создание фрагмента
+            viewModel.getData = searchInterface?.getData
+                ?: throw IllegalStateException("SearchDialogFragment should receive SearchInterface in constructor")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -85,15 +87,13 @@ class SearchDialogFragment :
             return@setOnKeyListener false
         }
 
-        binding.edit.setText(arguments?.getString(ARG_SEARCH_STRING) ?: "")
-        binding.edit.requestFocus()
         return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getStadiums().observe(viewLifecycleOwner) { resource ->
+        viewModel.getData().observe(viewLifecycleOwner) { resource ->
             when (resource.status) {
                 Status.LOADING -> showLoading()
                 Status.SUCCESS -> {
@@ -101,7 +101,7 @@ class SearchDialogFragment :
                     resource.data?.let {
                         viewModel.items = it
                         updateItems(
-                            viewModel.filterItems(viewModel.items, binding.edit.text.toString())
+                            it.filter(binding.edit.text.toString())
                         )
                     }
                 }
@@ -128,7 +128,7 @@ class SearchDialogFragment :
         binding.searchRv.visibility = View.VISIBLE
     }
 
-    private fun updateItems(items: List<Triple<Int, Int, Stadium>>) {
+    private fun updateItems(items: List<Triple<FirstMatch, LastMatch, SearchItemInterface>>) {
         if (items.isEmpty()) showItemsEmptyText()
         else showRVWithItems(items)
     }
@@ -146,7 +146,7 @@ class SearchDialogFragment :
         binding.txtHint.visibility = View.INVISIBLE
     }
 
-    private fun showRVWithItems(items: List<Triple<Int, Int, Stadium>>) {
+    private fun showRVWithItems(items: List<Triple<FirstMatch, LastMatch, SearchItemInterface>>) {
         adapter.submitList(items)
         hideHintTextAndShowRV()
     }
@@ -155,14 +155,16 @@ class SearchDialogFragment :
         super.onStart()
         val componentInt = arguments?.getInt(ARG_GAME_COMPONENT_ORDINAL)
         if (componentInt != null) {
-            viewModel.component = GameComponent.getComponent(componentInt)
-            binding.title.text = getText(viewModel.component.title)
-            binding.icon.setImageResource(viewModel.component.icon)
+            val component = GameComponent.getComponent(componentInt)
+            binding.title.text = getText(component.title)
+            binding.icon.setImageResource(component.icon)
         } else {
             throw IllegalStateException("Not receive type of component")
         }
 
-        binding.plusButton.setOnClickListener { showAddNewEntityDialog() }
+        binding.plusButton.setOnClickListener { TODO("добавить слушателя на кнопку") }
+        binding.edit.setText(arguments?.getString(ARG_SEARCH_STRING) ?: "")
+        binding.edit.requestFocus()
         binding.edit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -171,27 +173,15 @@ class SearchDialogFragment :
                 if (s == null) return
                 Log.d(TAG, "\ntext changed: $s")
                 val searchSubstring = if (s.length > LENGTH_TEXT_BEFORE_FILTER) s.toString() else ""
-                val filteringItems = viewModel.filterItems(viewModel.items, searchSubstring)
+                val filteringItems = viewModel.items.filter(searchSubstring)
                 updateItems(filteringItems)
             }
         })
     }
 
-    private fun showAddNewEntityDialog() {
-        val text: String = getString(R.string.add_entity_to_db, binding.edit.text.toString())
-
-        AddEntityAlertDialog(
-            getText(viewModel.component.title).toString(),
-            text,
-            viewModel.component.ordinal,
-            ADD_NEW_ENTITY_TO_DB_REQUEST_CODE
-        ).show(parentFragmentManager, "")
-
-    }
-
-
-    private fun saveEntityToDB() {
-        Log.d(TAG, "saveEntity")
+    override fun onStop() {
+        super.onStop()
+        binding.edit.clearFocus()
     }
 
     override fun onDestroy() {
@@ -205,55 +195,38 @@ class SearchDialogFragment :
         }
     }
 
-    private fun sendRequestAndDismiss(entity: Entity) {
-        if (entity == Entity.Companion.Empty) {
-            Log.d(TAG, "don't request empty entity, show add dialog")
-            showAddNewEntityDialog()
-        } else {
-            Log.d(TAG, "return request with: $entity")
-            sendRequest(entity)
-            this.dismiss()
-        }
+    private fun sendRequestAndDismiss(searchItem: SearchItemInterface) {
+        Log.d(TAG, "return request with: $searchItem")
+        sendRequest(searchItem)
+        this.dismiss()
     }
 
-    private fun sendRequest(entity: Entity) {
+    private fun sendRequest(searchItem: SearchItemInterface) {
         val bundle = Bundle().apply {
-            putString(ARG_SHORT_NAME, entity.shortName)
-            putSerializable(ARG_ID, entity.id)
+            putString(ARG_SHORT_NAME, searchItem.title)
+            putSerializable(ARG_ID, searchItem.id)
         }
         val resultRequestCode = requireArguments().getString(ARG_REQUEST_CODE, "")
         setFragmentResult(resultRequestCode, bundle)
     }
 
-    override fun onSearchClickListener(e: Stadium) {
-        sendRequestAndDismiss(e)
-    }
-
     companion object {
         operator fun invoke(
-            title: String,
+            title: String = "",
             gameComponentOrdinal: Int,
             searchString: String = "",
-            requestCode: String
+            searchInterface: SearchInterface,
+            requestCode: String,
         ): SearchDialogFragment {
-            return SearchDialogFragment(title, requestCode).apply {
-                arguments = Bundle(arguments).apply {
+            return SearchDialogFragment(searchInterface).apply {
+                arguments = Bundle().apply {
+                    putString(ARG_TITLE, title)
+                    putString(ARG_REQUEST_CODE, requestCode)
                     putInt(ARG_GAME_COMPONENT_ORDINAL, gameComponentOrdinal)
                     putString(ARG_SEARCH_STRING, searchString)
                 }
             }
         }
-
-        operator fun invoke(title: String, requestCode: String): SearchDialogFragment {
-                val args = Bundle().apply {
-                    putString(ARG_TITLE, title)
-                    putString(ARG_REQUEST_CODE, requestCode)
-                }
-
-                return SearchDialogFragment().apply {
-                    arguments = args
-                }
-            }
 
             fun getShortName(result: Bundle) = result.getString(ARG_SHORT_NAME) ?: ""
             fun getId(result: Bundle) = result.getSerializable(ARG_ID) as UUID
