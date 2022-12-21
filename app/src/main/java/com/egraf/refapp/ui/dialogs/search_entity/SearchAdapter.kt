@@ -8,15 +8,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.database.entities.Entity
 import com.egraf.refapp.databinding.SearchEntityItemBinding
+import io.reactivex.internal.observers.InnerQueuedObserver
 
 private const val TAG = "SearchAdapter"
 
-class SearchAdapter :
+class SearchAdapter(
+    private val onSearchItemClickListener: SearchHolder.Companion.InnerOnSearchItemClickListener? = null,
+    private val onInfoClickListener: SearchHolder.Companion.InnerOnInfoClickListener? = null
+) :
     ListAdapter<Triple<FirstMatch, LastMatch, SearchItemInterface>, SearchHolder>(SearchDU<Triple<FirstMatch, LastMatch, SearchItemInterface>>()) {
 
     val getFirstEntity = { currentList[0] }
@@ -27,7 +32,7 @@ class SearchAdapter :
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ), onSearchItemClickListener, onInfoClickListener
         )
 
     override fun onBindViewHolder(holder: SearchHolder, position: Int) {
@@ -51,9 +56,10 @@ class SearchDU<T : Triple<FirstMatch, LastMatch, SearchItemInterface>> : DiffUti
         oldItem.third.title == newItem.third.title
 }
 
-
 class SearchHolder(
-    private val binding: SearchEntityItemBinding
+    private val binding: SearchEntityItemBinding,
+    private val onSearchItemClickListener: InnerOnSearchItemClickListener? = null,
+    private val infoClickListener: InnerOnInfoClickListener? = null
 ) : RecyclerView.ViewHolder(binding.root),
     View.OnClickListener {
 
@@ -65,10 +71,11 @@ class SearchHolder(
     fun bind(item: Triple<FirstMatch, LastMatch, SearchItemInterface>) {
         entity = item
         binding.textView.text = spanItem(item)
+        binding.info.setOnClickListener { infoClickListener?.onClick(entity.third) }
     }
 
     override fun onClick(v: View?) {
-        Log.d(TAG, "onClick: click on holder")
+        onSearchItemClickListener?.onClick(entity.third)
     }
 
     private fun spanItem(item: Triple<FirstMatch, LastMatch, SearchItemInterface>): SpannableString {
@@ -84,4 +91,14 @@ class SearchHolder(
         }
         return spannableString
     }
+
+    companion object {
+        interface InnerOnInfoClickListener {
+            fun onClick(searchItem: SearchItemInterface)
+        }
+
+        interface InnerOnSearchItemClickListener {
+            fun onClick(searchItem: SearchItemInterface)
+        }
     }
+}

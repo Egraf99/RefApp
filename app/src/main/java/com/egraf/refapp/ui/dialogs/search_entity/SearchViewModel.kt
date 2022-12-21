@@ -13,6 +13,11 @@ private const val TAG = "SearchViewModel"
 class SearchViewModel: ViewModelWithGameRepo() {
     var items = listOf<SearchItemInterface>()
     lateinit var searchComponent: SearchComponent
+
+    // listeners
+    var onSearchItemClickListener: OnSearchItemClickListener? = null
+    var onInfoClickListener: OnInfoClickListener? = null
+    var onAddClickListener: OnAddClickListener? = null
 }
 
 //class SearchViewModelFactory(private val searchInterface: SearchInterface) :

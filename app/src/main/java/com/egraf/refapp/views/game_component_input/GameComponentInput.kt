@@ -2,6 +2,7 @@ package com.egraf.refapp.views.game_component_input
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.Animation
@@ -22,6 +23,7 @@ import kotlinx.android.synthetic.main.game_component_input.view.*
 import kotlinx.coroutines.Dispatchers
 import java.util.*
 
+private const val TAG = "GameComponent"
 
 enum class GameComponent(
     override val title: Int = SearchComponent.noTitle,
@@ -178,7 +180,22 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
                 gameComponent,
                 contentTextView.text.toString(),
                 ""
-            ).show(fragmentManager, "")
+            )
+                .setOnAddClickListener { _, editable -> Log.d(TAG, "add click: $editable") }
+                .setOnInfoClickListener { dialog, searchItem ->
+                    dialog.dismiss()
+                    Log.d(
+                        TAG,
+                        "info click: ${searchItem.title}"
+                    )
+                }
+                .setOnSearchItemClickListener { _, searchItem ->
+                    Log.d(
+                        TAG,
+                        "item click: ${searchItem.title}"
+                    )
+                }
+                .show(fragmentManager, "")
         }
 
         // set content

@@ -78,13 +78,44 @@ class SearchDialogFragment(private val searchComponent: SearchComponent? = null)
     }
     private val binding get() = _binding!!
     private var _binding: SearchEntityFragmentBinding? = null
-    private val adapter = SearchAdapter()
+    private lateinit var adapter: SearchAdapter
+    var onAddClickListener: OnAddClickListener? = null
+    var onInfoClickListener: OnInfoClickListener? = null
+    var onSearchItemClickListener: OnSearchItemClickListener? = null
+
+    fun setOnAddClickListener(f: (DialogFragment, Editable) -> Unit): SearchDialogFragment {
+        onAddClickListener = object : OnAddClickListener {
+            override fun onClick(dialog: DialogFragment, inputText: Editable) = f(dialog, inputText)
+        }
+        return this
+    }
+
+    fun setOnInfoClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): SearchDialogFragment {
+        onInfoClickListener = object : OnInfoClickListener {
+            override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) =
+                f(dialog, searchItem)
+        }
+        return this
+    }
+
+    fun setOnSearchItemClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): SearchDialogFragment {
+        onSearchItemClickListener = object : OnSearchItemClickListener {
+            override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) =
+                f(dialog, searchItem)
+        }
+        return this
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) // первое создание фрагмента
+        if (savedInstanceState == null) {// первое создание фрагмента
             viewModel.searchComponent = searchComponent
                 ?: throw IllegalStateException("SearchDialogFragment should receive SearchInterface in constructor")
+            viewModel.onSearchItemClickListener = onSearchItemClickListener
+            viewModel.onAddClickListener = onAddClickListener
+            viewModel.onInfoClickListener = onInfoClickListener
+        }
+
     }
 
     override fun onCreateView(
@@ -96,6 +127,18 @@ class SearchDialogFragment(private val searchComponent: SearchComponent? = null)
         setCustomBackground(gravity = Gravity.TOP)
 
         // set RV adapter
+        adapter = SearchAdapter(
+            onSearchItemClickListener = object : SearchHolder.Companion.InnerOnSearchItemClickListener {
+                override fun onClick(searchItem: SearchItemInterface) {
+                    viewModel.onSearchItemClickListener?.onClick(this@SearchDialogFragment, searchItem)
+                }
+            },
+            onInfoClickListener = object : SearchHolder.Companion.InnerOnInfoClickListener {
+                override fun onClick(searchItem: SearchItemInterface) {
+                    viewModel.onInfoClickListener?.onClick(this@SearchDialogFragment, searchItem)
+                }
+            }
+        )
         binding.searchRv.adapter = adapter
         // set RV divider
         val divider = DividerItemDecoration(requireContext(), RecyclerView.VERTICAL)
@@ -183,7 +226,12 @@ class SearchDialogFragment(private val searchComponent: SearchComponent? = null)
         if (viewModel.searchComponent.icon != SearchComponent.noIcon)
             binding.icon.setImageResource(viewModel.searchComponent.icon)
 
-        binding.plusButton.setOnClickListener { TODO("добавить слушателя на кнопку") }
+        binding.plusButton.setOnClickListener {
+            viewModel.onAddClickListener?.onClick(
+                this,
+                binding.edit.text
+            )
+        }
         binding.edit.setText(arguments?.getString(ARG_SEARCH_STRING) ?: "")
         binding.edit.requestFocus()
         binding.edit.addTextChangedListener(object : TextWatcher {
