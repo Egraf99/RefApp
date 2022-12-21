@@ -1,12 +1,6 @@
 package com.egraf.refapp.ui.dialogs.search_entity
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.liveData
 import com.egraf.refapp.ui.ViewModelWithGameRepo
-import com.egraf.refapp.utils.Resource
-import kotlinx.coroutines.Dispatchers
 
 private const val TAG = "SearchViewModel"
 

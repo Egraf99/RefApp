@@ -10,18 +10,18 @@ import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
-import com.egraf.refapp.ui.dialogs.search_entity.*
+import com.egraf.refapp.ui.dialogs.search_entity.SearchComponent
+import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
+import com.egraf.refapp.ui.dialogs.search_entity.SearchItemInterface
 import com.egraf.refapp.utils.Resource
 import kotlinx.android.synthetic.main.game_component_input.view.*
 import kotlinx.coroutines.Dispatchers
-import java.util.*
 
 private const val TAG = "GameComponent"
 
