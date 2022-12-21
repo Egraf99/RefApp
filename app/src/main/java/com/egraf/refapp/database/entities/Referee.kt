@@ -14,11 +14,13 @@ data class Referee(
     var firstName: String = "",
     var secondName: String = "",
     var thirdName: String = "",
-) : com.egraf.refapp.database.entities.Entity, Parcelable {
+) : com.egraf.refapp.database.entities.Entity(), Parcelable {
     override val shortName: String
-        get() = arrayListOf(secondName, firstName).joinToString(" ").trim()
+        get() = "${secondName.trim()} ${firstName.trim()}".trim()
     override val fullName: String
-        get() = arrayListOf(secondName, firstName, thirdName).joinToString(" ").trim()
+        get() = "${secondName.trim()} ${firstName.trim()} ${thirdName.trim()}".trim()
+    override val title: String
+        get() = shortName
 
     override fun setEntityName(text: String): Referee {
         val fullName = text.trim().split(" ")

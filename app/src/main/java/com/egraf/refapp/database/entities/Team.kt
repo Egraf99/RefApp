@@ -12,11 +12,13 @@ data class Team(
     @PrimaryKey
     override var id: UUID = UUID.randomUUID(),
     var name: String = ""
-): com.egraf.refapp.database.entities.Entity, Parcelable {
+) : com.egraf.refapp.database.entities.Entity(), Parcelable {
     override val shortName: String
         get() = name
     override val fullName: String
         get() = name
+    override val title: String
+        get() = shortName
 
     override fun setEntityName(text: String): Team {
         return this.apply { name = text.trim() }
