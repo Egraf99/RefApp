@@ -1,9 +1,7 @@
 package com.egraf.refapp.views.game_component_input
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.Animation
@@ -18,23 +16,42 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
-import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
-import com.egraf.refapp.ui.dialogs.search_entity.SearchInterface
-import com.egraf.refapp.ui.dialogs.search_entity.SearchItemInterface
+import com.egraf.refapp.ui.dialogs.search_entity.*
 import com.egraf.refapp.utils.Resource
 import kotlinx.android.synthetic.main.game_component_input.view.*
 import kotlinx.coroutines.Dispatchers
 import java.util.*
 
 
-enum class GameComponent(val title: Int, val icon: Int, val getData: () -> List<SearchItemInterface>) {
-    STADIUM(R.string.stadium, R.drawable.ic_stadium, {GameRepository.get().getStadiums()}),
-    LEAGUE(R.string.league, R.drawable.ic_stadium, {GameRepository.get().getStadiums()}),
-    HOME_TEAM(R.string.home_team, R.drawable.ic_stadium, {GameRepository.get().getStadiums()}),
-    GUEST_TEAM(R.string.guest_team, R.drawable.ic_stadium, {GameRepository.get().getStadiums()}),
-    DATE(R.string.date, R.drawable.ic_stadium, {GameRepository.get().getStadiums()}),
-    TIME(R.string.time, R.drawable.ic_stadium, {GameRepository.get().getStadiums()}),
-    NULL(0, 0, { kotlin.collections.listOf()});
+enum class GameComponent(
+    override val title: Int = SearchComponent.noTitle,
+    override val icon: Int = SearchComponent.noIcon,
+    val _getData: () -> List<SearchItemInterface> = { listOf() }
+) :
+    SearchComponent {
+    STADIUM(R.string.stadium, R.drawable.ic_stadium, { GameRepository.get().getStadiums() }),
+    LEAGUE(R.string.league, R.drawable.ic_stadium, { GameRepository.get().getStadiums() }),
+    HOME_TEAM(R.string.home_team, R.drawable.ic_stadium, { GameRepository.get().getStadiums() }),
+    GUEST_TEAM(R.string.guest_team, R.drawable.ic_stadium, { GameRepository.get().getStadiums() }),
+    DATE(R.string.date, R.drawable.ic_stadium, { GameRepository.get().getStadiums() }),
+    TIME(R.string.time, R.drawable.ic_stadium, { GameRepository.get().getStadiums() }),
+    NULL(0, 0, { listOf() });
+
+    override val getData: () -> LiveData<Resource<List<SearchItemInterface>>> = {
+        liveData(Dispatchers.IO) {
+            emit(Resource.loading(data = null))
+            try {
+                emit(Resource.success(data = _getData()))
+            } catch (e: Exception) {
+                emit(
+                    Resource.error(
+                        data = null,
+                        message = e.message ?: "Unknown error occurred!"
+                    )
+                )
+            }
+        }
+    }
 
     companion object {
         fun getComponent(value: Int?): GameComponent = when (value) {
@@ -158,26 +175,8 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         setOnClickListener(this)
         infoButton.setOnClickListener {
             SearchDialogFragment(
-                context.getString(gameComponent.title),
-                gameComponent.ordinal,
+                gameComponent,
                 contentTextView.text.toString(),
-                object : SearchInterface {
-                    override val getData: () -> LiveData<Resource<List<SearchItemInterface>>> = {
-                        liveData(Dispatchers.IO) {
-                            emit(Resource.loading(data = null))
-                            try {
-                                emit(Resource.success(data = gameComponent.getData()))
-                            } catch (e: Exception) {
-                                emit(
-                                    Resource.error(
-                                        data = null,
-                                        message = e.message ?: "Unknown error occurred!"
-                                    )
-                                )
-                            }
-                        }
-                    }
-                },
                 ""
             ).show(fragmentManager, "")
         }

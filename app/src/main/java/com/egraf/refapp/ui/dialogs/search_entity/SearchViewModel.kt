@@ -12,7 +12,7 @@ private const val TAG = "SearchViewModel"
 
 class SearchViewModel: ViewModelWithGameRepo() {
     var items = listOf<SearchItemInterface>()
-    lateinit var getData: () -> LiveData<Resource<List<SearchItemInterface>>>
+    lateinit var searchComponent: SearchComponent
 }
 
 //class SearchViewModelFactory(private val searchInterface: SearchInterface) :

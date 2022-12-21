@@ -8,22 +8,22 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
-import android.widget.SearchView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.fragment.app.*
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentResultListener
+import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.liveData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.R
-import com.egraf.refapp.database.entities.Entity
 import com.egraf.refapp.databinding.SearchEntityFragmentBinding
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.StadiumAddDialog
+import com.egraf.refapp.utils.Resource
 import com.egraf.refapp.utils.Status
-import com.egraf.refapp.views.game_component_input.GameComponent
 import java.util.*
 
-private const val ARG_TITLE = "TitleBundleKey"
-private const val ARG_GAME_COMPONENT_ORDINAL = "GameComponentBundleKey"
 private const val ARG_SEARCH_STRING = "SearchStingBundleKey"
 private const val ARG_SHORT_NAME = "NameBundleKey"
 private const val ARG_ID = "IdBundleKey"
@@ -45,7 +45,32 @@ fun DialogFragment.setCustomBackground(gravity: Int = Gravity.CENTER) {
     }
 }
 
-class SearchDialogFragment(private val searchInterface: SearchInterface? = null) :
+interface SearchComponent {
+    /** R.string ресурс, по умолчанию пустой **/
+    val title: Int
+
+    /** R.drawable ресурс, по умолчанию пустой **/
+    val icon: Int
+
+    val getData: () -> LiveData<Resource<List<SearchItemInterface>>>
+        get() =
+            {
+                liveData {
+                    Resource(
+                        Status.ERROR,
+                        listOf<SearchComponent>(),
+                        "Not initialize getData() in SearchComponent"
+                    )
+                }
+            }
+
+    companion object {
+        const val noTitle: Int = -1
+        const val noIcon: Int = -1
+    }
+}
+
+class SearchDialogFragment(private val searchComponent: SearchComponent? = null) :
     DialogFragment(R.layout.search_entity_fragment), FragmentResultListener {
 
     private val viewModel: SearchViewModel by lazy {
@@ -58,7 +83,7 @@ class SearchDialogFragment(private val searchInterface: SearchInterface? = null)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) // первое создание фрагмента
-            viewModel.getData = searchInterface?.getData
+            viewModel.searchComponent = searchComponent
                 ?: throw IllegalStateException("SearchDialogFragment should receive SearchInterface in constructor")
     }
 
@@ -93,7 +118,7 @@ class SearchDialogFragment(private val searchInterface: SearchInterface? = null)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getData().observe(viewLifecycleOwner) { resource ->
+        viewModel.searchComponent.getData().observe(viewLifecycleOwner) { resource ->
             when (resource.status) {
                 Status.LOADING -> showLoading()
                 Status.SUCCESS -> {
@@ -105,7 +130,7 @@ class SearchDialogFragment(private val searchInterface: SearchInterface? = null)
                         )
                     }
                 }
-                Status.ERROR -> Log.d(TAG, "Don't receive stadiums by: ${resource.message}")
+                Status.ERROR -> Log.d(TAG, "Don't receive data by: ${resource.message}")
             }
         }
 
@@ -153,14 +178,10 @@ class SearchDialogFragment(private val searchInterface: SearchInterface? = null)
 
     override fun onStart() {
         super.onStart()
-        val componentInt = arguments?.getInt(ARG_GAME_COMPONENT_ORDINAL)
-        if (componentInt != null) {
-            val component = GameComponent.getComponent(componentInt)
-            binding.title.text = getText(component.title)
-            binding.icon.setImageResource(component.icon)
-        } else {
-            throw IllegalStateException("Not receive type of component")
-        }
+        if (viewModel.searchComponent.title != SearchComponent.noTitle)
+            binding.title.text = getText(viewModel.searchComponent.title)
+        if (viewModel.searchComponent.icon != SearchComponent.noIcon)
+            binding.icon.setImageResource(viewModel.searchComponent.icon)
 
         binding.plusButton.setOnClickListener { TODO("добавить слушателя на кнопку") }
         binding.edit.setText(arguments?.getString(ARG_SEARCH_STRING) ?: "")
@@ -212,17 +233,13 @@ class SearchDialogFragment(private val searchInterface: SearchInterface? = null)
 
     companion object {
         operator fun invoke(
-            title: String = "",
-            gameComponentOrdinal: Int,
+            searchInterface: SearchComponent,
             searchString: String = "",
-            searchInterface: SearchInterface,
             requestCode: String,
         ): SearchDialogFragment {
             return SearchDialogFragment(searchInterface).apply {
                 arguments = Bundle().apply {
-                    putString(ARG_TITLE, title)
                     putString(ARG_REQUEST_CODE, requestCode)
-                    putInt(ARG_GAME_COMPONENT_ORDINAL, gameComponentOrdinal)
                     putString(ARG_SEARCH_STRING, searchString)
                 }
             }
