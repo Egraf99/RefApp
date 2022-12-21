@@ -10,8 +10,6 @@ import android.view.*
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentResultListener
-import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.liveData
@@ -19,17 +17,11 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.R
 import com.egraf.refapp.databinding.SearchEntityFragmentBinding
-import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.StadiumAddDialog
 import com.egraf.refapp.utils.Resource
 import com.egraf.refapp.utils.Status
-import java.lang.IndexOutOfBoundsException
-import java.util.*
+import kotlinx.coroutines.Dispatchers
 
 private const val ARG_SEARCH_STRING = "SearchStingBundleKey"
-private const val ARG_SHORT_NAME = "NameBundleKey"
-private const val ARG_ID = "IdBundleKey"
-
-private const val ARG_REQUEST_CODE = "RequestCodeBundle"
 private const val LENGTH_TEXT_BEFORE_FILTER: Int = 0
 
 private const val TAG = "SearchDialogFragment"
@@ -52,7 +44,23 @@ interface SearchComponent {
     /** R.drawable ресурс, по умолчанию пустой **/
     val icon: Int
 
-    val getData: () -> LiveData<Resource<List<SearchItemInterface>>>
+    val getData: () -> List<SearchItemInterface>
+    val lifeDataItems: LiveData<Resource<List<SearchItemInterface>>>
+        get() =
+            liveData(Dispatchers.IO) {
+                emit(Resource.loading(data = null))
+                try {
+                    emit(Resource.success(data = getData()))
+                } catch (e: Exception) {
+                    emit(
+                        Resource.error(
+                            data = null,
+                            message = e.message ?: "Unknown error occurred!"
+                        )
+                    )
+                }
+            }
+
 
     companion object {
         const val noTitle: Int = -1
@@ -69,6 +77,8 @@ class SearchDialogFragment(private val searchComponent: SearchComponent? = null)
     private val binding get() = _binding!!
     private var _binding: SearchEntityFragmentBinding? = null
     private lateinit var adapter: SearchAdapter
+
+    // listeners
     var onAddClickListener: OnAddClickListener? = null
     var onInfoClickListener: OnInfoClickListener? = null
     var onSearchItemClickListener: OnSearchItemClickListener? = null
@@ -79,7 +89,6 @@ class SearchDialogFragment(private val searchComponent: SearchComponent? = null)
         }
         return this
     }
-
     fun setOnInfoClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): SearchDialogFragment {
         onInfoClickListener = object : OnInfoClickListener {
             override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) =
@@ -87,7 +96,6 @@ class SearchDialogFragment(private val searchComponent: SearchComponent? = null)
         }
         return this
     }
-
     fun setOnSearchItemClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): SearchDialogFragment {
         onSearchItemClickListener = object : OnSearchItemClickListener {
             override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) =
@@ -151,7 +159,7 @@ class SearchDialogFragment(private val searchComponent: SearchComponent? = null)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.searchComponent.getData().observe(viewLifecycleOwner) { resource ->
+        viewModel.searchComponent.lifeDataItems.observe(viewLifecycleOwner) { resource ->
             when (resource.status) {
                 Status.LOADING -> {
                     hideRecycleView()
@@ -267,30 +275,16 @@ class SearchDialogFragment(private val searchComponent: SearchComponent? = null)
         }
     }
 
-    private fun sendRequest(searchItem: SearchItemInterface) {
-        val bundle = Bundle().apply {
-            putString(ARG_SHORT_NAME, searchItem.title)
-            putSerializable(ARG_ID, searchItem.id)
-        }
-        val resultRequestCode = requireArguments().getString(ARG_REQUEST_CODE, "")
-        setFragmentResult(resultRequestCode, bundle)
-    }
-
     companion object {
         operator fun invoke(
-            searchInterface: SearchComponent,
+            searchComponent: SearchComponent,
             searchString: String = "",
-            requestCode: String,
         ): SearchDialogFragment {
-            return SearchDialogFragment(searchInterface).apply {
+            return SearchDialogFragment(searchComponent).apply {
                 arguments = Bundle().apply {
-                    putString(ARG_REQUEST_CODE, requestCode)
                     putString(ARG_SEARCH_STRING, searchString)
                 }
             }
         }
-
-            fun getShortName(result: Bundle) = result.getString(ARG_SHORT_NAME) ?: ""
-            fun getId(result: Bundle) = result.getSerializable(ARG_ID) as UUID
-        }
+}
 }

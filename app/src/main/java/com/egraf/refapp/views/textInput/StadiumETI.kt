@@ -58,7 +58,6 @@ class StadiumETI(context: Context, attrs: AttributeSet? = null) :
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         when (requestKey) {
             REQUEST_ADD_STADIUM -> this.setText(StadiumAddDialog.getStadiumShortName(result))
-            REQUEST_FILL_STADIUM -> this.setText(SearchDialogFragment.getShortName(result))
         }
         super.onFragmentResult(requestKey, result)
     }

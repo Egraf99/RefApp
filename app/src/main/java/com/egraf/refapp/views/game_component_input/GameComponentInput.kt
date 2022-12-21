@@ -28,32 +28,16 @@ private const val TAG = "GameComponent"
 enum class GameComponent(
     override val title: Int = SearchComponent.noTitle,
     override val icon: Int = SearchComponent.noIcon,
-    val _getData: () -> List<SearchItemInterface> = { listOf() }
+    override val getData: () -> List<SearchItemInterface> = { listOf() }
 ) :
     SearchComponent {
-    STADIUM(R.string.stadium, R.drawable.ic_stadium, { GameRepository.get().getStadiums() }),
-    LEAGUE(R.string.league, R.drawable.ic_stadium, { GameRepository.get().getStadiums() }),
-    HOME_TEAM(R.string.home_team, R.drawable.ic_stadium, { GameRepository.get().getStadiums() }),
-    GUEST_TEAM(R.string.guest_team, R.drawable.ic_stadium, { GameRepository.get().getStadiums() }),
-    DATE(R.string.date, R.drawable.ic_stadium, { GameRepository.get().getStadiums() }),
-    TIME(R.string.time, R.drawable.ic_stadium, { GameRepository.get().getStadiums() }),
+    STADIUM(R.string.stadium, R.drawable.ic_stadium, GameRepository.get()::getStadiums),
+    LEAGUE(R.string.league, R.drawable.ic_stadium, GameRepository.get()::getStadiums),
+    HOME_TEAM(R.string.home_team, R.drawable.ic_stadium, GameRepository.get()::getStadiums),
+    GUEST_TEAM(R.string.guest_team, R.drawable.ic_stadium, GameRepository.get()::getStadiums),
+    DATE(R.string.date, R.drawable.ic_stadium, GameRepository.get()::getStadiums),
+    TIME(R.string.time, R.drawable.ic_stadium, GameRepository.get()::getStadiums),
     NULL(0, 0, { listOf() });
-
-    override val getData: () -> LiveData<Resource<List<SearchItemInterface>>> = {
-        liveData(Dispatchers.IO) {
-            emit(Resource.loading(data = null))
-            try {
-                emit(Resource.success(data = _getData()))
-            } catch (e: Exception) {
-                emit(
-                    Resource.error(
-                        data = null,
-                        message = e.message ?: "Unknown error occurred!"
-                    )
-                )
-            }
-        }
-    }
 
     companion object {
         fun getComponent(value: Int?): GameComponent = when (value) {
@@ -179,7 +163,6 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
             SearchDialogFragment(
                 gameComponent,
                 contentTextView.text.toString(),
-                ""
             )
                 .setOnAddClickListener { _, editable -> Log.d(TAG, "add click: $editable") }
                 .setOnInfoClickListener { dialog, searchItem ->

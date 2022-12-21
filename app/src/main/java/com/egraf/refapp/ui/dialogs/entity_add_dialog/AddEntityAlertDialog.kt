@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import com.egraf.refapp.databinding.AddStadiumFragmentBinding
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 import com.egraf.refapp.views.game_component_input.GameComponent
@@ -16,7 +17,7 @@ private const val ARG_MESSAGE = "ArgMessage"
 private const val ARG_COMPONENT_ORDER = "ArgComponentOrder"
 private const val ARG_REQUEST_CODE = "ArgRequestCode"
 
-class AddEntityAlertDialog: DialogFragment() {
+class AddEntityAlertDialog: Fragment() {
     private val binding get() = binding_!!
     private var binding_: AddStadiumFragmentBinding? = null
 
@@ -36,8 +37,6 @@ class AddEntityAlertDialog: DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        setCustomBackground()
-
         binding_ = AddStadiumFragmentBinding.inflate(inflater, container, false)
         binding.addEntityTitle.text = arguments?.getString(ARG_TITLE) ?: ""
 
