@@ -6,6 +6,7 @@ private const val TAG = "SearchViewModel"
 
 class SearchViewModel: ViewModelWithGameRepo() {
     var items = listOf<SearchItemInterface>()
+    var filterItems = listOf<Triple<FirstMatch, LastMatch, SearchItemInterface>>()
     lateinit var searchComponent: SearchComponent
 
     // listeners

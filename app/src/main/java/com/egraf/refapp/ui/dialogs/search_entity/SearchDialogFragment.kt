@@ -22,13 +22,13 @@ import com.egraf.refapp.databinding.SearchEntityFragmentBinding
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.StadiumAddDialog
 import com.egraf.refapp.utils.Resource
 import com.egraf.refapp.utils.Status
+import java.lang.IndexOutOfBoundsException
 import java.util.*
 
 private const val ARG_SEARCH_STRING = "SearchStingBundleKey"
 private const val ARG_SHORT_NAME = "NameBundleKey"
 private const val ARG_ID = "IdBundleKey"
 
-private const val REQUEST_NEW_ENTITY = "RequestAddEntityKey"
 private const val ARG_REQUEST_CODE = "RequestCodeBundle"
 private const val LENGTH_TEXT_BEFORE_FILTER: Int = 0
 
@@ -53,16 +53,6 @@ interface SearchComponent {
     val icon: Int
 
     val getData: () -> LiveData<Resource<List<SearchItemInterface>>>
-        get() =
-            {
-                liveData {
-                    Resource(
-                        Status.ERROR,
-                        listOf<SearchComponent>(),
-                        "Not initialize getData() in SearchComponent"
-                    )
-                }
-            }
 
     companion object {
         const val noTitle: Int = -1
@@ -71,7 +61,7 @@ interface SearchComponent {
 }
 
 class SearchDialogFragment(private val searchComponent: SearchComponent? = null) :
-    DialogFragment(R.layout.search_entity_fragment), FragmentResultListener {
+    DialogFragment(R.layout.search_entity_fragment) {
 
     private val viewModel: SearchViewModel by lazy {
         ViewModelProvider(this)[SearchViewModel::class.java]
@@ -149,7 +139,7 @@ class SearchDialogFragment(private val searchComponent: SearchComponent? = null)
         // set listener on ET
         binding.edit.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                sendRequestAndDismiss(adapter.getFirstEntity().third)
+                enterClicked()
                 return@setOnKeyListener true
             }
             return@setOnKeyListener false
@@ -163,38 +153,45 @@ class SearchDialogFragment(private val searchComponent: SearchComponent? = null)
         super.onViewCreated(view, savedInstanceState)
         viewModel.searchComponent.getData().observe(viewLifecycleOwner) { resource ->
             when (resource.status) {
-                Status.LOADING -> showLoading()
+                Status.LOADING -> {
+                    hideRecycleView()
+                    hideHintText()
+                    showLoading()
+                }
                 Status.SUCCESS -> {
+                    hideHintText()
+                    hideLoading()
                     showRecycleView()
                     resource.data?.let {
                         viewModel.items = it
+                        viewModel.filterItems = it.filter(binding.edit.text.toString())
                         updateItems(
-                            it.filter(binding.edit.text.toString())
-                        )
+                            viewModel.filterItems
+                            )
                     }
                 }
-                Status.ERROR -> Log.d(TAG, "Don't receive data by: ${resource.message}")
+                Status.ERROR -> {
+                    hideLoading()
+                    hideRecycleView()
+                    showHintTextWithText(getText(R.string.no_data) as String)
+
+                    Log.d(TAG, "Don't receive data by: ${resource.message}")
+                }
             }
         }
-
-        parentFragmentManager.setFragmentResultListener(
-            REQUEST_NEW_ENTITY,
-            viewLifecycleOwner,
-            this
-        )
     }
 
-    private fun showLoading() {
-        binding.progressBar.visibility = View.VISIBLE
-        binding.txtHint.visibility = View.INVISIBLE
-        binding.searchRv.visibility = View.INVISIBLE
-    }
+    private val showLoading = { binding.progressBar.visibility = View.VISIBLE }
+    private val hideLoading = { binding.progressBar.visibility = View.GONE }
 
-    private fun showRecycleView() {
-        binding.progressBar.visibility = View.GONE
-        binding.txtHint.visibility = View.INVISIBLE
+    private val showRecycleView = { binding.searchRv.visibility = View.VISIBLE }
+    private val hideRecycleView = { binding.searchRv.visibility = View.INVISIBLE }
+
+    private val showHintTextWithText = { text: String ->
         binding.searchRv.visibility = View.VISIBLE
+        binding.txtHint.text = text
     }
+    private val hideHintText = { binding.txtHint.visibility = View.INVISIBLE }
 
     private fun updateItems(items: List<Triple<FirstMatch, LastMatch, SearchItemInterface>>) {
         if (items.isEmpty()) showItemsEmptyText()
@@ -242,8 +239,8 @@ class SearchDialogFragment(private val searchComponent: SearchComponent? = null)
                 if (s == null) return
                 Log.d(TAG, "\ntext changed: $s")
                 val searchSubstring = if (s.length > LENGTH_TEXT_BEFORE_FILTER) s.toString() else ""
-                val filteringItems = viewModel.items.filter(searchSubstring)
-                updateItems(filteringItems)
+                viewModel.filterItems = viewModel.items.filter(searchSubstring)
+                updateItems(viewModel.filterItems)
             }
         })
     }
@@ -258,16 +255,16 @@ class SearchDialogFragment(private val searchComponent: SearchComponent? = null)
         _binding = null
     }
 
-    override fun onFragmentResult(requestKey: String, result: Bundle) {
-        when (requestKey) {
-            REQUEST_NEW_ENTITY -> sendRequestAndDismiss(StadiumAddDialog.getStadium(result))
+    private fun enterClicked() {
+        // поле незаполенено - возвращаем пустой Item
+        if (binding.edit.text.isBlank()) onSearchItemClickListener?.onClick(this, EmptySearchItem)
+        try {
+            // есть совпадения - берем первое совпадение
+            onSearchItemClickListener?.onClick(this, viewModel.filterItems[0].third)
+        } catch (e: IndexOutOfBoundsException) {
+            // нет совпадений - возвращаем пустой Item
+            onSearchItemClickListener?.onClick(this, EmptySearchItem)
         }
-    }
-
-    private fun sendRequestAndDismiss(searchItem: SearchItemInterface) {
-        Log.d(TAG, "return request with: $searchItem")
-        sendRequest(searchItem)
-        this.dismiss()
     }
 
     private fun sendRequest(searchItem: SearchItemInterface) {
