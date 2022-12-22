@@ -289,7 +289,10 @@ class SearchDialogFragment(
 
     private fun enterClicked() {
         // поле незаполенено - возвращаем пустой Item
-        if (binding.edit.text.isBlank()) onSearchItemClickListener?.onClick(this, EmptySearchItem)
+        if (binding.edit.text.isBlank()) {
+            onSearchItemClickListener?.onClick(this, EmptySearchItem)
+            return
+        }
         try {
             // есть совпадения - берем первое совпадение
             onSearchItemClickListener?.onClick(this, viewModel.filterItems[0].third)

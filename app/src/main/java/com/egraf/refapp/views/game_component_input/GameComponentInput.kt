@@ -75,9 +75,15 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         private set
 
     fun setItem(item: SearchItemInterface) {
-        searchItem = item
-        contentTextView.text = item.title
-        setContentFill()
+        if (item == EmptySearchItem) {
+            searchItem = null
+            contentTextView.text = ""
+            setContentEmpty()
+        } else {
+            searchItem = item
+            contentTextView.text = item.title
+            setContentFill()
+        }
     }
     // ------------------------------------------------
 

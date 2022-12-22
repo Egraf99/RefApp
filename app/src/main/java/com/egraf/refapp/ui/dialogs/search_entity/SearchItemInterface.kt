@@ -10,6 +10,7 @@ interface SearchItemInterface {
 object EmptySearchItem: SearchItemInterface {
     override val id: UUID = UUID.randomUUID()
     override val title: String = "Empty Search Item"
+    override fun toString(): String = "EmptySearchItem"
 }
 
 /** Первое совпадение при фильтрации **/
