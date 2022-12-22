@@ -7,13 +7,15 @@
 
     <com.egraf.refapp.views.game_component_input.GameComponentInput
         android:id="@+id/stadium_component_input"
-        custom:gameComponent="stadium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:startIcon="@drawable/ic_stadium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+
+        custom:gameComponent="stadium"
+        custom:title="@string/league"
+        custom:mIcon="@drawable/ic_whistle"/>
 
     <Button
         android:id="@+id/date_choose_button"

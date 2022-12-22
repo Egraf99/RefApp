@@ -1,6 +1,7 @@
 package com.egraf.refapp.views.game_component_input
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.util.AttributeSet
 import android.util.Log
@@ -56,6 +57,9 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
     private val helpTextView: TextView
     private val contentTextView: TextView
     private val infoButton: ImageButton
+    private val title: String
+    private val text: String
+    private val icon: Drawable?
 
     private val appearAnim: Animation
     private val disappearAnim: Animation
@@ -110,6 +114,9 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
                             0
                         )
                     )
+                title = getString(R.styleable.GameComponentInput_title) ?: ""
+                text = getString(R.styleable.GameComponentInput_text) ?: ""
+                icon = getDrawable(R.styleable.GameComponentInput_mIcon)
             } finally {
                 recycle()
             }
@@ -120,7 +127,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
 
         // set receive icon
         val mIcon = getChildAt(1) as ImageView
-        mIcon.setImageResource(gameComponent.icon)
+        icon?.let { mIcon.setImageDrawable(it) }
 
         // search text views
         helpTextView = getChildAt(2) as TextView
@@ -129,10 +136,9 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         infoButton = getChildAt(5) as ImageButton
 
         // заполняем text views
-        val title = gameComponent.title
-        helpTextView.text = context.getText(title)
-        animTextView.text = context.getText(title)
-        contentTextView.text = "Авангард"
+        helpTextView.text = title
+        animTextView.text = title
+        contentTextView.text = text
 
         // init animations
         appearAnim = AnimationUtils.loadAnimation(context, R.anim.appeare_textview).apply {
@@ -183,7 +189,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         }
         // clickable
         contentTextView.setOnClickListener(this)
-        icon.setOnClickListener(this)
+        mIcon.setOnClickListener(this)
         setOnClickListener(this)
         updateShowSearchDialogListener()
 
@@ -195,6 +201,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         infoButton.setOnClickListener {
             SearchDialogFragment(
                 gameComponent,
+                title, icon,
                 contentTextView.text.toString(),
             )
                 .setOnAddClickListener { dialog, editable ->

@@ -1,5 +1,6 @@
 package com.egraf.refapp.ui.dialogs.search_entity
 
+import android.graphics.drawable.Drawable
 import com.egraf.refapp.ui.ViewModelWithGameRepo
 
 private const val TAG = "SearchViewModel"
@@ -7,7 +8,10 @@ private const val TAG = "SearchViewModel"
 class SearchViewModel: ViewModelWithGameRepo() {
     var items = listOf<SearchItemInterface>()
     var filterItems = listOf<Triple<FirstMatch, LastMatch, SearchItemInterface>>()
+
     lateinit var searchComponent: SearchComponent
+    var title: String? = null
+    var icon: Drawable? = null
 
     // listeners
     var onSearchItemClickListener: OnSearchItemClickListener? = null

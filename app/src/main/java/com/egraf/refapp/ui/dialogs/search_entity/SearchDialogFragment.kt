@@ -2,6 +2,7 @@ package com.egraf.refapp.ui.dialogs.search_entity
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -68,7 +69,11 @@ interface SearchComponent {
     }
 }
 
-class SearchDialogFragment(private val searchComponent: SearchComponent? = null) :
+class SearchDialogFragment(
+    private val searchComponent: SearchComponent? = null,
+    private val title: String? = null,
+    private val icon: Drawable? = null
+) :
     DialogFragment(R.layout.search_entity_fragment) {
 
     private val viewModel: SearchViewModel by lazy {
@@ -126,6 +131,8 @@ class SearchDialogFragment(private val searchComponent: SearchComponent? = null)
         if (savedInstanceState == null) {// первое создание фрагмента
             viewModel.searchComponent = searchComponent
                 ?: throw IllegalStateException("SearchDialogFragment should receive SearchInterface in constructor")
+            viewModel.title = title
+            viewModel.icon = icon
             viewModel.onSearchItemClickListener = onSearchItemClickListener
             viewModel.onAddClickListener = onAddClickListener
             viewModel.onInfoClickListener = onInfoClickListener
@@ -243,10 +250,9 @@ class SearchDialogFragment(private val searchComponent: SearchComponent? = null)
 
     override fun onStart() {
         super.onStart()
-        if (viewModel.searchComponent.title != SearchComponent.noTitle)
-            binding.title.text = getText(viewModel.searchComponent.title)
-        if (viewModel.searchComponent.icon != SearchComponent.noIcon)
-            binding.icon.setImageResource(viewModel.searchComponent.icon)
+        binding.title.text = viewModel.title ?: ""
+        if (viewModel.icon != null)
+            binding.icon.setImageDrawable(viewModel.icon)
 
         binding.plusButton.setOnClickListener {
             viewModel.onAddClickListener?.onClick(
@@ -295,9 +301,11 @@ class SearchDialogFragment(private val searchComponent: SearchComponent? = null)
     companion object {
         operator fun invoke(
             searchComponent: SearchComponent,
+            title: String? = null,
+            icon: Drawable? = null,
             searchString: String = "",
         ): SearchDialogFragment {
-            return SearchDialogFragment(searchComponent).apply {
+            return SearchDialogFragment(searchComponent, title, icon).apply {
                 arguments = Bundle().apply {
                     putString(ARG_SEARCH_STRING, searchString)
                 }
