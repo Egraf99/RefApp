@@ -24,8 +24,6 @@ class SearchAdapter(
 ) :
     ListAdapter<Triple<FirstMatch, LastMatch, SearchItemInterface>, SearchHolder>(SearchDU<Triple<FirstMatch, LastMatch, SearchItemInterface>>()) {
 
-    val getFirstEntity = { currentList[0] }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchHolder =
         SearchHolder(
             SearchEntityItemBinding.inflate(

@@ -6,12 +6,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.FragmentResultListener
+import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.GameRepository
+import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.DateChooseBinding
 import com.egraf.refapp.ui.dialogs.DatePickerFragment
 import com.egraf.refapp.ui.dialogs.TimePickerFragment
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.StadiumAddFragment
 
 private const val REQUEST_DATE = "DialogDate"
 private const val REQUEST_TIME = "DialogTime"
@@ -34,10 +38,21 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
             stadiumComponentInput
                 .bindFragmentManager(this@DateChooseFragment.parentFragmentManager)
                 .setOnSearchItemClickListener { _, searchItemInterface ->
-                    Log.d(
-                        TAG,
-                        "fragment click: ${searchItemInterface.title}"
-                    ) }
+//                    findNavController().navigate(
+//                        R.id.action_dateChooseFragment_to_stadiumAddFragment,
+//                        StadiumAddFragment.putText(searchItemInterface.title)
+//                    )
+                }
+                .setOnAddClickListener { dialog, editable ->
+                    Log.d(TAG, "add click")
+//                    findNavController().navigate(
+//                        R.id.action_dateChooseFragment_to_stadiumAddFragment,
+//                        StadiumAddFragment.putText(editable.toString())
+//                    )
+                }
+                .setOnInfoClickListener { _, searchItemInterface ->
+                    Toast.makeText(context, searchItemInterface.title, Toast.LENGTH_SHORT).show()
+                }
                 .setSearchItemsReceiveFunction { GameRepository.get().getStadiums() }
         }
         updateUI()

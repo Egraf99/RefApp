@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.R
 import com.egraf.refapp.databinding.AddNewGameDialogBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment

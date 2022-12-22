@@ -10,6 +10,9 @@
         <action
             android:id="@+id/action_choose_date_to_team"
             app:destination="@id/teamChooseFragment" />
+        <action
+            android:id="@+id/action_dateChooseFragment_to_stadiumAddFragment"
+            app:destination="@id/stadiumAddFragment" />
     </fragment>
     <fragment
         android:id="@+id/teamChooseFragment"
@@ -23,4 +26,8 @@
         android:id="@+id/refereeChooseFragment"
         android:name="com.egraf.refapp.ui.dialogs.add_new_game.RefereeChooseFragment"
         android:label="RefereeChooseFragment" />
+    <fragment
+        android:id="@+id/stadiumAddFragment"
+        android:name="com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.StadiumAddFragment"
+        android:label="StadiumAddFragment" />
 </navigation>
