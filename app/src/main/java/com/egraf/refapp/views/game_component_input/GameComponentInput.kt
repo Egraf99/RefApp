@@ -66,9 +66,23 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
     private val leftUpAnim: Animation
     private val rightDownAnim: Animation
 
+    private var showSearchFragment: () -> Unit
+
     private lateinit var fragmentManager: FragmentManager
 
-    // listeners
+    // ------------- searchItem -----------------------
+    var searchItem: SearchItemInterface? = null
+        private set
+
+    fun setItem(item: SearchItemInterface) {
+        searchItem = item
+        contentTextView.text = item.title
+        setContentFill()
+    }
+    // ------------------------------------------------
+
+
+    // ------------- listeners ------------------------
     var onAddClickListener: OnAddClickListener? = null
     var onInfoClickListener: OnInfoClickListener? = null
     var onSearchItemClickListener: OnSearchItemClickListener? = null
@@ -96,14 +110,16 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         updateShowSearchDialogListener()
         return this
     }
+    // ------------------------------------------------
 
-    // get items function
+    // ------------- get item function ----------------
     var functionSearchItemsReceive: (() -> List<SearchItemInterface>)? = null
     fun setSearchItemsReceiveFunction(f: () -> List<SearchItemInterface>): GameComponentInput {
         functionSearchItemsReceive = f
         updateShowSearchDialogListener()
         return this
     }
+    // ------------------------------------------------
 
     init {
         Log.d(TAG, "create")
@@ -147,6 +163,15 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         helpTextView.text = title
         animTextView.text = title
         contentTextView.text = text
+
+        // clickable
+        contentTextView.setOnClickListener(this)
+        mIcon.setOnClickListener(this)
+        setOnClickListener(this)
+        showSearchFragment = updateShowSearchDialogListener()
+
+        // set content
+        setState(isEmpty)
 
         // init animations
         appearAnim = AnimationUtils.loadAnimation(context, R.anim.appeare_textview).apply {
@@ -195,44 +220,28 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
                 override fun onAnimationRepeat(animation: Animation?) {}
             })
         }
-        // clickable
-        contentTextView.setOnClickListener(this)
-        mIcon.setOnClickListener(this)
-        setOnClickListener(this)
-        updateShowSearchDialogListener()
-
-        // set content
-        setState(isEmpty)
     }
 
-    private fun updateShowSearchDialogListener() {
-        infoButton.setOnClickListener {
+    private fun updateShowSearchDialogListener(): () -> Unit {
+        showSearchFragment = {
             SearchDialogFragment(
                 title, icon,
                 functionSearchItemsReceive,
-                contentTextView.text.toString(),
             )
                 .setOnAddClickListener { dialog, editable ->
-                    Log.d(TAG, "gc add click: $editable")
                     onAddClickListener?.onClick(dialog, editable)
                 }
                 .setOnInfoClickListener { dialog, searchItem ->
-                    dialog.dismiss()
-                    Log.d(
-                        TAG,
-                        "gc info click: ${searchItem.title}"
-                    )
                     onInfoClickListener?.onClick(dialog, searchItem)
                 }
                 .setOnSearchItemClickListener { dialog, searchItem ->
-                    Log.d(
-                        TAG,
-                        "gc item click: ${searchItem.title}"
-                    )
+                    dialog.dismiss()
+                    setItem(searchItem)
                     onSearchItemClickListener?.onClick(dialog, searchItem)
                 }
                 .show(fragmentManager, "")
         }
+        return showSearchFragment
     }
 
     private fun fill() {
@@ -270,11 +279,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
     }
 
     private fun setState(state: Boolean) {
-        if (state) {
-            setContentEmpty()
-        } else {
-            setContentFill()
-        }
+        if (state) setContentEmpty() else setContentFill()
     }
 
     fun bindFragmentManager(parentFragmentManager: FragmentManager): GameComponentInput {
@@ -282,18 +287,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         return this
     }
 
-    private fun changeState() {
-        if (isEmpty) {
-            isEmpty = false
-            fill()
-        } else {
-            isEmpty = true
-            empty()
-        }
-    }
-
-
     override fun onClick(v: View?) {
-        changeState()
+        showSearchFragment()
     }
 }
