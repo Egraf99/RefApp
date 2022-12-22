@@ -22,7 +22,6 @@ import com.egraf.refapp.utils.Resource
 import com.egraf.refapp.utils.Status
 import kotlinx.coroutines.Dispatchers
 
-private const val ARG_SEARCH_STRING = "SearchStingBundleKey"
 private const val LENGTH_TEXT_BEFORE_FILTER: Int = 0
 
 private const val TAG = "SearchDialogFragment"
@@ -70,9 +69,10 @@ interface SearchComponent {
 }
 
 class SearchDialogFragment(
-    private val searchComponent: SearchComponent? = null,
     private val title: String? = null,
-    private val icon: Drawable? = null
+    private val icon: Drawable? = null,
+    private val receiveSearchItems: (() -> List<SearchItemInterface>)? = null,
+    private val text: String? = null
 ) :
     DialogFragment(R.layout.search_entity_fragment) {
 
@@ -129,8 +129,8 @@ class SearchDialogFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {// первое создание фрагмента
-            viewModel.searchComponent = searchComponent
-                ?: throw IllegalStateException("SearchDialogFragment should receive SearchInterface in constructor")
+            viewModel.receiveItems = receiveSearchItems
+            viewModel.text = text
             viewModel.title = title
             viewModel.icon = icon
             viewModel.onSearchItemClickListener = onSearchItemClickListener
@@ -183,7 +183,7 @@ class SearchDialogFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.searchComponent.lifeDataItems.observe(viewLifecycleOwner) { resource ->
+        viewModel.liveDataReceiveItems.observe(viewLifecycleOwner) { resource ->
             when (resource.status) {
                 Status.LOADING -> {
                     hideRecycleView()
@@ -260,7 +260,7 @@ class SearchDialogFragment(
                 binding.edit.text
             )
         }
-        binding.edit.setText(arguments?.getString(ARG_SEARCH_STRING) ?: "")
+        binding.edit.setText(viewModel.text)
         binding.edit.requestFocus()
         binding.edit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -269,6 +269,7 @@ class SearchDialogFragment(
             override fun afterTextChanged(s: Editable?) {
                 if (s == null) return
                 Log.d(TAG, "\ntext changed: $s")
+                viewModel.text = s.toString()
                 val searchSubstring = if (s.length > LENGTH_TEXT_BEFORE_FILTER) s.toString() else ""
                 viewModel.filterItems = viewModel.items.filter(searchSubstring)
                 updateItems(viewModel.filterItems)
@@ -297,19 +298,4 @@ class SearchDialogFragment(
             onSearchItemClickListener?.onClick(this, EmptySearchItem)
         }
     }
-
-    companion object {
-        operator fun invoke(
-            searchComponent: SearchComponent,
-            title: String? = null,
-            icon: Drawable? = null,
-            searchString: String = "",
-        ): SearchDialogFragment {
-            return SearchDialogFragment(searchComponent, title, icon).apply {
-                arguments = Bundle().apply {
-                    putString(ARG_SEARCH_STRING, searchString)
-                }
-            }
-        }
-}
 }

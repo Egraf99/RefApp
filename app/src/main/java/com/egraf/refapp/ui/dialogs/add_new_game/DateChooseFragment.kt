@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentResultListener
+import com.egraf.refapp.GameRepository
 import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.DateChooseBinding
 import com.egraf.refapp.ui.dialogs.DatePickerFragment
@@ -37,6 +38,7 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
                         TAG,
                         "fragment click: ${searchItemInterface.title}"
                     ) }
+                .setSearchItemsReceiveFunction { GameRepository.get().getStadiums() }
         }
         updateUI()
         return binding.root

@@ -97,6 +97,14 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         return this
     }
 
+    // get items function
+    var functionSearchItemsReceive: (() -> List<SearchItemInterface>)? = null
+    fun setSearchItemsReceiveFunction(f: () -> List<SearchItemInterface>): GameComponentInput {
+        functionSearchItemsReceive = f
+        updateShowSearchDialogListener()
+        return this
+    }
+
     init {
         Log.d(TAG, "create")
         context.theme.obtainStyledAttributes(
@@ -200,8 +208,8 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
     private fun updateShowSearchDialogListener() {
         infoButton.setOnClickListener {
             SearchDialogFragment(
-                gameComponent,
                 title, icon,
+                functionSearchItemsReceive,
                 contentTextView.text.toString(),
             )
                 .setOnAddClickListener { dialog, editable ->
