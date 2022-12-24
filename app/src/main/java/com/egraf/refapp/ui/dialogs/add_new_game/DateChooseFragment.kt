@@ -6,16 +6,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.FragmentResultListener
-import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.GameRepository
-import com.egraf.refapp.R
-import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.DateChooseBinding
 import com.egraf.refapp.ui.dialogs.DatePickerFragment
 import com.egraf.refapp.ui.dialogs.TimePickerFragment
-import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.StadiumAddFragment
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.StadiumInfoDialogFragment
 
 private const val REQUEST_DATE = "DialogDate"
 private const val REQUEST_TIME = "DialogTime"
@@ -51,7 +47,7 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
 //                    )
                 }
                 .setOnInfoClickListener { _, searchItemInterface ->
-                    Toast.makeText(context, searchItemInterface.title, Toast.LENGTH_SHORT).show()
+                    StadiumInfoDialogFragment(searchItemInterface.title).show(parentFragmentManager, "")
                 }
                 .setSearchItemsReceiveFunction { GameRepository.get().getStadiums() }
         }

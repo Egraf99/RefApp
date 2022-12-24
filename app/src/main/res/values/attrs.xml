@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="GameComponentInput">
+    <declare-styleable name="GameComponentSearch">
         <attr name="fill" format="boolean"/>
         <attr name="title" format="string"/>
         <attr name="text" format="string"/>
         <attr name="mIcon" format="integer"/>
+    </declare-styleable>
 
-<!--  Enum for this values define in GameComponentInput.kt file  -->
-        <attr name="gameComponent" format="enum">
-            <enum name="stadium"    value="0"/>
-            <enum name="league"     value="1"/>
-            <enum name="homeTeam"   value="2"/>
-            <enum name="guestTeam"  value="3"/>
-            <enum name="date"       value="4"/>
-            <enum name="time"       value="5"/>
-        </attr>
+    <declare-styleable name="GameComponentInput">
+        <attr name="hintText" format="string"/>
     </declare-styleable>
 </resources>

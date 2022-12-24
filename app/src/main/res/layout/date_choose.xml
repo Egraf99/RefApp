@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.egraf.refapp.views.game_component_input.GameComponentInput
+    <com.egraf.refapp.views.custom_views.GameComponentSearch
         android:id="@+id/stadium_component_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,7 +13,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
 
-        custom:gameComponent="stadium"
         custom:title="@string/league"
         custom:mIcon="@drawable/ic_whistle"/>
 

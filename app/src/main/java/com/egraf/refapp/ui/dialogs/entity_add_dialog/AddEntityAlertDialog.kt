@@ -1,16 +1,13 @@
 package com.egraf.refapp.ui.dialogs.entity_add_dialog
 
-import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.egraf.refapp.databinding.AddStadiumFragmentBinding
-import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
-import com.egraf.refapp.views.game_component_input.GameComponentInputType
+import com.egraf.refapp.views.custom_views.GameComponentInputType
 
 private const val ARG_TITLE = "ArgTitle"
 private const val ARG_MESSAGE = "ArgMessage"

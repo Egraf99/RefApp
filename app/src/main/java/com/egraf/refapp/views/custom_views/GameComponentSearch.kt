@@ -1,4 +1,4 @@
-package com.egraf.refapp.views.game_component_input
+package com.egraf.refapp.views.custom_views
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -18,7 +18,6 @@ import androidx.fragment.app.FragmentManager
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
 import com.egraf.refapp.ui.dialogs.search_entity.*
-import kotlinx.android.synthetic.main.game_component_input.view.*
 
 private const val TAG = "GameComponent"
 
@@ -50,9 +49,8 @@ enum class GameComponentInputType(
     }
 }
 
-class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), View.OnClickListener {
+class GameComponentSearch(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), View.OnClickListener {
     private var isEmpty: Boolean
-    private val gameComponent: GameComponentInputType
     private val animTextView: TextView
     private val helpTextView: TextView
     private val contentTextView: TextView
@@ -93,7 +91,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
     var onInfoClickListener: OnInfoClickListener? = null
     var onSearchItemClickListener: OnSearchItemClickListener? = null
 
-    fun setOnAddClickListener(f: (DialogFragment, Editable) -> Unit): GameComponentInput {
+    fun setOnAddClickListener(f: (DialogFragment, Editable) -> Unit): GameComponentSearch {
         onAddClickListener = object : OnAddClickListener {
             override fun onClick(dialog: DialogFragment, inputText: Editable) = f(dialog, inputText)
         }
@@ -101,7 +99,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         return this
     }
 
-    fun setOnInfoClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): GameComponentInput {
+    fun setOnInfoClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): GameComponentSearch {
         onInfoClickListener = object : OnInfoClickListener {
             override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) = f(dialog, searchItem)
         }
@@ -109,7 +107,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         return this
     }
 
-    fun setOnSearchItemClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): GameComponentInput {
+    fun setOnSearchItemClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): GameComponentSearch {
         onSearchItemClickListener = object : OnSearchItemClickListener {
             override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) = f(dialog, searchItem)
         }
@@ -120,7 +118,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
 
     // ------------- get item function ----------------
     var functionSearchItemsReceive: (() -> List<SearchItemInterface>)? = null
-    fun setSearchItemsReceiveFunction(f: () -> List<SearchItemInterface>): GameComponentInput {
+    fun setSearchItemsReceiveFunction(f: () -> List<SearchItemInterface>): GameComponentSearch {
         functionSearchItemsReceive = f
         updateShowSearchDialogListener()
         return this
@@ -131,29 +129,22 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         Log.d(TAG, "create")
         context.theme.obtainStyledAttributes(
             attrs,
-            R.styleable.GameComponentInput,
+            R.styleable.GameComponentSearch,
             0, 0
         ).apply {
 
             try {
-                isEmpty = !getBoolean(R.styleable.GameComponentInput_fill, false)
-                gameComponent =
-                    GameComponentInputType.getComponent(
-                        getInteger(
-                            R.styleable.GameComponentInput_gameComponent,
-                            0
-                        )
-                    )
-                title = getString(R.styleable.GameComponentInput_title) ?: ""
-                text = getString(R.styleable.GameComponentInput_text) ?: ""
-                icon = getDrawable(R.styleable.GameComponentInput_mIcon)
+                isEmpty = !getBoolean(R.styleable.GameComponentSearch_fill, false)
+                title = getString(R.styleable.GameComponentSearch_title) ?: ""
+                text = getString(R.styleable.GameComponentSearch_text) ?: ""
+                icon = getDrawable(R.styleable.GameComponentSearch_mIcon)
             } finally {
                 recycle()
             }
         }
         val inflater = context
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        inflater.inflate(R.layout.game_component_input, this, true)
+        inflater.inflate(R.layout.game_component_search, this, true)
 
         // set receive icon
         val mIcon = getChildAt(1) as ImageView
@@ -204,7 +195,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
             }
             )
         }
-        leftUpAnim = AnimationUtils.loadAnimation(context, R.anim.move_left_up).apply {
+        leftUpAnim = AnimationUtils.loadAnimation(context, R.anim.move_up).apply {
             setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation?) {}
 
@@ -215,7 +206,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
                 override fun onAnimationRepeat(animation: Animation?) {}
             })
         }
-        rightDownAnim = AnimationUtils.loadAnimation(context, R.anim.move_right_down).apply {
+        rightDownAnim = AnimationUtils.loadAnimation(context, R.anim.move_down).apply {
             setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation?) {}
 
@@ -288,7 +279,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet) : ConstraintLayo
         if (state) setContentEmpty() else setContentFill()
     }
 
-    fun bindFragmentManager(parentFragmentManager: FragmentManager): GameComponentInput {
+    fun bindFragmentManager(parentFragmentManager: FragmentManager): GameComponentSearch {
         fragmentManager = parentFragmentManager
         return this
     }
