@@ -44,14 +44,17 @@ class GameComponentInput(context: Context, attrs: AttributeSet): ConstraintLayou
         editText = getChildAt(3) as EditText
 
         // set strings
-        tintTextView.text= hintText
+        tintTextView.text = hintText
         animTextView.text = hintText
         tintTextView.visibility = INVISIBLE
 
 
         // set editText listener
-        editText.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) setFocused() else setUnfocused()
+        editText.apply {
+            setOnFocusChangeListener { _, hasFocus ->
+                if (this.text.isNotBlank()) return@setOnFocusChangeListener
+                if (hasFocus) startAnimFocus() else startAnimUnfocus()
+            }
         }
 
         // init animations
@@ -79,18 +82,18 @@ class GameComponentInput(context: Context, attrs: AttributeSet): ConstraintLayou
         }
     }
 
-    private fun focus() {
+    private fun startAnimFocus() {
         upAnim.reset()
 
         animTextView.clearAnimation()
         animTextView.startAnimation(upAnim)
     }
 
-    private fun unfocus() {
+    private fun startAnimUnfocus() {
         downAnim.reset()
 
-        animTextView.clearAnimation()
-        animTextView.startAnimation(downAnim)
+        tintTextView.clearAnimation()
+        tintTextView.startAnimation(downAnim)
     }
 
     private fun setFocused() {
@@ -99,9 +102,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet): ConstraintLayou
     }
 
     private fun setUnfocused() {
-        if (editText.text.isBlank()) {
-            animTextView.visibility = VISIBLE
-            tintTextView.visibility = INVISIBLE
-        }
+        animTextView.visibility = VISIBLE
+        tintTextView.visibility = INVISIBLE
     }
 }
