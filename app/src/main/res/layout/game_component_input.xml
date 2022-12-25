@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <!--    Open bracket -->
+    <ImageView
+        android:id="@+id/open_bracket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:background="@drawable/ic_open_bracket"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--    Help text view -->
+    <TextView
+        android:id="@+id/tint_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Tint"
+        app:layout_constraintStart_toStartOf="@id/content_text_view"
+        app:layout_constraintBottom_toTopOf="@id/content_text_view"
+        android:layout_marginBottom="4dp" />
+
+    <!--    Animation text view from content to help -->
+    <TextView
+        android:id="@+id/content_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@id/edit_text"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintStart_toStartOf="@id/edit_text"
+        android:layout_marginStart="4dp"
+        tools:text="Content" />
+
+    <!--    Edit text -->
+    <EditText
+        android:id="@+id/edit_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="26dp"
+        android:layout_weight="1"
+        android:inputType="textImeMultiLine"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/open_bracket" />
+
+    <!--    Close bracket -->
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="@drawable/ic_close_bracket"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</merge>
