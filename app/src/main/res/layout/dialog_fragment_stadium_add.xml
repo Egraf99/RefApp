@@ -6,26 +6,19 @@
     android:minWidth="350dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/fragment_background"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@drawable/fragment_background">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="Text" />
+        tools:text="Add Entity" />
 
     <com.egraf.refapp.views.custom_views.GameComponentInput
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        custom:hintText="@string/stadium"/>
-
-    <com.egraf.refapp.views.custom_views.GameComponentInput
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        custom:hintText="@string/league"/>
+        custom:hintText="@string/title" />
 
     <Button
         android:layout_width="wrap_content"

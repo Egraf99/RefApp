@@ -90,7 +90,10 @@ class SearchDialogFragment(
 
     fun setOnAddClickListener(f: (DialogFragment, Editable) -> Unit): SearchDialogFragment {
         onAddClickListener = object : OnAddClickListener {
-            override fun onClick(dialog: DialogFragment, inputText: Editable) = f(dialog, inputText)
+            override fun onClick(dialog: DialogFragment, inputText: Editable) {
+                binding.edit.clearFocus()
+                f(dialog, inputText)
+            }
         }
         return this
     }
@@ -102,8 +105,10 @@ class SearchDialogFragment(
 
     fun setOnInfoClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): SearchDialogFragment {
         onInfoClickListener = object : OnInfoClickListener {
-            override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) =
+            override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) {
+                binding.edit.clearFocus()
                 f(dialog, searchItem)
+            }
         }
         return this
     }
@@ -115,8 +120,10 @@ class SearchDialogFragment(
 
     fun setOnSearchItemClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): SearchDialogFragment {
         onSearchItemClickListener = object : OnSearchItemClickListener {
-            override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) =
+            override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) {
+                binding.edit.clearFocus()
                 f(dialog, searchItem)
+            }
         }
         return this
     }
