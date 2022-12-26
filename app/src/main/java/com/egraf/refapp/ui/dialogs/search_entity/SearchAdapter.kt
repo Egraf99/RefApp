@@ -44,14 +44,12 @@ class SearchAdapter(
 
 class SearchDU<T : Triple<FirstMatch, LastMatch, SearchItemInterface>> : DiffUtil.ItemCallback<T>() {
     override fun areItemsTheSame(oldItem: T, newItem: T): Boolean =
-        oldItem.first == newItem.first &&
-        oldItem.second == newItem.second &&
         oldItem.third.title == newItem.third.title
 
     override fun areContentsTheSame(oldItem: T, newItem: T): Boolean =
+        oldItem.third.title == newItem.third.title &&
         oldItem.first == newItem.first &&
-        oldItem.second == newItem.second &&
-        oldItem.third.title == newItem.third.title
+        oldItem.second == newItem.second
 }
 
 class SearchHolder(
