@@ -27,26 +27,25 @@
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp"
+            android:layout_margin="16dp"
             app:layout_constraintTop_toBottomOf="@id/add_game_fragment_container">
 
-                <Button
+                <ImageButton
                     android:id="@+id/previous_button"
-                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:text="@string/cancel"
-                    app:layout_constraintEnd_toStartOf="@id/next_button" />
+                    android:layout_gravity="end"
+                    android:background="@drawable/previous_button"
+                    android:contentDescription="@string/previous" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/next_button"
-                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/next"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    android:layout_gravity="end"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/next_button"
+                    android:contentDescription="@string/next"/>
         </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

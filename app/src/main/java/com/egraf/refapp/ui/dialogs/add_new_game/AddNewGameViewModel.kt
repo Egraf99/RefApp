@@ -13,6 +13,10 @@ enum class AddGameDestination(val res: Int = 0) {
     REFEREE_CHOSE(R.id.action_choose_team_to_referee),
     // действия
     CANCEL, PREVIOUS, CREATE;
+
+    companion object {
+        const val countDestinations = 3
+    }
 }
 
 class AddNewGameViewModel: ViewModelWithEntitiesAndGame() {

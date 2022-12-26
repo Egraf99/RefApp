@@ -75,14 +75,14 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
         Log.d(TAG, "checkCurrentFragmentPosition: ${addNewGameViewModel.currentPosition}")
         //  меняем текст на кнопке previous, если показывается первый фрагмент
         if (addNewGameViewModel.currentPosition == 0)
-            binding.previousButton.setText(R.string.cancel)
+            binding.previousButton.visibility = View.INVISIBLE
         else
-            binding.previousButton.setText(R.string.previous)
+            binding.previousButton.visibility = View.VISIBLE
 
         // меняем текст на кнопке next, если показывается последний фрагмент
-        if (addNewGameViewModel.currentPosition == AddGameDestination.values().size-1 - 3)
-            binding.nextButton.setText(R.string.create)
+        if (addNewGameViewModel.currentPosition == AddGameDestination.values().size-1 - AddGameDestination.countDestinations)
+            binding.nextButton.setImageResource(R.drawable.accept_button)
         else
-            binding.nextButton.setText(R.string.next)
+            binding.nextButton.setImageResource(R.drawable.next_button)
     }
 }
