@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.egraf.refapp.databinding.AddStadiumFragmentBinding
-import com.egraf.refapp.views.custom_views.GameComponentInputType
 
 private const val ARG_TITLE = "ArgTitle"
 private const val ARG_MESSAGE = "ArgMessage"
@@ -20,13 +19,11 @@ class AddEntityAlertDialog: Fragment() {
 
     private lateinit var title: String
     private lateinit var message: String
-    private lateinit var component: GameComponentInputType
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         title = arguments?.getString(ARG_TITLE) ?: ""
         message = arguments?.getString(ARG_MESSAGE) ?: ""
-        component = GameComponentInputType.getComponent(arguments?.getInt(ARG_COMPONENT_ORDER))
     }
 
     override fun onCreateView(

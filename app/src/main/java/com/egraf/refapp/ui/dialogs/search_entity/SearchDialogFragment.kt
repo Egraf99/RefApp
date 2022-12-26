@@ -37,37 +37,6 @@ fun DialogFragment.setCustomBackground(gravity: Int = Gravity.CENTER) {
     }
 }
 
-interface SearchComponent {
-    /** R.string ресурс, по умолчанию пустой **/
-    val title: Int
-
-    /** R.drawable ресурс, по умолчанию пустой **/
-    val icon: Int
-
-    val getData: () -> List<SearchItemInterface>
-    val lifeDataItems: LiveData<Resource<List<SearchItemInterface>>>
-        get() =
-            liveData(Dispatchers.IO) {
-                emit(Resource.loading(data = null))
-                try {
-                    emit(Resource.success(data = getData()))
-                } catch (e: Exception) {
-                    emit(
-                        Resource.error(
-                            data = null,
-                            message = e.message ?: "Unknown error occurred!"
-                        )
-                    )
-                }
-            }
-
-
-    companion object {
-        const val noTitle: Int = -1
-        const val noIcon: Int = -1
-    }
-}
-
 class SearchDialogFragment(
     private val title: String? = null,
     private val icon: Drawable? = null,

@@ -21,34 +21,6 @@ import com.egraf.refapp.ui.dialogs.search_entity.*
 
 private const val TAG = "GameComponent"
 
-enum class GameComponentInputType(
-    override val title: Int = SearchComponent.noTitle,
-    override val icon: Int = SearchComponent.noIcon,
-    override val getData: () -> List<SearchItemInterface> = { listOf() }
-) :
-    SearchComponent {
-    STADIUM(R.string.stadium, R.drawable.ic_stadium, GameRepository.get()::getStadiums),
-    LEAGUE(R.string.league, R.drawable.ic_stadium, GameRepository.get()::getStadiums),
-    HOME_TEAM(R.string.home_team, R.drawable.ic_stadium, GameRepository.get()::getStadiums),
-    GUEST_TEAM(R.string.guest_team, R.drawable.ic_stadium, GameRepository.get()::getStadiums),
-    DATE(R.string.date, R.drawable.ic_stadium, GameRepository.get()::getStadiums),
-    TIME(R.string.time, R.drawable.ic_stadium, GameRepository.get()::getStadiums),
-    NULL(0, 0, { listOf() });
-
-    companion object {
-        fun getComponent(value: Int?): GameComponentInputType = when (value) {
-            null -> NULL
-            STADIUM.ordinal -> STADIUM
-            LEAGUE.ordinal -> LEAGUE
-            HOME_TEAM.ordinal -> HOME_TEAM
-            GUEST_TEAM.ordinal -> GUEST_TEAM
-            DATE.ordinal -> DATE
-            TIME.ordinal -> TIME
-            else -> throw IllegalStateException("Unknown value: $value")
-        }
-    }
-}
-
 class GameComponentSearch(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), View.OnClickListener {
     private var isEmpty: Boolean
     private val animTextView: TextView
