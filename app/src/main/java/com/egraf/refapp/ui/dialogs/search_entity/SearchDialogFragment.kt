@@ -258,8 +258,8 @@ class SearchDialogFragment(
         binding.edit.clearFocus()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 

@@ -11,7 +11,7 @@ import com.egraf.refapp.GameRepository
 import com.egraf.refapp.databinding.DateChooseBinding
 import com.egraf.refapp.ui.dialogs.DatePickerFragment
 import com.egraf.refapp.ui.dialogs.TimePickerFragment
-import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.StadiumInfoDialogFragment
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.EntityAddDialogFragment
 
 private const val REQUEST_DATE = "DialogDate"
 private const val REQUEST_TIME = "DialogTime"
@@ -40,6 +40,7 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
 //                    )
                 }
                 .setOnAddClickListener { dialog, editable ->
+                    EntityAddDialogFragment("Add", editable.toString()).show(parentFragmentManager, "")
                     Log.d(TAG, "add click")
 //                    findNavController().navigate(
 //                        R.id.action_dateChooseFragment_to_stadiumAddFragment,
@@ -47,7 +48,6 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
 //                    )
                 }
                 .setOnInfoClickListener { _, searchItemInterface ->
-                    StadiumInfoDialogFragment(searchItemInterface.title).show(parentFragmentManager, "")
                 }
                 .setSearchItemsReceiveFunction { GameRepository.get().getStadiums() }
         }

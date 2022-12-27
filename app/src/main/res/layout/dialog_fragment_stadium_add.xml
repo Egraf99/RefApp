@@ -18,6 +18,7 @@
         tools:text="Add Entity" />
 
     <com.egraf.refapp.views.custom_views.GameComponentInput
+        android:id="@+id/entity_title_game_component"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         custom:hintText="@string/title" />
@@ -30,6 +31,7 @@
         android:orientation="horizontal">
 
         <ImageButton
+            android:id="@+id/cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -37,6 +39,7 @@
             android:contentDescription="@string/cancel" />
 
         <ImageButton
+            android:id="@+id/accept_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"

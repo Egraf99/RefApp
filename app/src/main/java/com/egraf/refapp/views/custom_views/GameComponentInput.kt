@@ -2,7 +2,6 @@ package com.egraf.refapp.views.custom_views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -63,7 +62,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet): ConstraintLayou
                 override fun onAnimationStart(animation: Animation?) {}
 
                 override fun onAnimationEnd(animation: Animation?) {
-                    setFocused()
+                    setFill()
                 }
 
                 override fun onAnimationRepeat(animation: Animation?) {}
@@ -74,12 +73,19 @@ class GameComponentInput(context: Context, attrs: AttributeSet): ConstraintLayou
                 override fun onAnimationStart(animation: Animation?) {}
 
                 override fun onAnimationEnd(animation: Animation?) {
-                    setUnfocused()
+                    setEmpty()
                 }
 
                 override fun onAnimationRepeat(animation: Animation?) {}
             })
         }
+    }
+
+    fun setText(text: String?) {
+        if (text?.isNotBlank() == true) {
+            editText.setText(text)
+            setFill()
+        } else setEmpty()
     }
 
     private fun startAnimFocus() {
@@ -96,12 +102,12 @@ class GameComponentInput(context: Context, attrs: AttributeSet): ConstraintLayou
         tintTextView.startAnimation(downAnim)
     }
 
-    private fun setFocused() {
+    private fun setFill() {
         animTextView.visibility = INVISIBLE
         tintTextView.visibility = VISIBLE
     }
 
-    private fun setUnfocused() {
+    private fun setEmpty() {
         animTextView.visibility = VISIBLE
         tintTextView.visibility = INVISIBLE
     }
