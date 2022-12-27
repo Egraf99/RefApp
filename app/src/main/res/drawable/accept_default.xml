@@ -1,22 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:bottom="0dp"
-        android:top="0dp"
-        android:start="2dp"
-        android:end="2dp">
-        <shape android:shape="rectangle">
-            <corners android:radius="40dp" />
-            <gradient
-                android:centerColor="@color/black"
-                android:angle="90"
-                android:gradientRadius="24dp"
-                android:centerX="90%"
-                android:type="linear" />
-        </shape>
-    </item>
-    <item
-        android:bottom="5dp"
+    <item android:start="2dp" android:end="2dp" android:top="4dp" android:drawable="@drawable/ic_button_shadow"/>
+    <item android:bottom="4dp"
         android:drawable="@drawable/ic_accept_button" />
-
 </layer-list>

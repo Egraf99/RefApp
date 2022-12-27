@@ -81,7 +81,7 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
 
         // меняем текст на кнопке next, если показывается последний фрагмент
         if (addNewGameViewModel.currentPosition == AddGameDestination.values().size-1 - AddGameDestination.countDestinations)
-            binding.nextButton.setImageResource(R.drawable.accept_button)
+            binding.nextButton.setImageResource(R.drawable.accept_wide_button)
         else
             binding.nextButton.setImageResource(R.drawable.next_button)
     }

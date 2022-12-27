@@ -2,5 +2,5 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:start="2dp" android:end="2dp" android:top="4dp" android:drawable="@drawable/ic_button_shadow"/>
     <item android:top="3dp" android:bottom="1dp"
-        android:drawable="@drawable/ic_accept_button" />
+        android:drawable="@drawable/ic_accept_wide_button" />
 </layer-list>
