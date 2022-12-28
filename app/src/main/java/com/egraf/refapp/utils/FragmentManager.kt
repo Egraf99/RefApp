@@ -1,4 +1,4 @@
-package com.egraf.refapp
+package com.egraf.refapp.utils
 
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
