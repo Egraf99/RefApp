@@ -81,18 +81,11 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
                 )
                 when (SearchDialogFragment.getTypeOfResult(result)) {
                     SearchDialogFragment.Companion.ResultRequest.SEARCH_ITEM_RESULT_REQUEST -> {
-                        Log.d(TAG, "onFragmentResult: item")
                         binding.stadiumComponentInput.setItem(item)
-
-                        // закрываем SearchDialogFragment
                         parentFragmentManager.close(FRAGMENT_STADIUM)
                     }
-                    SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
-                        Log.d(TAG, "onFragmentResult: info")
-
-                    }
+                    SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> { }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
-                        Log.d(TAG, "onFragmentResult: add")
                         EntityAddDialogFragment(
                             getString(R.string.add_stadium),
                             SearchDialogFragment.getTitle(result),
