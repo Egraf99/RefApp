@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.databinding.DialogFragmentStadiumAddBinding
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
@@ -45,5 +46,26 @@ class EntityAddDialogFragment(private val title: String? = null, private val ent
         binding.textView.text = viewModel.title
         binding.entityTitleGameComponent.setText(viewModel.entityTitle)
         binding.cancelButton.setOnClickListener { dismiss() }
+        binding.acceptButton.setOnClickListener {
+            setFragmentResult(
+                arguments?.getString(REQUEST) ?: "Unknown request",
+                Bundle().apply { putString(TITLE_RESULT, binding.entityTitleGameComponent.text) }
+            )
+        }
+    }
+
+    companion object {
+        private const val REQUEST = "Request"
+        private const val TITLE_RESULT = "ResultTitle"
+
+        operator fun invoke(
+            title: String? = null,
+            entityTitle: String? = null,
+            request: String
+        ): EntityAddDialogFragment = EntityAddDialogFragment(title, entityTitle).apply {
+            arguments = Bundle().apply { putString(REQUEST, request) }
+        }
+
+        fun getTitle(bundle: Bundle): String = bundle.getString(TITLE_RESULT) ?: throw IllegalStateException("Result title didn't send")
     }
 }

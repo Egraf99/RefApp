@@ -14,6 +14,8 @@ class GameComponentInput(context: Context, attrs: AttributeSet): ConstraintLayou
     private val animTextView: TextView
     private val tintTextView: TextView
     private val editText: EditText
+    val text: String
+        get() = editText.text.toString()
 
     private val upAnim: Animation
     private val downAnim: Animation

@@ -14,6 +14,8 @@
         app:layout_constraintTop_toTopOf="parent"
 
         custom:title="@string/league"
+        custom:text="Text"
+        custom:fill="true"
         custom:mIcon="@drawable/ic_whistle"/>
 
     <Button
@@ -37,23 +39,25 @@
 
     <CheckBox
         android:id="@+id/game_passed_check_box"
-        app:useMaterialThemeColors="false"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:minHeight="48dp"
+        android:text="@string/gamePassedCheckBox"
         app:layout_constraintEnd_toStartOf="@id/game_paid_check_box"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/date_choose_button"
-        android:text="@string/gamePassedCheckBox"/>
+        app:useMaterialThemeColors="false" />
 
     <CheckBox
         android:id="@+id/game_paid_check_box"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        app:layout_constraintStart_toEndOf="@id/game_passed_check_box"
+        android:minHeight="48dp"
+        android:text="@string/gamePaidCheckbox"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/game_passed_check_box"
-        android:text="@string/gamePaidCheckbox"/>
+        app:layout_constraintStart_toEndOf="@id/game_passed_check_box"
+        app:layout_constraintTop_toTopOf="@id/game_passed_check_box" />
 </androidx.constraintlayout.widget.ConstraintLayout>

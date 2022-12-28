@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -11,16 +12,15 @@ import android.view.*
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.LiveData
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.liveData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.R
 import com.egraf.refapp.databinding.SearchEntityFragmentBinding
-import com.egraf.refapp.utils.Resource
 import com.egraf.refapp.utils.Status
-import kotlinx.coroutines.Dispatchers
+import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 private const val LENGTH_TEXT_BEFORE_FILTER: Int = 0
 
@@ -52,56 +52,6 @@ class SearchDialogFragment(
     private var _binding: SearchEntityFragmentBinding? = null
     private lateinit var adapter: SearchAdapter
 
-    // listeners
-    var onAddClickListener: OnAddClickListener? = null
-    var onInfoClickListener: OnInfoClickListener? = null
-    var onSearchItemClickListener: OnSearchItemClickListener? = null
-
-    fun setOnAddClickListener(f: (DialogFragment, Editable) -> Unit): SearchDialogFragment {
-        onAddClickListener = object : OnAddClickListener {
-            override fun onClick(dialog: DialogFragment, inputText: Editable) {
-                binding.edit.clearFocus()
-                f(dialog, inputText)
-            }
-        }
-        return this
-    }
-
-    fun setOnAddClickListener(listener: OnAddClickListener?): SearchDialogFragment {
-        onAddClickListener = listener
-        return this
-    }
-
-    fun setOnInfoClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): SearchDialogFragment {
-        onInfoClickListener = object : OnInfoClickListener {
-            override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) {
-                binding.edit.clearFocus()
-                f(dialog, searchItem)
-            }
-        }
-        return this
-    }
-
-    fun setOnInfoClickListener(listener: OnInfoClickListener?): SearchDialogFragment {
-        onInfoClickListener = listener
-        return this
-    }
-
-    fun setOnSearchItemClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): SearchDialogFragment {
-        onSearchItemClickListener = object : OnSearchItemClickListener {
-            override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) {
-                binding.edit.clearFocus()
-                f(dialog, searchItem)
-            }
-        }
-        return this
-    }
-
-    fun setOnSearchItemClickListener(listener: OnSearchItemClickListener?): SearchDialogFragment {
-        onSearchItemClickListener = listener
-        return this
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {// первое создание фрагмента
@@ -109,9 +59,6 @@ class SearchDialogFragment(
             viewModel.text = text
             viewModel.title = title
             viewModel.icon = icon
-            viewModel.onSearchItemClickListener = onSearchItemClickListener
-            viewModel.onAddClickListener = onAddClickListener
-            viewModel.onInfoClickListener = onInfoClickListener
         }
 
     }
@@ -128,12 +75,14 @@ class SearchDialogFragment(
         adapter = SearchAdapter(
             onSearchItemClickListener = object : SearchHolder.Companion.InnerOnSearchItemClickListener {
                 override fun onClick(searchItem: SearchItemInterface) {
-                    viewModel.onSearchItemClickListener?.onClick(this@SearchDialogFragment, searchItem)
+                    binding.edit.clearFocus()
+                    sendRequest(ResultRequest.SEARCH_ITEM_RESULT_REQUEST, searchItem)
                 }
             },
             onInfoClickListener = object : SearchHolder.Companion.InnerOnInfoClickListener {
                 override fun onClick(searchItem: SearchItemInterface) {
-                    viewModel.onInfoClickListener?.onClick(this@SearchDialogFragment, searchItem)
+                    binding.edit.clearFocus()
+                    sendRequest(ResultRequest.INFO_RESULT_REQUEST, searchItem)
                 }
             }
         )
@@ -231,10 +180,8 @@ class SearchDialogFragment(
             binding.icon.setImageDrawable(viewModel.icon)
 
         binding.plusButton.setOnClickListener {
-            viewModel.onAddClickListener?.onClick(
-                this,
-                binding.edit.text
-            )
+            binding.edit.clearFocus()
+            sendRequest(ResultRequest.ADD_RESULT_REQUEST, binding.edit.text.toString())
         }
         binding.edit.setText(viewModel.text)
         binding.edit.requestFocus()
@@ -264,17 +211,67 @@ class SearchDialogFragment(
     }
 
     private fun enterClicked() {
-        // поле незаполенено - возвращаем пустой Item
+        // поле незаполенено - возвращаем SEARCH_REQUEST с пустым Item
         if (binding.edit.text.isBlank()) {
-            onSearchItemClickListener?.onClick(this, EmptySearchItem)
+            sendRequest(ResultRequest.SEARCH_ITEM_RESULT_REQUEST, EmptySearchItem)
             return
         }
         try {
-            // есть совпадения - берем первое совпадение
-            onSearchItemClickListener?.onClick(this, viewModel.filterItems[0].third)
+            // есть совпадения - возвращаем SEARCH_REQUEST
+            sendRequest(ResultRequest.SEARCH_ITEM_RESULT_REQUEST, viewModel.filterItems[0].third)
         } catch (e: IndexOutOfBoundsException) {
-            // нет совпадений - возвращаем пустой Item
-            onSearchItemClickListener?.onClick(this, EmptySearchItem)
+            // нет совпадений - возвращаем ADD_REQUEST
+            sendRequest(ResultRequest.ADD_RESULT_REQUEST, binding.edit.text.toString())
         }
+    }
+
+    private fun sendRequest(result: ResultRequest, searchItem: SearchItemInterface) {
+        val bundle = Bundle().apply {
+            putParcelable(TYPE_OF_RESULT, result)
+            putString(TITLE_RESULT, searchItem.title)
+            putSerializable(ID_RESULT, searchItem.id)
+        }
+        setFragmentResult(arguments?.getString(REQUEST) ?: "Unknown Request", bundle)
+    }
+
+    private fun sendRequest(result: ResultRequest, text: String) {
+        val bundle = Bundle().apply {
+            putParcelable(TYPE_OF_RESULT, result)
+            putString(TITLE_RESULT, text)
+        }
+        setFragmentResult(arguments?.getString(REQUEST) ?: "Unknown Request", bundle)
+    }
+
+    companion object {
+        private const val TYPE_OF_RESULT = "TypeRequest"
+        private const val TITLE_RESULT = "TitleRequest"
+        private const val ID_RESULT = "IdRequest"
+        private const val REQUEST = "Request"
+
+        @Parcelize
+        enum class ResultRequest: Parcelable {
+            ADD_RESULT_REQUEST,
+            INFO_RESULT_REQUEST,
+            SEARCH_ITEM_RESULT_REQUEST;
+        }
+
+        operator fun invoke(
+            title: String? = null,
+            icon: Drawable? = null,
+            receiveSearchItems: (() -> List<SearchItemInterface>)? = null,
+            text: String? = null,
+            request: String
+        ): SearchDialogFragment {
+            return SearchDialogFragment(title, icon, receiveSearchItems, text).apply {
+                arguments = Bundle().apply { putString(REQUEST, request) }
+            }
+        }
+
+        fun getTypeOfResult(bundle: Bundle): ResultRequest = bundle.getParcelable(TYPE_OF_RESULT)
+            ?: throw IllegalStateException("Type of result didn't send")
+
+        fun getTitle(bundle: Bundle): String = bundle.getString(TITLE_RESULT, EmptySearchItem.title)
+        fun getId(bundle: Bundle): UUID =
+            bundle.getSerializable(ID_RESULT) as UUID? ?: EmptySearchItem.id
     }
 }

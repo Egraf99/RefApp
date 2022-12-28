@@ -18,27 +18,20 @@ import androidx.fragment.app.FragmentManager
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
 import com.egraf.refapp.ui.dialogs.search_entity.*
+import java.util.*
 
 private const val TAG = "GameComponent"
 
-class GameComponentSearch(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), View.OnClickListener {
+class GameComponentSearch(context: Context, attrs: AttributeSet) :
+    ConstraintLayout(context, attrs) {
     private var isEmpty: Boolean
     private val animTextView: TextView
     private val helpTextView: TextView
     private val contentTextView: TextView
     private val infoButton: ImageButton
-    private val title: String
-    private val text: String
-    private val icon: Drawable?
-
-    private val appearAnim: Animation
-    private val disappearAnim: Animation
-    private val leftUpAnim: Animation
-    private val rightDownAnim: Animation
-
-    private var showSearchFragment: () -> Unit
-
-    private lateinit var fragmentManager: FragmentManager
+    val title: String
+    val text: String
+    val icon: Drawable?
 
     // ------------- searchItem -----------------------
     var searchItem: SearchItemInterface? = null
@@ -54,46 +47,6 @@ class GameComponentSearch(context: Context, attrs: AttributeSet) : ConstraintLay
             contentTextView.text = item.title
             setContentFill()
         }
-    }
-    // ------------------------------------------------
-
-
-    // ------------- listeners ------------------------
-    var onAddClickListener: OnAddClickListener? = null
-    var onInfoClickListener: OnInfoClickListener? = null
-    var onSearchItemClickListener: OnSearchItemClickListener? = null
-
-    fun setOnAddClickListener(f: (DialogFragment, Editable) -> Unit): GameComponentSearch {
-        onAddClickListener = object : OnAddClickListener {
-            override fun onClick(dialog: DialogFragment, inputText: Editable) = f(dialog, inputText)
-        }
-        updateShowSearchDialogListener()
-        return this
-    }
-
-    fun setOnInfoClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): GameComponentSearch {
-        onInfoClickListener = object : OnInfoClickListener {
-            override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) = f(dialog, searchItem)
-        }
-        updateShowSearchDialogListener()
-        return this
-    }
-
-    fun setOnSearchItemClickListener(f: (DialogFragment, SearchItemInterface) -> Unit): GameComponentSearch {
-        onSearchItemClickListener = object : OnSearchItemClickListener {
-            override fun onClick(dialog: DialogFragment, searchItem: SearchItemInterface) = f(dialog, searchItem)
-        }
-        updateShowSearchDialogListener()
-        return this
-    }
-    // ------------------------------------------------
-
-    // ------------- get item function ----------------
-    var functionSearchItemsReceive: (() -> List<SearchItemInterface>)? = null
-    fun setSearchItemsReceiveFunction(f: () -> List<SearchItemInterface>): GameComponentSearch {
-        functionSearchItemsReceive = f
-        updateShowSearchDialogListener()
-        return this
     }
     // ------------------------------------------------
 
@@ -134,103 +87,12 @@ class GameComponentSearch(context: Context, attrs: AttributeSet) : ConstraintLay
         contentTextView.text = text
 
         // clickable
-        contentTextView.setOnClickListener(this)
-        mIcon.setOnClickListener(this)
-        setOnClickListener(this)
-        showSearchFragment = updateShowSearchDialogListener()
+        infoButton.setOnClickListener {
+            Log.d(TAG, "info click")
+        }
 
         // set content
         setState(isEmpty)
-
-        // init animations
-        appearAnim = AnimationUtils.loadAnimation(context, R.anim.appeare_textview).apply {
-            setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation?) {}
-
-                override fun onAnimationEnd(animation: Animation?) {
-                    contentTextView.visibility = View.VISIBLE
-                }
-
-                override fun onAnimationRepeat(animation: Animation?) {}
-            }
-            )
-        }
-        disappearAnim = AnimationUtils.loadAnimation(context, R.anim.disappeare_textview).apply {
-            setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation?) {}
-
-                override fun onAnimationEnd(animation: Animation?) {
-                    contentTextView.visibility = View.INVISIBLE
-                }
-
-                override fun onAnimationRepeat(animation: Animation?) {}
-            }
-            )
-        }
-        leftUpAnim = AnimationUtils.loadAnimation(context, R.anim.move_up).apply {
-            setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation?) {}
-
-                override fun onAnimationEnd(animation: Animation?) {
-                    setContentFill()
-                }
-
-                override fun onAnimationRepeat(animation: Animation?) {}
-            })
-        }
-        rightDownAnim = AnimationUtils.loadAnimation(context, R.anim.move_down).apply {
-            setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation?) {}
-
-                override fun onAnimationEnd(animation: Animation?) {
-                    setContentEmpty()
-                }
-
-                override fun onAnimationRepeat(animation: Animation?) {}
-            })
-        }
-    }
-
-    private fun updateShowSearchDialogListener(): () -> Unit {
-        showSearchFragment = {
-            SearchDialogFragment(
-                title, icon,
-                functionSearchItemsReceive,
-            )
-                .setOnAddClickListener { dialog, editable ->
-                    onAddClickListener?.onClick(dialog, editable)
-                }
-                .setOnInfoClickListener { dialog, searchItem ->
-                    onInfoClickListener?.onClick(dialog, searchItem)
-                }
-                .setOnSearchItemClickListener { dialog, searchItem ->
-                    dialog.dismiss()
-                    setItem(searchItem)
-                    onSearchItemClickListener?.onClick(dialog, searchItem)
-                }
-                .show(fragmentManager, "")
-        }
-        return showSearchFragment
-    }
-
-    private fun fill() {
-        leftUpAnim.reset()
-        appearAnim.reset()
-        animTextView.clearAnimation()
-        animTextView.startAnimation(leftUpAnim)
-
-        contentTextView.clearAnimation()
-        contentTextView.startAnimation(appearAnim)
-    }
-
-    private fun empty() {
-        rightDownAnim.reset()
-        disappearAnim.reset()
-        helpTextView.clearAnimation()
-        helpTextView.startAnimation(rightDownAnim)
-
-        contentTextView.clearAnimation()
-        contentTextView.startAnimation(disappearAnim)
     }
 
     private fun setContentEmpty() {
@@ -249,14 +111,5 @@ class GameComponentSearch(context: Context, attrs: AttributeSet) : ConstraintLay
 
     private fun setState(state: Boolean) {
         if (state) setContentEmpty() else setContentFill()
-    }
-
-    fun bindFragmentManager(parentFragmentManager: FragmentManager): GameComponentSearch {
-        fragmentManager = parentFragmentManager
-        return this
-    }
-
-    override fun onClick(v: View?) {
-        showSearchFragment()
     }
 }

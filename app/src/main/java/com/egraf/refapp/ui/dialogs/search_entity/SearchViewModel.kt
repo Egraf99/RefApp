@@ -34,11 +34,6 @@ class SearchViewModel: ViewModelWithGameRepo() {
         }
     }
     var receiveItems: (() -> List<SearchItemInterface>)? = null
-
-    // listeners
-    var onSearchItemClickListener: OnSearchItemClickListener? = null
-    var onInfoClickListener: OnInfoClickListener? = null
-    var onAddClickListener: OnAddClickListener? = null
 }
 
 //class SearchViewModelFactory(private val searchInterface: SearchInterface) :
