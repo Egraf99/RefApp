@@ -10,5 +10,6 @@
 
     <declare-styleable name="GameComponentInput">
         <attr name="hintText" format="string"/>
+        <attr name="android:clickable" format="boolean"/>
     </declare-styleable>
 </resources>

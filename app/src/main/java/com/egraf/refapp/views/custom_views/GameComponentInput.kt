@@ -21,6 +21,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet): ConstraintLayou
     private val downAnim: Animation
 
     private val hintText: String
+    private var clickable: Boolean
 
     init {
         context.theme.obtainStyledAttributes(
@@ -31,6 +32,7 @@ class GameComponentInput(context: Context, attrs: AttributeSet): ConstraintLayou
 
             try {
                 hintText = getString(R.styleable.GameComponentInput_hintText) ?: ""
+                clickable = getBoolean(R.styleable.GameComponentInput_android_clickable, true)
             } finally {
                 recycle()
             }
@@ -48,6 +50,8 @@ class GameComponentInput(context: Context, attrs: AttributeSet): ConstraintLayou
         tintTextView.text = hintText
         animTextView.text = hintText
         tintTextView.visibility = INVISIBLE
+
+        isClickable = clickable
 
 
         // set editText listener
@@ -88,6 +92,13 @@ class GameComponentInput(context: Context, attrs: AttributeSet): ConstraintLayou
             editText.setText(text)
             setFill()
         } else setEmpty()
+    }
+
+    override fun setClickable(b: Boolean) {
+        clickable = b
+        editText.isClickable = b
+        editText.isEnabled = b
+        this.isEnabled = b
     }
 
     private fun startAnimFocus() {

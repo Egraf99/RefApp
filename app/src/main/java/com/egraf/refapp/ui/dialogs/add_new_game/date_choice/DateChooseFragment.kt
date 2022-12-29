@@ -16,6 +16,7 @@ import com.egraf.refapp.ui.dialogs.DatePickerFragment
 import com.egraf.refapp.ui.dialogs.TimePickerFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.EntityAddDialogFragment
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.GameComponentInfoDialog
 import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.SearchItemInterface
 
@@ -93,6 +94,10 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
                     }
                     SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
                         Log.d(TAG, "info: $item")
+                        GameComponentInfoDialog(
+                            title = getString(R.string.stadium),
+                            componentTitle = SearchDialogFragment.getTitle(result),
+                        ).show(parentFragmentManager, FRAGMENT_INFO_STADIUM)
                     }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
                         Log.d(TAG, "add: $item")
@@ -174,6 +179,7 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
 
         private const val FRAGMENT_STADIUM = "FragmentStadium"
         private const val FRAGMENT_ADD_STADIUM = "FragmentAddStadium"
+        private const val FRAGMENT_INFO_STADIUM = "FragmentInfoStadium"
         private const val FRAGMENT_DATE = "FragmentDialogDate"
         private const val FRAGMENT_TIME = "FragmentDialogTime"
     }
