@@ -1,4 +1,4 @@
-package com.egraf.refapp.ui.dialogs.add_new_game
+package com.egraf.refapp.ui.dialogs.add_new_game.date_choice
 
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -6,20 +6,27 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentResultListener
-import androidx.fragment.app.commit
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
-import com.egraf.refapp.close
-import com.egraf.refapp.databinding.AddStadiumFragmentBinding
+import com.egraf.refapp.database.entities.Stadium
+import com.egraf.refapp.utils.close
 import com.egraf.refapp.databinding.DateChooseBinding
 import com.egraf.refapp.ui.dialogs.DatePickerFragment
 import com.egraf.refapp.ui.dialogs.TimePickerFragment
+import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.EntityAddDialogFragment
-import com.egraf.refapp.ui.dialogs.search_entity.EmptySearchItem
 import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.SearchItemInterface
+import com.egraf.refapp.utils.Resource
+import com.egraf.refapp.utils.Status
+import com.egraf.refapp.views.custom_views.GameComponentSearch
+import kotlinx.coroutines.launch
+import java.util.*
 
 private const val DATE_FORMAT = "EEE dd.MM.yyyy"
 private const val TIME_FORMAT = "HH:mm"
@@ -29,6 +36,10 @@ private const val TAG = "AddGame"
 class DateChooseFragment : ChooserFragment(), FragmentResultListener {
     private val binding get() = _binding!!
     private var _binding: DateChooseBinding? = null
+
+    private val viewModel: DateChooseViewModel by lazy {
+        ViewModelProvider(this)[DateChooseViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,7 +62,7 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
         binding.stadiumComponentInput.apply {
             setOnClickListener {
                 SearchDialogFragment(
-                    this.title, this.icon,
+                    this.searchItem.title, this.icon,
                     { GameRepository.get().getStadiums() },
                     request = REQUEST_STADIUM
                 ).show(parentFragmentManager, FRAGMENT_STADIUM)
@@ -67,8 +78,12 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
                 .newInstance(addNewGameViewModel.gameWithAttributes.game.date, REQUEST_TIME)
                 .show(parentFragmentManager, FRAGMENT_TIME)
         }
-        binding.gamePaidCheckBox.setOnCheckedChangeListener { _, isChecked -> addNewGameViewModel.gameWithAttributes.game.isPaid = isChecked }
-        binding.gamePassedCheckBox.setOnCheckedChangeListener { _, isChecked -> addNewGameViewModel.gameWithAttributes.game.isPassed = isChecked }
+        binding.gamePaidCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            addNewGameViewModel.gameWithAttributes.game.isPaid = isChecked
+        }
+        binding.gamePassedCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            addNewGameViewModel.gameWithAttributes.game.isPassed = isChecked
+        }
         updateUI()
     }
 
@@ -81,11 +96,15 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
                 )
                 when (SearchDialogFragment.getTypeOfResult(result)) {
                     SearchDialogFragment.Companion.ResultRequest.SEARCH_ITEM_RESULT_REQUEST -> {
+                        Log.d(TAG, "search: $item")
                         binding.stadiumComponentInput.setItem(item)
                         parentFragmentManager.close(FRAGMENT_STADIUM)
                     }
-                    SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> { }
+                    SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
+                        Log.d(TAG, "info: $item")
+                    }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
+                        Log.d(TAG, "add: $item")
                         EntityAddDialogFragment(
                             getString(R.string.add_stadium),
                             SearchDialogFragment.getTitle(result),
@@ -95,8 +114,24 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
                 }
             }
             REQUEST_ADD_STADIUM -> {
-                binding.stadiumComponentInput.setItem(SearchItemInterface(EntityAddDialogFragment.getTitle(result)))
+                val stadiumName = EntityAddDialogFragment.getTitle(result)
                 parentFragmentManager.close(FRAGMENT_STADIUM, FRAGMENT_ADD_STADIUM)
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        val stadium = Stadium(id = UUID.randomUUID(), name = stadiumName)
+                        viewModel.addStadiumToDB(stadium).collect { resource ->
+                            Log.d("123456", "${resource.status}")
+                            when (resource.status) {
+                                Status.LOADING -> binding.stadiumComponentInput.startLoading()
+                                Status.SUCCESS -> binding.stadiumComponentInput.apply {
+                                    stopLoading()
+                                    setItem(stadium)
+                                }
+                                Status.ERROR -> Log.d(TAG, "Unknown error")
+                            }
+                        }
+                    }
+                }
             }
             REQUEST_DATE -> {
                 addNewGameViewModel.gameWithAttributes.game.date =

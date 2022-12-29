@@ -4,17 +4,6 @@
     android:id="@+id/add_game_nav"
     app:startDestination="@id/dateChooseFragment">
     <fragment
-        android:id="@+id/dateChooseFragment"
-        android:name="com.egraf.refapp.ui.dialogs.add_new_game.DateChooseFragment"
-        android:label="DateChooseFragment" >
-        <action
-            android:id="@+id/action_choose_date_to_team"
-            app:destination="@id/teamChooseFragment" />
-        <action
-            android:id="@+id/action_dateChooseFragment_to_stadiumAddFragment"
-            app:destination="@id/stadiumAddFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/teamChooseFragment"
         android:name="com.egraf.refapp.ui.dialogs.add_new_game.TeamChooseFragment"
         android:label="TeamChooseFragment" >
@@ -28,6 +17,17 @@
         android:label="RefereeChooseFragment" />
     <fragment
         android:id="@+id/stadiumAddFragment"
-        android:name="com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.StadiumAddFragment"
+        android:name="com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.StadiumAddDialog"
         android:label="StadiumAddFragment" />
+    <fragment
+        android:id="@+id/dateChooseFragment"
+        android:name="com.egraf.refapp.ui.dialogs.add_new_game.date_choice.DateChooseFragment"
+        android:label="DateChooseFragment" >
+        <action
+            android:id="@+id/action_dateChooseFragment_to_stadiumAddFragment"
+            app:destination="@id/stadiumAddFragment" />
+        <action
+            android:id="@+id/action_choose_date_to_team"
+            app:destination="@id/teamChooseFragment" />
+    </fragment>
 </navigation>

@@ -2,9 +2,10 @@
 <resources>
     <declare-styleable name="GameComponentSearch">
         <attr name="fill" format="boolean"/>
-        <attr name="title" format="string"/>
-        <attr name="text" format="string"/>
-        <attr name="mIcon" format="integer"/>
+        <attr name="loading" format="boolean"/>
+        <attr name="title" format="string" />
+        <attr name="text" format="string" />
+        <attr name="mIcon" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="GameComponentInput">

@@ -14,8 +14,6 @@
         app:layout_constraintTop_toTopOf="parent"
 
         custom:title="@string/league"
-        custom:text="Text"
-        custom:fill="true"
         custom:mIcon="@drawable/ic_whistle"/>
 
     <Button

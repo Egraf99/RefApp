@@ -2,7 +2,6 @@ package com.egraf.refapp.views.custom_views
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.text.Editable
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,61 +10,55 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
-import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
 import com.egraf.refapp.ui.dialogs.search_entity.*
-import java.util.*
+import kotlinx.android.synthetic.main.search_entity_item.view.*
 
 private const val TAG = "GameComponent"
 
 class GameComponentSearch(context: Context, attrs: AttributeSet) :
     ConstraintLayout(context, attrs) {
-    private var isEmpty: Boolean
-    private val animTextView: TextView
-    private val helpTextView: TextView
+    private var state: State = State.EMPTY
+    private var showingLoading: Boolean = false
+    private val tintTextView: TextView
+    private val smallTintTextView: TextView
     private val contentTextView: TextView
     private val infoButton: ImageButton
-    val title: String
+    private val progressBar: ProgressBar
+
+    private val appearAnim: (String) -> Animation
+    private val disappearAnim: () -> Animation
+    private val disappearAndAppearAnim: (String) -> Animation
+    private val leftUpAnim: () -> Animation
+    private val rightDownAnim: () -> Animation
+
     val text: String
     val icon: Drawable?
 
     // ------------- searchItem -----------------------
-    var searchItem: SearchItemInterface? = null
+    var searchItem: SearchItemInterface = EmptySearchItem
         private set
-
-    fun setItem(item: SearchItemInterface) {
-        if (item == EmptySearchItem) {
-            searchItem = null
-            contentTextView.text = ""
-            setContentEmpty()
-        } else {
-            searchItem = item
-            contentTextView.text = item.title
-            setContentFill()
-        }
-    }
-    // ------------------------------------------------
+    // -----------------------------------------------
 
     init {
-        Log.d(TAG, "create")
         context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.GameComponentSearch,
             0, 0
         ).apply {
-
-            try {
-                isEmpty = !getBoolean(R.styleable.GameComponentSearch_fill, false)
-                title = getString(R.styleable.GameComponentSearch_title) ?: ""
-                text = getString(R.styleable.GameComponentSearch_text) ?: ""
-                icon = getDrawable(R.styleable.GameComponentSearch_mIcon)
-            } finally {
-                recycle()
-            }
+            state = if (!getBoolean(
+                    R.styleable.GameComponentSearch_fill,
+                    false
+                )
+            ) State.EMPTY else State.FILL
+            showingLoading = getBoolean(R.styleable.GameComponentSearch_loading, false)
+            val title = getString(R.styleable.GameComponentSearch_title)
+            searchItem = if (title == null) EmptySearchItem else SearchItemInterface(title)
+            text = getString(R.styleable.GameComponentSearch_text) ?: ""
+            icon = getDrawable(R.styleable.GameComponentSearch_mIcon)
         }
         val inflater = context
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -76,40 +69,191 @@ class GameComponentSearch(context: Context, attrs: AttributeSet) :
         icon?.let { mIcon.setImageDrawable(it) }
 
         // search text views
-        helpTextView = getChildAt(2) as TextView
-        animTextView = getChildAt(3) as TextView
+        smallTintTextView = getChildAt(2) as TextView
+        tintTextView = getChildAt(3) as TextView
         contentTextView = getChildAt(4) as TextView
         infoButton = getChildAt(5) as ImageButton
+        progressBar = getChildAt(6) as ProgressBar
 
         // заполняем text views
-        helpTextView.text = title
-        animTextView.text = title
+        smallTintTextView.text = searchItem.title
+        tintTextView.text = searchItem.title
         contentTextView.text = text
+
+        if (showingLoading) startLoading() else stopLoading()
 
         // clickable
         infoButton.setOnClickListener {
             Log.d(TAG, "info click")
         }
 
-        // set content
-        setState(isEmpty)
+        // init animations
+        appearAnim = { text: String ->
+            AnimationUtils.loadAnimation(context, R.anim.appeare_textview).apply {
+                setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(animation: Animation?) {
+                        contentTextView.text = text
+                    }
+
+                    override fun onAnimationEnd(animation: Animation?) {
+                        showContent()
+                    }
+
+                    override fun onAnimationRepeat(animation: Animation?) {}
+                }
+                )
+            }
+        }
+        disappearAnim = {
+            AnimationUtils.loadAnimation(context, R.anim.disappeare_textview).apply {
+                setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(animation: Animation?) {}
+
+                    override fun onAnimationEnd(animation: Animation?) {
+                        hideContent()
+                    }
+
+                    override fun onAnimationRepeat(animation: Animation?) {}
+                }
+                )
+            }
+        }
+        disappearAndAppearAnim = { text: String ->
+            AnimationUtils.loadAnimation(context, R.anim.disappeare_textview).apply {
+                setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(animation: Animation?) {}
+
+                    override fun onAnimationEnd(animation: Animation?) {
+                        contentTextView.startAnimation(appearAnim(text))
+                        infoButton.startAnimation(appearAnim(text))
+                    }
+
+                    override fun onAnimationRepeat(animation: Animation?) {}
+                }
+                )
+            }
+        }
+        leftUpAnim = {
+            AnimationUtils.loadAnimation(context, R.anim.move_left_up).apply {
+                setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(animation: Animation?) {}
+
+                    override fun onAnimationEnd(animation: Animation?) {
+                        tintTextView.visibility = INVISIBLE
+                        smallTintTextView.visibility = VISIBLE
+                    }
+
+                    override fun onAnimationRepeat(animation: Animation?) {}
+                })
+            }
+        }
+        rightDownAnim = {
+            AnimationUtils.loadAnimation(context, R.anim.move_right_down).apply {
+                setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(animation: Animation?) {}
+                    override fun onAnimationEnd(animation: Animation?) {}
+                    override fun onAnimationRepeat(animation: Animation?) {}
+                })
+            }
+        }
     }
 
-    private fun setContentEmpty() {
-        helpTextView.visibility = View.INVISIBLE
+    fun setItem(item: SearchItemInterface) {
+        Log.d(TAG, "setItem: $state, $item")
+        when (state) {
+            State.EMPTY -> state = when (item) {
+                EmptySearchItem -> {
+                    hideContent()
+                    State.EMPTY
+                }
+                else -> {
+                    showAnimContent(item.title)
+                    State.FILL
+                }
+            }
+            State.FILL -> state = when (item) {
+                EmptySearchItem -> {
+                    hideAnimContent()
+                    State.EMPTY
+                }
+                else -> {
+                    updateAnimContent(item.title)
+                    State.FILL
+                }
+            }
+        }
+    }
+
+    private fun updateAnimContent(text: String) {
+        val anim = disappearAndAppearAnim(text)
+        anim.reset()
+        contentTextView.clearAnimation()
+        infoButton.clearAnimation()
+        contentTextView.startAnimation(anim)
+        infoButton.startAnimation(anim)
+    }
+
+    fun startLoading() {
+        progressBar.visibility = VISIBLE
+        infoButton.visibility = INVISIBLE
+    }
+
+    fun stopLoading() {
+        progressBar.visibility = INVISIBLE
+    }
+
+    private fun hideAnimContent() {
+        val contentAnim = disappearAnim()
+        contentAnim.reset()
+
+        val tintAnim = rightDownAnim()
+        tintAnim.reset()
+
+        contentTextView.clearAnimation()
+        infoButton.clearAnimation()
+        smallTintTextView.clearAnimation()
+        contentTextView.startAnimation(contentAnim)
+        infoButton.startAnimation(contentAnim)
+        smallTintTextView.startAnimation(tintAnim)
+    }
+
+    private fun hideContent() {
+        smallTintTextView.visibility = View.INVISIBLE
         contentTextView.visibility = View.INVISIBLE
         infoButton.visibility = View.INVISIBLE
-        animTextView.visibility = View.VISIBLE
+        tintTextView.visibility = View.VISIBLE
+        progressBar.visibility = View.INVISIBLE
     }
 
-    private fun setContentFill() {
-        helpTextView.visibility = View.VISIBLE
+
+    private fun showAnimContent(text: String) {
+        Log.d(TAG, "showAnimContent: show")
+        val contentAnim = appearAnim(text)
+        contentAnim.reset()
+
+        val tintAnim = leftUpAnim()
+        tintAnim.reset()
+
+        contentTextView.clearAnimation()
+        infoButton.clearAnimation()
+        tintTextView.clearAnimation()
+        infoButton.startAnimation(contentAnim)
+        contentTextView.startAnimation(contentAnim)
+        tintTextView.startAnimation(tintAnim)
+    }
+
+    private fun showContent() {
+        smallTintTextView.visibility = View.VISIBLE
         contentTextView.visibility = View.VISIBLE
         infoButton.visibility = View.VISIBLE
-        animTextView.visibility = View.INVISIBLE
+        tintTextView.visibility = View.INVISIBLE
+        progressBar.visibility = View.INVISIBLE
     }
 
-    private fun setState(state: Boolean) {
-        if (state) setContentEmpty() else setContentFill()
+    companion object {
+        enum class State {
+            EMPTY,
+            FILL
+        }
     }
 }

@@ -72,6 +72,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@id/infoButton"
+        app:layout_constraintEnd_toEndOf="@id/infoButton"
+        app:layout_constraintBottom_toBottomOf="@id/infoButton"
+        app:layout_constraintTop_toTopOf="@id/infoButton" />
+
 <!--    Close bracket -->
     <ImageView
         android:layout_height="match_parent"
