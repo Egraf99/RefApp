@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
+import com.egraf.refapp.R
 import com.egraf.refapp.databinding.DialogFragmentStadiumAddBinding
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 
@@ -47,6 +49,11 @@ class EntityAddDialogFragment(private val title: String? = null, private val ent
         binding.entityTitleGameComponent.setText(viewModel.entityTitle)
         binding.cancelButton.setOnClickListener { dismiss() }
         binding.acceptButton.setOnClickListener {
+            // пустое поле не сохраняем в БД
+            if (binding.entityTitleGameComponent.text.isBlank()) {
+                Toast.makeText(context, R.string.empty_field, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             setFragmentResult(
                 arguments?.getString(REQUEST) ?: "Unknown request",
                 Bundle().apply { putString(TITLE_RESULT, binding.entityTitleGameComponent.text) }

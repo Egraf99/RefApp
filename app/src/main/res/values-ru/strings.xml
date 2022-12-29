@@ -44,4 +44,5 @@
     <string name="yes">Да</string>
     <string name="add_entity_to_db">Добавить &lt;b>%1$s&lt;/b> в базу?</string>
     <string name="no_data">Нет данных</string>
+    <string name="empty_field">Незаполненное поле</string>
 </resources>
