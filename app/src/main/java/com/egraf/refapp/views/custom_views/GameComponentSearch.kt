@@ -15,7 +15,6 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.egraf.refapp.R
 import com.egraf.refapp.ui.dialogs.search_entity.*
-import kotlinx.android.synthetic.main.search_entity_item.view.*
 
 private const val TAG = "GameComponent"
 
@@ -39,7 +38,7 @@ class GameComponentSearch(context: Context, attrs: AttributeSet) :
     val icon: Drawable?
 
     // ------------- searchItem -----------------------
-    var searchItem: SearchItemInterface = EmptySearchItem
+    var item: SearchItemInterface = EmptySearchItem
         private set
     // -----------------------------------------------
 
@@ -56,7 +55,7 @@ class GameComponentSearch(context: Context, attrs: AttributeSet) :
             ) State.EMPTY else State.FILL
             showingLoading = getBoolean(R.styleable.GameComponentSearch_loading, false)
             val title = getString(R.styleable.GameComponentSearch_title)
-            searchItem = if (title == null) EmptySearchItem else SearchItemInterface(title)
+            item = if (title == null) EmptySearchItem else SearchItemInterface(title)
             text = getString(R.styleable.GameComponentSearch_text) ?: ""
             icon = getDrawable(R.styleable.GameComponentSearch_mIcon)
         }
@@ -76,8 +75,8 @@ class GameComponentSearch(context: Context, attrs: AttributeSet) :
         progressBar = getChildAt(6) as ProgressBar
 
         // заполняем text views
-        smallTintTextView.text = searchItem.title
-        tintTextView.text = searchItem.title
+        smallTintTextView.text = item.title
+        tintTextView.text = item.title
         contentTextView.text = text
 
         if (showingLoading) startLoading() else stopLoading()
@@ -159,7 +158,7 @@ class GameComponentSearch(context: Context, attrs: AttributeSet) :
     }
 
     fun setItem(item: SearchItemInterface) {
-        Log.d(TAG, "setItem: $state, $item")
+        this.item = item
         when (state) {
             State.EMPTY -> state = when (item) {
                 EmptySearchItem -> {

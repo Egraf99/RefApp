@@ -8,13 +8,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.database.entities.Entity
 import com.egraf.refapp.databinding.SearchEntityItemBinding
-import io.reactivex.internal.observers.InnerQueuedObserver
 
 private const val TAG = "SearchAdapter"
 

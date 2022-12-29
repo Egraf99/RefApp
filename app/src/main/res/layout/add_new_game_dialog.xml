@@ -18,7 +18,7 @@
             app:layout_constraintVertical_chainStyle="spread_inside"
             android:layout_marginHorizontal="8dp"
             app:defaultNavHost="true"
-            app:navGraph="@navigation/add_new_game_nav" />
+            app:navGraph="@navigation/add_new_game_route" />
 
         <LinearLayout
             android:id="@+id/buttons_container"

@@ -8,12 +8,19 @@ import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
+import java.util.*
 
 class DateChooseViewModel : ViewModelWithGameRepo() {
-    val addStadiumToDB: (Stadium) -> StateFlow<Resource<Unit>> =
-        { stadium ->
+    val addStadiumToDB: (String) -> StateFlow<Resource<Pair<UUID, String>>> =
+        { stadiumName ->
+            val stadium = Stadium(name = stadiumName)
             flow {
-                emit(Resource.success(gameRepository.addStadium(stadium)))
+                try {
+                    gameRepository.addStadium(stadium)
+                    emit(Resource.success(Pair(stadium.id, stadium.name)))
+                } catch (e: Exception) {
+                    emit(Resource.error(null, e.message.toString()))
+                }
             }.stateIn(
                 scope = viewModelScope,
                 started = WhileSubscribed(5000), // Or Lazily because it's a one-shot
