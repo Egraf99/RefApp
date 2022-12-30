@@ -6,6 +6,7 @@ import androidx.room.Room
 import com.egraf.refapp.database.GameDatabase
 import com.egraf.refapp.database.entities.*
 import com.egraf.refapp.database.migration_1_2
+import kotlinx.coroutines.flow.Flow
 import java.util.*
 import java.util.concurrent.Executors
 
@@ -52,7 +53,7 @@ class LocalGameDataSource(context: Context) : GameDataSource {
     }
 
     override fun getStadiums(): List<Stadium> = stadiumDao.getStadiums()
-    override fun getStadium(id: UUID): LiveData<Stadium?> = stadiumDao.getStadium(id)
+    override fun getStadium(id: UUID): Flow<Stadium?> = stadiumDao.getStadium(id)
     override fun updateStadium(stadium: Stadium) {
         executor.execute {
             stadiumDao.updateStadium(stadium)

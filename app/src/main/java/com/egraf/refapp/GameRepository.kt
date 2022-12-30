@@ -3,6 +3,7 @@ package com.egraf.refapp
 import androidx.lifecycle.LiveData
 import com.egraf.refapp.database.entities.*
 import com.egraf.refapp.database.source.GameDataSource
+import kotlinx.coroutines.flow.Flow
 import java.util.*
 
 
@@ -19,7 +20,7 @@ class GameRepository private constructor(private val dataSource: GameDataSource)
     fun addStadium(stadium: Stadium) = dataSource.addStadium(stadium)
 
     fun getStadiums(): List<Stadium> = dataSource.getStadiums()
-    fun getStadium(id: UUID): LiveData<Stadium?> = dataSource.getStadium(id)
+    fun getStadium(id: UUID): Flow<Stadium?> = dataSource.getStadium(id)
     fun updateStadium(stadium: Stadium) = dataSource.updateStadium(stadium)
 
     //    league block

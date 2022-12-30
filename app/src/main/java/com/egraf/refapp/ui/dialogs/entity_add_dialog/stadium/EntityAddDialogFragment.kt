@@ -22,9 +22,9 @@ private const val TAG = "EntityAddFragment"
 
 class EntityAddDialogFragment(
     title: String? = null,
-    entityTitle: String? = null,
+    private val entityTitle: String? = null,
     private val functionSaveEntityInDB: ((String) -> StateFlow<Resource<Pair<UUID, String>>>)? = null
-) : GameComponentDialog(title, entityTitle) {
+) : GameComponentDialog(title) {
     override val viewModel by lazy {
         ViewModelProvider(this)[EntityAddViewModel::class.java]
     }
@@ -32,6 +32,7 @@ class EntityAddDialogFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) { // первое создание диалога
+            viewModel.entityTitle = entityTitle ?: ""
             functionSaveEntityInDB?.let { viewModel.saveInDBFun = functionSaveEntityInDB }
         }
     }
@@ -74,16 +75,9 @@ class EntityAddDialogFragment(
         return binding.root
     }
 
-    private fun loading() {
-        binding.progressBar.visibility = View.VISIBLE
-        binding.cancelButton.visibility = View.INVISIBLE
-        binding.acceptButton.visibility = View.INVISIBLE
-    }
-
-    private fun stopLoading() {
-        binding.progressBar.visibility = View.INVISIBLE
-        binding.cancelButton.visibility = View.VISIBLE
-        binding.acceptButton.visibility = View.VISIBLE
+    override fun onStart() {
+        super.onStart()
+        binding.entityTitleGameComponent.setText(viewModel.entityTitle)
     }
 
     companion object {
