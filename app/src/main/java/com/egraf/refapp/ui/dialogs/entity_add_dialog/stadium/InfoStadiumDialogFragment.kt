@@ -5,30 +5,44 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.egraf.refapp.database.entities.Stadium
+import com.egraf.refapp.databinding.AddComponentDialogBinding
+import com.egraf.refapp.databinding.StadiumFieldsBinding
 import com.egraf.refapp.ui.dialogs.search_entity.EmptySearchItem
+import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 import com.egraf.refapp.utils.Status
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import java.util.*
 
 private const val TAG = "InfoDialog"
 
 class GameComponentInfoDialog(
-    title: String = "",
+    private val title: String = "",
+    private val entityTitle: String = "",
     private val componentId: UUID = EmptySearchItem.id,
-) : GameComponentDialog(title) {
+) : DialogFragment() {
+    internal val binding get() = _binding!!
+    internal var _binding: AddComponentDialogBinding? = null
+    internal val fieldBinding get() = _fieldBinding!!
+    internal var _fieldBinding: StadiumFieldsBinding? = null
 
-    override val viewModel: GameComponentInfoViewModel by lazy {
+    private val viewModel: GameComponentInfoViewModel by lazy {
         ViewModelProvider(
             this,
             GameComponentViewModelFactory(componentId)
         )[GameComponentInfoViewModel::class.java]
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) { // первое создание диалога
+            viewModel.title = title
+            viewModel.entityTitle = entityTitle
+        }
     }
 
     override fun onCreateView(
@@ -36,14 +50,17 @@ class GameComponentInfoDialog(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setCustomBackground()
+        _binding = AddComponentDialogBinding.inflate(inflater, container, false)
+        _fieldBinding = StadiumFieldsBinding.bind(binding.root)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.componentId.collect { resource ->
                     Log.d(TAG, "${resource.status}, ${resource.data}")
                     when (resource.status) {
-                        Status.LOADING -> loading()
+                        Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
                         Status.SUCCESS -> {
-                            stopLoading()
+                            binding.progressBar.visibility = View.GONE
                             updateUI(resource.data?.shortName ?: "")
                         }
                         Status.ERROR -> {}
@@ -51,10 +68,17 @@ class GameComponentInfoDialog(
                 }
             }
         }
-        return super.onCreateView(inflater, container, savedInstanceState)
+        binding.buttonsBottomBar.cancelButton.setOnClickListener { dismiss() }
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        _fieldBinding = null
     }
 
     private fun updateUI(text: String) {
-        binding.entityTitleGameComponent.setText(text)
+        fieldBinding.title.setText(text)
     }
 }

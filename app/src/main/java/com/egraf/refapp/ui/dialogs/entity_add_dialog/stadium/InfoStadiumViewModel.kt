@@ -13,7 +13,9 @@ import java.util.*
 
 class GameComponentInfoViewModel(
     stadiumId: UUID,
-) : GameComponentDialogViewModel() {
+) : ViewModel() {
+    var title: String = ""
+    var entityTitle: String = ""
     private val _componentId = MutableStateFlow<Resource<Stadium>>(Resource.loading(null))
     val componentId: StateFlow<Resource<Stadium>> = _componentId
 

@@ -6,12 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.egraf.refapp.R
+import com.egraf.refapp.databinding.AddComponentDialogBinding
+import com.egraf.refapp.databinding.StadiumFieldsBinding
+import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 import com.egraf.refapp.utils.Resource
 import com.egraf.refapp.utils.Status
 import kotlinx.coroutines.flow.StateFlow
@@ -21,30 +25,39 @@ import java.util.*
 private const val TAG = "EntityAddFragment"
 
 class EntityAddDialogFragment(
-    title: String? = null,
-    private val entityTitle: String? = null,
+    private val title: String = "",
+    private val entityTitle: String = "",
     private val functionSaveEntityInDB: ((String) -> StateFlow<Resource<Pair<UUID, String>>>)? = null
-) : GameComponentDialog(title) {
-    override val viewModel by lazy {
-        ViewModelProvider(this)[EntityAddViewModel::class.java]
+) : DialogFragment() {
+    private val binding get() = _binding!!
+    private var _binding: AddComponentDialogBinding? = null
+    private val fieldBinding get() = _fieldBinding!!
+    private var _fieldBinding: StadiumFieldsBinding? = null
+
+    private val viewModel by lazy {
+        ViewModelProvider(this)[AddStadiumViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) { // первое создание диалога
-            viewModel.entityTitle = entityTitle ?: ""
+            viewModel.title = title
+            viewModel.entityTitle = entityTitle
             functionSaveEntityInDB?.let { viewModel.saveInDBFun = functionSaveEntityInDB }
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        super.onCreateView(inflater, container, savedInstanceState)
-        binding.acceptButton.setOnClickListener {
-            val entityTitle = binding.entityTitleGameComponent.text
-            // пустое поле не сохраняем в БД
+        setCustomBackground()
+        _binding = AddComponentDialogBinding.inflate(inflater, container, false)
+        _fieldBinding = StadiumFieldsBinding.bind(binding.root)
+        binding.buttonsBottomBar.acceptButton.setOnClickListener {
+            val entityTitle = fieldBinding.title.text
+//             пустое поле не сохраняем в БД
             if (entityTitle.isBlank()) {
                 Toast.makeText(context, R.string.empty_field, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -54,9 +67,9 @@ class EntityAddDialogFragment(
                 viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.saveInDBFun(entityTitle).collect { resource ->
                         when (resource.status) {
-                            Status.LOADING -> loading()
+                            Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
                             Status.SUCCESS -> {
-                                stopLoading()
+                                binding.progressBar.visibility = View.GONE
                                 setFragmentResult(
                                     arguments?.getString(REQUEST) ?: "Unknown request",
                                     Bundle().apply {
@@ -72,12 +85,20 @@ class EntityAddDialogFragment(
                 }
             }
         }
+        binding.buttonsBottomBar.cancelButton.setOnClickListener { dismiss() }
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        _fieldBinding = null
     }
 
     override fun onStart() {
         super.onStart()
-        binding.entityTitleGameComponent.setText(viewModel.entityTitle)
+        binding.dialogTitle.text = viewModel.title
+        fieldBinding.title.setText(viewModel.entityTitle)
     }
 
     companion object {
@@ -86,8 +107,8 @@ class EntityAddDialogFragment(
         private const val TITLE_RESULT = "ResultTitle"
 
         operator fun invoke(
-            title: String? = null,
-            entityTitle: String? = null,
+            title: String = "",
+            entityTitle: String = "",
             functionSaveEntityInDB: ((String) -> StateFlow<Resource<Pair<UUID, String>>>)? = null,
             request: String
         ): EntityAddDialogFragment =
