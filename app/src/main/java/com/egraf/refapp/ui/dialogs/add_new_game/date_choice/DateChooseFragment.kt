@@ -10,24 +10,24 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
+import com.egraf.refapp.databinding.StadiumChooseBinding
 import com.egraf.refapp.utils.close
-import com.egraf.refapp.databinding.DateChooseBinding
 import com.egraf.refapp.ui.dialogs.DatePickerFragment
 import com.egraf.refapp.ui.dialogs.TimePickerFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.EntityAddDialogFragment
-import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.GameComponentInfoDialog
 import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.SearchItemInterface
+import java.util.*
 
-private const val DATE_FORMAT = "EEE dd.MM.yyyy"
+private const val DATE_FORMAT = "dd.MM"
 private const val TIME_FORMAT = "HH:mm"
 
 private const val TAG = "AddGame"
 
 class DateChooseFragment : ChooserFragment(), FragmentResultListener {
     private val binding get() = _binding!!
-    private var _binding: DateChooseBinding? = null
+    private var _binding: StadiumChooseBinding? = null
 
     private val viewModel: DateChooseViewModel by lazy {
         ViewModelProvider(this)[DateChooseViewModel::class.java]
@@ -39,7 +39,7 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
         savedInstanceState: Bundle?
     ): View {
         Log.d(TAG, "create")
-        _binding = DateChooseBinding.inflate(inflater)
+        _binding = StadiumChooseBinding.inflate(inflater)
         return binding.root
     }
 
@@ -60,12 +60,12 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
                 ).show(parentFragmentManager, FRAGMENT_STADIUM)
             }
         }
-        binding.dateChooseButton.setOnClickListener {
+        binding.dateInput.setOnClickListener {
             DatePickerFragment
                 .newInstance(addNewGameViewModel.gameWithAttributes.game.date, REQUEST_DATE)
                 .show(parentFragmentManager, FRAGMENT_DATE)
         }
-        binding.timeChooseButton.setOnClickListener {
+        binding.dateInput.setOnClickListener {
             TimePickerFragment
                 .newInstance(addNewGameViewModel.gameWithAttributes.game.date, REQUEST_TIME)
                 .show(parentFragmentManager, FRAGMENT_TIME)
@@ -160,15 +160,23 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
     }
 
     private fun updateDate() {
-        binding.dateChooseButton.text =
-            DateFormat.format(DATE_FORMAT, addNewGameViewModel.gameWithAttributes.game.date)
-                .toString()
+        binding.dateInput.setItem(
+            SearchItemInterface(
+                DateFormat.format(DATE_FORMAT, addNewGameViewModel.gameWithAttributes.game.date)
+                    .toString(),
+                UUID.randomUUID()
+            )
+        )
     }
 
     private fun updateTime() {
-        binding.timeChooseButton.text =
-            DateFormat.format(TIME_FORMAT, addNewGameViewModel.gameWithAttributes.game.date)
-                .toString()
+        binding.timeInput.setItem(
+            SearchItemInterface(
+                DateFormat.format(TIME_FORMAT, addNewGameViewModel.gameWithAttributes.game.date)
+                    .toString(),
+                UUID.randomUUID()
+            )
+        )
     }
 
     companion object {
