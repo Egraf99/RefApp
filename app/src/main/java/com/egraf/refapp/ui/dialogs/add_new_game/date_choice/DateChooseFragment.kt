@@ -97,7 +97,6 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
                         GameComponentInfoDialog(
                             title = getString(R.string.stadium),
                             componentId = SearchDialogFragment.getId(result),
-                            getComponentFunction = viewModel.getStadiumNameFromDB
                         ).show(parentFragmentManager, FRAGMENT_INFO_STADIUM)
                     }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {

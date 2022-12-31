@@ -22,13 +22,12 @@ private const val TAG = "InfoDialog"
 class GameComponentInfoDialog(
     title: String = "",
     private val componentId: UUID = EmptySearchItem.id,
-    private val getComponentFunction: (UUID) -> Flow<Stadium?> = { flow{ emit(Stadium()) } }
 ) : GameComponentDialog(title) {
 
     override val viewModel: GameComponentInfoViewModel by lazy {
         ViewModelProvider(
             this,
-            GameComponentViewModelFactory(componentId, getComponentFunction)
+            GameComponentViewModelFactory(componentId)
         )[GameComponentInfoViewModel::class.java]
     }
 
@@ -57,12 +56,5 @@ class GameComponentInfoDialog(
 
     private fun updateUI(text: String) {
         binding.entityTitleGameComponent.setText(text)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        binding.acceptButton.visibility = View.GONE
-        binding.progressBar.visibility = View.GONE
-        binding.entityTitleGameComponent.isClickable = false
     }
 }
