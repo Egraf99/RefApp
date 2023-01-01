@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.egraf.refapp.databinding.AddComponentDialogBinding
 import com.egraf.refapp.databinding.StadiumFieldsBinding
-import com.egraf.refapp.ui.dialogs.search_entity.EmptySearchItem
+import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 import com.egraf.refapp.utils.Status
 import kotlinx.coroutines.launch
@@ -23,7 +23,7 @@ private const val TAG = "InfoDialog"
 class GameComponentInfoDialog(
     private val title: String = "",
     private val entityTitle: String = "",
-    private val componentId: UUID = EmptySearchItem.id,
+    private val componentId: UUID = EmptyItem.id,
 ) : DialogFragment() {
     internal val binding get() = _binding!!
     internal var _binding: AddComponentDialogBinding? = null

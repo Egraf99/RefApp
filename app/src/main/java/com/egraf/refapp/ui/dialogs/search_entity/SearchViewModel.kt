@@ -9,8 +9,8 @@ import kotlinx.coroutines.Dispatchers
 private const val TAG = "SearchViewModel"
 
 class SearchViewModel: ViewModelWithGameRepo() {
-    var items = listOf<SearchItemInterface>()
-    var filterItems = listOf<Triple<FirstMatch, LastMatch, SearchItemInterface>>()
+    var items = listOf<SearchItem>()
+    var filterItems = listOf<Triple<FirstMatch, LastMatch, SearchItem>>()
 
     var text: String? = null
     var title: String? = null
@@ -33,7 +33,7 @@ class SearchViewModel: ViewModelWithGameRepo() {
             )
         }
     }
-    var receiveItems: (() -> List<SearchItemInterface>)? = null
+    var receiveItems: (() -> List<SearchItem>)? = null
 }
 
 //class SearchViewModelFactory(private val searchInterface: SearchInterface) :

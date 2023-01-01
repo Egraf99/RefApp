@@ -20,7 +20,7 @@ class SearchAdapter(
     private val onSearchItemClickListener: SearchHolder.Companion.InnerOnSearchItemClickListener? = null,
     private val onInfoClickListener: SearchHolder.Companion.InnerOnInfoClickListener? = null
 ) :
-    ListAdapter<Triple<FirstMatch, LastMatch, SearchItemInterface>, SearchHolder>(SearchDU<Triple<FirstMatch, LastMatch, SearchItemInterface>>()) {
+    ListAdapter<Triple<FirstMatch, LastMatch, SearchItem>, SearchHolder>(SearchDU<Triple<FirstMatch, LastMatch, SearchItem>>()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchHolder =
         SearchHolder(
@@ -40,7 +40,7 @@ class SearchAdapter(
     override fun getItemCount() = currentList.size
 }
 
-class SearchDU<T : Triple<FirstMatch, LastMatch, SearchItemInterface>> : DiffUtil.ItemCallback<T>() {
+class SearchDU<T : Triple<FirstMatch, LastMatch, SearchItem>> : DiffUtil.ItemCallback<T>() {
     override fun areItemsTheSame(oldItem: T, newItem: T): Boolean =
         oldItem.third.title == newItem.third.title
 
@@ -61,8 +61,8 @@ class SearchHolder(
         itemView.setOnClickListener(this)
     }
 
-    private var entity: Triple<FirstMatch, LastMatch, SearchItemInterface> = Triple(0, 0, Entity.Companion.Empty)
-    fun bind(item: Triple<FirstMatch, LastMatch, SearchItemInterface>) {
+    private var entity: Triple<FirstMatch, LastMatch, SearchItem> = Triple(0, 0, Entity.Companion.Empty)
+    fun bind(item: Triple<FirstMatch, LastMatch, SearchItem>) {
         entity = item
         binding.textView.text = spanItem(item)
         binding.info.setOnClickListener { infoClickListener?.onClick(entity.third) }
@@ -72,7 +72,7 @@ class SearchHolder(
         onSearchItemClickListener?.onClick(entity.third)
     }
 
-    private fun spanItem(item: Triple<FirstMatch, LastMatch, SearchItemInterface>): SpannableString {
+    private fun spanItem(item: Triple<FirstMatch, LastMatch, SearchItem>): SpannableString {
         val spannableString = SpannableString(item.third.title)
         if (!(item.first == 0 && item.second == 0)) {
             val fColor = ForegroundColorSpan(Color.BLACK)
@@ -88,11 +88,11 @@ class SearchHolder(
 
     companion object {
         interface InnerOnInfoClickListener {
-            fun onClick(searchItem: SearchItemInterface)
+            fun onClick(searchItem: SearchItem)
         }
 
         interface InnerOnSearchItemClickListener {
-            fun onClick(searchItem: SearchItemInterface)
+            fun onClick(searchItem: SearchItem)
         }
     }
 }

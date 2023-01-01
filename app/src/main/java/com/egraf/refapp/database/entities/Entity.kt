@@ -1,9 +1,9 @@
 package com.egraf.refapp.database.entities
 
-import com.egraf.refapp.ui.dialogs.search_entity.SearchItemInterface
+import com.egraf.refapp.ui.dialogs.search_entity.SearchItem
 import java.util.*
 
-abstract class Entity: SearchItemInterface {
+abstract class Entity: SearchItem {
     abstract override val id: UUID
     abstract val shortName: String
     abstract val fullName: String

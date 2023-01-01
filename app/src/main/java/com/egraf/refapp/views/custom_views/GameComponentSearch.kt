@@ -38,7 +38,7 @@ class GameComponentSearch(context: Context, attrs: AttributeSet) :
     val icon: Drawable?
 
     // ------------- searchItem -----------------------
-    var item: SearchItemInterface = EmptySearchItem
+    var item: SearchItem = EmptyItem
         private set
     // -----------------------------------------------
 
@@ -55,7 +55,7 @@ class GameComponentSearch(context: Context, attrs: AttributeSet) :
             ) State.EMPTY else State.FILL
             showingLoading = getBoolean(R.styleable.GameComponentSearch_loading, false)
             val title = getString(R.styleable.GameComponentSearch_title)
-            item = if (title == null) EmptySearchItem else SearchItemInterface(title)
+            item = if (title == null) EmptyItem else SearchItem(title)
             text = getString(R.styleable.GameComponentSearch_text) ?: ""
             icon = getDrawable(R.styleable.GameComponentSearch_mIcon)
         }
@@ -157,11 +157,11 @@ class GameComponentSearch(context: Context, attrs: AttributeSet) :
         }
     }
 
-    fun setItem(item: SearchItemInterface) {
+    fun setItem(item: SearchItem) {
         this.item = item
         when (state) {
             State.EMPTY -> state = when (item) {
-                EmptySearchItem -> {
+                EmptyItem -> {
                     hideContent()
                     State.EMPTY
                 }
@@ -171,7 +171,7 @@ class GameComponentSearch(context: Context, attrs: AttributeSet) :
                 }
             }
             State.FILL -> state = when (item) {
-                EmptySearchItem -> {
+                EmptyItem -> {
                     hideAnimContent()
                     State.EMPTY
                 }

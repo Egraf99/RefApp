@@ -4,13 +4,9 @@ import androidx.lifecycle.viewModelScope
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.ui.ViewModelWithGameRepo
-import com.egraf.refapp.ui.dialogs.search_entity.EmptySearchItem
 import com.egraf.refapp.utils.Resource
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
-import kotlinx.coroutines.launch
 import java.util.*
 
 class DateChooseViewModel : ViewModelWithGameRepo() {

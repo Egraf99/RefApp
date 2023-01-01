@@ -16,8 +16,9 @@ import com.egraf.refapp.ui.dialogs.DatePickerFragment
 import com.egraf.refapp.ui.dialogs.TimePickerFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.EntityAddDialogFragment
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.GameComponentInfoDialog
 import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
-import com.egraf.refapp.ui.dialogs.search_entity.SearchItemInterface
+import com.egraf.refapp.ui.dialogs.search_entity.SearchItem
 import java.util.*
 
 private const val DATE_FORMAT = "dd.MM"
@@ -45,7 +46,7 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        for (request in listOf(REQUEST_STADIUM, REQUEST_ADD_STADIUM, REQUEST_DATE, REQUEST_TIME))
+        for (request in listOf(REQUEST_SEARCH_STADIUM, REQUEST_ADD_STADIUM, REQUEST_DATE, REQUEST_TIME))
             parentFragmentManager.setFragmentResultListener(request, viewLifecycleOwner, this)
     }
 
@@ -56,7 +57,7 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
                 SearchDialogFragment(
                     this.item.title, this.icon,
                     { GameRepository.get().getStadiums() },
-                    request = REQUEST_STADIUM
+                    request = REQUEST_SEARCH_STADIUM
                 ).show(parentFragmentManager, FRAGMENT_STADIUM)
             }
         }
@@ -81,8 +82,8 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         when (requestKey) {
-            REQUEST_STADIUM -> {
-                val item = SearchItemInterface(
+            REQUEST_SEARCH_STADIUM -> {
+                val item = SearchItem(
                     SearchDialogFragment.getTitle(result),
                     SearchDialogFragment.getId(result)
                 )
@@ -94,10 +95,10 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
                     }
                     SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
                         Log.d(TAG, "info: $item")
-//                        GameComponentInfoDialog(
-//                            title = getString(R.string.stadium),
-//                            componentId = SearchDialogFragment.getId(result),
-//                        ).show(parentFragmentManager, FRAGMENT_INFO_STADIUM)
+                        GameComponentInfoDialog(
+                            title = getString(R.string.stadium),
+                            componentId = SearchDialogFragment.getId(result),
+                        ).show(parentFragmentManager, FRAGMENT_INFO_STADIUM)
                     }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
                         Log.d(TAG, "add: $item")
@@ -112,7 +113,7 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
             }
             REQUEST_ADD_STADIUM -> {
                 parentFragmentManager.close(FRAGMENT_STADIUM, FRAGMENT_ADD_STADIUM)
-                binding.stadiumComponentInput.setItem(SearchItemInterface(
+                binding.stadiumComponentInput.setItem(SearchItem(
                     id = EntityAddDialogFragment.getId(result),
                     title = EntityAddDialogFragment.getTitle(result)
                 ))
@@ -161,7 +162,7 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
 
     private fun updateDate() {
         binding.dateInput.setItem(
-            SearchItemInterface(
+            SearchItem(
                 DateFormat.format(DATE_FORMAT, addNewGameViewModel.gameWithAttributes.game.date)
                     .toString(),
                 UUID.randomUUID()
@@ -171,7 +172,7 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
 
     private fun updateTime() {
         binding.timeInput.setItem(
-            SearchItemInterface(
+            SearchItem(
                 DateFormat.format(TIME_FORMAT, addNewGameViewModel.gameWithAttributes.game.date)
                     .toString(),
                 UUID.randomUUID()
@@ -180,7 +181,7 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
     }
 
     companion object {
-        private const val REQUEST_STADIUM = "RequestStadium"
+        private const val REQUEST_SEARCH_STADIUM = "RequestStadium"
         private const val REQUEST_ADD_STADIUM = "RequestAddStadium"
         private const val REQUEST_DATE = "DialogDate"
         private const val REQUEST_TIME = "DialogTime"

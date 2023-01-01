@@ -40,7 +40,7 @@ fun DialogFragment.setCustomBackground(gravity: Int = Gravity.CENTER) {
 class SearchDialogFragment(
     private val title: String? = null,
     private val icon: Drawable? = null,
-    private val receiveSearchItems: (() -> List<SearchItemInterface>)? = null,
+    private val receiveSearchItems: (() -> List<SearchItem>)? = null,
     private val text: String? = null
 ) :
     DialogFragment(R.layout.search_entity_fragment) {
@@ -74,13 +74,13 @@ class SearchDialogFragment(
         // set RV adapter
         adapter = SearchAdapter(
             onSearchItemClickListener = object : SearchHolder.Companion.InnerOnSearchItemClickListener {
-                override fun onClick(searchItem: SearchItemInterface) {
+                override fun onClick(searchItem: SearchItem) {
                     binding.edit.clearFocus()
                     sendRequest(ResultRequest.SEARCH_ITEM_RESULT_REQUEST, searchItem)
                 }
             },
             onInfoClickListener = object : SearchHolder.Companion.InnerOnInfoClickListener {
-                override fun onClick(searchItem: SearchItemInterface) {
+                override fun onClick(searchItem: SearchItem) {
                     binding.edit.clearFocus()
                     sendRequest(ResultRequest.INFO_RESULT_REQUEST, searchItem)
                 }
@@ -150,7 +150,7 @@ class SearchDialogFragment(
     }
     private val hideHintText = { binding.txtHint.visibility = View.INVISIBLE }
 
-    private fun updateItems(items: List<Triple<FirstMatch, LastMatch, SearchItemInterface>>) {
+    private fun updateItems(items: List<Triple<FirstMatch, LastMatch, SearchItem>>) {
         if (items.isEmpty()) showItemsEmptyText()
         else showRVWithItems(items)
     }
@@ -168,7 +168,7 @@ class SearchDialogFragment(
         binding.txtHint.visibility = View.INVISIBLE
     }
 
-    private fun showRVWithItems(items: List<Triple<FirstMatch, LastMatch, SearchItemInterface>>) {
+    private fun showRVWithItems(items: List<Triple<FirstMatch, LastMatch, SearchItem>>) {
         adapter.submitList(items)
         hideHintTextAndShowRV()
     }
@@ -213,7 +213,7 @@ class SearchDialogFragment(
     private fun enterClicked() {
         // поле незаполенено - возвращаем SEARCH_REQUEST с пустым Item
         if (binding.edit.text.isBlank()) {
-            sendRequest(ResultRequest.SEARCH_ITEM_RESULT_REQUEST, EmptySearchItem)
+            sendRequest(ResultRequest.SEARCH_ITEM_RESULT_REQUEST, EmptyItem)
             return
         }
         try {
@@ -225,7 +225,7 @@ class SearchDialogFragment(
         }
     }
 
-    private fun sendRequest(result: ResultRequest, searchItem: SearchItemInterface) {
+    private fun sendRequest(result: ResultRequest, searchItem: SearchItem) {
         val bundle = Bundle().apply {
             putParcelable(TYPE_OF_RESULT, result)
             putString(TITLE_RESULT, searchItem.title)
@@ -258,7 +258,7 @@ class SearchDialogFragment(
         operator fun invoke(
             title: String? = null,
             icon: Drawable? = null,
-            receiveSearchItems: (() -> List<SearchItemInterface>)? = null,
+            receiveSearchItems: (() -> List<SearchItem>)? = null,
             text: String? = null,
             request: String
         ): SearchDialogFragment {
@@ -270,8 +270,8 @@ class SearchDialogFragment(
         fun getTypeOfResult(bundle: Bundle): ResultRequest = bundle.getParcelable(TYPE_OF_RESULT)
             ?: throw IllegalStateException("Type of result didn't send")
 
-        fun getTitle(bundle: Bundle): String = bundle.getString(TITLE_RESULT, EmptySearchItem.title)
+        fun getTitle(bundle: Bundle): String = bundle.getString(TITLE_RESULT, EmptyItem.title)
         fun getId(bundle: Bundle): UUID =
-            bundle.getSerializable(ID_RESULT) as UUID? ?: EmptySearchItem.id
+            bundle.getSerializable(ID_RESULT) as UUID? ?: EmptyItem.id
     }
 }
