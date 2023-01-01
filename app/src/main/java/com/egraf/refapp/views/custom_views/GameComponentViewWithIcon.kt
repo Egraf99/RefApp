@@ -4,12 +4,16 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.Toast
 
-class GameComponentViewWithIcon<S: Saving>(context: Context, attrs: AttributeSet) :
-    GameComponentTextView<S>(context, attrs) {
+class GameComponentViewWithIcon<T, S : Saving<T>>(context: Context, attrs: AttributeSet) :
+    GameComponentTextView<T, S>(context, attrs) {
 
     init {
         infoButton.setOnClickListener {
-            Toast.makeText(context, item.getText(), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                item.getValueOrThrow(IllegalStateException("illegal")).toString(),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 

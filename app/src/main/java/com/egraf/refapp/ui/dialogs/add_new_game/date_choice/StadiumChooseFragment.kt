@@ -87,8 +87,10 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
         when (requestKey) {
             REQUEST_SEARCH_STADIUM -> {
                 val item = GameComponent(
-                    Stadium(name =
-                            SearchDialogFragment.getTitle(result))
+                    Stadium(
+                        SearchDialogFragment.getId(result),
+                        SearchDialogFragment.getTitle(result),
+                    )
                 )
                 when (SearchDialogFragment.getTypeOfResult(result)) {
                     SearchDialogFragment.Companion.ResultRequest.SEARCH_ITEM_RESULT_REQUEST -> {

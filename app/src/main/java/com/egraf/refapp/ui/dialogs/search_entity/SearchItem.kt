@@ -31,8 +31,9 @@ interface SearchItem {
     }
 }
 
-object EmptyItem : SearchItem, Saving {
+object EmptyItem : SearchItem, Saving<UUID> {
     override val id: UUID = UUID.randomUUID()
+    override val savedValue: UUID = id
     override val title: String = "Empty Search Item"
     override fun toString(): String = "EmptyItem"
 }
