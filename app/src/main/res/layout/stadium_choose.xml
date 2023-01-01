@@ -16,7 +16,7 @@
         custom:title="@string/stadium"
         custom:mIcon="@drawable/ic_stadium"/>
 
-    <com.egraf.refapp.views.custom_views.GameComponentSearch
+    <com.egraf.refapp.views.custom_views.GameComponentField
         android:id="@+id/date_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
         custom:mIcon="@drawable/ic_calendar"
         />
 
-    <com.egraf.refapp.views.custom_views.GameComponentSearch
+    <com.egraf.refapp.views.custom_views.GameComponentField
         android:id="@+id/time_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
