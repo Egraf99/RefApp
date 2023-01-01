@@ -29,7 +29,7 @@
         custom:mIcon="@drawable/ic_calendar"
         />
 
-    <com.egraf.refapp.views.custom_views.CustomViewWithTitle
+    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
         android:id="@+id/time_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

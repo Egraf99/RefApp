@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.GameDate
+import com.egraf.refapp.database.entities.GameTime
 import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.StadiumChooseBinding
 import com.egraf.refapp.ui.dialogs.DatePickerFragment
@@ -22,11 +23,9 @@ import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
 import com.egraf.refapp.utils.close
 import com.egraf.refapp.views.custom_views.GameComponent
 
-private const val TIME_FORMAT = "HH:mm"
-
 private const val TAG = "AddGame"
 
-class DateChooseFragment : ChooserFragment(), FragmentResultListener {
+class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
     private val binding get() = _binding!!
     private var _binding: StadiumChooseBinding? = null
 
@@ -63,12 +62,12 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
         }
         binding.dateInput.setOnClickListener {
             DatePickerFragment
-                .newInstance(addNewGameViewModel.gameWithAttributes.game.date.value, REQUEST_DATE)
+                .newInstance(addNewGameViewModel.gameWithAttributes.game.date, REQUEST_DATE)
                 .show(parentFragmentManager, FRAGMENT_DATE)
         }
         binding.timeInput.setOnClickListener {
             TimePickerFragment
-                .newInstance(addNewGameViewModel.gameWithAttributes.game.date.value, REQUEST_TIME)
+                .newInstance(addNewGameViewModel.gameWithAttributes.game.date, REQUEST_TIME)
                 .show(parentFragmentManager, FRAGMENT_TIME)
         }
         binding.gamePaidCheckBox.setOnCheckedChangeListener { _, isChecked ->
@@ -129,7 +128,7 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
 //                updateDate()
                 binding.dateInput.setItem(
                     GameComponent(
-                        GameDate(DatePickerFragment.getSelectedDate(result))
+                        GameDate(DatePickerFragment.getSelectedDate(result).toLocalDate())
                     )
                 )
             }
@@ -137,8 +136,10 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
 //                addNewGameViewModel.gameWithAttributes.game.date.value =
 //                    TimePickerFragment.getSelectedTime(result)
 //                updateTime()
-                binding.timeInput.setText(
-                    TimePickerFragment.getSelectedTime(result).toString()
+                binding.timeInput.setItem(
+                    GameComponent(
+                        GameTime(TimePickerFragment.getSelectedTime(result).toLocalTime())
+                    )
                 )
             }
         }
@@ -184,13 +185,13 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
     }
 
     private fun updateTime() {
-        binding.timeInput.setText(
+//        binding.timeInput.setText(
 //            SearchItem(
-                DateFormat.format(TIME_FORMAT, addNewGameViewModel.gameWithAttributes.game.date.value)
-                    .toString(),
+//                DateFormat.format(TIME_FORMAT, addNewGameViewModel.gameWithAttributes.game.date.value)
+//                    .toString(),
 //                UUID.randomUUID()
 //            )
-        )
+//        )
     }
 
     companion object {

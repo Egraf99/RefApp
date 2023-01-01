@@ -2,20 +2,19 @@ package com.egraf.refapp.database
 
 import androidx.room.TypeConverter
 import com.egraf.refapp.database.entities.GameDate
+import com.egraf.refapp.database.entities.GameDateTime
+import com.egraf.refapp.database.entities.GameTime
+import com.egraf.refapp.database.entities.toGameDateTime
+import java.time.Instant
+import java.time.ZoneId
 import java.util.*
 
 class GameTypeConverters {
     @TypeConverter
-    fun fromGameDate(date: GameDate?): Long? {
-        return date?.savedValue?.time
-    }
+    fun fromGameDateTime(date: GameDateTime?): Long? = date?.toMillis()
 
     @TypeConverter
-    fun inGameDate(millisFromEpoch: Long?): GameDate? {
-        return millisFromEpoch?.let {
-            GameDate(Date(it))
-        }
-    }
+    fun inGameDateTime(millisFromEpoch: Long?): GameDateTime? = millisFromEpoch?.toGameDateTime()
 
     @TypeConverter
     fun fromUUID(uuid: UUID?): String? {

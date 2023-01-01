@@ -12,7 +12,7 @@ import java.util.*
 data class Game(
     @PrimaryKey
     var id: UUID = UUID.randomUUID(),
-    var date: GameDate = GameDate(),
+    var date: GameDateTime = GameDateTime(GameDate(), GameTime()),
     var homeTeamId: UUID? = null,
     var guestTeamId: UUID? = null,
     var stadiumId: UUID? = null,

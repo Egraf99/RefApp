@@ -179,13 +179,13 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
 
         binding.gameDateButton.setOnClickListener {
             DatePickerFragment
-                .newInstance(gameDetailViewModel.gameWithAttributes.game.date.value, REQUEST_DATE)
+                .newInstance(gameDetailViewModel.gameWithAttributes.game.date, REQUEST_DATE)
                 .show(parentFragmentManager, REQUEST_DATE)
         }
 
         binding.gameTimeButton.setOnClickListener {
             TimePickerFragment
-                .newInstance(gameDetailViewModel.gameWithAttributes.game.date.value, REQUEST_TIME)
+                .newInstance(gameDetailViewModel.gameWithAttributes.game.date, REQUEST_TIME)
                 .show(parentFragmentManager, REQUEST_TIME)
         }
 
@@ -231,8 +231,8 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
             if (textInput.getText().isBlank())
                 textInput.setText(attribute?.shortName ?: "")
         }
-        updateDate()
-        updateTime()
+//        updateDate()
+//        updateTime()
 
         binding.gamePaidCheckBox.apply {
             isChecked = gameDetailViewModel.gameWithAttributes.game.isPaid
@@ -248,18 +248,18 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
      * Устанавливает дату на кнопке выбора даты
      */
     private fun updateDate() {
-        binding.gameDateButton.text =
-            DateFormat.format(DATE_FORMAT, gameDetailViewModel.gameWithAttributes.game.date.value)
-                .toString()
+//        binding.gameDateButton.text =
+//            DateFormat.format(DATE_FORMAT, gameDetailViewModel.gameWithAttributes.game.date)
+//                .toString()
     }
 
     /**
      * Устанавливает время на кнопке выбора времени
      */
     private fun updateTime() {
-        binding.gameTimeButton.text =
-            DateFormat.format(TIME_FORMAT, gameDetailViewModel.gameWithAttributes.game.date.value)
-                .toString()
+//        binding.gameTimeButton.text =
+//            DateFormat.format(TIME_FORMAT, gameDetailViewModel.gameWithAttributes.game.date)
+//                .toString()
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {

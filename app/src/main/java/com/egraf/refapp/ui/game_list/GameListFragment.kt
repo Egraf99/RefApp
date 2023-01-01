@@ -95,8 +95,7 @@ class GameListFragment: FragmentWithToolbar() {
             Log.d(TAG, "bind() called with: game = $game")
             binding.stadiumTextview.text = gameWithAttributes.stadium?.name
             binding.leagueTextview.text = gameWithAttributes.league?.name
-            binding.dateTextview.text =
-                DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date.value).toString()
+            binding.dateTextview.text = gameWithAttributes.game.date.date.title
 
             val resGamePaid =
                 if (gameWithAttributes.game.isPaid) R.drawable.ic_payment_done else R.drawable.ic_payment_wait
