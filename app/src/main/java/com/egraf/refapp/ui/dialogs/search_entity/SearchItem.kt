@@ -1,5 +1,6 @@
 package com.egraf.refapp.ui.dialogs.search_entity
 
+import com.egraf.refapp.views.custom_views.Saving
 import java.util.*
 
 interface SearchItem {
@@ -30,7 +31,7 @@ interface SearchItem {
     }
 }
 
-object EmptyItem : SearchItem {
+object EmptyItem : SearchItem, Saving {
     override val id: UUID = UUID.randomUUID()
     override val title: String = "Empty Search Item"
     override fun toString(): String = "EmptyItem"

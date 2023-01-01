@@ -3,19 +3,13 @@ package com.egraf.refapp.views.custom_views
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.egraf.refapp.R
-import com.egraf.refapp.databinding.GameComponentSearchBinding
-import com.egraf.refapp.ui.dialogs.search_entity.*
 
 private const val TAG = "GameComponent"
 
@@ -26,10 +20,13 @@ open class CustomViewWithTitle(context: Context, attrs: AttributeSet) :
     private val tintTextView: TextView
     private val smallTintTextView: TextView
     private val contentTextView: TextView
+    internal val infoButton: ImageButton
+    private val mIcon: ImageView
 
     val title: String
     val text: String
     val icon: Drawable?
+
     init {
         with(context.theme.obtainStyledAttributes(attrs, R.styleable.CustomViewWithTitle, 0, 0)) {
             state = if (!getBoolean(R.styleable.CustomViewWithTitle_fill, false)
@@ -46,13 +43,14 @@ open class CustomViewWithTitle(context: Context, attrs: AttributeSet) :
         inflater.inflate(R.layout.game_component_search, this, true)
 
         // set receive icon
-        val mIcon = getChildAt(1) as ImageView
+        mIcon = getChildAt(1) as ImageView
         icon?.let { mIcon.setImageDrawable(it) }
 
         // search text views
         smallTintTextView = getChildAt(2) as TextView
         tintTextView = getChildAt(3) as TextView
         contentTextView = getChildAt(4) as TextView
+        infoButton = getChildAt(5) as ImageButton
 
         // заполняем text views
         smallTintTextView.text = title
@@ -80,13 +78,13 @@ open class CustomViewWithTitle(context: Context, attrs: AttributeSet) :
         }
     }
 
-    private fun hideContent() {
+    internal open fun hideContent() {
         smallTintTextView.visibility = View.INVISIBLE
         contentTextView.visibility = View.INVISIBLE
         tintTextView.visibility = View.VISIBLE
     }
 
-    private fun showContent(text: String) {
+    internal open fun showContent(text: String) {
         smallTintTextView.visibility = View.VISIBLE
         contentTextView.text = text
         contentTextView.visibility = View.VISIBLE

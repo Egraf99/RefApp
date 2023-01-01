@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.egraf.refapp.views.custom_views.CustomViewWithTitle
+    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
         android:id="@+id/stadium_component_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

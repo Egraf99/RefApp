@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
+import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.StadiumChooseBinding
 import com.egraf.refapp.utils.close
 import com.egraf.refapp.ui.dialogs.DatePickerFragment
@@ -20,6 +21,7 @@ import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.GameComponentInfoDi
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.SearchItem
+import com.egraf.refapp.views.custom_views.GameComponent
 import java.util.*
 
 private const val DATE_FORMAT = "dd.MM.yyy"
@@ -84,16 +86,14 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         when (requestKey) {
             REQUEST_SEARCH_STADIUM -> {
-                val item = SearchItem(
-                    SearchDialogFragment.getTitle(result),
-                    SearchDialogFragment.getId(result)
+                val item = GameComponent(
+                    Stadium(name =
+                            SearchDialogFragment.getTitle(result))
                 )
-                //TODO
-                val text = if (item == EmptyItem) "" else item.title
                 when (SearchDialogFragment.getTypeOfResult(result)) {
                     SearchDialogFragment.Companion.ResultRequest.SEARCH_ITEM_RESULT_REQUEST -> {
                         Log.d(TAG, "search: $item")
-                        binding.stadiumComponentInput.setText(text)
+                        binding.stadiumComponentInput.setItem(item)
                         parentFragmentManager.close(FRAGMENT_STADIUM)
                     }
                     SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
