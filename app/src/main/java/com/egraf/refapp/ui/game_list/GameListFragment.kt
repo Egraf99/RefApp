@@ -96,7 +96,7 @@ class GameListFragment: FragmentWithToolbar() {
             binding.stadiumTextview.text = gameWithAttributes.stadium?.name
             binding.leagueTextview.text = gameWithAttributes.league?.name
             binding.dateTextview.text =
-                DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date).toString()
+                DateFormat.format(DATE_FORMAT, gameWithAttributes.game.date.value).toString()
 
             val resGamePaid =
                 if (gameWithAttributes.game.isPaid) R.drawable.ic_payment_done else R.drawable.ic_payment_wait

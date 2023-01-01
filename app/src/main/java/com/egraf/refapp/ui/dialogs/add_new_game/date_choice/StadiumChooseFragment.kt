@@ -10,21 +10,18 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
+import com.egraf.refapp.database.entities.GameDate
 import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.StadiumChooseBinding
-import com.egraf.refapp.utils.close
 import com.egraf.refapp.ui.dialogs.DatePickerFragment
 import com.egraf.refapp.ui.dialogs.TimePickerFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.EntityAddDialogFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.GameComponentInfoDialog
-import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
-import com.egraf.refapp.ui.dialogs.search_entity.SearchItem
+import com.egraf.refapp.utils.close
 import com.egraf.refapp.views.custom_views.GameComponent
-import java.util.*
 
-private const val DATE_FORMAT = "dd.MM.yyy"
 private const val TIME_FORMAT = "HH:mm"
 
 private const val TAG = "AddGame"
@@ -66,12 +63,12 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
         }
         binding.dateInput.setOnClickListener {
             DatePickerFragment
-                .newInstance(addNewGameViewModel.gameWithAttributes.game.date, REQUEST_DATE)
+                .newInstance(addNewGameViewModel.gameWithAttributes.game.date.value, REQUEST_DATE)
                 .show(parentFragmentManager, FRAGMENT_DATE)
         }
-        binding.dateInput.setOnClickListener {
+        binding.timeInput.setOnClickListener {
             TimePickerFragment
-                .newInstance(addNewGameViewModel.gameWithAttributes.game.date, REQUEST_TIME)
+                .newInstance(addNewGameViewModel.gameWithAttributes.game.date.value, REQUEST_TIME)
                 .show(parentFragmentManager, FRAGMENT_TIME)
         }
         binding.gamePaidCheckBox.setOnCheckedChangeListener { _, isChecked ->
@@ -127,14 +124,22 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
                 )
             }
             REQUEST_DATE -> {
-                addNewGameViewModel.gameWithAttributes.game.date =
-                    DatePickerFragment.getSelectedDate(result)
-                updateDate()
+//                addNewGameViewModel.gameWithAttributes.game.date =
+//                    DatePickerFragment.getSelectedDate(result)
+//                updateDate()
+                binding.dateInput.setItem(
+                    GameComponent(
+                        GameDate(DatePickerFragment.getSelectedDate(result))
+                    )
+                )
             }
             REQUEST_TIME -> {
-                addNewGameViewModel.gameWithAttributes.game.date =
-                    TimePickerFragment.getSelectedTime(result)
-                updateTime()
+//                addNewGameViewModel.gameWithAttributes.game.date.value =
+//                    TimePickerFragment.getSelectedTime(result)
+//                updateTime()
+                binding.timeInput.setText(
+                    TimePickerFragment.getSelectedTime(result).toString()
+                )
             }
         }
     }
@@ -169,19 +174,19 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
     }
 
     private fun updateDate() {
-        binding.dateInput.setText(
+//        binding.dateInput.setText(
 //            SearchItem(
-                DateFormat.format(DATE_FORMAT, addNewGameViewModel.gameWithAttributes.game.date)
-                    .toString(),
+//                DateFormat.format(addNewGameViewModel.gameWithAttributes.game.date)
+//                    .toString(),
 //                UUID.randomUUID()
 //            )
-        )
+//        )
     }
 
     private fun updateTime() {
         binding.timeInput.setText(
 //            SearchItem(
-                DateFormat.format(TIME_FORMAT, addNewGameViewModel.gameWithAttributes.game.date)
+                DateFormat.format(TIME_FORMAT, addNewGameViewModel.gameWithAttributes.game.date.value)
                     .toString(),
 //                UUID.randomUUID()
 //            )
