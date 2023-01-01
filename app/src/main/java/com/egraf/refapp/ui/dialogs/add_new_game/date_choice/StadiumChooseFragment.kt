@@ -17,11 +17,12 @@ import com.egraf.refapp.ui.dialogs.TimePickerFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.EntityAddDialogFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.GameComponentInfoDialog
+import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.SearchItem
 import java.util.*
 
-private const val DATE_FORMAT = "dd.MM"
+private const val DATE_FORMAT = "dd.MM.yyy"
 private const val TIME_FORMAT = "HH:mm"
 
 private const val TAG = "AddGame"
@@ -30,8 +31,8 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
     private val binding get() = _binding!!
     private var _binding: StadiumChooseBinding? = null
 
-    private val viewModel: DateChooseViewModel by lazy {
-        ViewModelProvider(this)[DateChooseViewModel::class.java]
+    private val viewModel: StadiumChooseViewModel by lazy {
+        ViewModelProvider(this)[StadiumChooseViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -55,7 +56,7 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
         binding.stadiumComponentInput.apply {
             setOnClickListener {
                 SearchDialogFragment(
-                    this.item.title, this.icon,
+                    this.title, this.icon,
                     { GameRepository.get().getStadiums() },
                     request = REQUEST_SEARCH_STADIUM
                 ).show(parentFragmentManager, FRAGMENT_STADIUM)
@@ -87,10 +88,12 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
                     SearchDialogFragment.getTitle(result),
                     SearchDialogFragment.getId(result)
                 )
+                //TODO
+                val text = if (item == EmptyItem) "" else item.title
                 when (SearchDialogFragment.getTypeOfResult(result)) {
                     SearchDialogFragment.Companion.ResultRequest.SEARCH_ITEM_RESULT_REQUEST -> {
                         Log.d(TAG, "search: $item")
-                        binding.stadiumComponentInput.setItem(item)
+                        binding.stadiumComponentInput.setText(text)
                         parentFragmentManager.close(FRAGMENT_STADIUM)
                     }
                     SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
@@ -113,10 +116,13 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
             }
             REQUEST_ADD_STADIUM -> {
                 parentFragmentManager.close(FRAGMENT_STADIUM, FRAGMENT_ADD_STADIUM)
-                binding.stadiumComponentInput.setItem(SearchItem(
-                    id = EntityAddDialogFragment.getId(result),
-                    title = EntityAddDialogFragment.getTitle(result)
-                ))
+                binding.stadiumComponentInput.setText(
+                    EntityAddDialogFragment.getTitle(result)
+//                    SearchItem(
+//                    id = EntityAddDialogFragment.getId(result),
+//                    title = EntityAddDialogFragment.getTitle(result)
+//                )
+                )
             }
             REQUEST_DATE -> {
                 addNewGameViewModel.gameWithAttributes.game.date =
@@ -161,22 +167,22 @@ class DateChooseFragment : ChooserFragment(), FragmentResultListener {
     }
 
     private fun updateDate() {
-        binding.dateInput.setItem(
-            SearchItem(
+        binding.dateInput.setText(
+//            SearchItem(
                 DateFormat.format(DATE_FORMAT, addNewGameViewModel.gameWithAttributes.game.date)
                     .toString(),
-                UUID.randomUUID()
-            )
+//                UUID.randomUUID()
+//            )
         )
     }
 
     private fun updateTime() {
-        binding.timeInput.setItem(
-            SearchItem(
+        binding.timeInput.setText(
+//            SearchItem(
                 DateFormat.format(TIME_FORMAT, addNewGameViewModel.gameWithAttributes.game.date)
                     .toString(),
-                UUID.randomUUID()
-            )
+//                UUID.randomUUID()
+//            )
         )
     }
 

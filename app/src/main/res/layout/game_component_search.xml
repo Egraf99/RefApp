@@ -25,7 +25,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-<!--    Help text view -->
+<!--    Tint text view when showing content text view -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         app:layout_constraintStart_toEndOf="@id/icon"
         android:visibility="invisible"/>
 
-    <!--    Animation text view from content to help -->
+    <!--    Tint text view from content to help -->
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -65,22 +65,13 @@
         android:id="@+id/infoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
         android:background="@drawable/info_button"
         android:layout_marginEnd="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="@id/infoButton"
-        app:layout_constraintEnd_toEndOf="@id/infoButton"
-        app:layout_constraintBottom_toBottomOf="@id/infoButton"
-        app:layout_constraintTop_toTopOf="@id/infoButton" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        />
 
 <!--    Close bracket -->
     <ImageView

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import java.util.*
 
-class DateChooseViewModel : ViewModelWithGameRepo() {
+class StadiumChooseViewModel : ViewModelWithGameRepo() {
     val addStadiumToDB: (String) -> StateFlow<Resource<Pair<UUID, String>>> =
         { stadiumName ->
             val stadium = Stadium(name = stadiumName)
