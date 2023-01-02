@@ -1,7 +1,6 @@
 package com.egraf.refapp.ui.dialogs.add_new_game.date_choice
 
 import android.os.Bundle
-import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,9 +18,11 @@ import com.egraf.refapp.ui.dialogs.TimePickerFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.EntityAddDialogFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.GameComponentInfoDialog
+import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
 import com.egraf.refapp.utils.close
 import com.egraf.refapp.views.custom_views.GameComponent
+import java.util.*
 
 private const val TAG = "AddGame"
 
@@ -45,13 +46,18 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        for (request in listOf(REQUEST_SEARCH_STADIUM, REQUEST_ADD_STADIUM, REQUEST_DATE, REQUEST_TIME))
+        for (request in listOf(
+            REQUEST_SEARCH_STADIUM,
+            REQUEST_ADD_STADIUM,
+            REQUEST_INPUT_DATE,
+            REQUEST_INPUT_TIME
+        ))
             parentFragmentManager.setFragmentResultListener(request, viewLifecycleOwner, this)
     }
 
     override fun onStart() {
         super.onStart()
-        binding.stadiumComponentInput.apply {
+        binding.stadiumComponentView.apply {
             setOnClickListener {
                 SearchDialogFragment(
                     this.title, this.icon,
@@ -62,12 +68,12 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
         }
         binding.dateInput.setOnClickListener {
             DatePickerFragment
-                .newInstance(addNewGameViewModel.gameWithAttributes.game.date, REQUEST_DATE)
+                .newInstance(addNewGameViewModel.gameWithAttributes.game.date, REQUEST_INPUT_DATE)
                 .show(parentFragmentManager, FRAGMENT_DATE)
         }
         binding.timeInput.setOnClickListener {
             TimePickerFragment
-                .newInstance(addNewGameViewModel.gameWithAttributes.game.date, REQUEST_TIME)
+                .newInstance(addNewGameViewModel.gameWithAttributes.game.date, REQUEST_INPUT_TIME)
                 .show(parentFragmentManager, FRAGMENT_TIME)
         }
         binding.gamePaidCheckBox.setOnCheckedChangeListener { _, isChecked ->
@@ -91,7 +97,7 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
                 when (SearchDialogFragment.getTypeOfResult(result)) {
                     SearchDialogFragment.Companion.ResultRequest.SEARCH_ITEM_RESULT_REQUEST -> {
                         Log.d(TAG, "search: $item")
-                        binding.stadiumComponentInput.setItem(item)
+                        binding.stadiumComponentView.setItem(item)
                         parentFragmentManager.close(FRAGMENT_STADIUM)
                     }
                     SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
@@ -114,7 +120,7 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
             }
             REQUEST_ADD_STADIUM -> {
                 parentFragmentManager.close(FRAGMENT_STADIUM, FRAGMENT_ADD_STADIUM)
-                binding.stadiumComponentInput.setText(
+                binding.stadiumComponentView.setText(
                     EntityAddDialogFragment.getTitle(result)
 //                    SearchItem(
 //                    id = EntityAddDialogFragment.getId(result),
@@ -122,7 +128,7 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
 //                )
                 )
             }
-            REQUEST_DATE -> {
+            REQUEST_INPUT_DATE -> {
 //                addNewGameViewModel.gameWithAttributes.game.date =
 //                    DatePickerFragment.getSelectedDate(result)
 //                updateDate()
@@ -132,7 +138,7 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
                     )
                 )
             }
-            REQUEST_TIME -> {
+            REQUEST_INPUT_TIME -> {
 //                addNewGameViewModel.gameWithAttributes.game.date.value =
 //                    TimePickerFragment.getSelectedTime(result)
 //                updateTime()
@@ -150,7 +156,7 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
         _binding = null
     }
 
-    override fun updateUI() {
+    private fun updateUI() {
         updateETI()
         updateCheckBox()
         updateDate()
@@ -172,6 +178,24 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
             jumpDrawablesToCurrentState()
         }
 
+    }
+
+    override fun getGameComponents(bundle: Bundle) {
+        val receiveStadium = bundle.getParcelable(STADIUM_VALUE) as Stadium?
+        Log.d("123456", "getGameComponents: ${EmptyItem.id} $receiveStadium ${receiveStadium?.isEmpty}")
+        val gameComponentWithStadium =
+            if (receiveStadium != null && !receiveStadium.isEmpty) GameComponent(receiveStadium) else GameComponent()
+        binding.stadiumComponentView.setItem(gameComponentWithStadium)
+    }
+
+    override fun putGameComponents(bundle: Bundle): Bundle {
+        return bundle.apply {
+            putParcelable(
+                STADIUM_VALUE,
+                binding.stadiumComponentView.getItem()
+                    .getOrElse { Stadium() } as Stadium
+            )
+        }
     }
 
     private fun updateDate() {
@@ -197,13 +221,18 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
     companion object {
         private const val REQUEST_SEARCH_STADIUM = "RequestStadium"
         private const val REQUEST_ADD_STADIUM = "RequestAddStadium"
-        private const val REQUEST_DATE = "DialogDate"
-        private const val REQUEST_TIME = "DialogTime"
+        private const val REQUEST_INPUT_DATE = "DialogInputDate"
+        private const val REQUEST_INPUT_TIME = "DialogInputTime"
 
         private const val FRAGMENT_STADIUM = "FragmentStadium"
         private const val FRAGMENT_ADD_STADIUM = "FragmentAddStadium"
         private const val FRAGMENT_INFO_STADIUM = "FragmentInfoStadium"
         private const val FRAGMENT_DATE = "FragmentDialogDate"
         private const val FRAGMENT_TIME = "FragmentDialogTime"
+
+        private const val STADIUM_VALUE = "StadiumValue"
+        private const val DATE_VALUE = "DateValue"
+        private const val PAY_VALUE = "PayValue"
+        private const val PASS_VALUE = "PassValue"
     }
 }

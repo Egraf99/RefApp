@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.SearchItem
 import com.egraf.refapp.views.custom_views.GameComponent
 import com.egraf.refapp.views.custom_views.Saving
@@ -14,27 +15,21 @@ import java.util.*
 @Entity
 data class Stadium(
     @PrimaryKey
-    override var id: UUID = UUID.randomUUID(),
+    override var id: UUID = EmptyItem.id,
     var name: String = "EmptyStadium"
-) : com.egraf.refapp.database.entities.Entity(), Saving<UUID>, SearchItem, Parcelable {
+) : com.egraf.refapp.database.entities.Entity(), Saving<Stadium>, SearchItem, Parcelable {
     override val shortName: String
         get() = name
     override val fullName: String
         get() = name
     override val title: String
         get() = shortName
-    @Ignore override val savedValue: UUID = id
+    @Ignore
+    override val savedValue = this
+    val isEmpty
+        get() = id == EmptyItem.id
 
     override fun setEntityName(text: String): Stadium {
         return this.apply { name = text.trim() }
-    }
-
-    companion object {
-        operator fun invoke(): GameComponent<UUID, Stadium> = GameComponent()
-        operator fun invoke(id: UUID): GameComponent<UUID, Stadium> = GameComponent(Stadium(id))
-        operator fun invoke(name: String): GameComponent<UUID, Stadium> =
-            GameComponent(Stadium(UUID.randomUUID(), name))
-        operator fun invoke(id: UUID, name: String = "EmptyStadium"): GameComponent<UUID, Stadium> =
-            GameComponent(Stadium(id, name))
     }
 }

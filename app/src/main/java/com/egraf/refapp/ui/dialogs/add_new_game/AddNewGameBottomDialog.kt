@@ -5,13 +5,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.R
 import com.egraf.refapp.databinding.AddNewGameDialogBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.launch
 
 private const val TAG = "AddNewGameDialog"
 class AddNewGameBottomDialog: BottomSheetDialogFragment() {
@@ -24,30 +27,6 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addNewGameViewModel.setPosition(0)
-        addNewGameViewModel.destination.observe(this) { destination ->
-            if (destination == null) return@observe
-            val fragment =
-                binding.addGameFragmentContainer.getFragment<NavHostFragment>().childFragmentManager.fragments[0] as ChooserFragment
-            when (destination) {
-                AddGameDestination.CREATE -> { // сохранение игры и закрытие окна
-                    fragment.addGameToDB()
-                    this.dismiss()
-                }
-                AddGameDestination.CANCEL -> { // закрытие окна добавления игры
-                    this.dismiss()
-                }
-                AddGameDestination.PREVIOUS -> { // переход к предыдущему фрагменту
-                    fragment.putGameInBundle()
-                    binding.addGameFragmentContainer.findNavController().popBackStack()
-                }
-                else -> // переход к фрагменту по action id
-                    binding.addGameFragmentContainer.findNavController().navigate(
-                        destination.res,
-                        fragment.putGameWithAttributes()
-                    )
-            }
-            checkCurrentFragmentPosition()
-        }
     }
 
     override fun onCreateView(
@@ -56,7 +35,7 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = AddNewGameDialogBinding.inflate(inflater)
-        checkCurrentFragmentPosition()
+        updateButtonsWithCurrentPosition()
         return binding.root
     }
 
@@ -64,6 +43,34 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.previousButton.setOnClickListener { addNewGameViewModel.showPreviousFragment() }
         binding.nextButton.setOnClickListener { addNewGameViewModel.showNextFragment() }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                addNewGameViewModel.destination.collect() { destination ->
+                    if (destination == null) return@collect
+                    val fragment =
+                        binding.addGameFragmentContainer.getFragment<NavHostFragment>().childFragmentManager.fragments[0] as ChooserFragment
+                    when (destination) {
+                        AddGameDestination.CREATE -> { // сохранение игры и закрытие окна
+                            fragment.addGameToDB()
+                            this@AddNewGameBottomDialog.dismiss()
+                        }
+                        AddGameDestination.CANCEL -> { // закрытие окна добавления игры
+                            this@AddNewGameBottomDialog.dismiss()
+                        }
+                        AddGameDestination.PREVIOUS -> { // переход к предыдущему фрагменту
+                            fragment.putComponentsInArguments()
+                            binding.addGameFragmentContainer.findNavController().popBackStack()
+                        }
+                        else -> // переход к фрагменту по action id
+                            binding.addGameFragmentContainer.findNavController().navigate(
+                                destination.res,
+                                fragment.putGameWithAttributes()
+                            )
+                    }
+                    updateButtonsWithCurrentPosition()
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -71,7 +78,7 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
         _binding = null
     }
 
-    private fun checkCurrentFragmentPosition() {
+    private fun updateButtonsWithCurrentPosition() {
         Log.d(TAG, "checkCurrentFragmentPosition: ${addNewGameViewModel.currentPosition}")
         //  меняем текст на кнопке previous, если показывается первый фрагмент
         if (addNewGameViewModel.currentPosition == 0)

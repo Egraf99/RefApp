@@ -12,6 +12,13 @@ class RefereeChooseFragment: ChooserFragment() {
     private val binding get() = _binding!!
     private var _binding: RefereeChooseBinding? = null
 
+    override fun putGameComponents(bundle: Bundle): Bundle {
+        return bundle
+    }
+
+    override fun getGameComponents(bundle: Bundle) {
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,7 +65,7 @@ class RefereeChooseFragment: ChooserFragment() {
         return binding.root
     }
 
-    override fun updateUI() {
+    private fun updateUI() {
         updateETI()
     }
 

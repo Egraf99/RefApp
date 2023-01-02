@@ -10,4 +10,5 @@ open class GameComponentView<T, S: Saving<T>>(context: Context, attr: AttributeS
         this.item = item
         setText(this.item.getText())
     }
+    fun getItem() = item
 }
