@@ -12,11 +12,11 @@ class RefereeChooseFragment: ChooserFragment() {
     private val binding get() = _binding!!
     private var _binding: RefereeChooseBinding? = null
 
-    override fun putGameComponents(bundle: Bundle): Bundle {
+    override fun putGameComponentsInSavedBundle(bundle: Bundle): Bundle {
         return bundle
     }
 
-    override fun getGameComponents(bundle: Bundle) {
+    override fun getGameComponentsFromSavedBundle(bundle: Bundle) {
     }
 
     override fun onCreateView(

@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
+import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.GameDate
 import com.egraf.refapp.database.entities.GameTime
 import com.egraf.refapp.database.entities.Stadium
@@ -93,7 +94,7 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
                         SearchDialogFragment.getId(result),
                         SearchDialogFragment.getTitle(result),
                     )
-                )
+                ).filter { it.id != EmptyItem.id }
                 when (SearchDialogFragment.getTypeOfResult(result)) {
                     SearchDialogFragment.Companion.ResultRequest.SEARCH_ITEM_RESULT_REQUEST -> {
                         Log.d(TAG, "search: $item")
@@ -120,8 +121,13 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
             }
             REQUEST_ADD_STADIUM -> {
                 parentFragmentManager.close(FRAGMENT_STADIUM, FRAGMENT_ADD_STADIUM)
-                binding.stadiumComponentView.setText(
-                    EntityAddDialogFragment.getTitle(result)
+                binding.stadiumComponentView.setItem(
+                    GameComponent(
+                        Stadium(
+                            EntityAddDialogFragment.getId(result),
+                            EntityAddDialogFragment.getTitle(result),
+                        )
+                    )
 //                    SearchItem(
 //                    id = EntityAddDialogFragment.getId(result),
 //                    title = EntityAddDialogFragment.getTitle(result)
@@ -180,15 +186,15 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
 
     }
 
-    override fun getGameComponents(bundle: Bundle) {
+    override fun getGameComponentsFromSavedBundle(bundle: Bundle) {
         val receiveStadium = bundle.getParcelable(STADIUM_VALUE) as Stadium?
-        Log.d("123456", "getGameComponents: ${EmptyItem.id} $receiveStadium ${receiveStadium?.isEmpty}")
+        Log.d("123456", "getGameComponentsFromSavedBundle: ${EmptyItem.id} $receiveStadium ${receiveStadium?.isEmpty}")
         val gameComponentWithStadium =
             if (receiveStadium != null && !receiveStadium.isEmpty) GameComponent(receiveStadium) else GameComponent()
         binding.stadiumComponentView.setItem(gameComponentWithStadium)
     }
 
-    override fun putGameComponents(bundle: Bundle): Bundle {
+    override fun putGameComponentsInSavedBundle(bundle: Bundle): Bundle {
         return bundle.apply {
             putParcelable(
                 STADIUM_VALUE,

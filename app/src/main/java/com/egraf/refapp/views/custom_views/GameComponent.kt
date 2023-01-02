@@ -16,17 +16,20 @@ sealed class GameComponent<out T, out S: Saving<T>> {
     }
 
     abstract fun <B, A: Saving<B>> map(f: (S) -> A): GameComponent<B, A>
+    abstract fun filter(p: (S) -> Boolean): GameComponent<T, S>
 
     internal object Empty : GameComponent<Nothing, Nothing>() {
         override val isEmpty: Boolean = true
         override fun toString(): String = "EmptyGameComponent"
         override fun <B, A: Saving<B>> map(f: (Nothing) -> A): GameComponent<Nothing, Nothing> = this
+        override fun filter(p: (Nothing) -> Boolean): GameComponent<Nothing, Nothing> = this
     }
 
     internal class Fill<T, out S: Saving<T>>(internal val value: S) : GameComponent<T, S>() {
         override val isEmpty: Boolean = false
         override fun toString(): String = "GC: $value"
         override fun <B, A : Saving<B>> map(f: (S) -> A): GameComponent<B, A> = Fill(f(value))
+        override fun filter(p: (S) -> Boolean): GameComponent<T, S> = if (p(value)) GameComponent(value) else Empty
     }
 
     companion object {
