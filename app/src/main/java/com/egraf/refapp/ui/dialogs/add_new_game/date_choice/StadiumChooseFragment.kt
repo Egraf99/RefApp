@@ -22,6 +22,9 @@ import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
 import com.egraf.refapp.utils.close
 import com.egraf.refapp.views.custom_views.GameComponent
+import java.time.LocalDate
+import java.time.LocalTime
+import java.util.*
 
 private const val TAG = "AddGame"
 
@@ -63,6 +66,13 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
                     { GameRepository.get().getStadiums() },
                     request = REQUEST_SEARCH_STADIUM
                 ).show(parentFragmentManager, FRAGMENT_STADIUM)
+            }
+            setOnInfoClickListener {
+                InfoStadiumDialogFragment(
+                    title = getString(R.string.stadium),
+                    componentId = (this.getItem()
+                        .getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Stadium).savedValue
+                ).show(parentFragmentManager, FRAGMENT_INFO_STADIUM)
             }
         }
         binding.dateInput.setOnClickListener {
@@ -186,9 +196,14 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
 
     override fun getGameComponentsFromSavedBundle(bundle: Bundle) {
         val receiveStadium = bundle.getParcelable(STADIUM_VALUE) as Stadium?
-        Log.d("123456", "getGameComponentsFromSavedBundle: ${EmptyItem.id} $receiveStadium ${receiveStadium?.isEmpty}")
         val gameComponentWithStadium =
             if (receiveStadium != null && !receiveStadium.isEmpty) GameComponent(receiveStadium) else GameComponent()
+
+        val receiveDate = bundle.getParcelable(DATE_VALUE) ?: GameDate()
+        val receiveTime = bundle.getParcelable(TIME_VALUE) ?: GameTime()
+
+        binding.dateInput.setItem(GameComponent(receiveDate))
+        binding.timeInput.setItem(GameComponent(receiveTime))
         binding.stadiumComponentView.setItem(gameComponentWithStadium)
     }
 
@@ -198,6 +213,16 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
                 STADIUM_VALUE,
                 binding.stadiumComponentView.getItem()
                     .getOrElse { Stadium() } as Stadium
+            )
+            putParcelable(
+                DATE_VALUE,
+                binding.dateInput.getItem()
+                    .getOrThrow(IllegalStateException("Date shouldn't be empty")) as GameDate
+            )
+            putParcelable(
+                TIME_VALUE,
+                binding.timeInput.getItem()
+                    .getOrThrow(IllegalStateException("Time shouldn't be empty")) as GameTime
             )
         }
     }
@@ -236,6 +261,7 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
 
         private const val STADIUM_VALUE = "StadiumValue"
         private const val DATE_VALUE = "DateValue"
+        private const val TIME_VALUE = "TimeValue"
         private const val PAY_VALUE = "PayValue"
         private const val PASS_VALUE = "PassValue"
     }

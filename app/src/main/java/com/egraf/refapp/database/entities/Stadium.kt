@@ -17,7 +17,7 @@ data class Stadium(
     @PrimaryKey
     override var id: UUID = EmptyItem.id,
     var name: String = "EmptyStadium"
-) : com.egraf.refapp.database.entities.Entity(), Saving<Stadium>, SearchItem, Parcelable {
+) : com.egraf.refapp.database.entities.Entity(), Saving<UUID>, SearchItem, Parcelable {
     override val shortName: String
         get() = name
     override val fullName: String
@@ -25,7 +25,7 @@ data class Stadium(
     override val title: String
         get() = shortName
     @Ignore
-    override val savedValue = this
+    override val savedValue = id
     val isEmpty
         get() = id == EmptyItem.id
 

@@ -10,9 +10,9 @@ sealed class GameComponent<out T, out S: Saving<T>> {
         is Empty -> ""
         is Fill -> value.title
     }
-    fun getValueOrThrow(e: Exception): T = when(this) {
+    fun getOrThrow(e: Exception): S = when(this) {
         is Empty -> throw e
-        is Fill -> value.savedValue
+        is Fill -> value
     }
 
     abstract fun <B, A: Saving<B>> map(f: (S) -> A): GameComponent<B, A>

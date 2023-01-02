@@ -2,19 +2,14 @@ package com.egraf.refapp.views.custom_views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.Toast
 
 class GameComponentViewWithIcon<T, S : Saving<T>>(context: Context, attrs: AttributeSet) :
     GameComponentView<T, S>(context, attrs) {
 
-    init {
-        infoButton.setOnClickListener {
-            Toast.makeText(
-                context,
-                item.getValueOrThrow(IllegalStateException("illegal")).toString(),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+    fun setOnInfoClickListener(listener: OnClickListener) {
+        infoButton.setOnClickListener(listener)
     }
 
     override fun hideContent() {
