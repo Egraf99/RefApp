@@ -5,7 +5,7 @@
     app:startDestination="@id/dateChooseFragment">
     <fragment
         android:id="@+id/dateChooseFragment"
-        android:name="com.egraf.refapp.ui.dialogs.add_new_game.date_choice.StadiumChooseFragment"
+        android:name="com.egraf.refapp.ui.dialogs.add_new_game.stadium_choose.StadiumChooseFragment"
         android:label="DateChooseFragment" >
         <action
             android:id="@+id/action_choose_date_to_team"

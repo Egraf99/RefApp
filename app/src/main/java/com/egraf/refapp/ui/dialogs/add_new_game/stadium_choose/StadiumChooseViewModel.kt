@@ -1,4 +1,4 @@
-package com.egraf.refapp.ui.dialogs.add_new_game.date_choice
+package com.egraf.refapp.ui.dialogs.add_new_game.stadium_choose
 
 import androidx.lifecycle.viewModelScope
 import com.egraf.refapp.GameRepository

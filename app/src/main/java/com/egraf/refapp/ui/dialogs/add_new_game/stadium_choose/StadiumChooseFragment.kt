@@ -1,4 +1,4 @@
-package com.egraf.refapp.ui.dialogs.add_new_game.date_choice
+package com.egraf.refapp.ui.dialogs.add_new_game.stadium_choose
 
 import android.os.Bundle
 import android.util.Log
@@ -22,9 +22,6 @@ import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
 import com.egraf.refapp.utils.close
 import com.egraf.refapp.views.custom_views.GameComponent
-import java.time.LocalDate
-import java.time.LocalTime
-import java.util.*
 
 private const val TAG = "AddGame"
 
@@ -70,7 +67,7 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
             setOnInfoClickListener {
                 InfoStadiumDialogFragment(
                     title = getString(R.string.stadium),
-                    componentId = (this.getItem()
+                    componentId = (this.item
                         .getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Stadium).savedValue
                 ).show(parentFragmentManager, FRAGMENT_INFO_STADIUM)
             }
@@ -91,7 +88,7 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
         binding.gamePassedCheckBox.setOnCheckedChangeListener { _, isChecked ->
             addNewGameViewModel.gameWithAttributes.game.isPassed = isChecked
         }
-        updateUI()
+        updateCheckBox()
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
@@ -106,7 +103,7 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
                 when (SearchDialogFragment.getTypeOfResult(result)) {
                     SearchDialogFragment.Companion.ResultRequest.SEARCH_ITEM_RESULT_REQUEST -> {
                         Log.d(TAG, "search: $item")
-                        binding.stadiumComponentView.setItem(item)
+                        binding.stadiumComponentView.item = item
                         parentFragmentManager.close(FRAGMENT_STADIUM)
                     }
                     SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
@@ -129,38 +126,25 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
             }
             REQUEST_ADD_STADIUM -> {
                 parentFragmentManager.close(FRAGMENT_STADIUM, FRAGMENT_ADD_STADIUM)
-                binding.stadiumComponentView.setItem(
+                binding.stadiumComponentView.item =
                     GameComponent(
                         Stadium(
                             AddStadiumDialogFragment.getId(result),
                             AddStadiumDialogFragment.getTitle(result),
                         )
                     )
-//                    SearchItem(
-//                    id = AddStadiumDialogFragment.getId(result),
-//                    title = AddStadiumDialogFragment.getTitle(result)
-//                )
-                )
             }
             REQUEST_INPUT_DATE -> {
-//                addNewGameViewModel.gameWithAttributes.game.date =
-//                    DatePickerFragment.getSelectedDate(result)
-//                updateDate()
-                binding.dateInput.setItem(
+                binding.dateInput.item =
                     GameComponent(
                         GameDate(DatePickerFragment.getSelectedDate(result).toLocalDate())
                     )
-                )
             }
             REQUEST_INPUT_TIME -> {
-//                addNewGameViewModel.gameWithAttributes.game.date.value =
-//                    TimePickerFragment.getSelectedTime(result)
-//                updateTime()
-                binding.timeInput.setItem(
+                binding.timeInput.item =
                     GameComponent(
                         GameTime(TimePickerFragment.getSelectedTime(result).toLocalTime())
                     )
-                )
             }
         }
     }
@@ -168,18 +152,6 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun updateUI() {
-        updateETI()
-        updateCheckBox()
-        updateDate()
-        updateTime()
-    }
-
-    private fun updateETI() {
-        Log.d(TAG, "updateETI: ${addNewGameViewModel.gameWithAttributes.game}")
-//        binding.stadiumLayout.setText(addNewGameViewModel.gameWithAttributes.stadium?.shortName ?: "")
     }
 
     private fun updateCheckBox() {
@@ -202,49 +174,29 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
         val receiveDate = bundle.getParcelable(DATE_VALUE) ?: GameDate()
         val receiveTime = bundle.getParcelable(TIME_VALUE) ?: GameTime()
 
-        binding.dateInput.setItem(GameComponent(receiveDate))
-        binding.timeInput.setItem(GameComponent(receiveTime))
-        binding.stadiumComponentView.setItem(gameComponentWithStadium)
+        binding.dateInput.item = GameComponent(receiveDate)
+        binding.timeInput.item = GameComponent(receiveTime)
+        binding.stadiumComponentView.item = gameComponentWithStadium
     }
 
     override fun putGameComponentsInSavedBundle(bundle: Bundle): Bundle {
         return bundle.apply {
             putParcelable(
                 STADIUM_VALUE,
-                binding.stadiumComponentView.getItem()
+                binding.stadiumComponentView.item
                     .getOrElse { Stadium() } as Stadium
             )
             putParcelable(
                 DATE_VALUE,
-                binding.dateInput.getItem()
+                binding.dateInput.item
                     .getOrThrow(IllegalStateException("Date shouldn't be empty")) as GameDate
             )
             putParcelable(
                 TIME_VALUE,
-                binding.timeInput.getItem()
+                binding.timeInput.item
                     .getOrThrow(IllegalStateException("Time shouldn't be empty")) as GameTime
             )
         }
-    }
-
-    private fun updateDate() {
-//        binding.dateInput.setText(
-//            SearchItem(
-//                DateFormat.format(addNewGameViewModel.gameWithAttributes.game.date)
-//                    .toString(),
-//                UUID.randomUUID()
-//            )
-//        )
-    }
-
-    private fun updateTime() {
-//        binding.timeInput.setText(
-//            SearchItem(
-//                DateFormat.format(TIME_FORMAT, addNewGameViewModel.gameWithAttributes.game.date.value)
-//                    .toString(),
-//                UUID.randomUUID()
-//            )
-//        )
     }
 
     companion object {
