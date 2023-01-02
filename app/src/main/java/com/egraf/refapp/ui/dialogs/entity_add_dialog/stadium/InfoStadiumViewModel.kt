@@ -15,7 +15,6 @@ class GameComponentInfoViewModel(
     stadiumId: UUID,
 ) : ViewModel() {
     var title: String = ""
-    var entityTitle: String = ""
     private val _componentId = MutableStateFlow<Resource<Stadium>>(Resource.loading(null))
     val componentId: StateFlow<Resource<Stadium>> = _componentId
 

@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
-import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.GameDate
 import com.egraf.refapp.database.entities.GameTime
 import com.egraf.refapp.database.entities.Stadium
@@ -17,13 +16,12 @@ import com.egraf.refapp.databinding.StadiumChooseBinding
 import com.egraf.refapp.ui.dialogs.DatePickerFragment
 import com.egraf.refapp.ui.dialogs.TimePickerFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
-import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.EntityAddDialogFragment
-import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.GameComponentInfoDialog
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.AddStadiumDialogFragment
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.InfoStadiumDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
 import com.egraf.refapp.utils.close
 import com.egraf.refapp.views.custom_views.GameComponent
-import java.util.*
 
 private const val TAG = "AddGame"
 
@@ -103,14 +101,14 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
                     }
                     SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
                         Log.d(TAG, "info: $item")
-                        GameComponentInfoDialog(
+                        InfoStadiumDialogFragment(
                             title = getString(R.string.stadium),
                             componentId = SearchDialogFragment.getId(result),
                         ).show(parentFragmentManager, FRAGMENT_INFO_STADIUM)
                     }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
                         Log.d(TAG, "add: $item")
-                        EntityAddDialogFragment(
+                        AddStadiumDialogFragment(
                             title = getString(R.string.add_stadium),
                             entityTitle = SearchDialogFragment.getTitle(result),
                             request = REQUEST_ADD_STADIUM,
@@ -124,13 +122,13 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
                 binding.stadiumComponentView.setItem(
                     GameComponent(
                         Stadium(
-                            EntityAddDialogFragment.getId(result),
-                            EntityAddDialogFragment.getTitle(result),
+                            AddStadiumDialogFragment.getId(result),
+                            AddStadiumDialogFragment.getTitle(result),
                         )
                     )
 //                    SearchItem(
-//                    id = EntityAddDialogFragment.getId(result),
-//                    title = EntityAddDialogFragment.getTitle(result)
+//                    id = AddStadiumDialogFragment.getId(result),
+//                    title = AddStadiumDialogFragment.getTitle(result)
 //                )
                 )
             }

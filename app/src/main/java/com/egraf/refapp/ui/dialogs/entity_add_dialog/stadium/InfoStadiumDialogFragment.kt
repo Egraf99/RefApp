@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.egraf.refapp.databinding.AddComponentDialogBinding
+import com.egraf.refapp.databinding.InfoComponentDialogBinding
 import com.egraf.refapp.databinding.StadiumFieldsBinding
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
@@ -20,15 +21,14 @@ import java.util.*
 
 private const val TAG = "InfoDialog"
 
-class GameComponentInfoDialog(
+class InfoStadiumDialogFragment(
     private val title: String = "",
-    private val entityTitle: String = "",
     private val componentId: UUID = EmptyItem.id,
 ) : DialogFragment() {
-    internal val binding get() = _binding!!
-    internal var _binding: AddComponentDialogBinding? = null
-    internal val fieldBinding get() = _fieldBinding!!
-    internal var _fieldBinding: StadiumFieldsBinding? = null
+    private val binding get() = _binding!!
+    private var _binding: InfoComponentDialogBinding? = null
+    private val fieldBinding get() = _fieldBinding!!
+    private var _fieldBinding: StadiumFieldsBinding? = null
 
     private val viewModel: GameComponentInfoViewModel by lazy {
         ViewModelProvider(
@@ -41,7 +41,6 @@ class GameComponentInfoDialog(
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) { // первое создание диалога
             viewModel.title = title
-            viewModel.entityTitle = entityTitle
         }
     }
 
@@ -51,7 +50,7 @@ class GameComponentInfoDialog(
         savedInstanceState: Bundle?
     ): View {
         setCustomBackground()
-        _binding = AddComponentDialogBinding.inflate(inflater, container, false)
+        _binding = InfoComponentDialogBinding.inflate(inflater, container, false)
         _fieldBinding = StadiumFieldsBinding.bind(binding.root)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -70,6 +69,11 @@ class GameComponentInfoDialog(
         }
         binding.buttonsBottomBar.cancelButton.setOnClickListener { dismiss() }
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        binding.dialogTitle.text = viewModel.title
     }
 
     override fun onDestroyView() {

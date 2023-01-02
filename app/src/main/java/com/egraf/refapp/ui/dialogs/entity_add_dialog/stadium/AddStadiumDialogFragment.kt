@@ -24,7 +24,7 @@ import java.util.*
 
 private const val TAG = "EntityAddFragment"
 
-class EntityAddDialogFragment(
+class AddStadiumDialogFragment(
     private val title: String = "",
     private val entityTitle: String = "",
     private val functionSaveEntityInDB: ((String) -> StateFlow<Resource<Pair<UUID, String>>>)? = null
@@ -111,8 +111,8 @@ class EntityAddDialogFragment(
             entityTitle: String = "",
             functionSaveEntityInDB: ((String) -> StateFlow<Resource<Pair<UUID, String>>>)? = null,
             request: String
-        ): EntityAddDialogFragment =
-            EntityAddDialogFragment(title, entityTitle, functionSaveEntityInDB).apply {
+        ): AddStadiumDialogFragment =
+            AddStadiumDialogFragment(title, entityTitle, functionSaveEntityInDB).apply {
                 arguments = Bundle().apply { putString(REQUEST, request) }
             }
 
