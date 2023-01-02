@@ -4,23 +4,33 @@
     android:id="@+id/add_game_nav"
     app:startDestination="@id/dateChooseFragment">
     <fragment
-        android:id="@+id/teamChooseFragment"
-        android:name="com.egraf.refapp.ui.dialogs.add_new_game.TeamChooseFragment"
-        android:label="TeamChooseFragment" >
-        <action
-            android:id="@+id/action_choose_team_to_referee"
-            app:destination="@id/refereeChooseFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/refereeChooseFragment"
-        android:name="com.egraf.refapp.ui.dialogs.add_new_game.RefereeChooseFragment"
-        android:label="RefereeChooseFragment" />
-    <fragment
         android:id="@+id/dateChooseFragment"
         android:name="com.egraf.refapp.ui.dialogs.add_new_game.date_choice.StadiumChooseFragment"
         android:label="DateChooseFragment" >
         <action
             android:id="@+id/action_choose_date_to_team"
-            app:destination="@id/teamChooseFragment" />
+            app:destination="@id/teamChooseFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
     </fragment>
+    <fragment
+        android:id="@+id/teamChooseFragment"
+        android:name="com.egraf.refapp.ui.dialogs.add_new_game.TeamChooseFragment"
+        android:label="TeamChooseFragment" >
+        <action
+            android:id="@+id/action_choose_team_to_referee"
+            app:destination="@id/refereeChooseFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/refereeChooseFragment"
+        android:name="com.egraf.refapp.ui.dialogs.add_new_game.RefereeChooseFragment"
+        android:label="RefereeChooseFragment" />
 </navigation>
