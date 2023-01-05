@@ -1,6 +1,7 @@
 package com.egraf.refapp.database.entities
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
@@ -13,7 +14,9 @@ data class Referee(
     @PrimaryKey
     override var id: UUID = EmptyItem.id,
     var firstName: String = "",
+    @ColumnInfo(name = "secondName")
     var middleName: String = "",
+    @ColumnInfo(name = "thirdName")
     var lastName: String = "",
 ) : com.egraf.refapp.database.entities.Entity(), Parcelable {
 
