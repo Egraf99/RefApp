@@ -17,17 +17,13 @@ data class Stadium(
     @PrimaryKey
     override var id: UUID = EmptyItem.id,
     var name: String = "EmptyStadium"
-) : com.egraf.refapp.database.entities.Entity(), Saving<UUID>, SearchItem, Parcelable {
+) : com.egraf.refapp.database.entities.Entity(), Parcelable {
     override val shortName: String
         get() = name
     override val fullName: String
         get() = name
     override val title: String
         get() = shortName
-    @Ignore
-    override val savedValue = id
-    val isEmpty
-        get() = id == EmptyItem.id
 
     override fun setEntityName(text: String): Stadium {
         return this.apply { name = text.trim() }

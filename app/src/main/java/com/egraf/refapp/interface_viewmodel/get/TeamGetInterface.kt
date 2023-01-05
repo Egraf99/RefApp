@@ -4,5 +4,5 @@ import androidx.lifecycle.LiveData
 import com.egraf.refapp.database.entities.Team
 
 interface TeamGetInterface: GetInterface {
-    fun getTeamsFromDB(): LiveData<List<Team>>
+    fun getTeamsFromDB(): List<Team>
 }

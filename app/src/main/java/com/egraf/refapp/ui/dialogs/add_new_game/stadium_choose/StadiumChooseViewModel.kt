@@ -26,6 +26,4 @@ class StadiumChooseViewModel : ViewModelWithGameRepo() {
                 initialValue = Resource.loading(null)
             )
         }
-
-    val getStadiumNameFromDB: (UUID) -> Flow<Stadium?> = { GameRepository.get().getStadium(it) }
 }

@@ -17,7 +17,7 @@ open class ViewModelWithEntitiesAndGame : ViewModelWithGame(),
         gameRepository.addTeam(team)
     }
 
-    override fun getTeamsFromDB(): LiveData<List<Team>> {
+    override fun getTeamsFromDB(): List<Team> {
         return gameRepository.getTeams()
     }
 
@@ -35,7 +35,7 @@ open class ViewModelWithEntitiesAndGame : ViewModelWithGame(),
         gameRepository.addLeague(league)
     }
 
-    override fun getLeagueFromDB(): LiveData<List<League>> {
+    override fun getLeagueFromDB(): List<League> {
         return gameRepository.getLeagues()
     }
 

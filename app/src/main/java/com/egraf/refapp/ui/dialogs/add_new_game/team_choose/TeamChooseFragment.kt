@@ -1,0 +1,258 @@
+package com.egraf.refapp.ui.dialogs.add_new_game.team_choose
+
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.FragmentResultListener
+import androidx.fragment.app.viewModels
+import com.egraf.refapp.GameRepository
+import com.egraf.refapp.R
+import com.egraf.refapp.database.entities.League
+import com.egraf.refapp.database.entities.Stadium
+import com.egraf.refapp.database.entities.Team
+import com.egraf.refapp.databinding.TeamChooseBinding
+import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
+import com.egraf.refapp.ui.dialogs.add_new_game.stadium_choose.StadiumChooseFragment
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.AddStadiumDialogFragment
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.InfoStadiumDialogFragment
+import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
+import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
+import com.egraf.refapp.utils.close
+import com.egraf.refapp.views.custom_views.GameComponent
+import com.egraf.refapp.views.textInput.TeamETI
+
+private const val TAG = "AddGame"
+
+class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
+    private val binding get() = _binding!!
+    private var _binding: TeamChooseBinding? = null
+
+    private val viewModel: TeamChooseViewModel by viewModels()
+
+    override fun putGameComponentsInSavedBundle(bundle: Bundle): Bundle {
+        return bundle
+    }
+
+    override fun getGameComponentsFromSavedBundle(bundle: Bundle) {
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        for (request in listOf(
+            REQUEST_SEARCH_HOME_TEAM,
+            REQUEST_ADD_HOME_TEAM,
+            REQUEST_SEARCH_GUEST_TEAM,
+            REQUEST_ADD_GUEST_TEAM,
+            REQUEST_SEARCH_LEAGUE,
+            REQUEST_ADD_LEAGUE,
+        ))
+            parentFragmentManager.setFragmentResultListener(request, viewLifecycleOwner, this)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = TeamChooseBinding.inflate(inflater)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onStart() {
+        super.onStart()
+        binding.homeTeamView.apply {
+            setOnClickListener {
+                SearchDialogFragment(
+                    this.title, this.icon,
+                    receiveSearchItems = { GameRepository.get().getTeams() },
+                    request = REQUEST_SEARCH_HOME_TEAM
+                ).show(parentFragmentManager, FRAGMENT_SEARCH_HOME_TEAM)
+            }
+            setOnInfoClickListener {
+                InfoStadiumDialogFragment(
+                    this.title,
+                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Team).savedValue
+                ).show(parentFragmentManager, FRAGMENT_INFO_HOME_TEAM)
+            }
+        }
+        binding.guestTeamView.apply {
+            setOnClickListener {
+                SearchDialogFragment(
+                    this.title, this.icon,
+                    receiveSearchItems = { GameRepository.get().getTeams() },
+                    request = REQUEST_SEARCH_GUEST_TEAM
+                ).show(parentFragmentManager, FRAGMENT_SEARCH_GUEST_TEAM)
+            }
+            setOnInfoClickListener {
+                InfoStadiumDialogFragment(
+                    this.title,
+                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Team).savedValue
+                ).show(parentFragmentManager, FRAGMENT_INFO_GUEST_TEAM)
+            }
+        }
+        binding.leagueView.apply {
+            setOnClickListener {
+                SearchDialogFragment(
+                    this.title, this.icon,
+                    receiveSearchItems = { GameRepository.get().getLeagues() },
+                    request = REQUEST_SEARCH_LEAGUE
+                ).show(parentFragmentManager, FRAGMENT_SEARCH_LEAGUE)
+            }
+            setOnInfoClickListener {
+                InfoStadiumDialogFragment(
+                    this.title,
+                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as League).savedValue
+                ).show(parentFragmentManager, FRAGMENT_INFO_LEAGUE)
+            }
+        }
+    }
+
+    override fun onFragmentResult(requestKey: String, result: Bundle) {
+        when (requestKey) {
+            REQUEST_SEARCH_HOME_TEAM -> {
+                val item = GameComponent(
+                    Team(
+                        SearchDialogFragment.getId(result),
+                        SearchDialogFragment.getTitle(result),
+                    )
+                ).filter { it.id != EmptyItem.id }
+                when (SearchDialogFragment.getTypeOfResult(result)) {
+                    SearchDialogFragment.Companion.ResultRequest.SEARCH_ITEM_RESULT_REQUEST -> {
+                        binding.homeTeamView.item = item
+                        parentFragmentManager.close(FRAGMENT_SEARCH_HOME_TEAM)
+                    }
+                    SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
+                        InfoStadiumDialogFragment(
+                            title = getString(R.string.home_team),
+                            componentId = SearchDialogFragment.getId(result),
+                        ).show(parentFragmentManager, FRAGMENT_INFO_HOME_TEAM)
+                    }
+                    SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
+                        AddStadiumDialogFragment(
+                            title = getString(R.string.add_team),
+                            entityTitle = SearchDialogFragment.getTitle(result),
+                            request = REQUEST_ADD_HOME_TEAM,
+                            functionSaveEntityInDB = viewModel.addTeamToDB
+                        ).show(parentFragmentManager, FRAGMENT_ADD_HOME_TEAM)
+                    }
+                }
+            }
+            REQUEST_ADD_HOME_TEAM -> {
+                parentFragmentManager.close(FRAGMENT_SEARCH_HOME_TEAM, FRAGMENT_ADD_HOME_TEAM)
+                binding.homeTeamView.item =
+                    GameComponent(
+                        Team(
+                            AddStadiumDialogFragment.getId(result),
+                            AddStadiumDialogFragment.getTitle(result),
+                        )
+                    )
+            }
+            REQUEST_SEARCH_GUEST_TEAM -> {
+                val item = GameComponent(
+                    Team(
+                        SearchDialogFragment.getId(result),
+                        SearchDialogFragment.getTitle(result),
+                    )
+                ).filter { it.id != EmptyItem.id }
+                when (SearchDialogFragment.getTypeOfResult(result)) {
+                    SearchDialogFragment.Companion.ResultRequest.SEARCH_ITEM_RESULT_REQUEST -> {
+                        binding.guestTeamView.item = item
+                        parentFragmentManager.close(FRAGMENT_SEARCH_GUEST_TEAM)
+                    }
+                    SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
+                        InfoStadiumDialogFragment(
+                            title = getString(R.string.guest_team),
+                            componentId = SearchDialogFragment.getId(result),
+                        ).show(parentFragmentManager, FRAGMENT_INFO_GUEST_TEAM)
+                    }
+                    SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
+                        AddStadiumDialogFragment(
+                            title = getString(R.string.add_team),
+                            entityTitle = SearchDialogFragment.getTitle(result),
+                            request = REQUEST_ADD_GUEST_TEAM,
+                            functionSaveEntityInDB = viewModel.addTeamToDB
+                        ).show(parentFragmentManager, FRAGMENT_ADD_GUEST_TEAM)
+                    }
+                }
+            }
+            REQUEST_ADD_GUEST_TEAM -> {
+                parentFragmentManager.close(FRAGMENT_SEARCH_GUEST_TEAM, FRAGMENT_ADD_GUEST_TEAM)
+                binding.guestTeamView.item =
+                    GameComponent(
+                        Team(
+                            AddStadiumDialogFragment.getId(result),
+                            AddStadiumDialogFragment.getTitle(result),
+                        )
+                    )
+            }
+            REQUEST_SEARCH_LEAGUE -> {
+                val item = GameComponent(
+                    League(
+                        SearchDialogFragment.getId(result),
+                        SearchDialogFragment.getTitle(result),
+                    )
+                ).filter { it.id != EmptyItem.id }
+                when (SearchDialogFragment.getTypeOfResult(result)) {
+                    SearchDialogFragment.Companion.ResultRequest.SEARCH_ITEM_RESULT_REQUEST -> {
+                        binding.leagueView.item = item
+                        parentFragmentManager.close(FRAGMENT_SEARCH_LEAGUE)
+                    }
+                    SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
+                        InfoStadiumDialogFragment(
+                            title = getString(R.string.league),
+                            componentId = SearchDialogFragment.getId(result),
+                        ).show(parentFragmentManager, FRAGMENT_INFO_LEAGUE)
+                    }
+                    SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
+                        AddStadiumDialogFragment(
+                            title = getString(R.string.add_league),
+                            entityTitle = SearchDialogFragment.getTitle(result),
+                            request = REQUEST_ADD_LEAGUE,
+                            functionSaveEntityInDB = viewModel.addLeagueToDB
+                        ).show(parentFragmentManager, FRAGMENT_ADD_LEAGUE)
+                    }
+                }
+            }
+            REQUEST_ADD_LEAGUE -> {
+                parentFragmentManager.close(FRAGMENT_SEARCH_LEAGUE, FRAGMENT_ADD_LEAGUE)
+                binding.leagueView.item =
+                    GameComponent(
+                        League(
+                            AddStadiumDialogFragment.getId(result),
+                            AddStadiumDialogFragment.getTitle(result),
+                        )
+                    )
+            }
+        }
+    }
+
+    companion object {
+        private const val REQUEST_SEARCH_HOME_TEAM = "RequestHomeTeam"
+        private const val REQUEST_ADD_HOME_TEAM = "RequestAddHomeTeam"
+        private const val REQUEST_SEARCH_GUEST_TEAM = "RequestGuestTeam"
+        private const val REQUEST_ADD_GUEST_TEAM = "RequestAddGuestTeam"
+        private const val REQUEST_SEARCH_LEAGUE = "RequestLeague"
+        private const val REQUEST_ADD_LEAGUE = "RequestAddLeague"
+
+        private const val FRAGMENT_SEARCH_HOME_TEAM = "FragmentSearchHomeTeam"
+        private const val FRAGMENT_ADD_HOME_TEAM = "FragmentAddHomeTeam"
+        private const val FRAGMENT_INFO_HOME_TEAM = "FragmentAddHomeTeam"
+        private const val FRAGMENT_SEARCH_GUEST_TEAM = "FragmentSearchGuestTeam"
+        private const val FRAGMENT_ADD_GUEST_TEAM = "FragmentAddGuestTeam"
+        private const val FRAGMENT_INFO_GUEST_TEAM = "FragmentAddGuestTeam"
+        private const val FRAGMENT_SEARCH_LEAGUE = "FragmentSearchLeague"
+        private const val FRAGMENT_ADD_LEAGUE = "FragmentAddLeague"
+        private const val FRAGMENT_INFO_LEAGUE = "FragmentAddLeague"
+
+        private const val HOME_TEAM_VALUE = "HomeTeamValue"
+        private const val GUEST_TEAM_VALUE = "GuestTeamValue"
+        private const val LEAGUE_VALUE = "LeagueValue"
+    }
+}

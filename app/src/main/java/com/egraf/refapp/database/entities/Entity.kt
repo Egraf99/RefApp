@@ -1,16 +1,22 @@
 package com.egraf.refapp.database.entities
 
+import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.SearchItem
+import com.egraf.refapp.views.custom_views.Saving
 import java.util.*
 
-abstract class Entity: SearchItem {
+abstract class Entity : SearchItem, Saving<UUID> {
     abstract override val id: UUID
+    val isEmpty
+        get() = id == EmptyItem.id
+    override val savedValue: UUID
+        get() = id
     abstract val shortName: String
     abstract val fullName: String
     abstract fun setEntityName(text: String): Entity
 
     companion object {
-        object Empty: Entity() {
+        object Empty : Entity() {
             override val id: UUID = UUID.randomUUID()
             override val title: String = ""
             override val shortName: String = ""

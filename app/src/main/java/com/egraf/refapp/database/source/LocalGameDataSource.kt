@@ -61,7 +61,7 @@ class LocalGameDataSource(context: Context) : GameDataSource {
     }
 
     //    league block
-    override fun getLeagues(): LiveData<List<League>> = leagueDao.getLeagues()
+    override fun getLeagues(): List<League> = leagueDao.getLeagues()
     override fun addLeague(league: League) {
         executor.execute {
             leagueDao.addLeague(league)
@@ -75,7 +75,7 @@ class LocalGameDataSource(context: Context) : GameDataSource {
     }
 
     //    team block
-    override fun getTeams(): LiveData<List<Team>> = teamDao.getTeams()
+    override fun getTeams(): List<Team> = teamDao.getTeams()
     override fun deleteTeam(team: Team) {
         teamDao.deleteTeam(team)
     }

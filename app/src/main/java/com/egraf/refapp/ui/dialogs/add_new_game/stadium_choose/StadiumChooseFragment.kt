@@ -62,11 +62,11 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
                     this.title, this.icon,
                     { GameRepository.get().getStadiums() },
                     request = REQUEST_SEARCH_STADIUM
-                ).show(parentFragmentManager, FRAGMENT_STADIUM)
+                ).show(parentFragmentManager, FRAGMENT_SEARCH_STADIUM)
             }
             setOnInfoClickListener {
                 InfoStadiumDialogFragment(
-                    title = getString(R.string.stadium),
+                    title = this.title,
                     componentId = (this.item
                         .getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Stadium).savedValue
                 ).show(parentFragmentManager, FRAGMENT_INFO_STADIUM)
@@ -104,7 +104,7 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
                     SearchDialogFragment.Companion.ResultRequest.SEARCH_ITEM_RESULT_REQUEST -> {
                         Log.d(TAG, "search: $item")
                         binding.stadiumComponentView.item = item
-                        parentFragmentManager.close(FRAGMENT_STADIUM)
+                        parentFragmentManager.close(FRAGMENT_SEARCH_STADIUM)
                     }
                     SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
                         Log.d(TAG, "info: $item")
@@ -125,7 +125,7 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
                 }
             }
             REQUEST_ADD_STADIUM -> {
-                parentFragmentManager.close(FRAGMENT_STADIUM, FRAGMENT_ADD_STADIUM)
+                parentFragmentManager.close(FRAGMENT_SEARCH_STADIUM, FRAGMENT_ADD_STADIUM)
                 binding.stadiumComponentView.item =
                     GameComponent(
                         Stadium(
@@ -212,7 +212,7 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
         private const val REQUEST_INPUT_DATE = "DialogInputDate"
         private const val REQUEST_INPUT_TIME = "DialogInputTime"
 
-        private const val FRAGMENT_STADIUM = "FragmentStadium"
+        private const val FRAGMENT_SEARCH_STADIUM = "FragmentStadium"
         private const val FRAGMENT_ADD_STADIUM = "FragmentAddStadium"
         private const val FRAGMENT_INFO_STADIUM = "FragmentInfoStadium"
         private const val FRAGMENT_DATE = "FragmentDialogDate"

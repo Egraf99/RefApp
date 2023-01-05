@@ -1,73 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <com.egraf.refapp.views.textInput.TeamETI
-        android:id="@+id/team_home_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:hint="@string/home_team"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:startIconDrawable="@drawable/ic_polo_team"
-        app:startIconTint="@color/orange">
-
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:inputType="textImeMultiLine"
-            android:paddingStart="8dp"
-            android:paddingEnd="0dp" />
-
-    </com.egraf.refapp.views.textInput.TeamETI>
-
-    <com.egraf.refapp.views.textInput.TeamETI
-        android:id="@+id/team_guest_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:hint="@string/guest_team"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/team_home_layout"
-        app:startIconDrawable="@drawable/ic_polo_team"
-        app:startIconTint="@color/orange">
-
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:inputType="textImeMultiLine"
-            android:paddingStart="8dp"
-            android:paddingEnd="0dp" />
-
-    </com.egraf.refapp.views.textInput.TeamETI>
-
-    <com.egraf.refapp.views.textInput.LeagueETI
-        android:id="@+id/league_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
+        android:id="@+id/home_team_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:hint="@string/league"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/team_guest_layout"
-        app:startIconDrawable="@drawable/ic_football_ball"
-        app:startIconTint="@color/orange">
 
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:inputType="textImeMultiLine"
-            android:paddingStart="8dp"
-            android:paddingEnd="0dp"/>
+        custom:mIcon="@drawable/ic_polo_home"
+        custom:title="@string/home_team" />
 
-    </com.egraf.refapp.views.textInput.LeagueETI>
+    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
+        android:id="@+id/guest_team_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        custom:mIcon="@drawable/ic_polo_guest"
+        custom:title="@string/guest_team" />
+
+    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
+        android:id="@+id/league_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        custom:mIcon="@drawable/ic_cup"
+        custom:title="@string/league" />
+
+
+</LinearLayout>

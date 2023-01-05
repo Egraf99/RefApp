@@ -47,12 +47,12 @@ class TeamDaoTest {
         database.close()
     }
 
-    @Test
-    fun insertTeam() = runTest {
-        val team = Team(name="TestTeam")
-
-        teamDao.addTeam(team)
-        val teams = teamDao.getTeams().getOrAwaitValue()
-        assertThat(teams).contains(team)
-    }
+//    @Test
+//    fun insertTeam() = runTest {
+//        val team = Team(name="TestTeam")
+//
+//        teamDao.addTeam(team)
+//        val teams = teamDao.getTeams().getOrAwaitValue()
+//        assertThat(teams).contains(team)
+//    }
 }

@@ -11,10 +11,10 @@ class GameListViewModel: ViewModelWithGameRepo() {
 
     // только для проверки теста
     // ------------
-    val teamsListLiveData = gameRepository.getTeams()
-    fun addTeam(team: Team) {
-        gameRepository.addTeam(team)
-    }
+//    val teamsListLiveData = gameRepository.getTeams()
+//    fun addTeam(team: Team) {
+//        gameRepository.addTeam(team)
+//    }
 
     val getFive: () -> Int = {5}
     // ------------

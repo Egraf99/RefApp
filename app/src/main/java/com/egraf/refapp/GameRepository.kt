@@ -24,12 +24,12 @@ class GameRepository private constructor(private val dataSource: GameDataSource)
     fun updateStadium(stadium: Stadium) = dataSource.updateStadium(stadium)
 
     //    league block
-    fun getLeagues(): LiveData<List<League>> = dataSource.getLeagues()
+    fun getLeagues(): List<League> = dataSource.getLeagues()
     fun addLeague(league: League) = dataSource.addLeague(league)
     fun updateLeague(league: League) = dataSource.updateLeague(league)
 
     //    team block
-    fun getTeams(): LiveData<List<Team>> = dataSource.getTeams()
+    fun getTeams(): List<Team> = dataSource.getTeams()
     fun addTeam(team: Team) = dataSource.addTeam(team)
 
     //    referee block

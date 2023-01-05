@@ -21,12 +21,12 @@ interface GameDataSource {
     fun updateStadium(stadium: Stadium)
 
     //    league block
-    fun getLeagues(): LiveData<List<League>>
+    fun getLeagues(): List<League>
     fun addLeague(league: League)
     fun updateLeague(league: League)
 
     //    team block
-    fun getTeams(): LiveData<List<Team>>
+    fun getTeams(): List<Team>
     fun deleteTeam(team: Team)
     fun addTeam(team: Team)
 

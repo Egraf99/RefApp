@@ -20,9 +20,9 @@ class LeagueETI(context: Context, attrs: AttributeSet? = null) :
         super.init()
         setParentFragmentManager(fragment)
 
-        viewModel.getLeagueFromDB().observe(fragment.viewLifecycleOwner) {leagues ->
-           setEntities(leagues)
-        }
+//        viewModel.getLeagueFromDB().observe(fragment.viewLifecycleOwner) {leagues ->
+//           setEntities(leagues)
+//        }
         doWhenInfoClicked { league ->
             Toast.makeText(context, league.fullName, Toast.LENGTH_SHORT).show()
         }

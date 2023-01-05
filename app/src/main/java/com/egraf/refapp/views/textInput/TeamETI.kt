@@ -25,9 +25,9 @@ class TeamETI(context: Context, attrs: AttributeSet? = null) :
         this.typeTeam = typeTeam
         setParentFragmentManager(fragment)
 
-        viewModel.getTeamsFromDB().observe(fragment.viewLifecycleOwner) { teams ->
-            setEntities(teams)
-        }
+//        viewModel.getTeamsFromDB().observe(fragment.viewLifecycleOwner) { teams ->
+//            setEntities(teams)
+//        }
         doWhenInfoClicked { team ->
             Toast.makeText(context, team.fullName, Toast.LENGTH_SHORT).show()
         }
