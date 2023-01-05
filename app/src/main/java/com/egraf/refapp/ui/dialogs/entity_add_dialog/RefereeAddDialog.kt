@@ -25,8 +25,8 @@ class RefereeAddDialog(val viewModel: RefereeInterface) : EntityAddDialog() {
         _binding = RefereeDetailsBinding.inflate(layoutInflater).apply {
             // отображаем полученные имена
             firstName.setText(referee.firstName)
-            secondName.setText(referee.secondName)
-            thirdName.setText(referee.thirdName)
+            secondName.setText(referee.middleName)
+            thirdName.setText(referee.lastName)
         }
     }
 
@@ -51,15 +51,15 @@ class RefereeAddDialog(val viewModel: RefereeInterface) : EntityAddDialog() {
     override fun returnEntityNameToFragment() {
         // обновляем атрибуты referee
         referee.firstName = binding.firstName.childTextInput.text.toString()
-        referee.secondName = binding.secondName.childTextInput.text.toString()
-        referee.thirdName = binding.thirdName.childTextInput.text.toString()
+        referee.middleName = binding.secondName.childTextInput.text.toString()
+        referee.lastName = binding.thirdName.childTextInput.text.toString()
         Log.d(TAG, "returnEntityNameToFragment: ${referee.shortName}")
 
         // создаем отправляемый пакет
         val bundle = Bundle().apply {
             putString(RESULT_ADD_REFEREE_FIRST_NAME, referee.firstName)
-            putString(RESULT_ADD_REFEREE_SECOND_NAME, referee.secondName)
-            putString(RESULT_ADD_REFEREE_THIRD_NAME, referee.thirdName)
+            putString(RESULT_ADD_REFEREE_SECOND_NAME, referee.middleName)
+            putString(RESULT_ADD_REFEREE_THIRD_NAME, referee.lastName)
             putString(RESULT_ADD_REFEREE_FULL_NAME, referee.fullName)
             putString(RESULT_ADD_REFEREE_SHORT_NAME, referee.shortName)
         }

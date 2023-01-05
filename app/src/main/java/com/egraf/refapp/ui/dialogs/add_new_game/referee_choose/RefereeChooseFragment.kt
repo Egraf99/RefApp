@@ -1,4 +1,4 @@
-package com.egraf.refapp.ui.dialogs.add_new_game
+package com.egraf.refapp.ui.dialogs.add_new_game.referee_choose
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.egraf.refapp.database.entities.Referee
 import com.egraf.refapp.databinding.RefereeChooseBinding
+import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.views.textInput.RefereeETI
 
 class RefereeChooseFragment: ChooserFragment() {

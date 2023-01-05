@@ -32,8 +32,8 @@ class GameWithAttributes(
                 " League name: ${league?.name}, id is: ${league?.id}" +
                 " TeamHome name: ${homeTeam?.name}, id is: ${homeTeam?.id}" +
                 " TeamGuest name: ${guestTeam?.name}, id is: ${guestTeam?.id}" +
-                " ChiefReferee name: ${chiefReferee?.secondName}, id is: ${chiefReferee?.id}" +
-                " FirstReferee name: ${firstReferee?.secondName}, id is: ${firstReferee?.id}" +
+                " ChiefReferee name: ${chiefReferee?.middleName}, id is: ${chiefReferee?.id}" +
+                " FirstReferee name: ${firstReferee?.middleName}, id is: ${firstReferee?.id}" +
                 " isPaid: ${game.isPaid}" +
                 " isPassed: ${game.isPassed}"
     }

@@ -31,6 +31,6 @@
     </fragment>
     <fragment
         android:id="@+id/refereeChooseFragment"
-        android:name="com.egraf.refapp.ui.dialogs.add_new_game.RefereeChooseFragment"
+        android:name="com.egraf.refapp.ui.dialogs.add_new_game.referee_choose.RefereeChooseFragment"
         android:label="RefereeChooseFragment" />
 </navigation>

@@ -1,56 +1,64 @@
 package com.egraf.refapp.database.entities
 
-import org.junit.Assert.*
-import org.junit.Before
-
+import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class RefereeTest {
-    private data class Name(
-        val firstName: String = "FirstName",
-        val secondName: String = "SecondName",
-        val thirdName: String = "ThirdName"
-    )
-
-    private var name = Name()
-    private lateinit var referee: Referee
-
-    @Before
-    fun setUp() {
-        referee = Referee().setEntityName("${name.secondName} ${name.firstName} ${name.thirdName}")
+    @Test
+    fun `Referee("") should return EmptyReferee`() {
+        assertThat(Referee("").isEmpty).isTrue()
     }
 
     @Test
-    fun `setEntityName должна вернуть судью с правильным именем`() {
-        assertEquals(
-            "${referee.firstName} not equals to ${name.firstName}",
-            referee.firstName, name.firstName
-        )
+    fun `Referee() should return EmptyReferee`() {
+        assertThat(Referee().isEmpty).isTrue()
     }
 
     @Test
-    fun `setEntityName должна вернуть судью с правильной фамилией`() {
-        assertEquals(
-            "${referee.secondName} not equals to ${name.secondName}",
-            referee.secondName, name.secondName
-        )
+    fun `Referee("Ivanov Ivan") should return EmptyReferee`() {
+        val referee = Referee("f_Ivan_ m_Ivanov_")
+        assertThat(referee.firstName).isEqualTo("Ivan")
+        assertThat(referee.middleName).isEqualTo("Ivanov")
+        assertThat(referee.lastName).isEqualTo("")
     }
 
     @Test
-    fun `setEntityName должна вернуть судью с правильным отчеством`() {
-        assertEquals(
-            "${referee.thirdName} not equals to ${name.thirdName}",
-            referee.thirdName, name.thirdName
-        )
+    fun `Referee("f_Ivan_ m_Ivanov_ l_Ivanovich_") should return Referee(fistName = "Ivan")`() {
+        val referee = Referee("f_Ivan_ m_Ivanov_ l_Ivanovich_")
+        assertThat(referee.firstName).isEqualTo("Ivan")
+        assertThat(referee.middleName).isEqualTo("Ivanov")
+        assertThat(referee.lastName).isEqualTo("Ivanovich")
     }
 
     @Test
-    fun `shortName возвращает фамилию и имя`() {
-        assertEquals(referee.shortName, "${name.secondName} ${name.firstName}")
+    fun `Referee(" m_Ivanov_ l_Ivanovich_ f_Ivan_ ") should return Referee(fistName = "Ivan")`() {
+        val referee = Referee(" m_Ivanov_ l_Ivanovich_ f_Ivan_ ")
+        assertThat(referee.firstName).isEqualTo("Ivan")
+        assertThat(referee.middleName).isEqualTo("Ivanov")
+        assertThat(referee.lastName).isEqualTo("Ivanovich")
     }
 
     @Test
-    fun `fullName возвращает фамилию имя и отчество`() {
-        assertEquals(referee.fullName, "${name.secondName} ${name.firstName} ${name.thirdName}")
+    fun `Referee("f_Ivan_ Ivanov l_Ivanovich_") should return Referee(fistName = "Ivan")`() {
+        val referee = Referee("f_Ivan_ Ivanov l_Ivanovich_")
+        assertThat(referee.firstName).isEqualTo("Ivan")
+        assertThat(referee.middleName).isEqualTo("")
+        assertThat(referee.lastName).isEqualTo("Ivanovich")
+    }
+
+    @Test
+    fun `Referee("m_Ivanov_") should return Referee(middleName = "Ivanov")`() {
+        val referee = Referee("m_Ivanov_")
+        assertThat(referee.firstName).isEqualTo("")
+        assertThat(referee.middleName).isEqualTo("Ivanov")
+        assertThat(referee.lastName).isEqualTo("")
+    }
+
+    @Test
+    fun `Referee("f_Ivan_ m_Ivanov_") should return Referee(fistName = "Ivan")`() {
+        val referee = Referee("f_Ivan_ m_Ivanov_")
+        assertThat(referee.firstName).isEqualTo("Ivan")
+        assertThat(referee.middleName).isEqualTo("Ivanov")
+        assertThat(referee.lastName).isEqualTo("")
     }
 }
