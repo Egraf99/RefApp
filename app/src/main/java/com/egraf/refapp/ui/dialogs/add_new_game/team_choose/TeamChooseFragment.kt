@@ -7,13 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
-import com.egraf.refapp.database.entities.League
-import com.egraf.refapp.database.entities.Stadium
-import com.egraf.refapp.database.entities.Team
+import com.egraf.refapp.database.entities.*
 import com.egraf.refapp.databinding.TeamChooseBinding
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
+import com.egraf.refapp.ui.dialogs.add_new_game.Position
 import com.egraf.refapp.ui.dialogs.add_new_game.stadium_choose.StadiumChooseFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.AddStadiumDialogFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.InfoStadiumDialogFragment
@@ -22,6 +22,7 @@ import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
 import com.egraf.refapp.utils.close
 import com.egraf.refapp.views.custom_views.GameComponent
 import com.egraf.refapp.views.textInput.TeamETI
+import kotlin.math.log
 
 private const val TAG = "AddGame"
 
@@ -32,10 +33,46 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
     private val viewModel: TeamChooseViewModel by viewModels()
 
     override fun putGameComponentsInSavedBundle(bundle: Bundle): Bundle {
-        return bundle
+        return bundle.apply {
+            putParcelable(
+                HOME_TEAM_VALUE,
+                binding.homeTeamView.item
+                    .getOrElse { Team() } as Team
+            )
+            putParcelable(
+                GUEST_TEAM_VALUE,
+                binding.guestTeamView.item
+                    .getOrElse { Team() } as Team
+            )
+            putParcelable(
+                LEAGUE_VALUE,
+                binding.leagueView.item
+                    .getOrElse { League() } as League
+            )
+        }
     }
 
     override fun getGameComponentsFromSavedBundle(bundle: Bundle) {
+        binding.homeTeamView.item =
+            GameComponent(bundle.getParcelable<Team>(HOME_TEAM_VALUE)).filter { !it.isEmpty }
+
+        binding.guestTeamView.item =
+            GameComponent(bundle.getParcelable<Team>(GUEST_TEAM_VALUE)).filter { !it.isEmpty }
+
+        binding.leagueView.item =
+            GameComponent(bundle.getParcelable<League>(LEAGUE_VALUE)).filter { !it.isEmpty }
+    }
+
+    override fun showNextFragment(): Position {
+        val bundle = putComponentsInArguments()
+        findNavController().navigate(R.id.action_choose_team_to_referee, bundle)
+        return Position.LAST
+    }
+
+    override fun showPreviousFragment(): Position {
+        putComponentsInArguments()
+        findNavController().popBackStack()
+        return Position.MIDDLE
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -250,9 +287,5 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
         private const val FRAGMENT_SEARCH_LEAGUE = "FragmentSearchLeague"
         private const val FRAGMENT_ADD_LEAGUE = "FragmentAddLeague"
         private const val FRAGMENT_INFO_LEAGUE = "FragmentAddLeague"
-
-        private const val HOME_TEAM_VALUE = "HomeTeamValue"
-        private const val GUEST_TEAM_VALUE = "GuestTeamValue"
-        private const val LEAGUE_VALUE = "LeagueValue"
     }
 }

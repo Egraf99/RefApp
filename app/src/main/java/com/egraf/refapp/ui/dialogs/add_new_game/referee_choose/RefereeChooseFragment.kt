@@ -1,12 +1,15 @@
 package com.egraf.refapp.ui.dialogs.add_new_game.referee_choose
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.database.entities.Referee
 import com.egraf.refapp.databinding.RefereeChooseBinding
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
+import com.egraf.refapp.ui.dialogs.add_new_game.Position
 import com.egraf.refapp.views.textInput.RefereeETI
 
 class RefereeChooseFragment: ChooserFragment() {
@@ -18,6 +21,16 @@ class RefereeChooseFragment: ChooserFragment() {
     }
 
     override fun getGameComponentsFromSavedBundle(bundle: Bundle) {
+    }
+
+    override fun showNextFragment(): Position {
+        Log.d("AddNewGame", "create game")
+        return Position.DISMISS
+    }
+
+    override fun showPreviousFragment(): Position {
+        findNavController().popBackStack()
+        return Position.MIDDLE
     }
 
     override fun onCreateView(

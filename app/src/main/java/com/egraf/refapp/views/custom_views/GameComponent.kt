@@ -33,8 +33,9 @@ sealed class GameComponent<out T, out S: Saving<T>> {
     }
 
     companion object {
-        operator fun <T, S: Saving<T>> invoke(): GameComponent<T, S> = Empty
-        operator fun <T, S: Saving<T>> invoke(value: S): GameComponent<T, S> = Fill(value)
+        operator fun <T, S : Saving<T>> invoke(): GameComponent<T, S> = Empty
+        operator fun <T, S : Saving<T>> invoke(value: S?): GameComponent<T, S> =
+            if (value != null) Fill(value) else Empty
     }
 }
 

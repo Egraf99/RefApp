@@ -7,15 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.GameDate
 import com.egraf.refapp.database.entities.GameTime
 import com.egraf.refapp.database.entities.Stadium
+import com.egraf.refapp.database.entities.Team
 import com.egraf.refapp.databinding.StadiumChooseBinding
 import com.egraf.refapp.ui.dialogs.DatePickerFragment
 import com.egraf.refapp.ui.dialogs.TimePickerFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
+import com.egraf.refapp.ui.dialogs.add_new_game.Position
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.AddStadiumDialogFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.InfoStadiumDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
@@ -167,9 +170,8 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
     }
 
     override fun getGameComponentsFromSavedBundle(bundle: Bundle) {
-        val receiveStadium = bundle.getParcelable(STADIUM_VALUE) as Stadium?
         binding.stadiumComponentView.item =
-            if (receiveStadium != null && !receiveStadium.isEmpty) GameComponent(receiveStadium) else GameComponent()
+            GameComponent(bundle.getParcelable(STADIUM_VALUE) as Stadium?).filter { !it.isEmpty }
 
         binding.dateInput.item = GameComponent(bundle.getParcelable(DATE_VALUE) ?: GameDate())
         binding.timeInput.item = GameComponent(bundle.getParcelable(TIME_VALUE) ?: GameTime())
@@ -200,6 +202,19 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
         }
     }
 
+    override fun showNextFragment(): Position {
+        val bundle = putComponentsInArguments()
+        findNavController().navigate(R.id.action_choose_date_to_team, bundle)
+        // возвращаем позицию, которая будет у следующего фрагмента
+        return Position.MIDDLE
+    }
+
+    override fun showPreviousFragment(): Position {
+        findNavController().popBackStack()
+        // возвращаем позицию, которая будет у следующего фрагмента
+        return Position.DISMISS
+    }
+
     companion object {
         private const val REQUEST_SEARCH_STADIUM = "RequestStadium"
         private const val REQUEST_ADD_STADIUM = "RequestAddStadium"
@@ -211,11 +226,5 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
         private const val FRAGMENT_INFO_STADIUM = "FragmentInfoStadium"
         private const val FRAGMENT_DATE = "FragmentDialogDate"
         private const val FRAGMENT_TIME = "FragmentDialogTime"
-
-        private const val STADIUM_VALUE = "StadiumValue"
-        private const val DATE_VALUE = "DateValue"
-        private const val TIME_VALUE = "TimeValue"
-        private const val PAY_VALUE = "PayValue"
-        private const val PASS_VALUE = "PassValue"
     }
 }

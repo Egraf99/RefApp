@@ -26,7 +26,7 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        addNewGameViewModel.setPosition(0)
+//        addNewGameViewModel.setPosition(0)
     }
 
     override fun onCreateView(
@@ -35,42 +35,53 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = AddNewGameDialogBinding.inflate(inflater)
-        updateButtonsWithCurrentPosition()
+//        updateButtonsWithCurrentPosition()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.previousButton.setOnClickListener { addNewGameViewModel.showPreviousFragment() }
-        binding.nextButton.setOnClickListener { addNewGameViewModel.showNextFragment() }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                addNewGameViewModel.destination.collect() { destination ->
-                    if (destination == null) return@collect
-                    val fragment =
-                        binding.addGameFragmentContainer.getFragment<NavHostFragment>().childFragmentManager.fragments[0] as ChooserFragment
-                    when (destination) {
-                        AddGameDestination.CREATE -> { // сохранение игры и закрытие окна
-                            fragment.addGameToDB()
-                            this@AddNewGameBottomDialog.dismiss()
-                        }
-                        AddGameDestination.CANCEL -> { // закрытие окна добавления игры
-                            this@AddNewGameBottomDialog.dismiss()
-                        }
-                        AddGameDestination.PREVIOUS -> { // переход к предыдущему фрагменту
-                            fragment.putComponentsInArguments()
-                            binding.addGameFragmentContainer.findNavController().popBackStack()
-                        }
-                        else -> // переход к фрагменту по action id
-                            binding.addGameFragmentContainer.findNavController().navigate(
-                                destination.res,
-                                fragment.putGameWithAttributes()
-                            )
-                    }
-                    updateButtonsWithCurrentPosition()
-                }
-            }
+        binding.previousButton.setOnClickListener {
+            Log.d(TAG, "BottomDialog: previous click")
+//            addNewGameViewModel.showPreviousFragment()
+            val previousPosition = (binding.addGameFragmentContainer.getFragment<NavHostFragment>().childFragmentManager.fragments[0] as ChooserFragment).showPreviousFragment()
+            Log.d(TAG, "onViewCreated: $previousPosition")
         }
+        binding.nextButton.setOnClickListener {
+//            addNewGameViewModel.showNextFragment()
+            Log.d(TAG, "BottomDialog: next click")
+            val nextPosition = (binding.addGameFragmentContainer.getFragment<NavHostFragment>().childFragmentManager.fragments[0] as ChooserFragment).showNextFragment()
+            Log.d(TAG, "onViewCreated: $nextPosition")
+        }
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
+//                addNewGameViewModel.destination.collect() { destination ->
+//                    Log.d(TAG, "onViewCreated: $destination")
+//                    if (destination == null) return@collect
+//                    val fragment =
+//                        binding.addGameFragmentContainer.getFragment<NavHostFragment>().childFragmentManager.fragments[0] as ChooserFragment
+//                    when (destination) {
+//                        AddGameDestination.CREATE -> { // сохранение игры и закрытие окна
+//                            fragment.addGameToDB()
+//                            this@AddNewGameBottomDialog.dismiss()
+//                        }
+//                        AddGameDestination.CANCEL -> { // закрытие окна добавления игры
+//                            this@AddNewGameBottomDialog.dismiss()
+//                        }
+//                        AddGameDestination.PREVIOUS -> { // переход к предыдущему фрагменту
+//                            fragment.putComponentsInArguments()
+//                            binding.addGameFragmentContainer.findNavController().popBackStack()
+//                        }
+//                        else -> // переход к фрагменту по action id
+//                            binding.addGameFragmentContainer.findNavController().navigate(
+//                                destination.res,
+//                                fragment.putGameWithAttributes()
+//                            )
+//                    }
+//                    updateButtonsWithCurrentPosition()
+//                }
+//            }
+//        }
     }
 
     override fun onDestroy() {
@@ -79,17 +90,16 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
     }
 
     private fun updateButtonsWithCurrentPosition() {
-        Log.d(TAG, "checkCurrentFragmentPosition: ${addNewGameViewModel.currentPosition}")
         //  меняем текст на кнопке previous, если показывается первый фрагмент
-        if (addNewGameViewModel.currentPosition == 0)
-            binding.previousButton.visibility = View.INVISIBLE
-        else
-            binding.previousButton.visibility = View.VISIBLE
+//        if (addNewGameViewModel.currentPosition == 0)
+//            binding.previousButton.visibility = View.INVISIBLE
+//        else
+//            binding.previousButton.visibility = View.VISIBLE
 
         // меняем текст на кнопке next, если показывается последний фрагмент
-        if (addNewGameViewModel.currentPosition == AddGameDestination.values().size-1 - AddGameDestination.countDestinations)
-            binding.nextButton.setImageResource(R.drawable.accept_wide_button)
-        else
-            binding.nextButton.setImageResource(R.drawable.next_button)
+//        if (addNewGameViewModel.currentPosition == AddGameDestination.values().size-1 - AddGameDestination.countDestinations)
+//            binding.nextButton.setImageResource(R.drawable.accept_wide_button)
+//        else
+//            binding.nextButton.setImageResource(R.drawable.next_button)
     }
 }
