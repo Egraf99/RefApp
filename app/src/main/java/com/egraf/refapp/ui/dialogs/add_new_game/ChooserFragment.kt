@@ -11,7 +11,7 @@ private const val TAG = "AddGame"
 private const val BUNDLE_KEY = "BundleKey"
 
 abstract class ChooserFragment : Fragment() {
-    private var bundle: Bundle = Bundle()
+    protected var bundle: Bundle = Bundle()
     protected val addNewGameViewModel: AddNewGameViewModel by lazy {
         ViewModelProvider(this)[AddNewGameViewModel::class.java]
     }
@@ -19,8 +19,17 @@ abstract class ChooserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setPopBackObserver()
-        bundle = arguments ?: Bundle()
+        bundle = when {
+            arguments != null -> requireArguments()
+            savedInstanceState != null -> savedInstanceState
+            else -> Bundle()
+        }
         getGameComponentsFromSavedBundle(bundle)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        putGameComponentsInSavedBundle(outState)
     }
 
     abstract fun putGameComponentsInSavedBundle(bundle: Bundle): Bundle
@@ -34,9 +43,8 @@ abstract class ChooserFragment : Fragment() {
     }
 
     fun putGameWithAttributes(): Bundle {
-        Log.d(TAG, "putGameWithAttributes: ${addNewGameViewModel.gameWithAttributes.game}")
         bundle = putGameComponentsInSavedBundle(bundle)
-        return putGameComponentsInSavedBundle(bundle)
+        return bundle
 
     }
 

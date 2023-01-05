@@ -168,20 +168,14 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
 
     override fun getGameComponentsFromSavedBundle(bundle: Bundle) {
         val receiveStadium = bundle.getParcelable(STADIUM_VALUE) as Stadium?
-        val gameComponentWithStadium =
+        binding.stadiumComponentView.item =
             if (receiveStadium != null && !receiveStadium.isEmpty) GameComponent(receiveStadium) else GameComponent()
 
-        val receiveDate = bundle.getParcelable(DATE_VALUE) ?: GameDate()
-        val receiveTime = bundle.getParcelable(TIME_VALUE) ?: GameTime()
+        binding.dateInput.item = GameComponent(bundle.getParcelable(DATE_VALUE) ?: GameDate())
+        binding.timeInput.item = GameComponent(bundle.getParcelable(TIME_VALUE) ?: GameTime())
 
-        val passed = bundle.getBoolean(PASS_VALUE)
-        val paid = bundle.getBoolean(PAY_VALUE)
-
-        binding.dateInput.item = GameComponent(receiveDate)
-        binding.timeInput.item = GameComponent(receiveTime)
-        binding.stadiumComponentView.item = gameComponentWithStadium
-        binding.gamePassedCheckBox.isChecked = passed
-        binding.gamePaidCheckBox.isChecked = paid
+        binding.gamePassedCheckBox.isChecked = bundle.getBoolean(PASS_VALUE)
+        binding.gamePaidCheckBox.isChecked = bundle.getBoolean(PAY_VALUE)
     }
 
     override fun putGameComponentsInSavedBundle(bundle: Bundle): Bundle {
