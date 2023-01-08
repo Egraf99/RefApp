@@ -21,11 +21,13 @@ interface GameDataSource {
     fun updateStadium(stadium: Stadium)
 
     //    league block
+    fun getLeague(id: UUID): Flow<League?>
     fun getLeagues(): List<League>
     fun addLeague(league: League)
     fun updateLeague(league: League)
 
     //    team block
+    fun getTeam(id: UUID): Flow<Team?>
     fun getTeams(): List<Team>
     fun deleteTeam(team: Team)
     fun addTeam(team: Team)

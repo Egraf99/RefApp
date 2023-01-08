@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.SearchItem
+import com.egraf.refapp.ui.dialogs.search_entity.SearchItem.Companion.randomId
 import com.egraf.refapp.views.custom_views.Saving
 import kotlinx.android.parcel.Parcelize
 import java.util.*
@@ -28,4 +29,11 @@ data class League(
     }
 
     override fun toString(): String = name
+
+    companion object {
+        operator fun invoke(name: String): League = when {
+            name.isBlank() -> League()
+            else -> League(name = name, id = randomId())
+        }
+    }
 }

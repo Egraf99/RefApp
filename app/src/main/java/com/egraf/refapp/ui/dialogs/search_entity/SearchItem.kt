@@ -28,6 +28,14 @@ interface SearchItem {
                 override val id: UUID = id
             }
         }
+
+        val randomId: () -> UUID = {
+            var id: UUID
+            do {
+                id = UUID.randomUUID()
+            } while (id == EmptyItem.id)
+            id
+        }
     }
 }
 

@@ -12,7 +12,7 @@ import java.util.*
 class TeamChooseViewModel : ViewModelWithGameRepo() {
     val addTeamToDB: (String) -> StateFlow<Resource<Pair<UUID, String>>> =
         { teamName ->
-            val team = Team(name = teamName)
+            val team = Team(teamName)
             flow {
                 try {
                     gameRepository.addTeam(team)
@@ -29,7 +29,7 @@ class TeamChooseViewModel : ViewModelWithGameRepo() {
 
     val addLeagueToDB: (String) -> StateFlow<Resource<Pair<UUID, String>>> =
         { teamName ->
-            val league = League(name = teamName)
+            val league = League(teamName)
             flow {
                 try {
                     gameRepository.addLeague(league)

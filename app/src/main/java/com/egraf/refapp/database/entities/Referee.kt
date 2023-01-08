@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
+import com.egraf.refapp.ui.dialogs.search_entity.SearchItem.Companion.randomId
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -55,7 +56,7 @@ data class Referee(
             return if (firstName == "" && middleName == "" && lastName == "")
                 Referee()
             else
-                Referee(UUID.randomUUID(), firstName, middleName, lastName)
+                Referee(randomId(), firstName, middleName, lastName)
         }
     }
 }

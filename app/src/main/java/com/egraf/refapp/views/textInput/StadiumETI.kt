@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
 import com.egraf.refapp.interface_viewmodel.all.StadiumInterface
-import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.StadiumAddDialog
 
 private const val REQUEST_ADD_STADIUM = "requestAddStadium"
 private const val REQUEST_FILL_STADIUM = "requestFillStadium"
@@ -57,7 +56,7 @@ class StadiumETI(context: Context, attrs: AttributeSet? = null) :
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         when (requestKey) {
-            REQUEST_ADD_STADIUM -> this.setText(StadiumAddDialog.getStadiumShortName(result))
+//            REQUEST_ADD_STADIUM -> this.setText(StadiumAddDialog.getStadiumShortName(result))
         }
         super.onFragmentResult(requestKey, result)
     }

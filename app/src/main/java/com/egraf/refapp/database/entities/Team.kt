@@ -27,4 +27,11 @@ data class Team(
     override fun setEntityName(text: String): Team {
         return this.apply { name = text.trim() }
     }
+
+    companion object {
+        operator fun invoke(name: String): Team = when {
+            name.isBlank() -> Team()
+            else -> Team(name = name, id = SearchItem.randomId())
+        }
+    }
 }

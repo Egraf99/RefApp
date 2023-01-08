@@ -1,7 +1,6 @@
 package com.egraf.refapp.ui.dialogs.add_new_game.team_choose
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,15 +13,14 @@ import com.egraf.refapp.database.entities.*
 import com.egraf.refapp.databinding.TeamChooseBinding
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.Position
-import com.egraf.refapp.ui.dialogs.add_new_game.stadium_choose.StadiumChooseFragment
-import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.AddStadiumDialogFragment
-import com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium.InfoStadiumDialogFragment
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.league.AddLeagueDialogFragment
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.league.InfoLeagueDialogFragment
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.team.AddTeamDialogFragment
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.team.InfoTeamDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.SearchDialogFragment
 import com.egraf.refapp.utils.close
 import com.egraf.refapp.views.custom_views.GameComponent
-import com.egraf.refapp.views.textInput.TeamETI
-import kotlin.math.log
 
 private const val TAG = "AddGame"
 
@@ -114,7 +112,7 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                 ).show(parentFragmentManager, FRAGMENT_SEARCH_HOME_TEAM)
             }
             setOnInfoClickListener {
-                InfoStadiumDialogFragment(
+                InfoTeamDialogFragment(
                     this.title,
                     componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Team).savedValue
                 ).show(parentFragmentManager, FRAGMENT_INFO_HOME_TEAM)
@@ -129,7 +127,7 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                 ).show(parentFragmentManager, FRAGMENT_SEARCH_GUEST_TEAM)
             }
             setOnInfoClickListener {
-                InfoStadiumDialogFragment(
+                InfoTeamDialogFragment(
                     this.title,
                     componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Team).savedValue
                 ).show(parentFragmentManager, FRAGMENT_INFO_GUEST_TEAM)
@@ -144,7 +142,7 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                 ).show(parentFragmentManager, FRAGMENT_SEARCH_LEAGUE)
             }
             setOnInfoClickListener {
-                InfoStadiumDialogFragment(
+                InfoLeagueDialogFragment(
                     this.title,
                     componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as League).savedValue
                 ).show(parentFragmentManager, FRAGMENT_INFO_LEAGUE)
@@ -167,13 +165,13 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                         parentFragmentManager.close(FRAGMENT_SEARCH_HOME_TEAM)
                     }
                     SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
-                        InfoStadiumDialogFragment(
+                        InfoLeagueDialogFragment(
                             title = getString(R.string.home_team),
                             componentId = SearchDialogFragment.getId(result),
                         ).show(parentFragmentManager, FRAGMENT_INFO_HOME_TEAM)
                     }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
-                        AddStadiumDialogFragment(
+                        AddTeamDialogFragment(
                             title = getString(R.string.add_team),
                             entityTitle = SearchDialogFragment.getTitle(result),
                             request = REQUEST_ADD_HOME_TEAM,
@@ -187,8 +185,8 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                 binding.homeTeamView.item =
                     GameComponent(
                         Team(
-                            AddStadiumDialogFragment.getId(result),
-                            AddStadiumDialogFragment.getTitle(result),
+                            AddTeamDialogFragment.getId(result),
+                            AddTeamDialogFragment.getTitle(result),
                         )
                     )
             }
@@ -205,13 +203,13 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                         parentFragmentManager.close(FRAGMENT_SEARCH_GUEST_TEAM)
                     }
                     SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
-                        InfoStadiumDialogFragment(
+                        InfoTeamDialogFragment(
                             title = getString(R.string.guest_team),
                             componentId = SearchDialogFragment.getId(result),
                         ).show(parentFragmentManager, FRAGMENT_INFO_GUEST_TEAM)
                     }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
-                        AddStadiumDialogFragment(
+                        AddTeamDialogFragment(
                             title = getString(R.string.add_team),
                             entityTitle = SearchDialogFragment.getTitle(result),
                             request = REQUEST_ADD_GUEST_TEAM,
@@ -225,8 +223,8 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                 binding.guestTeamView.item =
                     GameComponent(
                         Team(
-                            AddStadiumDialogFragment.getId(result),
-                            AddStadiumDialogFragment.getTitle(result),
+                            AddTeamDialogFragment.getId(result),
+                            AddTeamDialogFragment.getTitle(result),
                         )
                     )
             }
@@ -243,13 +241,13 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                         parentFragmentManager.close(FRAGMENT_SEARCH_LEAGUE)
                     }
                     SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
-                        InfoStadiumDialogFragment(
+                        InfoLeagueDialogFragment(
                             title = getString(R.string.league),
                             componentId = SearchDialogFragment.getId(result),
                         ).show(parentFragmentManager, FRAGMENT_INFO_LEAGUE)
                     }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
-                        AddStadiumDialogFragment(
+                        AddLeagueDialogFragment(
                             title = getString(R.string.add_league),
                             entityTitle = SearchDialogFragment.getTitle(result),
                             request = REQUEST_ADD_LEAGUE,
@@ -263,8 +261,8 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                 binding.leagueView.item =
                     GameComponent(
                         League(
-                            AddStadiumDialogFragment.getId(result),
-                            AddStadiumDialogFragment.getTitle(result),
+                            AddLeagueDialogFragment.getId(result),
+                            AddLeagueDialogFragment.getTitle(result),
                         )
                     )
             }

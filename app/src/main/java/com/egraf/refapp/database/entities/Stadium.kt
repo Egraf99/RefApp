@@ -28,4 +28,11 @@ data class Stadium(
     override fun setEntityName(text: String): Stadium {
         return this.apply { name = text.trim() }
     }
+
+    companion object {
+        operator fun invoke(name: String): Stadium = when {
+            name.isBlank() -> Stadium()
+            else -> Stadium(name = name, id = UUID.randomUUID())
+        }
+    }
 }

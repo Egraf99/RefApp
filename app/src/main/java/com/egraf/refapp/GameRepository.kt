@@ -24,11 +24,13 @@ class GameRepository private constructor(private val dataSource: GameDataSource)
     fun updateStadium(stadium: Stadium) = dataSource.updateStadium(stadium)
 
     //    league block
+    fun getLeague(id: UUID): Flow<League?> = dataSource.getLeague(id)
     fun getLeagues(): List<League> = dataSource.getLeagues()
     fun addLeague(league: League) = dataSource.addLeague(league)
     fun updateLeague(league: League) = dataSource.updateLeague(league)
 
     //    team block
+    fun getTeam(id: UUID): Flow<Team?> = dataSource.getTeam(id)
     fun getTeams(): List<Team> = dataSource.getTeams()
     fun addTeam(team: Team) = dataSource.addTeam(team)
 

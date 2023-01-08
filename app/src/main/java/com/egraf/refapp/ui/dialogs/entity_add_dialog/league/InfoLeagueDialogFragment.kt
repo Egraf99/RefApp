@@ -1,4 +1,4 @@
-package com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium
+package com.egraf.refapp.ui.dialogs.entity_add_dialog.league
 
 import android.os.Bundle
 import android.util.Log
@@ -20,7 +20,7 @@ import java.util.*
 
 private const val TAG = "InfoDialog"
 
-class InfoStadiumDialogFragment(
+class InfoLeagueDialogFragment(
     private val title: String = "",
     private val componentId: UUID = EmptyItem.id,
 ) : DialogFragment() {
@@ -29,11 +29,11 @@ class InfoStadiumDialogFragment(
     private val fieldBinding get() = _fieldBinding!!
     private var _fieldBinding: StadiumFieldsBinding? = null
 
-    private val viewModel: StadiumInfoViewModel by lazy {
+    private val viewModel: InfoLeagueViewModel by lazy {
         ViewModelProvider(
             this,
             GameComponentViewModelFactory(componentId)
-        )[StadiumInfoViewModel::class.java]
+        )[InfoLeagueViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,8 +53,7 @@ class InfoStadiumDialogFragment(
         _fieldBinding = StadiumFieldsBinding.bind(binding.root)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.componentId.collect { resource ->
-                    Log.d(TAG, "${resource.status}, ${resource.data}")
+                viewModel.flowResourceLeague.collect { resource ->
                     when (resource.status) {
                         Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
                         Status.SUCCESS -> {

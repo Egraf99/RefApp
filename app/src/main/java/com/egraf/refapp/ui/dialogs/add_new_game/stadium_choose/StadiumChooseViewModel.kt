@@ -25,7 +25,7 @@ class StadiumChooseViewModel : ViewModelWithGameRepo() {
     var paid = false
     val addStadiumToDB: (String) -> StateFlow<Resource<Pair<UUID, String>>> =
         { stadiumName ->
-            val stadium = Stadium(name = stadiumName)
+            val stadium = Stadium(stadiumName)
             flow {
                 try {
                     gameRepository.addStadium(stadium)
