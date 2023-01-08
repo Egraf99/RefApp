@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
 
         custom:title="@string/stadium"
-        custom:mIcon="@drawable/ic_assistant_flag"/>
+        custom:mIcon="@drawable/ic_stadium"/>
 
     <com.egraf.refapp.views.custom_views.GameComponentView
         android:id="@+id/date_input"
