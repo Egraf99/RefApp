@@ -47,11 +47,10 @@ abstract class ChooserFragment : Fragment() {
      *  Если значение есть в обоих Bundle, значение берется из первого. **/
     abstract fun getGameComponentsFromSavedBundle(bundle: Bundle)
 
-    /** Функция должна возвращать позицию следующего фрагмента. **/
-    abstract fun showNextFragment(): Position
-
-    /** Функция должна возвращать позицию предыдущего фрагмента. **/
-    abstract fun showPreviousFragment(): Position
+    abstract val nextPosition: Position
+    abstract val previousPosition: Position
+    abstract fun showNextFragment()
+    abstract fun showPreviousFragment()
 
     private fun setPopBackObserver() {
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Bundle>(BUNDLE_KEY)

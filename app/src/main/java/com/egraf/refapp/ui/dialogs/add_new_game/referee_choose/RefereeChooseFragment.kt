@@ -23,15 +23,15 @@ class RefereeChooseFragment: ChooserFragment() {
     override fun getGameComponentsFromSavedBundle(bundle: Bundle) {
     }
 
-    override fun showNextFragment(): Position {
-        Log.d("AddNewGame", "create game")
-        return Position.DISMISS
+    override fun showNextFragment() {
     }
 
-    override fun showPreviousFragment(): Position {
+    override fun showPreviousFragment() {
         findNavController().popBackStack()
-        return Position.MIDDLE
     }
+
+    override val nextPosition: Position = Position.DISMISS
+    override val previousPosition: Position = Position.MIDDLE
 
     override fun onCreateView(
         inflater: LayoutInflater,

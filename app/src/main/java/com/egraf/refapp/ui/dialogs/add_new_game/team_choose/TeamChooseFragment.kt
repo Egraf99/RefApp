@@ -63,17 +63,18 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
             GameComponent(bundle.getParcelable<League>(LEAGUE_VALUE)).filter { !it.isEmpty }
     }
 
-    override fun showNextFragment(): Position {
+    override fun showNextFragment() {
         val bundle = putComponentsInArguments()
         findNavController().navigate(R.id.action_choose_team_to_referee, bundle)
-        return Position.LAST
     }
 
-    override fun showPreviousFragment(): Position {
+    override fun showPreviousFragment() {
         putComponentsInArguments()
         findNavController().popBackStack()
-        return Position.MIDDLE
     }
+
+    override val nextPosition: Position = Position.LAST
+    override val previousPosition: Position = Position.FIRST
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

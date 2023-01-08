@@ -202,18 +202,13 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
         }
     }
 
-    override fun showNextFragment(): Position {
-        val bundle = putComponentsInArguments()
-        findNavController().navigate(R.id.action_choose_date_to_team, bundle)
-        // возвращаем позицию, которая будет у следующего фрагмента
-        return Position.MIDDLE
-    }
+    override fun showNextFragment() =
+        findNavController().navigate(R.id.action_choose_date_to_team, putComponentsInArguments())
 
-    override fun showPreviousFragment(): Position {
-        findNavController().popBackStack()
-        // возвращаем позицию, которая будет у следующего фрагмента
-        return Position.DISMISS
-    }
+    override fun showPreviousFragment() {}
+
+    override val nextPosition: Position = Position.MIDDLE
+    override val previousPosition: Position = Position.DISMISS
 
     companion object {
         private const val REQUEST_SEARCH_STADIUM = "RequestStadium"
