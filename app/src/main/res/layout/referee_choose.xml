@@ -1,114 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <com.egraf.refapp.views.textInput.RefereeETI
-        android:id="@+id/chief_referee_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
+        android:id="@+id/chief_referee_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:hint="@string/chief_referee"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:startIconDrawable="@drawable/ic_whistle"
-        app:startIconTint="@color/orange">
 
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:inputType="textImeMultiLine"
-            android:paddingStart="8dp"
-            android:paddingEnd="0dp" />
+        custom:mIcon="@drawable/ic_whistle"
+        custom:title="@string/chief_referee"
+        custom:startIcon="@drawable/ic_open_bracket"
+        custom:endIcon="@drawable/ic_close_bracket"
+        />
 
-    </com.egraf.refapp.views.textInput.RefereeETI>
-    <com.egraf.refapp.views.textInput.RefereeETI
-        android:id="@+id/first_referee_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
+    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
+        android:id="@+id/first_assistant_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:hint="@string/first_assistant"
-        app:startIconDrawable="@drawable/ic_flag"
-        app:startIconTint="@color/orange"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chief_referee_layout">
 
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:inputType="textImeMultiLine"
-            android:paddingStart="8dp"
-            android:paddingEnd="0dp" />
+        custom:mIcon="@drawable/ic_assistant_flag"
+        custom:title="@string/second_assistant"
+        custom:startIcon="@drawable/ic_open_bracket"
+        custom:endIcon="@drawable/ic_close_bracket"
+        />
 
-    </com.egraf.refapp.views.textInput.RefereeETI>
-    <com.egraf.refapp.views.textInput.RefereeETI
-        android:id="@+id/second_referee_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
+    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
+        android:id="@+id/second_assistant_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:hint="@string/second_assistant"
-        app:startIconDrawable="@drawable/ic_flag"
-        app:startIconTint="@color/orange"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/first_referee_layout">
 
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:inputType="textImeMultiLine"
-            android:paddingStart="8dp"
-            android:paddingEnd="0dp" />
+        custom:mIcon="@drawable/ic_assistant_flag"
+        custom:title="@string/second_assistant"
+        custom:startIcon="@drawable/ic_open_bracket"
+        custom:endIcon="@drawable/ic_close_bracket"
+        />
 
-    </com.egraf.refapp.views.textInput.RefereeETI>
-
-    <com.egraf.refapp.views.textInput.RefereeETI
-        android:id="@+id/reserve_referee_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
+    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
+        android:id="@+id/reserve_referee_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:hint="@string/reserve_referee"
-        app:startIconDrawable="@drawable/ic_scoreboard"
-        app:startIconTint="@color/orange"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/second_referee_layout">
 
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:inputType="textImeMultiLine"
-            android:paddingStart="8dp"
-            android:paddingEnd="0dp" />
-
-    </com.egraf.refapp.views.textInput.RefereeETI>
-
-    <com.egraf.refapp.views.textInput.RefereeETI
-        android:id="@+id/inspector_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
+        custom:title="@string/reserve_referee"
+        custom:startIcon="@drawable/ic_open_bracket"
+        custom:endIcon="@drawable/ic_close_bracket"
+        />
+    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
+        android:id="@+id/inspector"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:hint="@string/inspector"
-        app:startIconDrawable="@drawable/ic_inspectors_list"
-        app:startIconTint="@color/orange"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/reserve_referee_layout">
 
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:inputType="textImeMultiLine"
-            android:paddingStart="8dp"
-            android:paddingEnd="0dp" />
-
-    </com.egraf.refapp.views.textInput.RefereeETI>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        custom:title="@string/inspector"
+        custom:startIcon="@drawable/ic_open_bracket"
+        custom:endIcon="@drawable/ic_close_bracket"
+        />
+</LinearLayout>

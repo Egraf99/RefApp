@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.egraf.refapp.database.entities.League
 import com.egraf.refapp.database.entities.Referee
+import com.egraf.refapp.database.entities.Team
 import com.egraf.refapp.databinding.RefereeChooseBinding
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.Position
@@ -17,7 +19,23 @@ class RefereeChooseFragment: ChooserFragment() {
     private var _binding: RefereeChooseBinding? = null
 
     override fun putGameComponentsInSavedBundle(bundle: Bundle): Bundle {
-        return bundle
+        return bundle.apply {
+            putParcelable(
+                CHIEF_REFEREE_VALUE,
+                binding.homeTeamView.item
+                    .getOrElse { Team() } as Team
+            )
+            putParcelable(
+                GUEST_TEAM_VALUE,
+                binding.guestTeamView.item
+                    .getOrElse { Team() } as Team
+            )
+            putParcelable(
+                LEAGUE_VALUE,
+                binding.leagueView.item
+                    .getOrElse { League() } as League
+            )
+        }
     }
 
     override fun getGameComponentsFromSavedBundle(bundle: Bundle) {
@@ -39,41 +57,6 @@ class RefereeChooseFragment: ChooserFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = RefereeChooseBinding.inflate(inflater).apply {
-            chiefRefereeLayout.init(this@RefereeChooseFragment, addNewGameViewModel, RefereeETI.TypeReferee.CHIEF_REFEREE)
-                .whatDoWhenTextMatchedEntity { referee ->
-                    addNewGameViewModel.setChiefReferee(referee as Referee?)
-                }
-                .whatDoWhenTextIsBlank {
-                    addNewGameViewModel.setChiefReferee(null)
-                }
-            firstRefereeLayout.init(this@RefereeChooseFragment, addNewGameViewModel, RefereeETI.TypeReferee.FIRST_REFEREE)
-                .whatDoWhenTextMatchedEntity { referee ->
-                    addNewGameViewModel.setFirstReferee(referee as Referee?)
-                }
-                .whatDoWhenTextIsBlank {
-                    addNewGameViewModel.setFirstReferee(null)
-                }
-            secondRefereeLayout.init(this@RefereeChooseFragment, addNewGameViewModel, RefereeETI.TypeReferee.SECOND_REFEREE)
-                .whatDoWhenTextMatchedEntity { referee ->
-                    addNewGameViewModel.setSecondReferee(referee as Referee?)
-                }
-                .whatDoWhenTextIsBlank {
-                    addNewGameViewModel.setSecondReferee(null)
-                }
-            reserveRefereeLayout.init(this@RefereeChooseFragment, addNewGameViewModel, RefereeETI.TypeReferee.RESERVE_REFEREE)
-                .whatDoWhenTextMatchedEntity { referee ->
-                    addNewGameViewModel.setReserveReferee(referee as Referee?)
-                }
-                .whatDoWhenTextIsBlank {
-                    addNewGameViewModel.setReserveReferee(null)
-                }
-            inspectorLayout.init(this@RefereeChooseFragment, addNewGameViewModel, RefereeETI.TypeReferee.INSPECTOR)
-                .whatDoWhenTextMatchedEntity { referee ->
-                    addNewGameViewModel.setInspector(referee as Referee?)
-                }
-                .whatDoWhenTextIsBlank {
-                    addNewGameViewModel.setInspector(null)
-                }
         }
         updateUI()
         return binding.root
@@ -84,15 +67,34 @@ class RefereeChooseFragment: ChooserFragment() {
     }
 
     private fun updateETI() {
-        binding.chiefRefereeLayout.setText(addNewGameViewModel.gameWithAttributes.chiefReferee?.shortName ?: "")
-        binding.firstRefereeLayout.setText(addNewGameViewModel.gameWithAttributes.firstReferee?.shortName ?: "")
-        binding.secondRefereeLayout.setText(addNewGameViewModel.gameWithAttributes.secondReferee?.shortName ?: "")
-        binding.reserveRefereeLayout.setText(addNewGameViewModel.gameWithAttributes.reserveReferee?.shortName ?: "")
-        binding.inspectorLayout.setText(addNewGameViewModel.gameWithAttributes.inspector?.shortName ?: "")
+//        binding.chiefRefereeLayout.setText(addNewGameViewModel.gameWithAttributes.chiefReferee?.shortName ?: "")
+//        binding.firstRefereeLayout.setText(addNewGameViewModel.gameWithAttributes.firstReferee?.shortName ?: "")
+//        binding.secondRefereeLayout.setText(addNewGameViewModel.gameWithAttributes.secondReferee?.shortName ?: "")
+//        binding.reserveRefereeLayout.setText(addNewGameViewModel.gameWithAttributes.reserveReferee?.shortName ?: "")
+//        binding.inspectorLayout.setText(addNewGameViewModel.gameWithAttributes.inspector?.shortName ?: "")
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val REQUEST_SEARCH_CHIEF_REFEREE = "RequestHomeTeam"
+        private const val REQUEST_ADD_CHIEF_REFEREE = "RequestAddHomeTeam"
+        private const val REQUEST_SEARCH_GUEST_TEAM = "RequestGuestTeam"
+        private const val REQUEST_ADD_GUEST_TEAM = "RequestAddGuestTeam"
+        private const val REQUEST_SEARCH_LEAGUE = "RequestLeague"
+        private const val REQUEST_ADD_LEAGUE = "RequestAddLeague"
+
+        private const val FRAGMENT_SEARCH_CHIEF_REFEREE = "FragmentSearchHomeTeam"
+        private const val FRAGMENT_ADD_CHIEF_REFEREE = "FragmentAddHomeTeam"
+        private const val FRAGMENT_INFO_CHIEF_REFEREE = "FragmentAddHomeTeam"
+        private const val FRAGMENT_SEARCH_GUEST_TEAM = "FragmentSearchGuestTeam"
+        private const val FRAGMENT_ADD_GUEST_TEAM = "FragmentAddGuestTeam"
+        private const val FRAGMENT_INFO_GUEST_TEAM = "FragmentAddGuestTeam"
+        private const val FRAGMENT_SEARCH_LEAGUE = "FragmentSearchLeague"
+        private const val FRAGMENT_ADD_LEAGUE = "FragmentAddLeague"
+        private const val FRAGMENT_INFO_LEAGUE = "FragmentAddLeague"
     }
 }
