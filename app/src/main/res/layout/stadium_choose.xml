@@ -14,7 +14,10 @@
         app:layout_constraintTop_toTopOf="parent"
 
         custom:title="@string/stadium"
-        custom:mIcon="@drawable/ic_stadium"/>
+        custom:mIcon="@drawable/ic_stadium"
+        custom:startIcon="@drawable/ic_open_bracket"
+        custom:endIcon="@drawable/ic_close_bracket"
+/>
 
     <com.egraf.refapp.views.custom_views.GameComponentView
         android:id="@+id/date_input"
@@ -23,10 +26,10 @@
         app:layout_constraintEnd_toStartOf="@id/time_input"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/stadium_component_view"
-        android:layout_marginEnd="2dp"
 
         custom:title="@string/date"
         custom:mIcon="@drawable/ic_calendar"
+        custom:startIcon="@drawable/ic_open_bracket"
         />
 
     <com.egraf.refapp.views.custom_views.GameComponentView
@@ -37,10 +40,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/date_input"
         app:layout_constraintBottom_toBottomOf="@id/date_input"
-        android:layout_marginStart="2dp"
 
         custom:title="@string/time"
         custom:mIcon="@drawable/ic_time"
+        custom:startIcon="@drawable/ic_separator"
+        custom:endIcon="@drawable/ic_close_bracket"
         />
 
     <CheckBox

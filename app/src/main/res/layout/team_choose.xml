@@ -11,7 +11,10 @@
         android:layout_height="wrap_content"
 
         custom:mIcon="@drawable/ic_polo_home"
-        custom:title="@string/home_team" />
+        custom:title="@string/home_team"
+        custom:startIcon="@drawable/ic_open_bracket"
+        custom:endIcon="@drawable/ic_close_bracket"
+        />
 
     <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
         android:id="@+id/guest_team_view"
@@ -19,7 +22,10 @@
         android:layout_height="wrap_content"
 
         custom:mIcon="@drawable/ic_polo_guest"
-        custom:title="@string/guest_team" />
+        custom:title="@string/guest_team"
+        custom:startIcon="@drawable/ic_open_bracket"
+        custom:endIcon="@drawable/ic_close_bracket"
+        />
 
     <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
         android:id="@+id/league_view"
@@ -27,7 +33,10 @@
         android:layout_height="wrap_content"
 
         custom:mIcon="@drawable/ic_cup"
-        custom:title="@string/league" />
+        custom:title="@string/league"
+        custom:startIcon="@drawable/ic_open_bracket"
+        custom:endIcon="@drawable/ic_close_bracket"
+        />
 
 
 </LinearLayout>

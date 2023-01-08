@@ -22,10 +22,14 @@ open class CustomViewWithTitle(context: Context, attrs: AttributeSet) :
     private val contentTextView: TextView
     internal val infoButton: ImageButton
     private val mIcon: ImageView
+    private val startIcon: ImageView
+    private val endIcon: ImageView
 
     val title: String
     val text: String
     val icon: Drawable?
+    private val startIconDrawable: Drawable?
+    private val endIconDrawable: Drawable?
 
     init {
         with(context.theme.obtainStyledAttributes(attrs, R.styleable.CustomViewWithTitle, 0, 0)) {
@@ -35,6 +39,8 @@ open class CustomViewWithTitle(context: Context, attrs: AttributeSet) :
             title = getString(R.styleable.CustomViewWithTitle_title).orEmpty()
             text = getString(R.styleable.CustomViewWithTitle_text).orEmpty()
             icon = getDrawable(R.styleable.CustomViewWithTitle_mIcon)
+            startIconDrawable = getDrawable(R.styleable.CustomViewWithTitle_startIcon)
+            endIconDrawable = getDrawable(R.styleable.CustomViewWithTitle_endIcon)
             recycle()
         }
 
@@ -42,9 +48,15 @@ open class CustomViewWithTitle(context: Context, attrs: AttributeSet) :
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.game_component_search, this, true)
 
+        startIcon = getChildAt(0) as ImageView
+        startIcon.setImageDrawable(startIconDrawable)
+
+        endIcon = getChildAt(6) as ImageView
+        endIcon.setImageDrawable(endIconDrawable)
+
         // set receive icon
         mIcon = getChildAt(1) as ImageView
-        icon?.let { mIcon.setImageDrawable(it) }
+        mIcon.setImageDrawable(icon)
 
         // search text views
         smallTintTextView = getChildAt(2) as TextView
