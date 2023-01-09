@@ -165,7 +165,7 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                         parentFragmentManager.close(FRAGMENT_SEARCH_HOME_TEAM)
                     }
                     SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
-                        InfoLeagueDialogFragment(
+                        InfoTeamDialogFragment(
                             title = getString(R.string.team),
                             componentId = SearchDialogFragment.getId(result),
                         ).show(parentFragmentManager, FRAGMENT_INFO_HOME_TEAM)

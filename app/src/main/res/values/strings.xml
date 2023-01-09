@@ -47,4 +47,5 @@
     <string name="add_entity_to_db">Add &lt;b>%1$s&lt;/b> to base?</string>
     <string name="no_data">No data</string>
     <string name="empty_field">Empty field</string>
+    <string name="press_again_delete">Press again for delete</string>
 </resources>

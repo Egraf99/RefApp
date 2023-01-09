@@ -5,13 +5,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.egraf.refapp.R
 import com.egraf.refapp.databinding.InfoComponentDialogBinding
-import com.egraf.refapp.databinding.StadiumFieldsBinding
+import com.egraf.refapp.databinding.LeagueFieldsBinding
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 import com.egraf.refapp.utils.Status
@@ -27,7 +29,7 @@ class InfoLeagueDialogFragment(
     private val binding get() = _binding!!
     private var _binding: InfoComponentDialogBinding? = null
     private val fieldBinding get() = _fieldBinding!!
-    private var _fieldBinding: StadiumFieldsBinding? = null
+    private var _fieldBinding: LeagueFieldsBinding? = null
 
     private val viewModel: InfoLeagueViewModel by lazy {
         ViewModelProvider(
@@ -50,7 +52,7 @@ class InfoLeagueDialogFragment(
     ): View {
         setCustomBackground()
         _binding = InfoComponentDialogBinding.inflate(inflater, container, false)
-        _fieldBinding = StadiumFieldsBinding.bind(binding.root)
+        _fieldBinding = LeagueFieldsBinding.bind(binding.root)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.flowResourceLeague.collect { resource ->
@@ -66,7 +68,27 @@ class InfoLeagueDialogFragment(
             }
         }
         binding.buttonsBottomBar.cancelButton.setOnClickListener { dismiss() }
+        binding.buttonsBottomBar.deleteButton.setOnClickListener(object : View.OnClickListener {
+            private var clickMoment: Long = 0
+
+            override fun onClick(v: View?) {
+                if (clickMoment + 2000 > System.currentTimeMillis())
+                    delete()
+                else {
+                    Toast.makeText(
+                        requireContext(), getText(R.string.press_again_delete),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    clickMoment = System.currentTimeMillis()
+                }
+            }
+        }
+        )
         return binding.root
+    }
+
+    private fun delete() {
+        Log.d(TAG, "delete")
     }
 
     override fun onStart() {

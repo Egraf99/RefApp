@@ -1,15 +1,25 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="end"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
+
+    <ImageButton
+        android:id="@+id/delete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/cancel_button"
+        android:contentDescription="@string/delete" />
 
     <ImageButton
         android:id="@+id/cancel_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/cancel_button"
         android:contentDescription="@string/cancel" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
