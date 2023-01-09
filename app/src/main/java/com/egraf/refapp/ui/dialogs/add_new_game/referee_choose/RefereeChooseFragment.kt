@@ -46,12 +46,12 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
             )
             putParcelable(
                 RESERVE_REFEREE_VALUE,
-                binding.secondAssistantView.item
+                binding.reserveRefereeView.item
                     .getOrElse { Referee() } as Referee
             )
             putParcelable(
                 INSPECTOR_VALUE,
-                binding.secondAssistantView.item
+                binding.inspectorView.item
                     .getOrElse { Referee() } as Referee
             )
         }

@@ -139,9 +139,9 @@ abstract class ChooserFragment : Fragment() {
                     ?: secondBundle.getParcelable<Referee>(RESERVE_REFEREE_VALUE)
             )
             putParcelable(
-                CHIEF_REFEREE_VALUE,
-                firstBundle.getParcelable<Referee>(CHIEF_REFEREE_VALUE)
-                    ?: secondBundle.getParcelable<Referee>(CHIEF_REFEREE_VALUE)
+                INSPECTOR_VALUE,
+                firstBundle.getParcelable<Referee>(INSPECTOR_VALUE)
+                    ?: secondBundle.getParcelable<Referee>(INSPECTOR_VALUE)
             )
         }
 
