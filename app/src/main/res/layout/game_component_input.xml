@@ -8,9 +8,8 @@
     <ImageView
         android:id="@+id/open_bracket"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_gravity="start"
-        android:background="@drawable/ic_open_bracket"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -43,7 +42,6 @@
         android:id="@+id/edit_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="26dp"
         android:layout_weight="1"
         android:inputType="textImeMultiLine"
         android:textColor="@color/black"
@@ -55,9 +53,8 @@
     <!--    Close bracket -->
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_gravity="end"
-        android:background="@drawable/ic_close_bracket"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

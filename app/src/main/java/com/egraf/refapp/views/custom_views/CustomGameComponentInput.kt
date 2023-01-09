@@ -1,16 +1,18 @@
 package com.egraf.refapp.views.custom_views
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.egraf.refapp.R
 
-class GameComponentInput(context: Context, attrs: AttributeSet): ConstraintLayout(context, attrs) {
+class CustomGameComponentInput(context: Context, attrs: AttributeSet): ConstraintLayout(context, attrs) {
     private val animTextView: TextView
     private val tintTextView: TextView
     private val editText: EditText
@@ -20,19 +22,26 @@ class GameComponentInput(context: Context, attrs: AttributeSet): ConstraintLayou
     private val upAnim: Animation
     private val downAnim: Animation
 
+    private val startIcon: ImageView
+    private val endIcon: ImageView
+    private val startIconDrawable: Drawable?
+    private val endIconDrawable: Drawable?
+
     private val hintText: String
     private var clickable: Boolean
 
     init {
         context.theme.obtainStyledAttributes(
             attrs,
-            R.styleable.GameComponentInput,
+            R.styleable.CustomGameComponentInput,
             0, 0
         ).apply {
 
             try {
-                hintText = getString(R.styleable.GameComponentInput_hintText) ?: ""
-                clickable = getBoolean(R.styleable.GameComponentInput_android_clickable, true)
+                hintText = getString(R.styleable.CustomGameComponentInput_hintText) ?: ""
+                clickable = getBoolean(R.styleable.CustomGameComponentInput_android_clickable, true)
+                startIconDrawable = getDrawable(R.styleable.CustomGameComponentInput_startIcon)
+                endIconDrawable = getDrawable(R.styleable.CustomGameComponentInput_endIcon)
             } finally {
                 recycle()
             }
@@ -42,6 +51,11 @@ class GameComponentInput(context: Context, attrs: AttributeSet): ConstraintLayou
         inflater.inflate(R.layout.game_component_input, this, true)
 
         // search views
+        startIcon = getChildAt(0) as ImageView
+        startIconDrawable?.let {startIcon.setImageDrawable(it)}
+        endIcon = getChildAt(4) as ImageView
+        endIconDrawable?.let {endIcon.setImageDrawable(it)}
+
         tintTextView = getChildAt(1) as TextView
         animTextView = getChildAt(2) as TextView
         editText = getChildAt(3) as EditText

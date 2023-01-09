@@ -6,19 +6,19 @@
     android:orientation="vertical"
     tools:parentTag="android.widget.LinearLayout">
 
-    <com.egraf.refapp.views.custom_views.GameComponentInput
+    <com.egraf.refapp.views.custom_views.CustomGameComponentInput
         android:id="@+id/middle_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         custom:hintText="@string/middle_name" />
 
-    <com.egraf.refapp.views.custom_views.GameComponentInput
+    <com.egraf.refapp.views.custom_views.CustomGameComponentInput
         android:id="@+id/first_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         custom:hintText="@string/first_name" />
 
-    <com.egraf.refapp.views.custom_views.GameComponentInput
+    <com.egraf.refapp.views.custom_views.CustomGameComponentInput
         android:id="@+id/last_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

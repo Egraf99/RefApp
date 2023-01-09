@@ -32,15 +32,15 @@ open class CustomViewWithTitle(context: Context, attrs: AttributeSet) :
     private val endIconDrawable: Drawable?
 
     init {
-        with(context.theme.obtainStyledAttributes(attrs, R.styleable.CustomViewWithTitle, 0, 0)) {
-            state = if (!getBoolean(R.styleable.CustomViewWithTitle_fill, false)
+        with(context.theme.obtainStyledAttributes(attrs, R.styleable.CustomGameComponentInput, 0, 0)) {
+            state = if (!getBoolean(R.styleable.CustomGameComponentInput_fill, false)
             ) State.EMPTY else State.FILL
-            showingLoading = getBoolean(R.styleable.CustomViewWithTitle_loading, false)
-            title = getString(R.styleable.CustomViewWithTitle_title).orEmpty()
-            text = getString(R.styleable.CustomViewWithTitle_text).orEmpty()
-            icon = getDrawable(R.styleable.CustomViewWithTitle_mIcon)
-            startIconDrawable = getDrawable(R.styleable.CustomViewWithTitle_startIcon)
-            endIconDrawable = getDrawable(R.styleable.CustomViewWithTitle_endIcon)
+            showingLoading = getBoolean(R.styleable.CustomGameComponentInput_loading, false)
+            title = getString(R.styleable.CustomGameComponentInput_title).orEmpty()
+            text = getString(R.styleable.CustomGameComponentInput_text).orEmpty()
+            icon = getDrawable(R.styleable.CustomGameComponentInput_mIcon)
+            startIconDrawable = getDrawable(R.styleable.CustomGameComponentInput_startIcon)
+            endIconDrawable = getDrawable(R.styleable.CustomGameComponentInput_endIcon)
             recycle()
         }
 

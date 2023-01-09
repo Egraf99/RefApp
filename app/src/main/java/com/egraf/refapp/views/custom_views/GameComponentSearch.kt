@@ -44,19 +44,19 @@ class GameComponentSearch(context: Context, attrs: AttributeSet) :
                 init {
                     context.theme.obtainStyledAttributes(
                         attrs,
-                        R.styleable.CustomViewWithTitle,
+                        R.styleable.CustomGameComponentInput,
                         0, 0
                     ).apply {
                         state = if (!getBoolean(
-                                R.styleable.CustomViewWithTitle_fill,
+                                R.styleable.CustomGameComponentInput_fill,
                                 false
                             )
                         ) State.EMPTY else State.FILL
-                        showingLoading = getBoolean(R.styleable.CustomViewWithTitle_loading, false)
-                        val title = getString(R.styleable.CustomViewWithTitle_title)
+                        showingLoading = getBoolean(R.styleable.CustomGameComponentInput_loading, false)
+                        val title = getString(R.styleable.CustomGameComponentInput_title)
                         item = if (title == null) EmptyItem else SearchItem(title)
-                        text = getString(R.styleable.CustomViewWithTitle_text) ?: ""
-                        icon = getDrawable(R.styleable.CustomViewWithTitle_mIcon)
+                        text = getString(R.styleable.CustomGameComponentInput_text) ?: ""
+                        icon = getDrawable(R.styleable.CustomGameComponentInput_mIcon)
                     }
                     val inflater = context
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater

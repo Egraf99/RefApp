@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="CustomViewWithTitle">
+    <declare-styleable name="CustomGameComponentInput">
         <attr name="fill" format="boolean"/>
         <attr name="loading" format="boolean"/>
         <attr name="title" format="string" />
         <attr name="text" format="string" />
         <attr name="mIcon" format="integer" />
-        <attr name="startIcon" format="integer"/>
-        <attr name="endIcon" format="integer"/>
-    </declare-styleable>
-
-    <declare-styleable name="GameComponentInput">
         <attr name="hintText" format="string"/>
         <attr name="android:clickable" format="boolean"/>
+        <attr name="startIcon" format="integer"/>
+        <attr name="endIcon" format="integer"/>
     </declare-styleable>
 </resources>
