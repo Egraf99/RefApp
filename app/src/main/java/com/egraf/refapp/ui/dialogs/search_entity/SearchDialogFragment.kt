@@ -13,13 +13,19 @@ import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.R
 import com.egraf.refapp.databinding.SearchEntityFragmentBinding
 import com.egraf.refapp.utils.Status
 import kotlinx.android.parcel.Parcelize
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 private const val LENGTH_TEXT_BEFORE_FILTER: Int = 0
@@ -108,34 +114,7 @@ class SearchDialogFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.liveDataReceiveItems.observe(viewLifecycleOwner) { resource ->
-            when (resource.status) {
-                Status.LOADING -> {
-                    hideRecycleView()
-                    hideHintText()
-                    showLoading()
-                }
-                Status.SUCCESS -> {
-                    hideHintText()
-                    hideLoading()
-                    showRecycleView()
-                    resource.data?.let {
-                        viewModel.items = it
-                        viewModel.filterItems = it.filter(binding.edit.text.toString())
-                        updateItems(
-                            viewModel.filterItems
-                            )
-                    }
-                }
-                Status.ERROR -> {
-                    hideLoading()
-                    hideRecycleView()
-                    showHintTextWithText(getText(R.string.no_data) as String)
-
-                    Log.d(TAG, "Don't receive data by: ${resource.message}")
-                }
-            }
-        }
+        updateRecycleViewItems()
     }
 
     private val showLoading = { binding.progressBar.visibility = View.VISIBLE }
@@ -149,6 +128,40 @@ class SearchDialogFragment(
         binding.txtHint.text = text
     }
     private val hideHintText = { binding.txtHint.visibility = View.INVISIBLE }
+
+    fun updateRecycleViewItems() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.startReceiveData()
+                viewModel.flowSearchItems.collect() { resource ->
+                    when (resource.status) {
+                        Status.LOADING -> {
+                            hideRecycleView()
+                            hideHintText()
+                            showLoading()
+                        }
+                        Status.SUCCESS -> {
+                            hideHintText()
+                            hideLoading()
+                            showRecycleView()
+                            resource.data?.let {
+                                viewModel.items = it
+                                viewModel.filterItems = it.filter(binding.edit.text.toString())
+                                updateItems(viewModel.filterItems)
+                            }
+                        }
+                        Status.ERROR -> {
+                            hideLoading()
+                            hideRecycleView()
+                            showHintTextWithText(getText(R.string.no_data) as String)
+
+                            Log.d("12345", "Don't receive data because: ${resource.message}")
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     private fun updateItems(items: List<Triple<FirstMatch, LastMatch, SearchItem>>) {
         if (items.isEmpty()) showItemsEmptyText()
@@ -249,7 +262,7 @@ class SearchDialogFragment(
         private const val REQUEST = "Request"
 
         @Parcelize
-        enum class ResultRequest: Parcelable {
+        enum class ResultRequest : Parcelable {
             ADD_RESULT_REQUEST,
             INFO_RESULT_REQUEST,
             SEARCH_ITEM_RESULT_REQUEST;

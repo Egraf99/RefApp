@@ -143,7 +143,9 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
                     )
             }
             REQUEST_INFO_STADIUM -> {  // удаление
-                parentFragmentManager.close(FRAGMENT_SEARCH_STADIUM, FRAGMENT_INFO_STADIUM)
+                parentFragmentManager.close(FRAGMENT_INFO_STADIUM)
+                val searchFragment = parentFragmentManager.findFragmentByTag(FRAGMENT_SEARCH_STADIUM) as SearchDialogFragment?
+                searchFragment?.updateRecycleViewItems()
                 binding.stadiumComponentView.item = GameComponent()
             }
             REQUEST_INPUT_DATE -> {

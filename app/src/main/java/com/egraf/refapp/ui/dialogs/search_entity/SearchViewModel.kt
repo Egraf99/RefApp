@@ -1,10 +1,19 @@
 package com.egraf.refapp.ui.dialogs.search_entity
 
 import android.graphics.drawable.Drawable
+import android.util.Log
 import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.egraf.refapp.ui.ViewModelWithGameRepo
 import com.egraf.refapp.utils.Resource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private const val TAG = "SearchViewModel"
 
@@ -12,35 +21,32 @@ class SearchViewModel: ViewModelWithGameRepo() {
     var items = listOf<SearchItem>()
     var filterItems = listOf<Triple<FirstMatch, LastMatch, SearchItem>>()
 
+    var receiveItems: (() -> List<SearchItem>)? = null
+
     var text: String? = null
     var title: String? = null
     var icon: Drawable? = null
-    val liveDataReceiveItems = liveData(Dispatchers.IO) {
-        if (receiveItems == null) {
-            emit(Resource.error(null, "Function to get data is not defined"))
-            return@liveData
-        }
 
-        emit(Resource.loading(null))
-        try {
-            emit(Resource.success(receiveItems!!()))
-        } catch (e: Exception) {
-            emit(
-                Resource.error(
+    private val _flowSearchItems =
+        MutableStateFlow<Resource<List<SearchItem>>>(Resource.loading(null))
+    val flowSearchItems: StateFlow<Resource<List<SearchItem>>> = _flowSearchItems
+
+    fun startReceiveData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                _flowSearchItems.value = if (receiveItems == null) Resource.error(
+                    null,
+                    "Function to get data is not defined"
+                ) else {
+                    val result = receiveItems!!()
+                    Resource.success(result)
+                }
+            } catch (e: Exception) {
+                _flowSearchItems.value = Resource.error(
                     data = null,
                     message = e.message ?: "Unknown error occurred trying get data"
                 )
-            )
+            }
         }
     }
-    var receiveItems: (() -> List<SearchItem>)? = null
 }
-
-//class SearchViewModelFactory(private val searchInterface: SearchInterface) :
-//    ViewModelProvider.Factory {
-//    @Suppress("UNCHECKED_CAST")
-//    override fun <T : ViewModel> create(modelClass: Class<T>): T = when {
-//        modelClass.isAssignableFrom(SearchViewModel::class.java) -> SearchViewModel(searchInterface) as T
-//        else -> throw IllegalStateException("Unknown ViewModel class")
-//    }
-//}
