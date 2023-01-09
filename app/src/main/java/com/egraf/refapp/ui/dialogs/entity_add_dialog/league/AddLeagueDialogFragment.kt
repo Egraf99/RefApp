@@ -13,8 +13,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.egraf.refapp.R
+import com.egraf.refapp.database.entities.Referee
 import com.egraf.refapp.databinding.AddComponentDialogBinding
 import com.egraf.refapp.databinding.StadiumFieldsBinding
+import com.egraf.refapp.ui.dialogs.search_entity.SearchItem
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 import com.egraf.refapp.utils.Resource
 import com.egraf.refapp.utils.Status
@@ -99,6 +101,11 @@ class AddLeagueDialogFragment(
         super.onStart()
         binding.dialogTitle.text = viewModel.title
         fieldBinding.title.setText(viewModel.entityTitle)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.entityTitle = fieldBinding.title.text
     }
 
     companion object {

@@ -101,6 +101,11 @@ class AddTeamDialogFragment(
         fieldBinding.title.setText(viewModel.entityTitle)
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.entityTitle = fieldBinding.title.text
+    }
+
     companion object {
         private const val REQUEST = "Request"
         private const val ID_RESULT = "ResultId"
