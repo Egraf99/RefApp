@@ -14,6 +14,7 @@ abstract class Entity : SearchItem, Saving<UUID> {
     abstract val shortName: String
     abstract val fullName: String
     abstract fun setEntityName(text: String): Entity
+    fun getName(default: String = ""): String = if (isEmpty) default else shortName
 
     companion object {
         object Empty : Entity() {

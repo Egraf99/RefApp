@@ -59,6 +59,9 @@ class LocalGameDataSource(context: Context) : GameDataSource {
             stadiumDao.updateStadium(stadium)
         }
     }
+    override fun deleteStadium(stadium: Stadium) {
+        executor.execute { stadiumDao.deleteStadium(stadium) }
+    }
 
     //    league block
     override fun getLeague(id: UUID): Flow<League?> = leagueDao.getLeague(id)

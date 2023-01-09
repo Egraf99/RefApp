@@ -18,4 +18,7 @@ interface StadiumDao {
 
     @Update
     fun updateStadium(stadium: Stadium)
+
+    @Delete
+    fun deleteStadium(stadium: Stadium)
 }

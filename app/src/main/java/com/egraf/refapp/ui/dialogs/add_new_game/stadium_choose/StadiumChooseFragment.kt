@@ -51,6 +51,7 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
         for (request in listOf(
             REQUEST_SEARCH_STADIUM,
             REQUEST_ADD_STADIUM,
+            REQUEST_INFO_STADIUM,
             REQUEST_INPUT_DATE,
             REQUEST_INPUT_TIME
         ))
@@ -71,7 +72,9 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
                 InfoStadiumDialogFragment(
                     title = this.title,
                     componentId = (this.item
-                        .getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Stadium).savedValue
+                        .getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Stadium).savedValue,
+                    deleteStadiumFunction = { GameRepository.get().deleteStadium(it) },
+                    request = REQUEST_INFO_STADIUM
                 ).show(parentFragmentManager, FRAGMENT_INFO_STADIUM)
             }
         }
@@ -114,6 +117,8 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
                         InfoStadiumDialogFragment(
                             title = getString(R.string.stadium),
                             componentId = SearchDialogFragment.getId(result),
+                            deleteStadiumFunction = { GameRepository.get().deleteStadium(it) },
+                            request = REQUEST_INFO_STADIUM
                         ).show(parentFragmentManager, FRAGMENT_INFO_STADIUM)
                     }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
@@ -136,6 +141,10 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
                             AddStadiumDialogFragment.getTitle(result),
                         )
                     )
+            }
+            REQUEST_INFO_STADIUM -> {  // удаление
+                parentFragmentManager.close(FRAGMENT_SEARCH_STADIUM, FRAGMENT_INFO_STADIUM)
+                binding.stadiumComponentView.item = GameComponent()
             }
             REQUEST_INPUT_DATE -> {
                 binding.dateInput.item =
@@ -213,6 +222,7 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
     companion object {
         private const val REQUEST_SEARCH_STADIUM = "RequestStadium"
         private const val REQUEST_ADD_STADIUM = "RequestAddStadium"
+        private const val REQUEST_INFO_STADIUM = "RequestInfoStadium"
         private const val REQUEST_INPUT_DATE = "DialogInputDate"
         private const val REQUEST_INPUT_TIME = "DialogInputTime"
 

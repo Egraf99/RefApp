@@ -7,11 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.egraf.refapp.R
+import com.egraf.refapp.database.dao.StadiumDao
+import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.databinding.InfoComponentDialogBinding
 import com.egraf.refapp.databinding.StadiumFieldsBinding
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
@@ -25,6 +28,7 @@ private const val TAG = "InfoDialog"
 class InfoStadiumDialogFragment(
     private val title: String = "",
     private val componentId: UUID = EmptyItem.id,
+    private val deleteStadiumFunction: (Stadium) -> Unit = {}
 ) : DialogFragment() {
     private val binding get() = _binding!!
     private var _binding: InfoComponentDialogBinding? = null
@@ -42,6 +46,7 @@ class InfoStadiumDialogFragment(
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) { // первое создание диалога
             viewModel.title = title
+            viewModel.deleteFunction = deleteStadiumFunction
         }
     }
 
@@ -61,7 +66,8 @@ class InfoStadiumDialogFragment(
                         Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
                         Status.SUCCESS -> {
                             binding.progressBar.visibility = View.GONE
-                            updateUI(resource.data?.shortName ?: "")
+                            viewModel.stadium = resource.data ?: Stadium()
+                            updateUI(viewModel.stadium.getName())
                         }
                         Status.ERROR -> {}
                     }
@@ -73,9 +79,10 @@ class InfoStadiumDialogFragment(
             private var clickMoment: Long = 0
 
             override fun onClick(v: View?) {
-                if (clickMoment + 2000 > System.currentTimeMillis())
-                    delete()
-                else {
+                if (clickMoment + 2000 > System.currentTimeMillis()) {
+                    delete(viewModel.stadium)
+                    dismiss()
+                } else {
                     Toast.makeText(
                         requireContext(), getText(R.string.press_again_delete),
                         Toast.LENGTH_SHORT
@@ -88,8 +95,14 @@ class InfoStadiumDialogFragment(
         return binding.root
     }
 
-    private fun delete() {
-        Log.d(TAG, "delete")
+    private fun delete(stadium: Stadium) {
+        viewModel.deleteFunction(stadium)
+        setFragmentResult(
+            arguments?.getString(REQUEST) ?: "Unknown request",
+            Bundle().apply {
+                putParcelable(DELETED_STADIUM, viewModel.stadium)
+            }
+        )
     }
 
     override fun onStart() {
@@ -105,5 +118,23 @@ class InfoStadiumDialogFragment(
 
     private fun updateUI(text: String) {
         fieldBinding.title.setText(text)
+    }
+
+    companion object {
+        private const val REQUEST = "Request"
+        private const val DELETED_STADIUM = "DeleteStadium"
+
+        operator fun invoke(
+            title: String = "",
+            componentId: UUID = EmptyItem.id,
+            deleteStadiumFunction: (Stadium) -> Unit = {},
+            request: String
+        ): InfoStadiumDialogFragment =
+            InfoStadiumDialogFragment(title, componentId, deleteStadiumFunction).apply {
+                arguments = Bundle().apply { putString(REQUEST, request) }
+            }
+
+        fun getDeletedStadium(bundle: Bundle): Stadium =
+            bundle.getParcelable(DELETED_STADIUM) ?: Stadium()
     }
 }
