@@ -11,9 +11,8 @@ import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import java.util.*
 
 class RefereeChooseViewModel : ViewModelWithGameRepo() {
-    val addRefereeToDB: (String) -> StateFlow<Resource<Pair<UUID, String>>> =
-        { refereeName ->
-            val referee = Referee(refereeName)
+    val addRefereeToDB: (Referee) -> StateFlow<Resource<Pair<UUID, String>>> =
+        { referee ->
             flow {
                 try {
                     gameRepository.addReferee(referee)

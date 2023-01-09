@@ -35,7 +35,8 @@ class GameRepository private constructor(private val dataSource: GameDataSource)
     fun addTeam(team: Team) = dataSource.addTeam(team)
 
     //    referee block
-    fun getReferees(): LiveData<List<Referee>> = dataSource.getReferees()
+    fun getReferee(id: UUID): Flow<Referee?> = dataSource.getReferee(id)
+    fun getReferees(): List<Referee> = dataSource.getReferees()
     fun addReferee(referee: Referee) = dataSource.addReferee(referee)
 
     companion object {

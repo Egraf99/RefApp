@@ -166,7 +166,7 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                     }
                     SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
                         InfoLeagueDialogFragment(
-                            title = getString(R.string.home_team),
+                            title = getString(R.string.team),
                             componentId = SearchDialogFragment.getId(result),
                         ).show(parentFragmentManager, FRAGMENT_INFO_HOME_TEAM)
                     }
@@ -204,7 +204,7 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                     }
                     SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
                         InfoTeamDialogFragment(
-                            title = getString(R.string.guest_team),
+                            title = getString(R.string.team),
                             componentId = SearchDialogFragment.getId(result),
                         ).show(parentFragmentManager, FRAGMENT_INFO_GUEST_TEAM)
                     }

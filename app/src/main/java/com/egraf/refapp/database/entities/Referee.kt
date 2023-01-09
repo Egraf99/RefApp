@@ -21,6 +21,11 @@ data class Referee(
     var lastName: String = "",
 ) : com.egraf.refapp.database.entities.Entity(), Parcelable {
 
+    init {
+        if (firstName.isBlank() && middleName.isBlank() && lastName.isBlank())
+            id = EmptyItem.id
+    }
+
     override val shortName: String
         get() = "$middleName $firstName"
     override val fullName: String
@@ -39,7 +44,8 @@ data class Referee(
 
     companion object {
         /**
-         * Pattern:
+         * ------- bySpace = false --------
+         * Name:
          *      f_..._ - for first name,
          *      m_..._ - for middle name,
          *      l_..._ - for last name.
@@ -47,20 +53,37 @@ data class Referee(
          * Example: "f_John_ m_Bence_ l_Doe_" return Referee(firstName=John, middleName=Bence, lastName=Doe)
          *
          * If pattern return empty strings for all three name, constructor return Referee with EmptyItem.id
+         * --------------------------------
+         * ------- bySpace = true --------
+         * When bySpace is true, name split by space symbols and:
+         *      middleName give first value,       >
+         *      firstName give second value,       >  if not exist give empty string
+         *      lastName give thirdValue,          >
+         *
+         * Example: "Bence John Doe" return Referee(firstName=John, middleName=Bence, lastName=Doe)
+         * --------------------------------
          */
-        operator fun invoke(pattern: String): Referee {
-            val firstName = Regex("f_(.*?)_").find(pattern)?.groupValues?.get(1) ?: ""
-            val middleName = Regex("m_(.*?)_").find(pattern)?.groupValues?.get(1) ?: ""
-            val lastName = Regex("l_(.*?)_").find(pattern)?.groupValues?.get(1) ?: ""
+        operator fun invoke(
+            name: String,
+            id: UUID = randomId(),
+            bySpace: Boolean = false
+        ): Referee {
+            if (bySpace) {
+                val namesList = name.split(" ")
+                return Referee(
+                    id,
+                    namesList.getOrElse(1) { "" },
+                    namesList.getOrElse(0) { "" },
+                    namesList.getOrElse(2) { "" })
+            }
+            val firstName = Regex("f_(.*?)_").find(name)?.groupValues?.get(1) ?: ""
+            val middleName = Regex("m_(.*?)_").find(name)?.groupValues?.get(1) ?: ""
+            val lastName = Regex("l_(.*?)_").find(name)?.groupValues?.get(1) ?: ""
 
             return if (firstName == "" && middleName == "" && lastName == "")
                 Referee()
             else
-                Referee(randomId(), firstName, middleName, lastName)
+                Referee(id, firstName, middleName, lastName)
         }
     }
-}
-
-fun main() {
-    println(Referee("f_Egor_ asdlgjlkg"))
 }

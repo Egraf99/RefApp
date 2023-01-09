@@ -33,9 +33,9 @@ class RefereeETI(context: Context, attrs: AttributeSet? = null) :
         this.typeReferee = typeReferee
         setParentFragmentManager(fragment)
 
-        viewModel.getRefereeFromDB().observe(fragment.viewLifecycleOwner) {referee ->
-           setEntities(referee)
-        }
+//        viewModel.getRefereeFromDB().observe(fragment.viewLifecycleOwner) {referee ->
+//           setEntities(referee)
+//        }
         doWhenInfoClicked { referee ->
             Toast.makeText(context, referee.fullName, Toast.LENGTH_SHORT).show()
         }

@@ -89,7 +89,8 @@ class LocalGameDataSource(context: Context) : GameDataSource {
     }
 
     //    referee block
-    override fun getReferees(): LiveData<List<Referee>> = refereeDao.getReferees()
+    override fun getReferee(id: UUID): Flow<Referee?> = refereeDao.getReferee(id)
+    override fun getReferees(): List<Referee> = refereeDao.getReferees()
     override fun addReferee(referee: Referee) {
         executor.execute { refereeDao.addReferee(referee) }
     }

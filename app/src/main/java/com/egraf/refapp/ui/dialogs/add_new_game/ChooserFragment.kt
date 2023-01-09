@@ -118,6 +118,31 @@ abstract class ChooserFragment : Fragment() {
                 firstBundle.getParcelable<League>(LEAGUE_VALUE)
                     ?: secondBundle.getParcelable<League>(LEAGUE_VALUE)
             )
+            putParcelable(
+                CHIEF_REFEREE_VALUE,
+                firstBundle.getParcelable<Referee>(CHIEF_REFEREE_VALUE)
+                    ?: secondBundle.getParcelable<Referee>(CHIEF_REFEREE_VALUE)
+            )
+            putParcelable(
+                FIRST_ASSISTANT_VALUE,
+                firstBundle.getParcelable<Referee>(FIRST_ASSISTANT_VALUE)
+                    ?: secondBundle.getParcelable<Referee>(FIRST_ASSISTANT_VALUE)
+            )
+            putParcelable(
+                SECOND_ASSISTANT_VALUE,
+                firstBundle.getParcelable<Referee>(SECOND_ASSISTANT_VALUE)
+                    ?: secondBundle.getParcelable<Referee>(SECOND_ASSISTANT_VALUE)
+            )
+            putParcelable(
+                RESERVE_REFEREE_VALUE,
+                firstBundle.getParcelable<Referee>(RESERVE_REFEREE_VALUE)
+                    ?: secondBundle.getParcelable<Referee>(RESERVE_REFEREE_VALUE)
+            )
+            putParcelable(
+                CHIEF_REFEREE_VALUE,
+                firstBundle.getParcelable<Referee>(CHIEF_REFEREE_VALUE)
+                    ?: secondBundle.getParcelable<Referee>(CHIEF_REFEREE_VALUE)
+            )
         }
 
     companion object {
@@ -129,6 +154,11 @@ abstract class ChooserFragment : Fragment() {
         const val HOME_TEAM_VALUE = "HomeTeamValue"
         const val GUEST_TEAM_VALUE = "GuestTeamValue"
         const val LEAGUE_VALUE = "LeagueValue"
+        const val CHIEF_REFEREE_VALUE = "ChiefRefereeValue"
+        const val FIRST_ASSISTANT_VALUE = "FirstAssistantValue"
+        const val SECOND_ASSISTANT_VALUE = "SecondAssistantValue"
+        const val RESERVE_REFEREE_VALUE = "ReserveRefereeValue"
+        const val INSPECTOR_VALUE = "InspectorValue"
     }
 }
 

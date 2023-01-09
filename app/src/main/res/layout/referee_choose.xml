@@ -48,7 +48,7 @@
         custom:endIcon="@drawable/ic_close_bracket"
         />
     <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
-        android:id="@+id/inspector"
+        android:id="@+id/inspector_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 

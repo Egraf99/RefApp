@@ -4,10 +4,12 @@
     <string name="new_game">Новая игра</string>
     <string name="add_game">Добавить новую игру</string>
     <string name="add">Добавить</string>
+    <string name="team">Команда</string>
     <string name="home_team">Команда хозяев</string>
     <string name="guest_team">Команда гостей</string>
     <string name="stadium">Стадион</string>
     <string name="league">Лига</string>
+    <string name="referee">Судья</string>
     <string name="delete">Удалить игру</string>
     <string name="cancel">Отмена</string>
     <string name="warning">Предупреждение</string>

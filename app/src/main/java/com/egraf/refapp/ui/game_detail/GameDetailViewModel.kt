@@ -58,7 +58,7 @@ TeamInterface, LeagueInterface, StadiumInterface, RefereeInterface {
         gameRepository.addReferee(referee)
     }
 
-    override fun getRefereeFromDB(): LiveData<List<Referee>> {
+    override fun getRefereeFromDB(): List<Referee> {
         return gameRepository.getReferees()
     }
 }

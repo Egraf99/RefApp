@@ -33,6 +33,7 @@ interface GameDataSource {
     fun addTeam(team: Team)
 
     //    referee block
-    fun getReferees(): LiveData<List<Referee>>
+    fun getReferee(id: UUID): Flow<Referee?>
+    fun getReferees(): List<Referee>
     fun addReferee(referee: Referee)
 }
