@@ -10,7 +10,7 @@ interface RefereeDao {
     @Query("SELECT * FROM Referee WHERE id=(:id)")
     fun getReferee(id: UUID): Flow<Referee?>
 
-    @Query("SELECT * FROM Referee")
+    @Query("SELECT * FROM Referee ORDER BY secondName, firstName, thirdName")
     fun getReferees(): List<Referee>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
