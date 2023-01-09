@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:start="2dp" android:end="2dp" android:top="4dp" android:drawable="@drawable/ic_button_shadow"/>
+    <item android:bottom="4dp"
+        android:drawable="@drawable/ic_delete_button" />
+</layer-list>

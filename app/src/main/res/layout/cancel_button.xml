@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@drawable/cancel_button"
+        android:background="@drawable/delete_button"
         android:contentDescription="@string/delete" />
 
     <ImageButton
