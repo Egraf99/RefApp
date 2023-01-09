@@ -46,6 +46,7 @@
         custom:title="@string/reserve_referee"
         custom:startIcon="@drawable/ic_open_bracket"
         custom:endIcon="@drawable/ic_close_bracket"
+        custom:mIcon="@drawable/ic_scoreboard"
         />
     <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
         android:id="@+id/inspector_view"
@@ -55,5 +56,6 @@
         custom:title="@string/inspector"
         custom:startIcon="@drawable/ic_open_bracket"
         custom:endIcon="@drawable/ic_close_bracket"
+        custom:mIcon="@drawable/ic_inspector"
         />
 </LinearLayout>
