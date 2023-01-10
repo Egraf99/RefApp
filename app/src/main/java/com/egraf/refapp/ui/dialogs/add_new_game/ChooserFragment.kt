@@ -1,13 +1,10 @@
 package com.egraf.refapp.ui.dialogs.add_new_game
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.*
 
 private const val TAG = "AddGame"
@@ -68,8 +65,26 @@ abstract class ChooserFragment : Fragment() {
         return bundle
     }
 
-    fun addGameToDB() {
-        addNewGameViewModel.addGameToDB()
+    protected fun getGameFromBundle(bundle: Bundle): Game = Game(
+        stadiumId = bundle.getParcelable<Stadium>(STADIUM_VALUE)?.id,
+        date = GameDateTime(
+            bundle.getParcelable(DATE_VALUE) ?: GameDate(),
+            bundle.getParcelable(TIME_VALUE) ?: GameTime()
+        ),
+        isPaid = bundle.getBoolean(PAY_VALUE),
+        isPassed = bundle.getBoolean(PASS_VALUE),
+        homeTeamId = bundle.getParcelable<Team>(HOME_TEAM_VALUE)?.id,
+        guestTeamId = bundle.getParcelable<Team>(GUEST_TEAM_VALUE)?.id,
+        leagueId = bundle.getParcelable<League>(LEAGUE_VALUE)?.id,
+        chiefRefereeId = bundle.getParcelable<Referee>(CHIEF_REFEREE_VALUE)?.id,
+        firstRefereeId = bundle.getParcelable<Referee>(FIRST_ASSISTANT_VALUE)?.id,
+        secondRefereeId = bundle.getParcelable<Referee>(SECOND_ASSISTANT_VALUE)?.id,
+        reserveRefereeId = bundle.getParcelable<Referee>(RESERVE_REFEREE_VALUE)?.id,
+        inspectorId = bundle.getParcelable<Referee>(INSPECTOR_VALUE)?.id,
+    )
+
+    protected fun addGameToDB(game: Game) {
+        addNewGameViewModel.addGameToDB(game)
     }
 
     /** Передаются два Bundle для поиска нужного значения в одном из них.

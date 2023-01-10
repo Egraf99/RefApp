@@ -74,7 +74,11 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
             GameComponent(bundle.getParcelable<Referee>(INSPECTOR_VALUE)).filter { !it.isEmpty }
     }
 
-    override fun showNextFragment() {}
+    override fun showNextFragment() {
+        putComponentsInArguments()
+        val game = getGameFromBundle(bundle)
+        addGameToDB(game)
+    }
 
     override fun showPreviousFragment() {
         putComponentsInArguments()

@@ -13,9 +13,7 @@ open class ViewModelWithGame: ViewModelWithGameRepo() {
         gameRepository.updateGame(gameWithAttributes.game)
     }
 
-    fun addGameToDB() {
-        Log.d(TAG, "addGameToDB: ${gameWithAttributes.game}")
-        gameRepository.addGame(gameWithAttributes.game) }
+    fun addGameToDB(game: Game) = gameRepository.addGame(game)
 
     fun setGameWithAttributes(game: GameWithAttributes) {
         gameWithAttributes = game
