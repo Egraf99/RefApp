@@ -15,6 +15,8 @@ class InfoLeagueViewModel(
     leagueId: UUID,
 ) : ViewModel() {
     var title: String = ""
+    var league: League = League()
+    var deleteFunction: (League) -> Unit = { GameRepository.get().deleteLeague(it) }
     private val _componentId = MutableStateFlow<Resource<League>>(Resource.loading(null))
     val flowResourceLeague: StateFlow<Resource<League>> = _componentId
 

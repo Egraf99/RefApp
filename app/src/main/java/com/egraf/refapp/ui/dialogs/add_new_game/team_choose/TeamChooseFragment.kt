@@ -13,6 +13,7 @@ import com.egraf.refapp.database.entities.*
 import com.egraf.refapp.databinding.TeamChooseBinding
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.Position
+import com.egraf.refapp.ui.dialogs.add_new_game.referee_choose.RefereeChooseFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.league.AddLeagueDialogFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.league.InfoLeagueDialogFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.team.AddTeamDialogFragment
@@ -79,10 +80,13 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
         for (request in listOf(
             REQUEST_SEARCH_HOME_TEAM,
             REQUEST_ADD_HOME_TEAM,
+            REQUEST_INFO_HOME_TEAM,
             REQUEST_SEARCH_GUEST_TEAM,
             REQUEST_ADD_GUEST_TEAM,
+            REQUEST_INFO_GUEST_TEAM,
             REQUEST_SEARCH_LEAGUE,
             REQUEST_ADD_LEAGUE,
+            REQUEST_INFO_LEAGUE,
         ))
             parentFragmentManager.setFragmentResultListener(request, viewLifecycleOwner, this)
     }
@@ -114,7 +118,9 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
             setOnInfoClickListener {
                 InfoTeamDialogFragment(
                     this.title,
-                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Team).savedValue
+                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Team).savedValue,
+                    deleteFunction = { GameRepository.get().deleteTeam(it) },
+                    request = REQUEST_INFO_HOME_TEAM
                 ).show(parentFragmentManager, FRAGMENT_INFO_HOME_TEAM)
             }
         }
@@ -129,7 +135,9 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
             setOnInfoClickListener {
                 InfoTeamDialogFragment(
                     this.title,
-                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Team).savedValue
+                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Team).savedValue,
+                    deleteFunction = {GameRepository.get().deleteTeam(it)},
+                    request = REQUEST_INFO_GUEST_TEAM
                 ).show(parentFragmentManager, FRAGMENT_INFO_GUEST_TEAM)
             }
         }
@@ -144,7 +152,9 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
             setOnInfoClickListener {
                 InfoLeagueDialogFragment(
                     this.title,
-                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as League).savedValue
+                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as League).savedValue,
+                    deleteFunction = {GameRepository.get().deleteLeague(it)},
+                    request = REQUEST_INFO_LEAGUE
                 ).show(parentFragmentManager, FRAGMENT_INFO_LEAGUE)
             }
         }
@@ -152,6 +162,7 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         when (requestKey) {
+            // -------------- home team ---------------
             REQUEST_SEARCH_HOME_TEAM -> {
                 val item = GameComponent(
                     Team(
@@ -168,6 +179,8 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                         InfoTeamDialogFragment(
                             title = getString(R.string.team),
                             componentId = SearchDialogFragment.getId(result),
+                            deleteFunction = {GameRepository.get().deleteTeam(it)},
+                            request = REQUEST_INFO_HOME_TEAM
                         ).show(parentFragmentManager, FRAGMENT_INFO_HOME_TEAM)
                     }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
@@ -190,6 +203,16 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                         )
                     )
             }
+            REQUEST_INFO_HOME_TEAM -> { // удаление
+                parentFragmentManager.close(FRAGMENT_INFO_HOME_TEAM)
+                val searchFragment = parentFragmentManager.findFragmentByTag(
+                    FRAGMENT_SEARCH_HOME_TEAM
+                ) as SearchDialogFragment?
+                searchFragment?.updateRecycleViewItems()
+                binding.homeTeamView.item = GameComponent()
+            }
+            // ----------------------------------------
+            // -------------- guest team ---------------
             REQUEST_SEARCH_GUEST_TEAM -> {
                 val item = GameComponent(
                     Team(
@@ -206,6 +229,8 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                         InfoTeamDialogFragment(
                             title = getString(R.string.team),
                             componentId = SearchDialogFragment.getId(result),
+                            deleteFunction = {GameRepository.get().deleteTeam(it)},
+                            request = REQUEST_INFO_GUEST_TEAM
                         ).show(parentFragmentManager, FRAGMENT_INFO_GUEST_TEAM)
                     }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
@@ -228,6 +253,16 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                         )
                     )
             }
+            REQUEST_INFO_GUEST_TEAM -> { // удаление
+                parentFragmentManager.close(FRAGMENT_INFO_GUEST_TEAM)
+                val searchFragment = parentFragmentManager.findFragmentByTag(
+                    FRAGMENT_SEARCH_GUEST_TEAM
+                ) as SearchDialogFragment?
+                searchFragment?.updateRecycleViewItems()
+                binding.guestTeamView.item = GameComponent()
+            }
+            // ----------------------------------------
+            // -------------- league ------------------
             REQUEST_SEARCH_LEAGUE -> {
                 val item = GameComponent(
                     League(
@@ -244,6 +279,8 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                         InfoLeagueDialogFragment(
                             title = getString(R.string.league),
                             componentId = SearchDialogFragment.getId(result),
+                            deleteFunction = {GameRepository.get().deleteLeague(it)},
+                            request = REQUEST_INFO_LEAGUE
                         ).show(parentFragmentManager, FRAGMENT_INFO_LEAGUE)
                     }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
@@ -266,16 +303,28 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
                         )
                     )
             }
+            REQUEST_INFO_LEAGUE -> { // удаление
+                parentFragmentManager.close(FRAGMENT_INFO_LEAGUE)
+                val searchFragment = parentFragmentManager.findFragmentByTag(
+                    FRAGMENT_SEARCH_LEAGUE
+                ) as SearchDialogFragment?
+                searchFragment?.updateRecycleViewItems()
+                binding.leagueView.item = GameComponent()
+            }
+            // ----------------------------------------
         }
     }
 
     companion object {
         private const val REQUEST_SEARCH_HOME_TEAM = "RequestHomeTeam"
         private const val REQUEST_ADD_HOME_TEAM = "RequestAddHomeTeam"
+        private const val REQUEST_INFO_HOME_TEAM = "RequestInfoHomeTeam"
         private const val REQUEST_SEARCH_GUEST_TEAM = "RequestGuestTeam"
         private const val REQUEST_ADD_GUEST_TEAM = "RequestAddGuestTeam"
+        private const val REQUEST_INFO_GUEST_TEAM = "RequestInfoGuestTeam"
         private const val REQUEST_SEARCH_LEAGUE = "RequestLeague"
         private const val REQUEST_ADD_LEAGUE = "RequestAddLeague"
+        private const val REQUEST_INFO_LEAGUE = "RequestInfoLeague"
 
         private const val FRAGMENT_SEARCH_HOME_TEAM = "FragmentSearchHomeTeam"
         private const val FRAGMENT_ADD_HOME_TEAM = "FragmentAddHomeTeam"

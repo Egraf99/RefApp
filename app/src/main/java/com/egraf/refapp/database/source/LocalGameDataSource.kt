@@ -85,7 +85,7 @@ class LocalGameDataSource(context: Context) : GameDataSource {
     override fun getTeam(id: UUID): Flow<Team?> = teamDao.getTeam(id)
     override fun getTeams(): List<Team> = teamDao.getTeams()
     override fun deleteTeam(team: Team) {
-        teamDao.deleteTeam(team)
+        executor.execute { teamDao.deleteTeam(team) }
     }
 
     override fun addTeam(team: Team) {

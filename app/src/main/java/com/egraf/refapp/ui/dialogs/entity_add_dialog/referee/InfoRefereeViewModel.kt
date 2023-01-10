@@ -17,7 +17,7 @@ class InfoRefereeViewModel(
 ) : ViewModel() {
     var title: String = ""
     var referee: Referee = Referee()
-    var deleteFunction: (Referee) -> Unit = {}
+    var deleteFunction: (Referee) -> Unit = { GameRepository.get().deleteReferee(it) }
     private val _componentId = MutableStateFlow<Resource<Referee>>(Resource.loading(null))
     val flowResourceReferee: StateFlow<Resource<Referee>> = _componentId
 

@@ -1,17 +1,18 @@
 package com.egraf.refapp.ui.dialogs.entity_add_dialog.league
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.egraf.refapp.R
+import com.egraf.refapp.database.entities.League
 import com.egraf.refapp.databinding.InfoComponentDialogBinding
 import com.egraf.refapp.databinding.LeagueFieldsBinding
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
@@ -25,6 +26,7 @@ private const val TAG = "InfoDialog"
 class InfoLeagueDialogFragment(
     private val title: String = "",
     private val componentId: UUID = EmptyItem.id,
+    private val deleteFunction: (League) -> Unit = {}
 ) : DialogFragment() {
     private val binding get() = _binding!!
     private var _binding: InfoComponentDialogBinding? = null
@@ -42,6 +44,7 @@ class InfoLeagueDialogFragment(
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) { // первое создание диалога
             viewModel.title = title
+            viewModel.deleteFunction = deleteFunction
         }
     }
 
@@ -60,7 +63,8 @@ class InfoLeagueDialogFragment(
                         Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
                         Status.SUCCESS -> {
                             binding.progressBar.visibility = View.GONE
-                            updateUI(resource.data?.shortName ?: "")
+                            viewModel.league = resource.data ?: League()
+                            updateUI(viewModel.league.name)
                         }
                         Status.ERROR -> {}
                     }
@@ -73,7 +77,7 @@ class InfoLeagueDialogFragment(
 
             override fun onClick(v: View?) {
                 if (clickMoment + 2000 > System.currentTimeMillis())
-                    delete()
+                    delete(viewModel.league)
                 else {
                     Toast.makeText(
                         requireContext(), getText(R.string.press_again_delete),
@@ -87,8 +91,14 @@ class InfoLeagueDialogFragment(
         return binding.root
     }
 
-    private fun delete() {
-        Log.d(TAG, "delete")
+    private fun delete(league: League) {
+        viewModel.deleteFunction(league)
+        setFragmentResult(
+            arguments?.getString(REQUEST) ?: "Unknown request",
+            Bundle().apply {
+                putParcelable(DELETED_LEAGUE, viewModel.league)
+            }
+        )
     }
 
     override fun onStart() {
@@ -104,5 +114,23 @@ class InfoLeagueDialogFragment(
 
     private fun updateUI(text: String) {
         fieldBinding.title.setText(text)
+    }
+
+    companion object {
+        private const val REQUEST = "Request"
+        private const val DELETED_LEAGUE = "DeleteLeague"
+
+        operator fun invoke(
+            title: String = "",
+            componentId: UUID = EmptyItem.id,
+            deleteFunction: (League) -> Unit = {},
+            request: String
+        ): InfoLeagueDialogFragment =
+            InfoLeagueDialogFragment(title, componentId, deleteFunction).apply {
+                arguments = Bundle().apply { putString(REQUEST, request) }
+            }
+
+        fun getDeletedLeague(bundle: Bundle): League =
+            bundle.getParcelable(DELETED_LEAGUE) ?: League()
     }
 }

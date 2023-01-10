@@ -7,13 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.egraf.refapp.R
+import com.egraf.refapp.database.entities.Referee
+import com.egraf.refapp.database.entities.Team
 import com.egraf.refapp.databinding.InfoComponentDialogBinding
 import com.egraf.refapp.databinding.TeamFieldsBinding
+import com.egraf.refapp.ui.dialogs.entity_add_dialog.referee.InfoRefereeDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 import com.egraf.refapp.utils.Status
@@ -25,6 +29,7 @@ private const val TAG = "InfoDialog"
 class InfoTeamDialogFragment(
     private val title: String = "",
     private val componentId: UUID = EmptyItem.id,
+    private val deleteFunction: (Team) -> Unit = {}
 ) : DialogFragment() {
     private val binding get() = _binding!!
     private var _binding: InfoComponentDialogBinding? = null
@@ -42,6 +47,7 @@ class InfoTeamDialogFragment(
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) { // первое создание диалога
             viewModel.title = title
+            viewModel.deleteFunction = deleteFunction
         }
     }
 
@@ -60,7 +66,8 @@ class InfoTeamDialogFragment(
                         Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
                         Status.SUCCESS -> {
                             binding.progressBar.visibility = View.GONE
-                            updateUI(resource.data?.shortName ?: "")
+                            viewModel.team = resource.data ?: Team()
+                            updateUI(viewModel.team.name)
                         }
                         Status.ERROR -> {}
                     }
@@ -71,9 +78,10 @@ class InfoTeamDialogFragment(
             private var clickMoment: Long = 0
 
             override fun onClick(v: View?) {
-                if (clickMoment + 2000 > System.currentTimeMillis())
-                    delete()
-                else {
+                if (clickMoment + 2000 > System.currentTimeMillis()) {
+                    delete(viewModel.team)
+                    dismiss()
+                } else {
                     Toast.makeText(
                         requireContext(), getText(R.string.press_again_delete),
                         Toast.LENGTH_SHORT
@@ -86,8 +94,14 @@ class InfoTeamDialogFragment(
         return binding.root
     }
 
-    private fun delete() {
-        Log.d(TAG, "delete")
+    private fun delete(team: Team) {
+        viewModel.deleteFunction(team)
+        setFragmentResult(
+            arguments?.getString(REQUEST) ?: "Unknown request",
+            Bundle().apply {
+                putParcelable(DELETED_TEAM, viewModel.team)
+            }
+        )
     }
 
     override fun onStart() {
@@ -103,5 +117,23 @@ class InfoTeamDialogFragment(
 
     private fun updateUI(text: String) {
         fieldBinding.title.setText(text)
+    }
+
+    companion object {
+        private const val REQUEST = "Request"
+        private const val DELETED_TEAM = "DeleteTeam"
+
+        operator fun invoke(
+            title: String = "",
+            componentId: UUID = EmptyItem.id,
+            deleteFunction: (Team) -> Unit = {},
+            request: String
+        ): InfoTeamDialogFragment =
+            InfoTeamDialogFragment(title, componentId, deleteFunction).apply {
+                arguments = Bundle().apply { putString(REQUEST, request) }
+            }
+
+        fun getDeletedTeam(bundle: Bundle): Team =
+            bundle.getParcelable(DELETED_TEAM) ?: Team()
     }
 }

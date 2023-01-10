@@ -15,7 +15,7 @@ import java.util.*
 data class League(
     @PrimaryKey
     override var id: UUID = EmptyItem.id,
-    var name: String = "EmptyLeague",
+    var name: String = "",
 ) : com.egraf.refapp.database.entities.Entity(), Parcelable {
     override val shortName: String
         get() = name

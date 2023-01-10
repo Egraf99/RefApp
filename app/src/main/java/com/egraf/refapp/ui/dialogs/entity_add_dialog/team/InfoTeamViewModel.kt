@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.egraf.refapp.GameRepository
-import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.database.entities.Team
 import com.egraf.refapp.utils.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +15,8 @@ class InfoTeamViewModel(
     teamId: UUID,
 ) : ViewModel() {
     var title: String = ""
+    var team: Team = Team()
+    var deleteFunction: (Team) -> Unit = { GameRepository.get().deleteTeam(it) }
     private val _componentId = MutableStateFlow<Resource<Team>>(Resource.loading(null))
     val flowResourceTeam: StateFlow<Resource<Team>> = _componentId
 

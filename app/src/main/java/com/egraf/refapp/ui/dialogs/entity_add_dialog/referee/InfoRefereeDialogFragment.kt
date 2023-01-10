@@ -121,7 +121,7 @@ class InfoRefereeDialogFragment(
         fieldBinding.lastName.setText(referee.lastName)
     }
 
-    companion object{
+    companion object {
         private const val REQUEST = "Request"
         private const val DELETED_REFEREE = "DeleteReferee"
 
