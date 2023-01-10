@@ -16,6 +16,9 @@ interface RefereeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addReferee(referee: Referee)
 
+    @Delete
+    fun deleteReferee(referee: Referee)
+
     @Update
     fun updateReferee(referee: Referee)
 

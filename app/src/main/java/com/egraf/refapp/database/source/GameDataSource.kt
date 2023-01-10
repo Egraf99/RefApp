@@ -26,6 +26,7 @@ interface GameDataSource {
     fun getLeagues(): List<League>
     fun addLeague(league: League)
     fun updateLeague(league: League)
+    fun deleteLeague(stadium: League)
 
     //    team block
     fun getTeam(id: UUID): Flow<Team?>
@@ -37,4 +38,5 @@ interface GameDataSource {
     fun getReferee(id: UUID): Flow<Referee?>
     fun getReferees(): List<Referee>
     fun addReferee(referee: Referee)
+    fun deleteReferee(stadium: Referee)
 }

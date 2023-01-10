@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
 
         custom:mIcon="@drawable/ic_assistant_flag"
-        custom:title="@string/second_assistant"
+        custom:title="@string/first_assistant"
         custom:startIcon="@drawable/ic_open_bracket"
         custom:endIcon="@drawable/ic_close_bracket"
         />

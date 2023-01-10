@@ -71,6 +71,9 @@ class LocalGameDataSource(context: Context) : GameDataSource {
             leagueDao.addLeague(league)
         }
     }
+    override fun deleteLeague(league: League) {
+        executor.execute { leagueDao.deleteLeague(league) }
+    }
 
     override fun updateLeague(league: League) {
         executor.execute {
@@ -96,5 +99,8 @@ class LocalGameDataSource(context: Context) : GameDataSource {
     override fun getReferees(): List<Referee> = refereeDao.getReferees()
     override fun addReferee(referee: Referee) {
         executor.execute { refereeDao.addReferee(referee) }
+    }
+    override fun deleteReferee(referee: Referee) {
+        executor.execute { refereeDao.deleteReferee(referee) }
     }
 }

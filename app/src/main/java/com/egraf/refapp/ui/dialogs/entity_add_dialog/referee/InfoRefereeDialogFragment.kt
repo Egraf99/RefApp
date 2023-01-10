@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -26,6 +27,7 @@ private const val TAG = "InfoDialog"
 class InfoRefereeDialogFragment(
     private val title: String = "",
     private val componentId: UUID = EmptyItem.id,
+    private val deleteFunction: (Referee) -> Unit = {}
 ) : DialogFragment() {
     private val binding get() = _binding!!
     private var _binding: InfoRefereeDialogBinding? = null
@@ -43,6 +45,7 @@ class InfoRefereeDialogFragment(
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) { // первое создание диалога
             viewModel.title = title
+            viewModel.deleteFunction = deleteFunction
         }
     }
 
@@ -61,7 +64,8 @@ class InfoRefereeDialogFragment(
                         Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
                         Status.SUCCESS -> {
                             binding.progressBar.visibility = View.GONE
-                            updateUI(resource.data ?: Referee())
+                            viewModel.referee = resource.data ?: Referee()
+                            updateUI(viewModel.referee)
                         }
                         Status.ERROR -> {}
                     }
@@ -73,8 +77,10 @@ class InfoRefereeDialogFragment(
             private var clickMoment: Long = 0
 
             override fun onClick(v: View?) {
-                if (clickMoment + 2000 > System.currentTimeMillis())
-                    delete()
+                if (clickMoment + 2000 > System.currentTimeMillis()) {
+                    delete(viewModel.referee)
+                    dismiss()
+                }
                 else {
                     Toast.makeText(
                         requireContext(), getText(R.string.press_again_delete),
@@ -88,8 +94,14 @@ class InfoRefereeDialogFragment(
         return binding.root
     }
 
-    private fun delete() {
-        Log.d(TAG, "delete")
+    private fun delete(referee: Referee) {
+        viewModel.deleteFunction(referee)
+        setFragmentResult(
+            arguments?.getString(REQUEST) ?: "Unknown request",
+            Bundle().apply {
+                putParcelable(DELETED_REFEREE, viewModel.referee)
+            }
+        )
     }
 
     override fun onStart() {
@@ -107,5 +119,23 @@ class InfoRefereeDialogFragment(
         fieldBinding.middleName.setText(referee.middleName)
         fieldBinding.firstName.setText(referee.firstName)
         fieldBinding.lastName.setText(referee.lastName)
+    }
+
+    companion object{
+        private const val REQUEST = "Request"
+        private const val DELETED_REFEREE = "DeleteReferee"
+
+        operator fun invoke(
+            title: String = "",
+            componentId: UUID = EmptyItem.id,
+            deleteRefereeFunction: (Referee) -> Unit = {},
+            request: String
+        ): InfoRefereeDialogFragment =
+            InfoRefereeDialogFragment(title, componentId, deleteRefereeFunction).apply {
+                arguments = Bundle().apply { putString(REQUEST, request) }
+            }
+
+        fun getDeletedReferee(bundle: Bundle): Referee =
+            bundle.getParcelable(DELETED_REFEREE) ?: Referee()
     }
 }

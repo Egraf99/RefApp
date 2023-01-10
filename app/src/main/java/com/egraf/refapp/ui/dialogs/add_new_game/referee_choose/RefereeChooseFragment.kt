@@ -1,6 +1,7 @@
 package com.egraf.refapp.ui.dialogs.add_new_game.referee_choose
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import com.egraf.refapp.database.entities.Referee
 import com.egraf.refapp.databinding.RefereeChooseBinding
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.Position
+import com.egraf.refapp.ui.dialogs.add_new_game.stadium_choose.StadiumChooseFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.referee.AddRefereeDialogFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.referee.InfoRefereeDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
@@ -93,14 +95,19 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
         for (request in listOf(
             REQUEST_SEARCH_CHIEF_REFEREE,
             REQUEST_ADD_CHIEF_REFEREE,
+            REQUEST_INFO_CHIEF_REFEREE,
             REQUEST_SEARCH_FIRST_ASSISTANT,
             REQUEST_ADD_FIRST_ASSISTANT,
+            REQUEST_INFO_FIRST_ASSISTANT,
             REQUEST_SEARCH_SECOND_ASSISTANT,
             REQUEST_ADD_SECOND_ASSISTANT,
+            REQUEST_INFO_SECOND_ASSISTANT,
             REQUEST_SEARCH_RESERVE_REFEREE,
             REQUEST_ADD_RESERVE_REFEREE,
+            REQUEST_INFO_RESERVE_REFEREE,
             REQUEST_SEARCH_INSPECTOR,
-            REQUEST_ADD_INSPECTOR
+            REQUEST_ADD_INSPECTOR,
+            REQUEST_INFO_INSPECTOR
         ))
             parentFragmentManager.setFragmentResultListener(request, viewLifecycleOwner, this)
     }
@@ -132,7 +139,9 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
             setOnInfoClickListener {
                 InfoRefereeDialogFragment(
                     this.title,
-                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Referee).savedValue
+                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Referee).savedValue,
+                    deleteRefereeFunction = { GameRepository.get().deleteReferee(it) },
+                    request = REQUEST_INFO_CHIEF_REFEREE
                 ).show(parentFragmentManager, FRAGMENT_INFO_CHIEF_REFEREE)
             }
         }
@@ -147,7 +156,9 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
             setOnInfoClickListener {
                 InfoRefereeDialogFragment(
                     this.title,
-                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Referee).savedValue
+                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Referee).savedValue,
+                    deleteRefereeFunction = { GameRepository.get().deleteReferee(it) },
+                    request = REQUEST_INFO_FIRST_ASSISTANT
                 ).show(parentFragmentManager, FRAGMENT_INFO_FIRST_ASSISTANT)
             }
         }
@@ -162,7 +173,9 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
             setOnInfoClickListener {
                 InfoRefereeDialogFragment(
                     this.title,
-                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Referee).savedValue
+                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Referee).savedValue,
+                    deleteRefereeFunction = { GameRepository.get().deleteReferee(it) },
+                    request = REQUEST_INFO_SECOND_ASSISTANT
                 ).show(parentFragmentManager, FRAGMENT_INFO_SECOND_ASSISTANT)
             }
         }
@@ -177,7 +190,9 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
             setOnInfoClickListener {
                 InfoRefereeDialogFragment(
                     this.title,
-                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Referee).savedValue
+                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Referee).savedValue,
+                    deleteRefereeFunction = { GameRepository.get().deleteReferee(it) },
+                    request = REQUEST_INFO_RESERVE_REFEREE
                 ).show(parentFragmentManager, FRAGMENT_INFO_RESERVE_REFEREE)
             }
         }
@@ -192,7 +207,9 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
             setOnInfoClickListener {
                 InfoRefereeDialogFragment(
                     this.title,
-                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Referee).savedValue
+                    componentId = (this.item.getOrThrow(IllegalStateException("Info button shouldn't be able when GameComponentView don't have item")) as Referee).savedValue,
+                    deleteRefereeFunction = { GameRepository.get().deleteReferee(it) },
+                    request = REQUEST_INFO_INSPECTOR
                 ).show(parentFragmentManager, FRAGMENT_INFO_INSPECTOR)
             }
         }
@@ -217,6 +234,9 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
                         InfoRefereeDialogFragment(
                             title = getString(R.string.referee),
                             componentId = SearchDialogFragment.getId(result),
+                            deleteRefereeFunction = {
+                                GameRepository.get().deleteReferee(it) },
+                            request = REQUEST_INFO_CHIEF_REFEREE
                         ).show(parentFragmentManager, FRAGMENT_INFO_CHIEF_REFEREE)
                     }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
@@ -243,6 +263,14 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
                         )
                     )
             }
+            REQUEST_INFO_CHIEF_REFEREE -> {  // удаление
+                parentFragmentManager.close(FRAGMENT_INFO_CHIEF_REFEREE)
+                val searchFragment = parentFragmentManager.findFragmentByTag(
+                    FRAGMENT_SEARCH_CHIEF_REFEREE
+                ) as SearchDialogFragment?
+                searchFragment?.updateRecycleViewItems()
+                binding.chiefRefereeView.item = GameComponent()
+            }
             REQUEST_SEARCH_FIRST_ASSISTANT -> {
                 val item = GameComponent(
                     Referee(
@@ -260,6 +288,8 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
                         InfoRefereeDialogFragment(
                             title = getString(R.string.referee),
                             componentId = SearchDialogFragment.getId(result),
+                            deleteRefereeFunction = { GameRepository.get().deleteReferee(it) },
+                            request = REQUEST_INFO_FIRST_ASSISTANT
                         ).show(parentFragmentManager, FRAGMENT_INFO_FIRST_ASSISTANT)
                     }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
@@ -286,6 +316,14 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
                         )
                     )
             }
+            REQUEST_INFO_FIRST_ASSISTANT -> {  // удаление
+                parentFragmentManager.close(FRAGMENT_INFO_FIRST_ASSISTANT)
+                val searchFragment = parentFragmentManager.findFragmentByTag(
+                    FRAGMENT_SEARCH_FIRST_ASSISTANT
+                ) as SearchDialogFragment?
+                searchFragment?.updateRecycleViewItems()
+                binding.firstAssistantView.item = GameComponent()
+            }
             REQUEST_SEARCH_SECOND_ASSISTANT -> {
                 val item = GameComponent(
                     Referee(
@@ -303,6 +341,8 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
                         InfoRefereeDialogFragment(
                             title = getString(R.string.referee),
                             componentId = SearchDialogFragment.getId(result),
+                            deleteRefereeFunction = { GameRepository.get().deleteReferee(it) },
+                            request = REQUEST_INFO_SECOND_ASSISTANT
                         ).show(parentFragmentManager, FRAGMENT_INFO_SECOND_ASSISTANT)
                     }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
@@ -329,6 +369,14 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
                         )
                     )
             }
+            REQUEST_INFO_SECOND_ASSISTANT -> {  // удаление
+                parentFragmentManager.close(FRAGMENT_INFO_SECOND_ASSISTANT)
+                val searchFragment = parentFragmentManager.findFragmentByTag(
+                    FRAGMENT_SEARCH_SECOND_ASSISTANT
+                ) as SearchDialogFragment?
+                searchFragment?.updateRecycleViewItems()
+                binding.secondAssistantView.item = GameComponent()
+            }
             REQUEST_SEARCH_RESERVE_REFEREE -> {
                 val item = GameComponent(
                     Referee(
@@ -346,6 +394,8 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
                         InfoRefereeDialogFragment(
                             title = getString(R.string.referee),
                             componentId = SearchDialogFragment.getId(result),
+                            deleteRefereeFunction = { GameRepository.get().deleteReferee(it) },
+                            request = REQUEST_INFO_RESERVE_REFEREE
                         ).show(parentFragmentManager, FRAGMENT_INFO_RESERVE_REFEREE)
                     }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
@@ -372,6 +422,14 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
                         )
                     )
             }
+            REQUEST_INFO_RESERVE_REFEREE -> {  // удаление
+                parentFragmentManager.close(FRAGMENT_INFO_RESERVE_REFEREE)
+                val searchFragment = parentFragmentManager.findFragmentByTag(
+                    FRAGMENT_SEARCH_RESERVE_REFEREE
+                ) as SearchDialogFragment?
+                searchFragment?.updateRecycleViewItems()
+                binding.reserveRefereeView.item = GameComponent()
+            }
             REQUEST_SEARCH_INSPECTOR -> {
                 val item = GameComponent(
                     Referee(
@@ -389,6 +447,8 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
                         InfoRefereeDialogFragment(
                             title = getString(R.string.referee),
                             componentId = SearchDialogFragment.getId(result),
+                            deleteRefereeFunction = { GameRepository.get().deleteReferee(it) },
+                            request = REQUEST_INFO_INSPECTOR
                         ).show(parentFragmentManager, FRAGMENT_INFO_INSPECTOR)
                     }
                     SearchDialogFragment.Companion.ResultRequest.ADD_RESULT_REQUEST -> {
@@ -415,20 +475,33 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
                         )
                     )
             }
+            REQUEST_INFO_INSPECTOR -> {  // удаление
+                parentFragmentManager.close(FRAGMENT_INFO_INSPECTOR)
+                val searchFragment = parentFragmentManager.findFragmentByTag(
+                    FRAGMENT_SEARCH_INSPECTOR
+                ) as SearchDialogFragment?
+                searchFragment?.updateRecycleViewItems()
+                binding.inspectorView.item = GameComponent()
+            }
         }
     }
 
     companion object {
         private const val REQUEST_SEARCH_CHIEF_REFEREE = "RequestChiefReferee"
         private const val REQUEST_ADD_CHIEF_REFEREE = "RequestAddChiefReferee"
+        private const val REQUEST_INFO_CHIEF_REFEREE = "RequestInfoChiefReferee"
         private const val REQUEST_SEARCH_FIRST_ASSISTANT = "RequestFirstReferee"
         private const val REQUEST_ADD_FIRST_ASSISTANT = "RequestAddFirstReferee"
+        private const val REQUEST_INFO_FIRST_ASSISTANT = "RequestInfoFirstReferee"
         private const val REQUEST_SEARCH_SECOND_ASSISTANT = "RequestSecondReferee"
         private const val REQUEST_ADD_SECOND_ASSISTANT = "RequestAddSecondReferee"
+        private const val REQUEST_INFO_SECOND_ASSISTANT = "RequestInfoSecondReferee"
         private const val REQUEST_SEARCH_RESERVE_REFEREE = "RequestReserveReferee"
         private const val REQUEST_ADD_RESERVE_REFEREE = "RequestAddReserveReferee"
+        private const val REQUEST_INFO_RESERVE_REFEREE = "RequestInfoReserveReferee"
         private const val REQUEST_SEARCH_INSPECTOR = "RequestInspector"
         private const val REQUEST_ADD_INSPECTOR = "RequestAddInspector"
+        private const val REQUEST_INFO_INSPECTOR = "RequestInfoInspector"
 
         private const val FRAGMENT_SEARCH_CHIEF_REFEREE = "FragmentSearchChiefReferee"
         private const val FRAGMENT_ADD_CHIEF_REFEREE = "FragmentAddChiefReferee"

@@ -29,16 +29,19 @@ class GameRepository private constructor(private val dataSource: GameDataSource)
     fun getLeagues(): List<League> = dataSource.getLeagues()
     fun addLeague(league: League) = dataSource.addLeague(league)
     fun updateLeague(league: League) = dataSource.updateLeague(league)
+    fun deleteLeague(stadium: League) = dataSource.deleteLeague(stadium)
 
     //    team block
     fun getTeam(id: UUID): Flow<Team?> = dataSource.getTeam(id)
     fun getTeams(): List<Team> = dataSource.getTeams()
     fun addTeam(team: Team) = dataSource.addTeam(team)
+    fun deleteTeam(stadium: Team) = dataSource.deleteTeam(stadium)
 
     //    referee block
     fun getReferee(id: UUID): Flow<Referee?> = dataSource.getReferee(id)
     fun getReferees(): List<Referee> = dataSource.getReferees()
     fun addReferee(referee: Referee) = dataSource.addReferee(referee)
+    fun deleteReferee(stadium: Referee) = dataSource.deleteReferee(stadium)
 
     companion object {
         private var INSTANCE: GameRepository? = null

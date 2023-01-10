@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.database.entities.Referee
+import com.egraf.refapp.database.entities.Stadium
 import com.egraf.refapp.utils.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,6 +16,8 @@ class InfoRefereeViewModel(
     refereeId: UUID,
 ) : ViewModel() {
     var title: String = ""
+    var referee: Referee = Referee()
+    var deleteFunction: (Referee) -> Unit = {}
     private val _componentId = MutableStateFlow<Resource<Referee>>(Resource.loading(null))
     val flowResourceReferee: StateFlow<Resource<Referee>> = _componentId
 

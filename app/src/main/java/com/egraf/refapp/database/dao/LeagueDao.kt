@@ -17,6 +17,9 @@ interface LeagueDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addLeague(league: League)
 
+    @Delete
+    fun deleteLeague(league: League)
+
     @Update
     fun updateLeague(league: League)
 
