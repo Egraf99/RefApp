@@ -4,8 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
+import android.view.animation.*
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -115,18 +114,67 @@ class CustomGameComponentInput(context: Context, attrs: AttributeSet): Constrain
         this.isEnabled = b
     }
 
+    private val scaleAnimation = { scaleX: Float, scaleY: Float ->
+        ScaleAnimation(
+            1F, scaleX, 1F, scaleY,
+            Animation.RELATIVE_TO_SELF, 0f, // Pivot point of X scaling
+            Animation.RELATIVE_TO_SELF, 0f
+        ).apply { duration = 50 }
+    }
+    private val transAnimation = { toYDelta: Float ->
+        TranslateAnimation(0f, 0f, 0f, toYDelta).apply { duration = 50 }
+    }
+
     private fun startAnimFocus() {
         upAnim.reset()
 
+        val animatorSet = AnimationSet(true)
+        animatorSet.addAnimation(
+            scaleAnimation(
+                tintTextView.width.toFloat() / animTextView.width,
+                tintTextView.height.toFloat() / animTextView.height
+            ).apply {
+                setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(animation: Animation?) {}
+                    override fun onAnimationEnd(animation: Animation?) {
+                        tintTextView.visibility = VISIBLE
+                        animTextView.visibility = INVISIBLE
+                    }
+
+                    override fun onAnimationRepeat(animation: Animation?) {}
+                })
+            }
+        )
+        animatorSet.addAnimation(transAnimation(tintTextView.y - animTextView.y))
+
         animTextView.clearAnimation()
-        animTextView.startAnimation(upAnim)
+        animTextView.startAnimation(animatorSet)
     }
 
     private fun startAnimUnfocus() {
         downAnim.reset()
 
+        val animatorSet = AnimationSet(true)
+        animatorSet.addAnimation(
+            scaleAnimation(
+                animTextView.width.toFloat() / tintTextView.width,
+                animTextView.height.toFloat() / tintTextView.height
+            ).apply {
+                setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(animation: Animation?) {}
+                    override fun onAnimationEnd(animation: Animation?) {
+                        tintTextView.visibility = INVISIBLE
+                        animTextView.visibility = VISIBLE
+                    }
+
+                    override fun onAnimationRepeat(animation: Animation?) {}
+                })
+            }
+        )
+        animatorSet.addAnimation(transAnimation(animTextView.y - tintTextView.y))
+
         tintTextView.clearAnimation()
-        tintTextView.startAnimation(downAnim)
+        tintTextView.startAnimation(animatorSet)
     }
 
     private fun setFill() {
