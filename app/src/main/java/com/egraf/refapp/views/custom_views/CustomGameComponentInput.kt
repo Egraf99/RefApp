@@ -121,7 +121,7 @@ class CustomGameComponentInput(context: Context, attrs: AttributeSet): Constrain
             Animation.RELATIVE_TO_SELF, 0f
         ).apply { duration = 50 }
     }
-    private val transAnimation = { toYDelta: Float ->
+    private val translateAnimation = { toYDelta: Float ->
         TranslateAnimation(0f, 0f, 0f, toYDelta).apply { duration = 50 }
     }
 
@@ -145,7 +145,7 @@ class CustomGameComponentInput(context: Context, attrs: AttributeSet): Constrain
                 })
             }
         )
-        animatorSet.addAnimation(transAnimation(tintTextView.y - animTextView.y))
+        animatorSet.addAnimation(translateAnimation(tintTextView.y - animTextView.y))
 
         animTextView.clearAnimation()
         animTextView.startAnimation(animatorSet)
@@ -171,7 +171,7 @@ class CustomGameComponentInput(context: Context, attrs: AttributeSet): Constrain
                 })
             }
         )
-        animatorSet.addAnimation(transAnimation(animTextView.y - tintTextView.y))
+        animatorSet.addAnimation(translateAnimation(animTextView.y - tintTextView.y))
 
         tintTextView.clearAnimation()
         tintTextView.startAnimation(animatorSet)

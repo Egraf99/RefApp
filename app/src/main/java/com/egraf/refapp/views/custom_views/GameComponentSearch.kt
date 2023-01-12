@@ -87,7 +87,7 @@ class GameComponentSearch(context: Context, attrs: AttributeSet) :
 
                     // init animations
                     appearAnim = { text: String ->
-                        AnimationUtils.loadAnimation(context, R.anim.appeare_textview).apply {
+                        AnimationUtils.loadAnimation(context, R.anim.appeare).apply {
                             setAnimationListener(object : Animation.AnimationListener {
                                 override fun onAnimationStart(animation: Animation?) {
                                     contentTextView.text = text
@@ -103,7 +103,7 @@ class GameComponentSearch(context: Context, attrs: AttributeSet) :
                         }
                     }
                     disappearAnim = {
-                        AnimationUtils.loadAnimation(context, R.anim.disappeare_textview).apply {
+                        AnimationUtils.loadAnimation(context, R.anim.disappeare).apply {
                             setAnimationListener(object : Animation.AnimationListener {
                                 override fun onAnimationStart(animation: Animation?) {}
 
@@ -117,7 +117,7 @@ class GameComponentSearch(context: Context, attrs: AttributeSet) :
                         }
                     }
                     disappearAndAppearAnim = { text: String ->
-                        AnimationUtils.loadAnimation(context, R.anim.disappeare_textview).apply {
+                        AnimationUtils.loadAnimation(context, R.anim.disappeare).apply {
                             setAnimationListener(object : Animation.AnimationListener {
                                 override fun onAnimationStart(animation: Animation?) {}
 

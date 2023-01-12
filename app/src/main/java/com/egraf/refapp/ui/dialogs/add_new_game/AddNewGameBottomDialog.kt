@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.TranslateAnimation
+import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.egraf.refapp.R
@@ -53,10 +56,12 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
         // обновляем слушателей
         binding.previousButton.setOnClickListener {
             currentFragment().showPreviousFragment()
+            counterAnimate(Direction.BACK)
             updateButtonsWithCurrentPosition(currentFragment().previousPosition)
         }
         binding.nextButton.setOnClickListener {
             currentFragment().showNextFragment()
+            counterAnimate(Direction.FORWARD)
             updateButtonsWithCurrentPosition(currentFragment().nextPosition)
         }
 
@@ -76,5 +81,58 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
             }
             Position.DISMISS -> this.dismiss()
         }
+    }
+
+    // анимация перехода между фрагментами
+    private var currentCounterPosition = 0
+
+    private fun counterAnimate(direction: Direction) {
+        val counter = binding.counter.counter
+        val positions = listOf(
+            binding.counter.firstPosition,
+            binding.counter.secondPosition,
+            binding.counter.thirdPosition,
+        )
+        val currentPosition =
+            positions[currentCounterPosition]
+        val nextPosition: ImageView?
+        when (direction) {
+            Direction.FORWARD -> {
+                nextPosition = positions.getOrNull(currentCounterPosition + 1)
+                currentCounterPosition += 1
+            }
+            Direction.BACK -> {
+                nextPosition = positions.getOrNull(currentCounterPosition - 1)
+                currentCounterPosition -= 1
+            }
+        }
+        if (nextPosition == null) return
+        counter.x = currentPosition.x
+        counter.y = currentPosition.y
+
+        val toXDelta = nextPosition.x - currentPosition.x
+        val translateAnimation = TranslateAnimation(0f, toXDelta, 0f, 0f).apply {
+            duration = 70
+            setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation?) {
+                    currentPosition.setBackgroundResource(R.drawable.circle_with_spacing)
+                }
+
+                override fun onAnimationEnd(animation: Animation?) {
+                    nextPosition.setBackgroundResource(R.drawable.ic_football_ball)
+                }
+
+                override fun onAnimationRepeat(animation: Animation?) {}
+            })
+        }
+        counter.clearAnimation()
+        counter.startAnimation(translateAnimation)
+
+
+    }
+
+    private enum class Direction {
+        FORWARD,
+        BACK
     }
 }

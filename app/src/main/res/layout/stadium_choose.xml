@@ -43,7 +43,7 @@
 
         custom:title="@string/time"
         custom:mIcon="@drawable/ic_time"
-        custom:startIcon="@drawable/ic_separator"
+        custom:startIcon="@drawable/ic_vertical_vector_separator"
         custom:endIcon="@drawable/ic_close_bracket"
         />
 
