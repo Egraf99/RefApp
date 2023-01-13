@@ -11,4 +11,9 @@
         <attr name="startIcon" format="integer"/>
         <attr name="endIcon" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="Counter">
+        <attr name="count" format="integer"/>
+        <attr name="position" format="integer"/>
+    </declare-styleable>
 </resources>

@@ -37,8 +37,8 @@ class GameListFragment: FragmentWithToolbar() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentGameListBinding.inflate(inflater, container, false)
-        binding.gameRecycleView.layoutManager = LinearLayoutManager(context)
-        binding.gameRecycleView.adapter = adapter
+//        binding.gameRecycleView.layoutManager = LinearLayoutManager(context)
+//        binding.gameRecycleView.adapter = adapter
         binding.addNewGameButton.setOnClickListener {
             Log.d(TAG, "onCreateView: click")
             findNavController().navigate(R.id.action_gameListFragment_to_addNewGame)

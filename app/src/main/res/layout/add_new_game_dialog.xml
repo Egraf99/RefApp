@@ -7,7 +7,7 @@
     android:minHeight="300dp">
 
         <include
-            layout="@layout/fragment_counter"
+            layout="@layout/counter"
             android:id="@+id/counter"/>
 
         <androidx.fragment.app.FragmentContainerView

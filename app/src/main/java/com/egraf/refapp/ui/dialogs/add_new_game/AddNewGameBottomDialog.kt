@@ -87,46 +87,46 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
     private var currentCounterPosition = 0
 
     private fun counterAnimate(direction: Direction) {
-        val counter = binding.counter.counter
-        val positions = listOf(
-            binding.counter.firstPosition,
-            binding.counter.secondPosition,
-            binding.counter.thirdPosition,
-        )
-        val currentPosition =
-            positions[currentCounterPosition]
-        val nextPosition: ImageView?
-        when (direction) {
-            Direction.FORWARD -> {
-                nextPosition = positions.getOrNull(currentCounterPosition + 1)
-                currentCounterPosition += 1
-            }
-            Direction.BACK -> {
-                nextPosition = positions.getOrNull(currentCounterPosition - 1)
-                currentCounterPosition -= 1
-            }
-        }
-        if (nextPosition == null) return
-        counter.x = currentPosition.x
-        counter.y = currentPosition.y
-
-        val toXDelta = nextPosition.x - currentPosition.x
-        val translateAnimation = TranslateAnimation(0f, toXDelta, 0f, 0f).apply {
-            duration = 70
-            setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation?) {
-                    currentPosition.setBackgroundResource(R.drawable.circle_with_spacing)
-                }
-
-                override fun onAnimationEnd(animation: Animation?) {
-                    nextPosition.setBackgroundResource(R.drawable.ic_football_ball)
-                }
-
-                override fun onAnimationRepeat(animation: Animation?) {}
-            })
-        }
-        counter.clearAnimation()
-        counter.startAnimation(translateAnimation)
+//        val counter = binding.counter.counter
+//        val positions = listOf(
+//            binding.counter.firstPosition,
+//            binding.counter.secondPosition,
+//            binding.counter.thirdPosition,
+//        )
+//        val currentPosition =
+//            positions[currentCounterPosition]
+//        val nextPosition: ImageView?
+//        when (direction) {
+//            Direction.FORWARD -> {
+//                nextPosition = positions.getOrNull(currentCounterPosition + 1)
+//                currentCounterPosition += 1
+//            }
+//            Direction.BACK -> {
+//                nextPosition = positions.getOrNull(currentCounterPosition - 1)
+//                currentCounterPosition -= 1
+//            }
+//        }
+//        if (nextPosition == null) return
+//        counter.x = currentPosition.x
+//        counter.y = currentPosition.y
+//
+//        val toXDelta = nextPosition.x - currentPosition.x
+//        val translateAnimation = TranslateAnimation(0f, toXDelta, 0f, 0f).apply {
+//            duration = 70
+//            setAnimationListener(object : Animation.AnimationListener {
+//                override fun onAnimationStart(animation: Animation?) {
+//                    currentPosition.setBackgroundResource(R.drawable.circle_with_spacing)
+//                }
+//
+//                override fun onAnimationEnd(animation: Animation?) {
+//                    nextPosition.setBackgroundResource(R.drawable.ic_football_ball)
+//                }
+//
+//                override fun onAnimationRepeat(animation: Animation?) {}
+//            })
+//        }
+//        counter.clearAnimation()
+//        counter.startAnimation(translateAnimation)
 
 
     }
