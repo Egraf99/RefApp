@@ -43,6 +43,12 @@ class GameListFragment: FragmentWithToolbar() {
             Log.d(TAG, "onCreateView: click")
             findNavController().navigate(R.id.action_gameListFragment_to_addNewGame)
         }
+        binding.prev.setOnClickListener {
+            binding.counter.showPrev()
+        }
+        binding.next.setOnClickListener {
+            binding.counter.showNext()
+        }
         return binding.root
     }
 
