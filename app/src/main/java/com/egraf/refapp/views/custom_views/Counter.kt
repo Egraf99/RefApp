@@ -2,6 +2,7 @@ package com.egraf.refapp.views.custom_views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -11,10 +12,11 @@ import androidx.annotation.DrawableRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.egraf.refapp.R
+import com.egraf.refapp.ui.dialogs.add_new_game.Position
 import com.egraf.refapp.utils.dp
 
 class Counter(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
-    private val count: Int
+    val count: Int
     private var currentPosition: Int
     private val marginBetween: Int
     private val images: List<ImageView>
@@ -31,14 +33,14 @@ class Counter(context: Context, attrs: AttributeSet) : ConstraintLayout(context,
         context.theme.obtainStyledAttributes(attrs, R.styleable.Counter, 0, 0).apply {
             try {
                 count = getInteger(R.styleable.Counter_count, 3)
-                currentPosition = getInteger(R.styleable.Counter_position, 1)
+                currentPosition = getInteger(R.styleable.Counter_position, 1) - 1
                 marginBetween = getDimension(R.styleable.Counter_marginBetween, 0f).toInt() / 2
                 durationAnimation = getInteger(R.styleable.Counter_durationAnimation, 70).toLong()
                 defaultImage =
                     getResourceId(R.styleable.Counter_defaultImage, R.drawable.circle_with_spacing)
                 movingImage =
                     getResourceId(R.styleable.Counter_movingImage, R.drawable.ic_football_ball)
-                if (currentPosition > count) throw IllegalStateException("CurrentPosition: $currentPosition more than count: $count")
+                if (currentPosition >= count) throw IllegalStateException("CurrentPosition: ${currentPosition + 1} more than count: $count")
                 if (count <= 1) throw IllegalStateException("Count should be more than 1")
             } finally {
                 recycle()
@@ -50,7 +52,7 @@ class Counter(context: Context, attrs: AttributeSet) : ConstraintLayout(context,
 
 
         images = generateImageViews(count, defaultImage)
-        images[currentPosition - 1].setImageResource(movingImage)
+        images[currentPosition].setImageResource(movingImage)
 
         counterImage = generateImageViews(1, movingImage)[0]
         counterImage.visibility = View.INVISIBLE
@@ -64,11 +66,18 @@ class Counter(context: Context, attrs: AttributeSet) : ConstraintLayout(context,
             ConstraintSet.LEFT,
             ConstraintSet.PARENT_ID,
             ConstraintSet.RIGHT,
-            images.fold(intArrayOf()) {acc, image -> acc + image.id},
+            images.fold(intArrayOf()) { acc, image -> acc + image.id },
             null,
             ConstraintSet.CHAIN_PACKED
         )
         constraintSet.applyTo(this)
+    }
+
+    fun updatePosition(position: Int) {
+        if (position < 1 || position > count) return
+        images[currentPosition].setImageResource(defaultImage)
+        currentPosition = position - 1
+        images[currentPosition].setImageResource(movingImage)
     }
 
     private fun generateImageViews(count: Int, @DrawableRes icon: Int): List<ImageView> {
@@ -154,21 +163,19 @@ class Counter(context: Context, attrs: AttributeSet) : ConstraintLayout(context,
     }
 
     fun showNext() {
-        // так как отсчет текущей позиции начинается с 1, то индекс следующей картинки будет равен текущей позиции
-        val nextImage = images.getOrNull(currentPosition) ?: return
+        val nextImage = images.getOrNull(currentPosition + 1) ?: return
         animateMoving(nextImage)
         currentPosition += 1
     }
 
     fun showPrev() {
-        // так как отсчет текущей позиции начинается с 1, то индекс предыдущей картинки будет равен текущей позиции - 2
-        val prevImage = images.getOrNull(currentPosition - 2) ?: return
+        val prevImage = images.getOrNull(currentPosition - 1) ?: return
         animateMoving(prevImage)
         currentPosition -= 1
     }
 
     private fun animateMoving(animateTo: ImageView) {
-        val currentPositionView = images[currentPosition - 1]
+        val currentPositionView = images[currentPosition]
         currentPositionView.setImageResource(defaultImage)
         counterImage.x = currentPositionView.x
         counterImage.y = currentPositionView.y

@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.TranslateAnimation
-import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.egraf.refapp.R
 import com.egraf.refapp.databinding.AddNewGameDialogBinding
+import com.egraf.refapp.views.custom_views.Counter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 private const val TAG = "AddNewGameDialog"
@@ -23,8 +21,10 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState == null)
-            addNewGameViewModel.currentPosition = Position.FIRST
+        if (savedInstanceState == null) {
+            addNewGameViewModel.fragmentPosition = Position.FIRST
+            addNewGameViewModel.counterPosition = 1
+        }
     }
 
     override fun onCreateView(
@@ -43,7 +43,8 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        updateButtonsWithCurrentPosition(addNewGameViewModel.currentPosition)
+        updateButtonsWithCurrentPosition(addNewGameViewModel.fragmentPosition)
+        binding.counter.updatePosition(addNewGameViewModel.counterPosition)
     }
 
     private val currentFragment: () -> ChooserFragment = {
@@ -51,17 +52,17 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
     }
 
     private fun updateButtonsWithCurrentPosition(position: Position) {
-        addNewGameViewModel.currentPosition = position
+        addNewGameViewModel.fragmentPosition = position
 
         // обновляем слушателей
         binding.previousButton.setOnClickListener {
             currentFragment().showPreviousFragment()
-            binding.counter.showPrev()
+            binding.counter.showPrevAndSavePosition()
             updateButtonsWithCurrentPosition(currentFragment().previousPosition)
         }
         binding.nextButton.setOnClickListener {
             currentFragment().showNextFragment()
-            binding.counter.showNext()
+            binding.counter.showNextAndSavePosition()
             updateButtonsWithCurrentPosition(currentFragment().nextPosition)
         }
 
@@ -81,5 +82,17 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
             }
             Position.DISMISS -> this.dismiss()
         }
+    }
+
+    private fun Counter.showPrevAndSavePosition() {
+        this.showPrev()
+        addNewGameViewModel.counterPosition -= 1
+        if (addNewGameViewModel.counterPosition < 1) addNewGameViewModel.counterPosition = 1
+    }
+
+    private fun Counter.showNextAndSavePosition() {
+        this.showNext()
+        addNewGameViewModel.counterPosition += 1
+        if (addNewGameViewModel.counterPosition > this.count + 1) addNewGameViewModel.counterPosition = this.count + 1
     }
 }
