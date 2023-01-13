@@ -14,14 +14,13 @@
         <com.egraf.refapp.views.custom_views.Counter
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:textSize="40sp"
-            android:gravity="center"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
 
             custom:position="1"
-            custom:count="7"/>
+            custom:count="7"
+            custom:marginBetween="8dp"/>
 
         <TextView
             android:id="@+id/empty_list_textview"

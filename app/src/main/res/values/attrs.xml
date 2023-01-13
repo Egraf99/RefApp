@@ -15,5 +15,6 @@
     <declare-styleable name="Counter">
         <attr name="count" format="integer"/>
         <attr name="position" format="integer"/>
+        <attr name="marginBetween" format="dimension"/>
     </declare-styleable>
 </resources>

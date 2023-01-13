@@ -14,12 +14,14 @@ import com.egraf.refapp.utils.dp
 class Counter(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
     private val count: Int
     private val currentPosition: Int
+    private val marginBetween: Int
 
     init {
         context.theme.obtainStyledAttributes(attrs, R.styleable.Counter, 0, 0).apply {
             try {
                 count = getInteger(R.styleable.Counter_count, 0)
                 currentPosition = getInteger(R.styleable.Counter_position, 1)
+                marginBetween = getDimension(R.styleable.Counter_marginBetween, 0f).toInt() / 2
                 if (currentPosition > count) throw IllegalStateException("CurrentPosition: $currentPosition more than count: $count")
                 if (count <= 1) throw IllegalStateException("Count should be more than 1")
             } finally {
@@ -87,7 +89,7 @@ class Counter(context: Context, attrs: AttributeSet) : ConstraintLayout(context,
             ConstraintSet.PARENT_ID,
             ConstraintSet.START
         )
-        constraintSet.connect(itemId, ConstraintSet.END, nextItemId, ConstraintSet.START)
+        constraintSet.connect(itemId, ConstraintSet.END, nextItemId, ConstraintSet.START, marginBetween)
         constraintSet.connect(itemId, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
         constraintSet.connect(
             itemId,
@@ -103,8 +105,8 @@ class Counter(context: Context, attrs: AttributeSet) : ConstraintLayout(context,
         itemId: Int,
         nextItemId: Int
     ) {
-        constraintSet.connect(itemId, ConstraintSet.START, previousId, ConstraintSet.END)
-        constraintSet.connect(itemId, ConstraintSet.END, nextItemId, ConstraintSet.START)
+        constraintSet.connect(itemId, ConstraintSet.START, previousId, ConstraintSet.END, marginBetween)
+        constraintSet.connect(itemId, ConstraintSet.END, nextItemId, ConstraintSet.START, marginBetween)
         constraintSet.connect(itemId, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
         constraintSet.connect(
             itemId,
@@ -115,7 +117,7 @@ class Counter(context: Context, attrs: AttributeSet) : ConstraintLayout(context,
     }
 
     private fun generateLast(constraintSet: ConstraintSet, previousId: Int, itemId: Int) {
-        constraintSet.connect(itemId, ConstraintSet.START, previousId, ConstraintSet.END)
+        constraintSet.connect(itemId, ConstraintSet.START, previousId, ConstraintSet.END, marginBetween)
         constraintSet.connect(itemId, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
         constraintSet.connect(itemId, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
         constraintSet.connect(
