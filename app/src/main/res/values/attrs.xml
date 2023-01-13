@@ -16,5 +16,8 @@
         <attr name="count" format="integer"/>
         <attr name="position" format="integer"/>
         <attr name="marginBetween" format="dimension"/>
+        <attr name="durationAnimation" format="integer"/>
+        <attr name="defaultImage" format="reference"/>
+        <attr name="movingImage" format="reference"/>
     </declare-styleable>
 </resources>

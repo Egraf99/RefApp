@@ -2,7 +2,6 @@ package com.egraf.refapp.views.custom_views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -20,6 +19,13 @@ class Counter(context: Context, attrs: AttributeSet) : ConstraintLayout(context,
     private val marginBetween: Int
     private val images: List<ImageView>
     private val counterImage: ImageView
+    private val durationAnimation: Long
+
+    @DrawableRes
+    private val defaultImage: Int
+
+    @DrawableRes
+    private val movingImage: Int
 
     init {
         context.theme.obtainStyledAttributes(attrs, R.styleable.Counter, 0, 0).apply {
@@ -27,6 +33,11 @@ class Counter(context: Context, attrs: AttributeSet) : ConstraintLayout(context,
                 count = getInteger(R.styleable.Counter_count, 3)
                 currentPosition = getInteger(R.styleable.Counter_position, 1)
                 marginBetween = getDimension(R.styleable.Counter_marginBetween, 0f).toInt() / 2
+                durationAnimation = getInteger(R.styleable.Counter_durationAnimation, 70).toLong()
+                defaultImage =
+                    getResourceId(R.styleable.Counter_defaultImage, R.drawable.circle_with_spacing)
+                movingImage =
+                    getResourceId(R.styleable.Counter_movingImage, R.drawable.ic_football_ball)
                 if (currentPosition > count) throw IllegalStateException("CurrentPosition: $currentPosition more than count: $count")
                 if (count <= 1) throw IllegalStateException("Count should be more than 1")
             } finally {
@@ -38,10 +49,10 @@ class Counter(context: Context, attrs: AttributeSet) : ConstraintLayout(context,
             LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
 
-        images = generateImageViews(count, R.drawable.circle_with_spacing)
-        images[currentPosition - 1].setImageResource(R.drawable.ic_football_ball)
+        images = generateImageViews(count, defaultImage)
+        images[currentPosition - 1].setImageResource(movingImage)
 
-        counterImage = generateImageViews(1, R.drawable.ic_football_ball)[0]
+        counterImage = generateImageViews(1, movingImage)[0]
         counterImage.visibility = View.INVISIBLE
         val constraintSet = ConstraintSet()
         constraintSet.clone(this)
@@ -158,7 +169,7 @@ class Counter(context: Context, attrs: AttributeSet) : ConstraintLayout(context,
 
     private fun animateMoving(animateTo: ImageView) {
         val currentPositionView = images[currentPosition - 1]
-        currentPositionView.setImageResource(R.drawable.circle_with_spacing)
+        currentPositionView.setImageResource(defaultImage)
         counterImage.x = currentPositionView.x
         counterImage.y = currentPositionView.y
 
@@ -167,7 +178,7 @@ class Counter(context: Context, attrs: AttributeSet) : ConstraintLayout(context,
         counterImage.startAnimation(
             translateHorizontalAnimation(
                 toXDelta,
-                70,
+                durationAnimation,
                 currentPositionView,
                 animateTo
             )
@@ -180,58 +191,15 @@ class Counter(context: Context, attrs: AttributeSet) : ConstraintLayout(context,
                 this.duration = duration
                 setAnimationListener(object : Animation.AnimationListener {
                     override fun onAnimationStart(animation: Animation?) {
-                        currentView.setImageResource(R.drawable.circle_with_spacing)
+                        currentView.setImageResource(defaultImage)
                     }
 
                     override fun onAnimationEnd(animation: Animation?) {
-                        animateToView.setImageResource(R.drawable.ic_football_ball)
+                        animateToView.setImageResource(movingImage)
                     }
 
                     override fun onAnimationRepeat(animation: Animation?) {}
                 })
             }
         }
-
-    private fun counterAnimate() {
-//        val counter = binding.counter.counter
-//        val positions = listOf(
-//            binding.counter.firstPosition,
-//            binding.counter.secondPosition,
-//            binding.counter.thirdPosition,
-//        )
-//        val currentPosition =
-//            positions[currentCounterPosition]
-//        val nextPosition: ImageView?
-//        when (direction) {
-//            Direction.FORWARD -> {
-//                nextPosition = positions.getOrNull(currentCounterPosition + 1)
-//                currentCounterPosition += 1
-//            }
-//            Direction.BACK -> {
-//                nextPosition = positions.getOrNull(currentCounterPosition - 1)
-//                currentCounterPosition -= 1
-//            }
-//        }
-//        if (nextPosition == null) return
-//        counter.x = currentPosition.x
-//        counter.y = currentPosition.y
-//
-//        val toXDelta = nextPosition.x - currentPosition.x
-//        val translateAnimation = TranslateAnimation(0f, toXDelta, 0f, 0f).apply {
-//            duration = 70
-//            setAnimationListener(object : Animation.AnimationListener {
-//                override fun onAnimationStart(animation: Animation?) {
-//                    currentPosition.setBackgroundResource(R.drawable.circle_with_spacing)
-//                }
-//
-//                override fun onAnimationEnd(animation: Animation?) {
-//                    nextPosition.setBackgroundResource(R.drawable.ic_football_ball)
-//                }
-//
-//                override fun onAnimationRepeat(animation: Animation?) {}
-//            })
-//        }
-//        counter.clearAnimation()
-//        counter.startAnimation(translateAnimation)
     }
-}
