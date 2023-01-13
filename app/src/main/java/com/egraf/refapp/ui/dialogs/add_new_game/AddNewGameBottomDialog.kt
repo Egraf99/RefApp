@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.egraf.refapp.R
 import com.egraf.refapp.databinding.AddNewGameDialogBinding
-import com.egraf.refapp.views.custom_views.Counter
+import com.egraf.refapp.views.custom_views.Slider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 private const val TAG = "AddNewGameDialog"
@@ -84,15 +84,15 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
         }
     }
 
-    private fun Counter.showPrevAndSavePosition() {
+    private fun Slider.showPrevAndSavePosition() {
         this.showPrev()
         addNewGameViewModel.counterPosition -= 1
         if (addNewGameViewModel.counterPosition < 1) addNewGameViewModel.counterPosition = 1
     }
 
-    private fun Counter.showNextAndSavePosition() {
+    private fun Slider.showNextAndSavePosition() {
         this.showNext()
         addNewGameViewModel.counterPosition += 1
-        if (addNewGameViewModel.counterPosition > this.count + 1) addNewGameViewModel.counterPosition = this.count + 1
+        if (addNewGameViewModel.counterPosition > this.size + 1) addNewGameViewModel.counterPosition = this.size + 1
     }
 }

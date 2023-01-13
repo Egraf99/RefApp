@@ -12,7 +12,7 @@
         <attr name="endIcon" format="integer"/>
     </declare-styleable>
 
-    <declare-styleable name="Counter">
+    <declare-styleable name="Slider">
         <attr name="count" format="integer"/>
         <attr name="position" format="integer"/>
         <attr name="marginBetween" format="dimension"/>

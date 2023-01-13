@@ -11,7 +11,7 @@
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="match_parent" />-->
 
-        <com.egraf.refapp.views.custom_views.Counter
+        <com.egraf.refapp.views.custom_views.Slider
             android:id="@+id/counter"
             android:layout_width="match_parent"
             android:layout_height="80dp"
