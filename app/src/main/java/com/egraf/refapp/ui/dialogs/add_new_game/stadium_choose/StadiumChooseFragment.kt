@@ -192,7 +192,7 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
     }
 
     override fun putGameComponentsInSavedBundle(bundle: Bundle): Bundle {
-        return bundle.apply {
+        return super.putGameComponentsInSavedBundle(bundle).apply {
             putParcelable(
                 STADIUM_VALUE,
                 binding.stadiumComponentView.item

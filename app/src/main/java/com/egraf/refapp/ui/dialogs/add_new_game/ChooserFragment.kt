@@ -6,12 +6,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.database.entities.*
+import java.time.LocalDateTime
 
 private const val TAG = "AddGame"
 private const val BUNDLE_KEY = "BundleKey"
 
+private fun Bundle.putCurrentTime(): Bundle =
+    this.apply { putSerializable(ChooserFragment.CREATED_TIME, LocalDateTime.now()) }
+
 abstract class ChooserFragment : Fragment() {
-    protected var bundle: Bundle = Bundle()
+    protected var bundle: Bundle = Bundle().putCurrentTime()
     protected val addNewGameViewModel: AddNewGameViewModel by lazy {
         ViewModelProvider(this)[AddNewGameViewModel::class.java]
     }
@@ -20,7 +24,7 @@ abstract class ChooserFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setPopBackObserver()
         bundle = when {
-            savedInstanceState != null && arguments != null  -> updateBundle(
+            savedInstanceState != null && arguments != null -> updateBundle(
                 savedInstanceState,
                 requireArguments(),
             )
@@ -38,10 +42,9 @@ abstract class ChooserFragment : Fragment() {
         }
     }
 
-    abstract fun putGameComponentsInSavedBundle(bundle: Bundle): Bundle
+    protected open fun putGameComponentsInSavedBundle(bundle: Bundle): Bundle =
+        bundle.putCurrentTime()
 
-    /** Передаются два Bundle для поиска нужного значения в одном из них.
-     *  Если значение есть в обоих Bundle, значение берется из первого. **/
     abstract fun getGameComponentsFromSavedBundle(bundle: Bundle)
 
     abstract val nextPosition: Position
@@ -88,77 +91,86 @@ abstract class ChooserFragment : Fragment() {
     }
 
     /** Передаются два Bundle для поиска нужного значения в одном из них.
-     *  Если значение есть в обоих Bundle, обновляемое значение берется из первого. **/
-    private fun updateBundle(firstBundle: Bundle, secondBundle: Bundle = Bundle()): Bundle =
-        Bundle().apply {
+     *  Если значение есть в обоих Bundle, обновляемое значение берется из того, который создан позже. **/
+    private fun updateBundle(firstBundle: Bundle, secondBundle: Bundle = Bundle()): Bundle {
+        val firstBundleCreateTime =
+            firstBundle.getSerializable(CREATED_TIME) as LocalDateTime? ?: LocalDateTime.MIN
+        val secondBundleCreateTime =
+            secondBundle.getSerializable(CREATED_TIME) as LocalDateTime? ?: LocalDateTime.MIN
+        val (laterBundle, earlierBundle) = when {
+            firstBundleCreateTime > secondBundleCreateTime -> Pair(firstBundle, secondBundle)
+            else -> Pair(secondBundle, firstBundle)
+        }
+        return Bundle().apply {
             putParcelable(
                 STADIUM_VALUE,
-                firstBundle.getParcelable<Stadium>(STADIUM_VALUE)
-                    ?: secondBundle.getParcelable<Stadium>(STADIUM_VALUE)
+                laterBundle.getParcelable<Stadium>(STADIUM_VALUE)
+                    ?: earlierBundle.getParcelable<Stadium>(STADIUM_VALUE)
             )
             putParcelable(
                 DATE_VALUE,
-                firstBundle.getParcelable<GameDate>(DATE_VALUE)
-                    ?: secondBundle.getParcelable<GameDate>(DATE_VALUE)
+                laterBundle.getParcelable<GameDate>(DATE_VALUE)
+                    ?: earlierBundle.getParcelable<GameDate>(DATE_VALUE)
             )
             putParcelable(
                 TIME_VALUE,
-                firstBundle.getParcelable<GameTime>(TIME_VALUE)
-                    ?: secondBundle.getParcelable<GameTime>(TIME_VALUE)
+                laterBundle.getParcelable<GameTime>(TIME_VALUE)
+                    ?: earlierBundle.getParcelable<GameTime>(TIME_VALUE)
             )
             val passed = when {
-                bundle.containsKey(PASS_VALUE) -> bundle.getBoolean(PASS_VALUE)
-                secondBundle.containsKey(PASS_VALUE) -> secondBundle.getBoolean(PASS_VALUE)
+                laterBundle.containsKey(PASS_VALUE) -> laterBundle.getBoolean(PASS_VALUE)
+                earlierBundle.containsKey(PASS_VALUE) -> earlierBundle.getBoolean(PASS_VALUE)
                 else -> false
             }
             putBoolean(PASS_VALUE, passed)
             val pay = when {
-                bundle.containsKey(PAY_VALUE) -> bundle.getBoolean(PAY_VALUE)
-                secondBundle.containsKey(PAY_VALUE) -> secondBundle.getBoolean(PAY_VALUE)
+                laterBundle.containsKey(PAY_VALUE) -> laterBundle.getBoolean(PAY_VALUE)
+                earlierBundle.containsKey(PAY_VALUE) -> earlierBundle.getBoolean(PAY_VALUE)
                 else -> false
             }
             putBoolean(PAY_VALUE, pay)
             putParcelable(
                 HOME_TEAM_VALUE,
-                firstBundle.getParcelable<Team>(HOME_TEAM_VALUE)
-                    ?: secondBundle.getParcelable<Team>(HOME_TEAM_VALUE)
+                laterBundle.getParcelable<Team>(HOME_TEAM_VALUE)
+                    ?: earlierBundle.getParcelable<Team>(HOME_TEAM_VALUE)
             )
             putParcelable(
                 GUEST_TEAM_VALUE,
-                firstBundle.getParcelable<Team>(GUEST_TEAM_VALUE)
-                    ?: secondBundle.getParcelable<Team>(GUEST_TEAM_VALUE)
+                laterBundle.getParcelable<Team>(GUEST_TEAM_VALUE)
+                    ?: earlierBundle.getParcelable<Team>(GUEST_TEAM_VALUE)
             )
             putParcelable(
                 LEAGUE_VALUE,
-                firstBundle.getParcelable<League>(LEAGUE_VALUE)
-                    ?: secondBundle.getParcelable<League>(LEAGUE_VALUE)
+                laterBundle.getParcelable<League>(LEAGUE_VALUE)
+                    ?: earlierBundle.getParcelable<League>(LEAGUE_VALUE)
             )
             putParcelable(
                 CHIEF_REFEREE_VALUE,
-                firstBundle.getParcelable<Referee>(CHIEF_REFEREE_VALUE)
-                    ?: secondBundle.getParcelable<Referee>(CHIEF_REFEREE_VALUE)
+                laterBundle.getParcelable<Referee>(CHIEF_REFEREE_VALUE)
+                    ?: earlierBundle.getParcelable<Referee>(CHIEF_REFEREE_VALUE)
             )
             putParcelable(
                 FIRST_ASSISTANT_VALUE,
-                firstBundle.getParcelable<Referee>(FIRST_ASSISTANT_VALUE)
-                    ?: secondBundle.getParcelable<Referee>(FIRST_ASSISTANT_VALUE)
+                laterBundle.getParcelable<Referee>(FIRST_ASSISTANT_VALUE)
+                    ?: earlierBundle.getParcelable<Referee>(FIRST_ASSISTANT_VALUE)
             )
             putParcelable(
                 SECOND_ASSISTANT_VALUE,
-                firstBundle.getParcelable<Referee>(SECOND_ASSISTANT_VALUE)
-                    ?: secondBundle.getParcelable<Referee>(SECOND_ASSISTANT_VALUE)
+                laterBundle.getParcelable<Referee>(SECOND_ASSISTANT_VALUE)
+                    ?: earlierBundle.getParcelable<Referee>(SECOND_ASSISTANT_VALUE)
             )
             putParcelable(
                 RESERVE_REFEREE_VALUE,
-                firstBundle.getParcelable<Referee>(RESERVE_REFEREE_VALUE)
-                    ?: secondBundle.getParcelable<Referee>(RESERVE_REFEREE_VALUE)
+                laterBundle.getParcelable<Referee>(RESERVE_REFEREE_VALUE)
+                    ?: earlierBundle.getParcelable<Referee>(RESERVE_REFEREE_VALUE)
             )
             putParcelable(
                 INSPECTOR_VALUE,
-                firstBundle.getParcelable<Referee>(INSPECTOR_VALUE)
-                    ?: secondBundle.getParcelable<Referee>(INSPECTOR_VALUE)
+                laterBundle.getParcelable<Referee>(INSPECTOR_VALUE)
+                    ?: earlierBundle.getParcelable<Referee>(INSPECTOR_VALUE)
             )
         }
+    }
 
     companion object {
         const val STADIUM_VALUE = "StadiumValue"
@@ -174,6 +186,8 @@ abstract class ChooserFragment : Fragment() {
         const val SECOND_ASSISTANT_VALUE = "SecondAssistantValue"
         const val RESERVE_REFEREE_VALUE = "ReserveRefereeValue"
         const val INSPECTOR_VALUE = "InspectorValue"
+
+        const val CREATED_TIME = "BundleCreatedTime"
     }
 }
 

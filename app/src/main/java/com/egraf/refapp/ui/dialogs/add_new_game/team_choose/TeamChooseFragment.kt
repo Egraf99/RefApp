@@ -32,7 +32,7 @@ class TeamChooseFragment : ChooserFragment(), FragmentResultListener {
     private val viewModel: TeamChooseViewModel by viewModels()
 
     override fun putGameComponentsInSavedBundle(bundle: Bundle): Bundle {
-        return bundle.apply {
+        return super.putGameComponentsInSavedBundle(bundle).apply {
             putParcelable(
                 HOME_TEAM_VALUE,
                 binding.homeTeamView.item

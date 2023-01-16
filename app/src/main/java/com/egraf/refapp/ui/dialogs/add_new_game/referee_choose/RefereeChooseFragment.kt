@@ -14,7 +14,6 @@ import com.egraf.refapp.database.entities.Referee
 import com.egraf.refapp.databinding.RefereeChooseBinding
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.Position
-import com.egraf.refapp.ui.dialogs.add_new_game.stadium_choose.StadiumChooseFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.referee.AddRefereeDialogFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.referee.InfoRefereeDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
@@ -30,7 +29,7 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
     private val viewModel: RefereeChooseViewModel by viewModels()
 
     override fun putGameComponentsInSavedBundle(bundle: Bundle): Bundle {
-        return bundle.apply {
+        return super.putGameComponentsInSavedBundle(bundle).apply {
             putParcelable(
                 CHIEF_REFEREE_VALUE,
                 binding.chiefRefereeView.item
@@ -60,6 +59,9 @@ class RefereeChooseFragment: ChooserFragment(), FragmentResultListener {
     }
 
     override fun getGameComponentsFromSavedBundle(bundle: Bundle) {
+        Log.d("12345", "get referee: ${
+            bundle.getParcelable<Referee>(CHIEF_REFEREE_VALUE)
+        }")
         binding.chiefRefereeView.item =
             GameComponent(bundle.getParcelable<Referee>(CHIEF_REFEREE_VALUE)).filter { !it.isEmpty }
 
