@@ -1,7 +1,6 @@
 package com.egraf.refapp.ui.game_list
 
 import android.os.Bundle
-import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,17 +13,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.egraf.refapp.R
 import com.egraf.refapp.database.entities.GameWithAttributes
-import com.egraf.refapp.databinding.FragmentGameListBinding
+import com.egraf.refapp.databinding.GameListFragmentBinding
 import com.egraf.refapp.databinding.ListItemGameBinding
 import com.egraf.refapp.ui.FragmentWithToolbar
 import com.egraf.refapp.ui.game_detail.GameDetailFragment
-import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "GameListFragment"
-private const val DATE_FORMAT = "dd.MM.yyyy (EE) HH:mm"
 
 class GameListFragment: FragmentWithToolbar() {
-    private var _binding: FragmentGameListBinding? = null
+    private var _binding: GameListFragmentBinding? = null
     private val binding get() = _binding!!
     private var adapter: GameAdapter = GameAdapter()
     private val gameListViewModel: GameListViewModel by lazy {
@@ -36,18 +33,12 @@ class GameListFragment: FragmentWithToolbar() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentGameListBinding.inflate(inflater, container, false)
-//        binding.gameRecycleView.layoutManager = LinearLayoutManager(context)
-//        binding.gameRecycleView.adapter = adapter
+        _binding = GameListFragmentBinding.inflate(inflater, container, false)
+        binding.gameRecycleView.layoutManager = LinearLayoutManager(context)
+        binding.gameRecycleView.adapter = adapter
         binding.addNewGameButton.setOnClickListener {
             Log.d(TAG, "onCreateView: click")
             findNavController().navigate(R.id.action_gameListFragment_to_addNewGame)
-        }
-        binding.prev.setOnClickListener {
-            binding.counter.showPrev()
-        }
-        binding.next.setOnClickListener {
-            binding.counter.showNext()
         }
         return binding.root
     }
@@ -100,16 +91,9 @@ class GameListFragment: FragmentWithToolbar() {
             gameWithAttributes = game
             Log.d(TAG, "bind() called with: game = $game")
             binding.stadiumTextview.text = gameWithAttributes.stadium?.name
-            binding.leagueTextview.text = gameWithAttributes.league?.name
-            binding.dateTextview.text = gameWithAttributes.game.date.date.title
+            binding.timeTextview.text = gameWithAttributes.game.date.time.title
 
-            val resGamePaid =
-                if (gameWithAttributes.game.isPaid) R.drawable.ic_payment_done else R.drawable.ic_payment_wait
-            binding.imgCheckGamePaid.setBackgroundResource(resGamePaid)
-
-            val resGamePassed =
-                if (gameWithAttributes.game.isPassed) R.drawable.ic_calendar_green else R.drawable.ic_calendar_yelow
-            binding.imgCheckGamePass.setBackgroundResource(resGamePassed)
+            binding.weatherIcon.setImageResource(R.drawable.ic_sun)
         }
 
         override fun onClick(v: View?) {
