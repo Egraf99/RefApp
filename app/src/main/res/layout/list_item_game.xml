@@ -6,7 +6,6 @@
     android:layout_height="50dp"
     android:layout_marginTop="10dp"
     android:elevation="8dp"
-    android:paddingHorizontal="4dp"
     android:background="@drawable/background_game_item">
 
     <FrameLayout
@@ -24,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:textColor="@color/black"
             android:gravity="center"
             android:textSize="26sp"
             android:textStyle="bold"
@@ -36,7 +36,7 @@
         android:layout_height="25dp"
         android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="1:1"
-        android:layout_marginHorizontal="6dp"
+        android:layout_marginHorizontal="8dp"
         app:layout_constraintTop_toTopOf="@id/time_frame"
         app:layout_constraintBottom_toBottomOf="@id/time_frame"
         app:layout_constraintStart_toEndOf="@id/time_frame"
@@ -52,6 +52,7 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:maxLines="1"
+        android:textColor="@color/black"
         app:layout_constraintTop_toTopOf="@id/stadium_icon"
         app:layout_constraintBottom_toBottomOf="@id/stadium_icon"
         app:layout_constraintStart_toEndOf="@id/stadium_icon"
@@ -66,6 +67,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="8dp"
         tools:src="@drawable/ic_sun" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

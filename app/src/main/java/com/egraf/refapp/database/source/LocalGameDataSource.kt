@@ -26,7 +26,7 @@ class LocalGameDataSource(context: Context) : GameDataSource {
     private val refereeDao = database.refereeDao()
 
     //    game block
-    override fun getGames(): LiveData<List<GameWithAttributes>> = gameDao.getGames()
+    override fun getGames(): Flow<List<GameWithAttributes>> = gameDao.getGames()
     override fun countGames(): LiveData<Int> = gameDao.countGames()
     override fun getGame(id: UUID): LiveData<GameWithAttributes?> = gameDao.getGame(id)
     override fun updateGame(game: Game) {

@@ -5,7 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +20,7 @@ import com.egraf.refapp.databinding.GameListFragmentBinding
 import com.egraf.refapp.databinding.ListItemGameBinding
 import com.egraf.refapp.ui.FragmentWithToolbar
 import com.egraf.refapp.ui.game_detail.GameDetailFragment
+import kotlinx.coroutines.launch
 
 private const val TAG = "GameListFragment"
 
@@ -37,7 +41,6 @@ class GameListFragment: FragmentWithToolbar() {
         binding.gameRecycleView.layoutManager = LinearLayoutManager(context)
         binding.gameRecycleView.adapter = adapter
         binding.addNewGameButton.setOnClickListener {
-            Log.d(TAG, "onCreateView: click")
             findNavController().navigate(R.id.action_gameListFragment_to_addNewGame)
         }
         return binding.root
@@ -50,31 +53,43 @@ class GameListFragment: FragmentWithToolbar() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        gameListViewModel.gamesListLiveData.observe(
-            viewLifecycleOwner
-        ) { games ->
-            games?.let {
-                updateUI(games)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                gameListViewModel.flowGames.collect() { updateRecycleView(it) }
             }
         }
-
-        gameListViewModel.countGamesLiveData.observe(
-            viewLifecycleOwner
-        ) { count ->
-            showEmptyListRepresent(count)
-        }
     }
 
-    private fun updateUI(games: List<GameWithAttributes>) {
-        Log.d(TAG, "updateUI() called with: games = $games")
-        adapter.submitList(games)
+    override fun onStart() {
+        super.onStart()
+        showLoading()
     }
 
-    private fun showEmptyListRepresent(count: Int) {
-        if (count > 0) {
-            binding.emptyListTextview.visibility = View.GONE
-        } else {
-            binding.emptyListTextview.visibility = View.VISIBLE
+    private fun showLoading() {
+        binding.loading.visibility = View.VISIBLE
+        binding.gameRecycleView.visibility = View.INVISIBLE
+        binding.hintTextview.visibility = View.INVISIBLE
+    }
+
+    private fun showText(text: String = getString(R.string.empty_list)) {
+        binding.loading.visibility = View.INVISIBLE
+        binding.gameRecycleView.visibility = View.INVISIBLE
+
+        binding.hintTextview.text = text
+        binding.hintTextview.visibility = View.VISIBLE
+    }
+
+    private fun showRecycleView() {
+        binding.loading.visibility = View.INVISIBLE
+        binding.gameRecycleView.visibility = View.VISIBLE
+        binding.hintTextview.visibility = View.INVISIBLE
+    }
+
+    private fun updateRecycleView(data: List<GameWithAttributes>) {
+        if (data.isEmpty()) showText()
+        else {
+            adapter.submitList(data)
+            showRecycleView()
         }
     }
 

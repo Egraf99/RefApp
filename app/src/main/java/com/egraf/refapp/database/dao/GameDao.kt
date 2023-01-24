@@ -4,12 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.egraf.refapp.database.entities.Game
 import com.egraf.refapp.database.entities.GameWithAttributes
+import kotlinx.coroutines.flow.Flow
 import java.util.*
 
 @Dao
 interface GameDao {
     @Query("SELECT * FROM Game ORDER BY date DESC")
-    fun getGames(): LiveData<List<GameWithAttributes>>
+    fun getGames(): Flow<List<GameWithAttributes>>
 
     @Query("SELECT * FROM Game WHERE id=(:id)")
     fun getGame(id: UUID): LiveData<GameWithAttributes?>

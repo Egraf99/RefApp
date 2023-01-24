@@ -1,21 +1,10 @@
 package com.egraf.refapp.ui.game_list
 
-import com.egraf.refapp.database.entities.Team
+import com.egraf.refapp.GameRepository
+import com.egraf.refapp.database.entities.GameWithAttributes
 import com.egraf.refapp.ui.ViewModelWithGameRepo
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 
 class GameListViewModel: ViewModelWithGameRepo() {
-    val gamesListLiveData = gameRepository.getGames()
-    val countGamesLiveData = gameRepository.countGames()
-
-    // только для проверки теста
-    // ------------
-//    val teamsListLiveData = gameRepository.getTeams()
-//    fun addTeam(team: Team) {
-//        gameRepository.addTeam(team)
-//    }
-
-    val getFive: () -> Int = {5}
-    // ------------
+    val flowGames: Flow<List<GameWithAttributes>> = GameRepository.get().getGames()
 }

@@ -9,7 +9,7 @@ import java.util.*
 
 class GameRepository private constructor(private val dataSource: GameDataSource) {
     //    game block
-    fun getGames(): LiveData<List<GameWithAttributes>> = dataSource.getGames()
+    fun getGames(): Flow<List<GameWithAttributes>> = dataSource.getGames()
     fun countGames(): LiveData<Int> = dataSource.countGames()
     fun getGame(id: UUID): LiveData<GameWithAttributes?> = dataSource.getGame(id)
     fun updateGame(game: Game) = dataSource.updateGame(game)

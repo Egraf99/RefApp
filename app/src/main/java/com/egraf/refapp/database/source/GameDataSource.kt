@@ -7,7 +7,7 @@ import java.util.*
 
 interface GameDataSource {
     //    game block
-    fun getGames(): LiveData<List<GameWithAttributes>>
+    fun getGames(): Flow<List<GameWithAttributes>>
     fun countGames(): LiveData<Int>
     fun getGame(id: UUID): LiveData<GameWithAttributes?>
     fun updateGame(game: Game)
