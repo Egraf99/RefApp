@@ -48,4 +48,7 @@
     <string name="no_data">No data</string>
     <string name="empty_field">Empty field</string>
     <string name="press_again_delete">Press again for delete</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="yesterday">Yesterday</string>
 </resources>

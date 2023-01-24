@@ -48,4 +48,7 @@
     <string name="no_data">Нет данных</string>
     <string name="empty_field">Незаполненное поле</string>
     <string name="press_again_delete">Нажмите еще раз для удаления</string>
+    <string name="today">Сегодня</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="yesterday">Вчера</string>
 </resources>

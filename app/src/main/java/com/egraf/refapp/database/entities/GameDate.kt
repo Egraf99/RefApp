@@ -28,6 +28,13 @@ class GameDateTime(val date: GameDate, val time: GameTime) : Parcelable {
         result = 31 * result + time.hashCode()
         return result
     }
+
+    companion object {
+        operator fun invoke(dateTime: LocalDateTime): GameDateTime = GameDateTime(
+            GameDate(dateTime.toLocalDate()),
+            GameTime(dateTime.toLocalTime())
+        )
+    }
 }
 
 fun Long.toGameDateTime(): GameDateTime {
