@@ -80,12 +80,12 @@ class StadiumChooseFragment : ChooserFragment(), FragmentResultListener {
         }
         binding.dateInput.setOnClickListener {
             DatePickerFragment
-                .newInstance(addNewGameViewModel.gameWithAttributes.game.date, REQUEST_INPUT_DATE)
+                .newInstance(addNewGameViewModel.gameWithAttributes.game.dateTime, REQUEST_INPUT_DATE)
                 .show(parentFragmentManager, FRAGMENT_DATE)
         }
         binding.timeInput.setOnClickListener {
             TimePickerFragment
-                .newInstance(addNewGameViewModel.gameWithAttributes.game.date, REQUEST_INPUT_TIME)
+                .newInstance(addNewGameViewModel.gameWithAttributes.game.dateTime, REQUEST_INPUT_TIME)
                 .show(parentFragmentManager, FRAGMENT_TIME)
         }
         binding.gamePaidCheckBox.setOnCheckedChangeListener { _, isChecked ->

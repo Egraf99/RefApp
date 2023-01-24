@@ -21,6 +21,7 @@ import com.egraf.refapp.databinding.ListItemGameBinding
 import com.egraf.refapp.ui.FragmentWithToolbar
 import com.egraf.refapp.ui.game_detail.GameDetailFragment
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 private const val TAG = "GameListFragment"
 
@@ -55,7 +56,10 @@ class GameListFragment: FragmentWithToolbar() {
         super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                gameListViewModel.flowGames.collect() { updateRecycleView(it) }
+                gameListViewModel.flowMapGamesWithDate.collect() { map ->
+                    Log.d("12345", "onViewCreated: $map")
+                    updateRecycleView(map.values.toList().flatten())
+                }
             }
         }
     }
@@ -106,7 +110,7 @@ class GameListFragment: FragmentWithToolbar() {
             gameWithAttributes = game
             Log.d(TAG, "bind() called with: game = $game")
             binding.stadiumTextview.text = gameWithAttributes.stadium?.name
-            binding.timeTextview.text = gameWithAttributes.game.date.time.title
+            binding.timeTextview.text = gameWithAttributes.game.dateTime.time.title
 
             binding.weatherIcon.setImageResource(R.drawable.ic_sun)
         }
@@ -154,7 +158,7 @@ class GameListFragment: FragmentWithToolbar() {
         ): Boolean {
             return oldGame.stadium?.name == newGame.stadium?.name &&
                     oldGame.league?.name == newGame.league?.name &&
-                    oldGame.game.date == newGame.game.date &&
+                    oldGame.game.dateTime == newGame.game.dateTime &&
                     oldGame.game.isPaid == newGame.game.isPaid &&
                     oldGame.game.isPassed == newGame.game.isPassed
         }

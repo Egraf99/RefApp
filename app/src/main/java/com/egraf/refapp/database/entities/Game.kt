@@ -2,6 +2,7 @@ package com.egraf.refapp.database.entities
 
 import android.os.Parcelable
 import androidx.annotation.NonNull
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
@@ -12,7 +13,8 @@ import java.util.*
 data class Game(
     @PrimaryKey
     var id: UUID = UUID.randomUUID(),
-    var date: GameDateTime = GameDateTime(GameDate(), GameTime()),
+    @ColumnInfo(name = "date")
+    var dateTime: GameDateTime = GameDateTime(GameDate(), GameTime()),
     var homeTeamId: UUID? = null,
     var guestTeamId: UUID? = null,
     var stadiumId: UUID? = null,

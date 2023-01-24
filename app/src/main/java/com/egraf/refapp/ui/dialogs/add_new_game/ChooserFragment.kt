@@ -70,7 +70,7 @@ abstract class ChooserFragment : Fragment() {
 
     protected fun getGameFromBundle(bundle: Bundle): Game = Game(
         stadiumId = bundle.getParcelable<Stadium>(STADIUM_VALUE)?.id,
-        date = GameDateTime(
+        dateTime = GameDateTime(
             bundle.getParcelable(DATE_VALUE) ?: GameDate(),
             bundle.getParcelable(TIME_VALUE) ?: GameTime()
         ),
