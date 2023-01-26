@@ -2,7 +2,10 @@ package com.egraf.refapp.ui.game_list
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.egraf.refapp.R
@@ -10,6 +13,7 @@ import com.egraf.refapp.database.entities.GameDate
 import com.egraf.refapp.database.entities.GameWithAttributes
 import com.egraf.refapp.databinding.DateListItemBinding
 import com.egraf.refapp.databinding.GameListItemBinding
+import com.egraf.refapp.utils.dp
 import java.time.LocalDate
 
 
@@ -27,6 +31,7 @@ class GameAdapter(private val context: Context, private val listener: ClickGameI
                 DateListItemBinding.inflate(LayoutInflater.from(context), parent, false)
             )
             R.layout.game_list_item -> GameListHolder.GameViewHolder(
+                context,
                 listener,
                 GameListItemBinding.inflate(LayoutInflater.from(context), parent, false)
             )
@@ -83,6 +88,7 @@ sealed class GameListHolder(binding: ViewBinding) :
     }
 
     class GameViewHolder(
+        private val context: Context,
         private val listener: ClickGameItemListener,
         private val gameBinding: GameListItemBinding
     ) : GameListHolder(gameBinding) {
@@ -92,10 +98,35 @@ sealed class GameListHolder(binding: ViewBinding) :
             gameBinding.timeTextview.text = gameItem.gwa.game.dateTime.time.title
 
             if (gameItem.gwa.game.isPassed)
-            //TODO: мутнее для проведенных игр
-                gameBinding.weatherIcon.setImageResource(R.drawable.ic_sun)
+                gameBinding.setDim(context)
             else
-                gameBinding.weatherIcon.setImageResource(R.drawable.ic_flag)
+                gameBinding.setBright(context)
+        }
+
+        private fun GameListItemBinding.setDim(context: Context) {
+            ViewCompat.setElevation(this.layout, dp(context, 0).toFloat())
+            this.layout.background =
+                AppCompatResources.getDrawable(context, R.drawable.background_dim_game_item)
+            this.timeFrame.background =
+                AppCompatResources.getDrawable(context, R.drawable.background_time_dim_item)
+            this.timeTextview.setTextColor(context.getColor(R.color.b))
+            this.stadiumIcon.setImageResource(R.drawable.ic_stadium_dim)
+            this.stadiumTextview.setTextColor(context.getColor(R.color.b))
+            this.weatherIcon.visibility = View.INVISIBLE
+        }
+
+        private fun GameListItemBinding.setBright(context: Context) {
+            ViewCompat.setElevation(this.layout, dp(context, 55).toFloat())
+            this.layout.background =
+                AppCompatResources.getDrawable(context, R.drawable.background_bright_game_item)
+            this.timeFrame.background =
+                AppCompatResources.getDrawable(context, R.drawable.background_time_bright_item)
+            this.stadiumIcon.setImageResource(R.drawable.ic_stadium)
+            this.timeTextview.setTextColor(context.getColor(R.color.black))
+            this.stadiumTextview.setTextColor(context.getColor(R.color.black))
+            // TODO: стучимся к апи для получения погоды
+            this.weatherIcon.setImageResource(R.drawable.ic_sun)
+            this.weatherIcon.visibility = View.VISIBLE
         }
     }
 }
