@@ -1,4 +1,4 @@
-package com.egraf.refapp.database.entities
+package com.egraf.refapp.database.local.entities
 
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.SearchItem

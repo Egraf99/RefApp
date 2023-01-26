@@ -1,11 +1,11 @@
-package com.egraf.refapp.database.source
+package com.egraf.refapp.database.local.source
 
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.Room
-import com.egraf.refapp.database.GameDatabase
-import com.egraf.refapp.database.entities.*
-import com.egraf.refapp.database.migration_1_2
+import com.egraf.refapp.database.local.GameDatabase
+import com.egraf.refapp.database.local.entities.*
+import com.egraf.refapp.database.local.migration_1_2
 import kotlinx.coroutines.flow.Flow
 import java.util.*
 import java.util.concurrent.Executors
@@ -102,5 +102,10 @@ class LocalGameDataSource(context: Context) : GameDataSource {
     }
     override fun deleteReferee(referee: Referee) {
         executor.execute { refereeDao.deleteReferee(referee) }
+    }
+
+    // weather
+    override fun getWeathersList(): Flow<List<Weather>> {
+        TODO("Not yet implemented")
     }
 }

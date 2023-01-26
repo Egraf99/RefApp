@@ -10,15 +10,12 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.egraf.refapp.R
-import com.egraf.refapp.database.entities.Referee
-import com.egraf.refapp.databinding.AddComponentDialogBinding
+import com.egraf.refapp.database.local.entities.Referee
 import com.egraf.refapp.databinding.AddRefereeDialogBinding
 import com.egraf.refapp.databinding.RefereeFieldsBinding
-import com.egraf.refapp.databinding.StadiumFieldsBinding
 import com.egraf.refapp.ui.dialogs.search_entity.SearchItem.Companion.randomId
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 import com.egraf.refapp.utils.Resource

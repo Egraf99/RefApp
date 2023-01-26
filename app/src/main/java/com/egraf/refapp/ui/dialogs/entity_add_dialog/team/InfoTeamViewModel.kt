@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.egraf.refapp.GameRepository
-import com.egraf.refapp.database.entities.Team
+import com.egraf.refapp.database.local.entities.Team
 import com.egraf.refapp.utils.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -1,7 +1,6 @@
 package com.egraf.refapp.ui.dialogs.entity_add_dialog.referee
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.egraf.refapp.R
-import com.egraf.refapp.database.entities.Referee
+import com.egraf.refapp.database.local.entities.Referee
 import com.egraf.refapp.databinding.InfoRefereeDialogBinding
 import com.egraf.refapp.databinding.RefereeFieldsBinding
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem

@@ -1,12 +1,10 @@
-package com.egraf.refapp.database.entities
+package com.egraf.refapp.database.local.entities
 
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
-import com.egraf.refapp.ui.dialogs.search_entity.SearchItem
 import com.egraf.refapp.ui.dialogs.search_entity.SearchItem.Companion.randomId
-import com.egraf.refapp.views.custom_views.Saving
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -16,7 +14,7 @@ data class League(
     @PrimaryKey
     override var id: UUID = EmptyItem.id,
     var name: String = "",
-) : com.egraf.refapp.database.entities.Entity(), Parcelable {
+) : com.egraf.refapp.database.local.entities.Entity(), Parcelable {
     override val shortName: String
         get() = name
     override val fullName: String

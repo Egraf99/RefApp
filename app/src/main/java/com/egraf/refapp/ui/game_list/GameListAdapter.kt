@@ -9,8 +9,8 @@ import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.egraf.refapp.R
-import com.egraf.refapp.database.entities.GameDate
-import com.egraf.refapp.database.entities.GameWithAttributes
+import com.egraf.refapp.database.local.entities.GameDate
+import com.egraf.refapp.database.local.entities.GameWithAttributes
 import com.egraf.refapp.databinding.DateListItemBinding
 import com.egraf.refapp.databinding.GameListItemBinding
 import com.egraf.refapp.utils.dp

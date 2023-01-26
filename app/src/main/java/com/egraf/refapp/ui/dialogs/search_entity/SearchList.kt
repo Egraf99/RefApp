@@ -1,6 +1,6 @@
 package com.egraf.refapp.ui.dialogs.search_entity
 
-import com.egraf.refapp.database.entities.League
+import com.egraf.refapp.database.local.entities.League
 
 fun <E> List<E>.toSearchList(): SearchList<E> =
     this.foldRight(SearchList.Nil as SearchList<E>) { e, acc -> acc.cons(e) }

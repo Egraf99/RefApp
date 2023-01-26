@@ -1,9 +1,7 @@
 package com.egraf.refapp.ui.dialogs.add_new_game.referee_choose
 
 import androidx.lifecycle.viewModelScope
-import com.egraf.refapp.GameRepository
-import com.egraf.refapp.database.entities.Referee
-import com.egraf.refapp.database.entities.Stadium
+import com.egraf.refapp.database.local.entities.Referee
 import com.egraf.refapp.ui.ViewModelWithGameRepo
 import com.egraf.refapp.utils.Resource
 import kotlinx.coroutines.flow.*

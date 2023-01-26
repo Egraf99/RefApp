@@ -11,7 +11,7 @@ package com.egraf.refapp.navigation
 //import androidx.test.filters.MediumTest
 //import com.egraf.refapp.GameRepository
 //import com.egraf.refapp.R
-//import com.egraf.refapp.database.source.FakeGameDataSource
+//import com.egraf.refapp.database.local.source.FakeGameDataSource
 //import com.egraf.refapp.ui.game_list.GameListFragment
 //import com.google.common.truth.Truth
 //import dagger.hilt.android.testing.HiltAndroidRule

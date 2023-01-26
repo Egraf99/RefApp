@@ -1,4 +1,4 @@
-package com.egraf.refapp.database.entities
+package com.egraf.refapp.database.local.entities
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
@@ -19,7 +19,7 @@ data class Referee(
     var middleName: String = "",
     @ColumnInfo(name = "thirdName")
     var lastName: String = "",
-) : com.egraf.refapp.database.entities.Entity(), Parcelable {
+) : com.egraf.refapp.database.local.entities.Entity(), Parcelable {
 
     init {
         if (firstName.isBlank() && middleName.isBlank() && lastName.isBlank())

@@ -1,10 +1,9 @@
 package com.egraf.refapp.ui
 
-import androidx.lifecycle.LiveData
-import com.egraf.refapp.database.entities.League
-import com.egraf.refapp.database.entities.Referee
-import com.egraf.refapp.database.entities.Stadium
-import com.egraf.refapp.database.entities.Team
+import com.egraf.refapp.database.local.entities.League
+import com.egraf.refapp.database.local.entities.Referee
+import com.egraf.refapp.database.local.entities.Stadium
+import com.egraf.refapp.database.local.entities.Team
 import com.egraf.refapp.interface_viewmodel.all.LeagueInterface
 import com.egraf.refapp.interface_viewmodel.all.RefereeInterface
 import com.egraf.refapp.interface_viewmodel.all.StadiumInterface

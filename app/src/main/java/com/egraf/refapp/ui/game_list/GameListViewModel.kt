@@ -1,8 +1,7 @@
 package com.egraf.refapp.ui.game_list
 
 import com.egraf.refapp.GameRepository
-import com.egraf.refapp.database.entities.GameDate
-import com.egraf.refapp.database.entities.GameWithAttributes
+import com.egraf.refapp.database.local.entities.GameDate
 import com.egraf.refapp.ui.ViewModelWithGameRepo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

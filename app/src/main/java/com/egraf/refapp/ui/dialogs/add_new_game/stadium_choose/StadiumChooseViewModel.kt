@@ -2,9 +2,9 @@ package com.egraf.refapp.ui.dialogs.add_new_game.stadium_choose
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.egraf.refapp.database.entities.GameDate
-import com.egraf.refapp.database.entities.GameTime
-import com.egraf.refapp.database.entities.Stadium
+import com.egraf.refapp.database.local.entities.GameDate
+import com.egraf.refapp.database.local.entities.GameTime
+import com.egraf.refapp.database.local.entities.Stadium
 import com.egraf.refapp.ui.ViewModelWithGameRepo
 import com.egraf.refapp.utils.Resource
 import com.egraf.refapp.views.custom_views.GameComponent

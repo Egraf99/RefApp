@@ -10,10 +10,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
-import com.egraf.refapp.database.entities.GameDate
-import com.egraf.refapp.database.entities.GameTime
-import com.egraf.refapp.database.entities.Stadium
-import com.egraf.refapp.database.entities.Team
+import com.egraf.refapp.database.local.entities.GameDate
+import com.egraf.refapp.database.local.entities.GameTime
+import com.egraf.refapp.database.local.entities.Stadium
 import com.egraf.refapp.databinding.StadiumChooseBinding
 import com.egraf.refapp.ui.dialogs.DatePickerFragment
 import com.egraf.refapp.ui.dialogs.TimePickerFragment

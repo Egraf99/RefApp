@@ -15,7 +15,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentResultListener
-import com.egraf.refapp.database.entities.Entity
+import com.egraf.refapp.database.local.entities.Entity
 import com.google.android.material.textfield.TextInputLayout
 import kotlin.math.max
 

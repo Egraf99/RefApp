@@ -1,8 +1,8 @@
 package com.egraf.refapp.ui.dialogs.add_new_game.team_choose
 
 import androidx.lifecycle.viewModelScope
-import com.egraf.refapp.database.entities.League
-import com.egraf.refapp.database.entities.Team
+import com.egraf.refapp.database.local.entities.League
+import com.egraf.refapp.database.local.entities.Team
 import com.egraf.refapp.ui.ViewModelWithGameRepo
 import com.egraf.refapp.utils.Resource
 import kotlinx.coroutines.flow.*

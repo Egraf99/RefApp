@@ -2,7 +2,7 @@ package com.egraf.refapp.di
 
 import android.content.Context
 import androidx.room.Room
-import com.egraf.refapp.database.GameDatabase
+import com.egraf.refapp.database.local.GameDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

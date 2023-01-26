@@ -1,12 +1,12 @@
-package com.egraf.refapp.database
+package com.egraf.refapp.database.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.egraf.refapp.database.dao.*
-import com.egraf.refapp.database.entities.*
+import com.egraf.refapp.database.local.dao.*
+import com.egraf.refapp.database.local.entities.*
 
 @Database(
     entities = [Game::class, Stadium::class, League::class, Team::class, Referee::class],

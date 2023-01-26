@@ -1,8 +1,7 @@
 package com.egraf.refapp
 
 import android.app.Application
-import com.egraf.refapp.database.source.LocalGameDataSource
-import dagger.hilt.android.HiltAndroidApp
+import com.egraf.refapp.database.local.source.LocalGameDataSource
 
 class RefIntentApplication: Application() {
     override fun onCreate() {

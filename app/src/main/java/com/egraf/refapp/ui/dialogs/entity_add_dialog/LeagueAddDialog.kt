@@ -3,7 +3,7 @@ package com.egraf.refapp.ui.dialogs.entity_add_dialog
 import android.os.Bundle
 import android.view.View
 import com.egraf.refapp.R
-import com.egraf.refapp.database.entities.League
+import com.egraf.refapp.database.local.entities.League
 import com.egraf.refapp.databinding.LeagueDetailsBinding
 import com.egraf.refapp.interface_viewmodel.add.LeagueAddInterface
 

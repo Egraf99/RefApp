@@ -1,9 +1,4 @@
-package com.egraf.refapp.database.source
-
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.egraf.refapp.database.entities.*
-import java.util.*
+package com.egraf.refapp.database.local.source
 
 //class FakeGameDataSource(private val initFakeData: Boolean = false) : GameDataSource {
 //    private val games = mutableListOf<GameWithAttributes>()

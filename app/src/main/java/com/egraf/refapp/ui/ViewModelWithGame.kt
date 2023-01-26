@@ -1,7 +1,6 @@
 package com.egraf.refapp.ui
 
-import android.util.Log
-import com.egraf.refapp.database.entities.*
+import com.egraf.refapp.database.local.entities.*
 
 private const val TAG = "AddGame"
 

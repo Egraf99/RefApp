@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.egraf.refapp.database.entities.Entity
+import com.egraf.refapp.database.local.entities.Entity
 import com.egraf.refapp.databinding.SearchEntityItemBinding
 
 private const val TAG = "SearchAdapter"

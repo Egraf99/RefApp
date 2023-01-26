@@ -1,6 +1,6 @@
 package com.egraf.refapp.ui.dialogs.search_entity
 
-import com.egraf.refapp.database.entities.League
+import com.egraf.refapp.database.local.entities.League
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test

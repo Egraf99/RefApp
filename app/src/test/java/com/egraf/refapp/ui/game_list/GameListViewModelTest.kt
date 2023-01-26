@@ -2,8 +2,8 @@ package com.egraf.refapp.ui.game_list
 
 //import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 //import com.egraf.refapp.GameRepository
-//import com.egraf.refapp.database.entities.Team
-//import com.egraf.refapp.database.source.FakeGameDataSource
+//import com.egraf.refapp.database.local.entities.Team
+//import com.egraf.refapp.database.local.source.FakeGameDataSource
 //import com.egraf.refapp.getOrAwaitValue
 //import com.google.common.truth.Truth.assertThat
 //import org.junit.Before

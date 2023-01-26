@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.egraf.refapp.database.entities.*
+import com.egraf.refapp.database.local.entities.*
 import java.time.LocalDateTime
 
 private const val TAG = "AddGame"

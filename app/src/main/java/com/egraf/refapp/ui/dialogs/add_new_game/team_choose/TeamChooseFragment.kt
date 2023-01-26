@@ -9,11 +9,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
-import com.egraf.refapp.database.entities.*
+import com.egraf.refapp.database.local.entities.*
 import com.egraf.refapp.databinding.TeamChooseBinding
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.Position
-import com.egraf.refapp.ui.dialogs.add_new_game.referee_choose.RefereeChooseFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.league.AddLeagueDialogFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.league.InfoLeagueDialogFragment
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.team.AddTeamDialogFragment

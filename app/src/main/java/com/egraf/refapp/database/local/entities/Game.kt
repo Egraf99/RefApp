@@ -1,7 +1,6 @@
-package com.egraf.refapp.database.entities
+package com.egraf.refapp.database.local.entities
 
 import android.os.Parcelable
-import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey

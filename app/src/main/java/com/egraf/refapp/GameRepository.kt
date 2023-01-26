@@ -1,8 +1,8 @@
 package com.egraf.refapp
 
 import androidx.lifecycle.LiveData
-import com.egraf.refapp.database.entities.*
-import com.egraf.refapp.database.source.GameDataSource
+import com.egraf.refapp.database.local.entities.*
+import com.egraf.refapp.database.local.source.GameDataSource
 import kotlinx.coroutines.flow.Flow
 import java.util.*
 

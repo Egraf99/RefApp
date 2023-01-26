@@ -9,10 +9,10 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.R
-import com.egraf.refapp.database.entities.League
-import com.egraf.refapp.database.entities.Referee
-import com.egraf.refapp.database.entities.Stadium
-import com.egraf.refapp.database.entities.Team
+import com.egraf.refapp.database.local.entities.League
+import com.egraf.refapp.database.local.entities.Referee
+import com.egraf.refapp.database.local.entities.Stadium
+import com.egraf.refapp.database.local.entities.Team
 import com.egraf.refapp.databinding.FragmentGameBinding
 import com.egraf.refapp.ui.dialogs.DatePickerFragment
 import com.egraf.refapp.ui.dialogs.DeleteDialog
@@ -20,7 +20,6 @@ import com.egraf.refapp.ui.dialogs.TimePickerFragment
 import com.egraf.refapp.ui.FragmentWithToolbar
 import com.egraf.refapp.views.textInput.RefereeETI
 import com.egraf.refapp.views.textInput.TeamETI
-import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 private const val TAG = "GameFragment"

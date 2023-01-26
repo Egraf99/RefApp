@@ -1,4 +1,4 @@
-package com.egraf.refapp.database.entities
+package com.egraf.refapp.database.local.entities
 
 import androidx.room.Embedded
 import androidx.room.Relation

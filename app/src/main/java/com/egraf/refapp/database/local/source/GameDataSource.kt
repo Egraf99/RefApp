@@ -1,7 +1,7 @@
-package com.egraf.refapp.database.source
+package com.egraf.refapp.database.local.source
 
 import androidx.lifecycle.LiveData
-import com.egraf.refapp.database.entities.*
+import com.egraf.refapp.database.local.entities.*
 import kotlinx.coroutines.flow.Flow
 import java.util.*
 
@@ -38,5 +38,8 @@ interface GameDataSource {
     fun getReferee(id: UUID): Flow<Referee?>
     fun getReferees(): List<Referee>
     fun addReferee(referee: Referee)
-    fun deleteReferee(stadium: Referee)
+    fun deleteReferee(referee: Referee)
+
+    // weather
+    fun getWeathersList(): Flow<List<Weather>>
 }

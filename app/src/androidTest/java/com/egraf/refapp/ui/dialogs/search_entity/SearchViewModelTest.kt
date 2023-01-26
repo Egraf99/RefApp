@@ -1,8 +1,8 @@
 package com.egraf.refapp.ui.dialogs.search_entity
 
 //import com.egraf.refapp.GameRepository
-//import com.egraf.refapp.database.entities.Stadium
-//import com.egraf.refapp.database.source.FakeGameDataSource
+//import com.egraf.refapp.database.local.entities.Stadium
+//import com.egraf.refapp.database.local.source.FakeGameDataSource
 //import com.google.common.truth.Truth.assertThat
 //import org.junit.Before
 //

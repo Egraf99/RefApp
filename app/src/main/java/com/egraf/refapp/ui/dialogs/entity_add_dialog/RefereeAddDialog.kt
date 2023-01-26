@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.egraf.refapp.R
-import com.egraf.refapp.database.entities.Referee
+import com.egraf.refapp.database.local.entities.Referee
 import com.egraf.refapp.databinding.RefereeDetailsBinding
 import com.egraf.refapp.interface_viewmodel.all.RefereeInterface
 

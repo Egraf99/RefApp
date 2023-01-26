@@ -1,7 +1,7 @@
 package com.egraf.refapp.ui.dialogs.entity_add_dialog.referee
 
 import androidx.lifecycle.ViewModel
-import com.egraf.refapp.database.entities.Referee
+import com.egraf.refapp.database.local.entities.Referee
 import com.egraf.refapp.utils.Resource
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow

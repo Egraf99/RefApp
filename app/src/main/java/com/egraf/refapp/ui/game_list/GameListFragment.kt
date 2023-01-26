@@ -11,7 +11,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.egraf.refapp.R
-import com.egraf.refapp.database.entities.GameWithAttributes
+import com.egraf.refapp.database.local.entities.GameWithAttributes
 import com.egraf.refapp.databinding.GameListFragmentBinding
 import com.egraf.refapp.ui.FragmentWithToolbar
 import com.egraf.refapp.ui.game_detail.GameDetailFragment

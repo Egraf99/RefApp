@@ -3,15 +3,13 @@ package com.egraf.refapp.ui.game_detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import com.egraf.refapp.database.entities.*
+import com.egraf.refapp.database.local.entities.*
 import com.egraf.refapp.interface_viewmodel.all.LeagueInterface
 import com.egraf.refapp.interface_viewmodel.all.RefereeInterface
 import com.egraf.refapp.interface_viewmodel.all.StadiumInterface
 import com.egraf.refapp.interface_viewmodel.all.TeamInterface
 import com.egraf.refapp.ui.ViewModelWithGame
-import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
-import javax.inject.Inject
 
 class GameDetailViewModel: ViewModelWithGame(),
 TeamInterface, LeagueInterface, StadiumInterface, RefereeInterface {

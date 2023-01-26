@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.egraf.refapp.database.entities.Entity
+import com.egraf.refapp.database.local.entities.Entity
 
 abstract class ETIWithEndButton(context: Context, attrs: AttributeSet? = null) :
     EntityTextInput(context, attrs) {

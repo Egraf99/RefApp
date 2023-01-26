@@ -1,7 +1,7 @@
-package com.egraf.refapp.database.dao
+package com.egraf.refapp.database.local.dao
 
 import androidx.room.*
-import com.egraf.refapp.database.entities.Team
+import com.egraf.refapp.database.local.entities.Team
 import kotlinx.coroutines.flow.Flow
 import java.util.*
 

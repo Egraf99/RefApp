@@ -1,4 +1,4 @@
-package com.egraf.refapp.database.entities
+package com.egraf.refapp.database.local.entities
 
 import android.os.Parcelable
 import com.egraf.refapp.views.custom_views.Saving

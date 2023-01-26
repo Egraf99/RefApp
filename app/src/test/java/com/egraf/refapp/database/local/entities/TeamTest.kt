@@ -1,7 +1,6 @@
-package com.egraf.refapp.database.entities
+package com.egraf.refapp.database.local.entities
 
 import org.junit.Assert.*
-import org.junit.Before
 
 import org.junit.Test
 

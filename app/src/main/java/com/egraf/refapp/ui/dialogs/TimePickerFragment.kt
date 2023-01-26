@@ -6,10 +6,8 @@ import android.os.Bundle
 import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
-import com.egraf.refapp.database.entities.GameDateTime
-import com.egraf.refapp.database.entities.GameTime
+import com.egraf.refapp.database.local.entities.GameDateTime
 import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.ZoneId
 import java.util.*
 
