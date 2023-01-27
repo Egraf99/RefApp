@@ -57,7 +57,7 @@ class GameListFragment : FragmentWithToolbar(), ClickGameItemListener {
         super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                gameListViewModel.flowMapGamesWithDate.collect {
+                gameListViewModel.flowMapGamesWithDate().collect {
                     updateRecycleView(it)
                 }
             }
