@@ -26,14 +26,14 @@ class GameListViewModel: ViewModel() {
         )
 
         return GameRepository.get().getGames().map { list ->
-            // объединяем игры по дате проведения (без учета времени). Ключ - дата, значение - список игр с этой датой
+            // объединяем игры по дате проведения (без учета времени)
             list.fold(
                 Sender(GameDate(LocalDate.MIN), listOf(), listOf())
 
             ) { sender, gwa ->
                 if (sender.date != gwa.game.dateTime.date) {
                     // если дата не совпадает с предыдущей датой -
-                    // то обновляем дату на новую и добавляем к аккумулятору
+                    // то обновляем дату на новую, добавляем к аккумулятору полученную группу игр
                     // и создаем новую группу для текущей даты с одним элементом игры
                     Sender(
                         gwa.game.dateTime.date,

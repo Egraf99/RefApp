@@ -98,12 +98,12 @@ sealed class GameListHolder(binding: ViewBinding) :
             gameBinding.timeTextview.text = gameItem.gwa.game.dateTime.time.title
 
             if (gameItem.gwa.game.isPassed)
-                gameBinding.setDim(context)
+                gameBinding.dim(context)
             else
-                gameBinding.setBright(context)
+                gameBinding.bright(context)
         }
 
-        private fun GameListItemBinding.setDim(context: Context) {
+        private fun GameListItemBinding.dim(context: Context) {
             ViewCompat.setElevation(this.layout, dp(context, 0).toFloat())
             this.layout.background =
                 AppCompatResources.getDrawable(context, R.drawable.background_dim_game_item)
@@ -115,8 +115,8 @@ sealed class GameListHolder(binding: ViewBinding) :
             this.weatherIcon.visibility = View.INVISIBLE
         }
 
-        private fun GameListItemBinding.setBright(context: Context) {
-            ViewCompat.setElevation(this.layout, dp(context, 55).toFloat())
+        private fun GameListItemBinding.bright(context: Context) {
+            ViewCompat.setElevation(this.layout, dp(context, 8).toFloat())
             this.layout.background =
                 AppCompatResources.getDrawable(context, R.drawable.background_bright_game_item)
             this.timeFrame.background =
