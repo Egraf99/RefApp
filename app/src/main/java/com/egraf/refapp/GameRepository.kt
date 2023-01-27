@@ -43,6 +43,9 @@ class GameRepository private constructor(private val dataSource: GameDataSource)
     fun addReferee(referee: Referee) = dataSource.addReferee(referee)
     fun deleteReferee(stadium: Referee) = dataSource.deleteReferee(stadium)
 
+    // weather block
+    fun getWeatherBy3h() = dataSource.getWeathersList()
+
     companion object {
         private var INSTANCE: GameRepository? = null
 

@@ -2,7 +2,10 @@ package com.egraf.refapp.database.local.source
 
 import androidx.lifecycle.LiveData
 import com.egraf.refapp.database.local.entities.*
+import com.egraf.refapp.database.remote.model.Weather
+import com.egraf.refapp.database.remote.model.WeatherResponse
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Call
 import java.util.*
 
 interface GameDataSource {
@@ -41,5 +44,5 @@ interface GameDataSource {
     fun deleteReferee(referee: Referee)
 
     // weather
-    fun getWeathersList(): Flow<List<Weather>>
+    fun getWeathersList(): Call<WeatherResponse>
 }

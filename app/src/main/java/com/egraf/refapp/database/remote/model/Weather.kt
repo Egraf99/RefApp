@@ -1,5 +1,8 @@
-package com.egraf.refapp.database.local.entities
+package com.egraf.refapp.database.remote.model
 
-data class Weather(val date: GameDateTime, val type: WeatherType)
-
-enum class WeatherType { SUN, CLOUDS, RAIN, SNOW }
+data class Weather(
+    val description: String,
+    val icon: String,
+    val id: Int,
+    val main: String
+)

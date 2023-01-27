@@ -6,7 +6,11 @@ import androidx.room.Room
 import com.egraf.refapp.database.local.GameDatabase
 import com.egraf.refapp.database.local.entities.*
 import com.egraf.refapp.database.local.migration_1_2
+import com.egraf.refapp.database.remote.Common
+import com.egraf.refapp.database.remote.model.Weather
+import com.egraf.refapp.database.remote.model.WeatherResponse
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Call
 import java.util.*
 import java.util.concurrent.Executors
 
@@ -105,7 +109,5 @@ class LocalGameDataSource(context: Context) : GameDataSource {
     }
 
     // weather
-    override fun getWeathersList(): Flow<List<Weather>> {
-        TODO("Not yet implemented")
-    }
+    override fun getWeathersList(): Call<WeatherResponse> = Common.weatherService.getWeatherForecast()
 }

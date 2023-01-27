@@ -1,13 +1,23 @@
 package com.egraf.refapp.ui.game_list
 
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.database.local.entities.GameDate
+import com.egraf.refapp.database.remote.Common
+import com.egraf.refapp.database.remote.model.WeatherResponse
+import com.egraf.refapp.database.remote.service.WeatherApi
 import com.egraf.refapp.ui.ViewModelWithGameRepo
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import com.egraf.refapp.utils.Resource
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.time.LocalDate
 
-class GameListViewModel: ViewModelWithGameRepo() {
+class GameListViewModel: ViewModel() {
     fun flowMapGamesWithDate(): Flow<List<GameListViewItem>> {
         class Sender(
             val date: GameDate, // Для передачи даты от предыдущего значения к следующему
@@ -47,6 +57,28 @@ class GameListViewModel: ViewModelWithGameRepo() {
                     )
                 }
             }.acc
+        }
+    }
+
+    val weatherFlow: MutableStateFlow<Resource<WeatherResponse>> =
+        MutableStateFlow(Resource.loading(null))
+
+    init {
+        GameRepository.get().getWeatherBy3h().enqueue(object : Callback<WeatherResponse> {
+            override fun onResponse(
+                call: Call<WeatherResponse>,
+                response: Response<WeatherResponse>
+            ) {
+                Log.d("12345", "onResponse: ${response.body()}")
+                response.body()?.let { weatherFlow.value = Resource.success(it) }
+            }
+
+            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {}
+        })
+        viewModelScope.launch {
+            weatherFlow.collect() {
+                Log.d("123456", "t: ${it.status} ${it.data}")
+            }
         }
     }
 }
