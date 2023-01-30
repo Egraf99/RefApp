@@ -101,7 +101,7 @@ class GameListViewModel: ViewModel() {
                             acc + Pair(
                                 // добавляем 000, так как в API возвращается дата без секунд и милисекунд
                                 (w.dt.toString() + "000").toLong(),
-                                Weather(id = w.weather[0].id, temp = w.main.temp)
+                                Weather(temp = w.main.temp, w.weather[0].icon)
                             )
                         }
                 }

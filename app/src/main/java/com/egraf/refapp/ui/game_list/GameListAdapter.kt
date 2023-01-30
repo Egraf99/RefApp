@@ -15,6 +15,7 @@ import com.egraf.refapp.R
 import com.egraf.refapp.database.local.entities.GameDate
 import com.egraf.refapp.database.local.entities.GameWithAttributes
 import com.egraf.refapp.database.remote.model.Weather
+import com.egraf.refapp.database.remote.model.WeatherType
 import com.egraf.refapp.databinding.DateListItemBinding
 import com.egraf.refapp.databinding.GameListItemBinding
 import com.egraf.refapp.utils.Resource
@@ -172,9 +173,14 @@ sealed class GameListHolder(binding: ViewBinding) :
 
         private fun GameListItemBinding.setWeather(weather: Weather) {
             this.weatherText.apply {
-                Log.d("12345", "weather: ${weather.temp.roundToInt()}")
                 text = weather.temp.roundToInt().toString()
                 visibility = View.VISIBLE
+            }
+            this.weatherIcon.apply {
+                if (weather.type == WeatherType.UNKNOWN) return@apply
+                setImageResource(weather.type.icon)
+                visibility = View.VISIBLE
+
             }
         }
     }
