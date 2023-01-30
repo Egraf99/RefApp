@@ -19,12 +19,11 @@ data class Weather(
     }
 }
 
-
-enum class WeatherType(@DrawableRes val icon: Int) {
-    SUN(R.drawable.ic_sun),
-    SUNNY(R.drawable.ic_sunny),
-    RAIN(R.drawable.ic_rain),
-    CLOUD(R.drawable.ic_cloud),
-    SNOW(R.drawable.ic_snow),
-    UNKNOWN(0)
+enum class WeatherType(val icon: Result<Int>) {
+    SUN(Result.success(R.drawable.ic_sun)),
+    SUNNY(Result.success(R.drawable.ic_sunny)),
+    RAIN(Result.success(R.drawable.ic_rain)),
+    CLOUD(Result.success(R.drawable.ic_cloud)),
+    SNOW(Result.success(R.drawable.ic_snow)),
+    UNKNOWN(Result.failure(IllegalStateException("Unknown type")))
 }

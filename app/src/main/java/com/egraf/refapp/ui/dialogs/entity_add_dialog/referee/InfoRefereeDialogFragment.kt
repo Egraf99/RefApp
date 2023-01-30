@@ -63,7 +63,7 @@ class InfoRefereeDialogFragment(
                         Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
                         Status.SUCCESS -> {
                             binding.progressBar.visibility = View.GONE
-                            viewModel.referee = resource.data ?: Referee()
+                            viewModel.referee = resource.data()
                             updateUI(viewModel.referee)
                         }
                         Status.ERROR -> {}

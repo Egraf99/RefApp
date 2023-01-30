@@ -144,7 +144,7 @@ class SearchDialogFragment(
                             hideHintText()
                             hideLoading()
                             showRecycleView()
-                            resource.data.let {
+                            resource.data().let {
                                 viewModel.items = it
                                 viewModel.filterItems = it.filter(binding.edit.text.toString())
                                 updateItems(viewModel.filterItems)

@@ -12,29 +12,31 @@ package com.egraf.refapp.utils
 //}
 
 sealed class Resource<out T> private constructor(val status: Status) {
-    abstract val data: T
-    abstract val exception: Exception
+    abstract val data: () -> T
+    abstract val exception: () -> Exception
 
     object Loading : Resource<Nothing>(Status.LOADING) {
-        override val data: Nothing
-            get() = throw IllegalStateException("get data from loading resource")
-        override val exception: Exception
-            get() = throw IllegalStateException("get exception from loading resource")
+        override val data: () -> Nothing =
+            { throw IllegalStateException("get data from loading resource") }
+        override val exception: () -> Exception =
+            { throw IllegalStateException("get exception from loading resource") }
     }
 
-    class Error(override val exception: Exception) : Resource<Nothing>(Status.ERROR) {
+    class Error(override val exception: () -> Exception) : Resource<Nothing>(Status.ERROR) {
         override val data: Nothing
-            get() =  throw IllegalStateException("get data from error resource")
+            get() = throw IllegalStateException("get data from error resource")
     }
-    class Success<out T>(override val data: T) : Resource<T>(Status.SUCCESS) {
-        override val exception: Exception
+
+    class Success<out T>(override val data: () -> T) : Resource<T>(Status.SUCCESS) {
+        override val exception: () -> Exception
             get() = throw IllegalStateException("get exception from success resource")
     }
 
+
     companion object {
-        fun <T> success(data: T): Resource<T> = Success(data)
+        fun <T> success(data: T): Resource<T> = Success { data }
         fun loading(): Resource<Nothing> = Loading
-        fun error(exception: Exception): Resource<Nothing> = Error(exception)
+        fun error(exception: Exception): Resource<Nothing> = Error { exception }
         fun error(message: String): Resource<Nothing> = error(RuntimeException(message))
     }
 }

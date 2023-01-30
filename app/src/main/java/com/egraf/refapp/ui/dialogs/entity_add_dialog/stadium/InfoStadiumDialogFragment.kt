@@ -65,7 +65,7 @@ class InfoStadiumDialogFragment(
                         Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
                         Status.SUCCESS -> {
                             binding.progressBar.visibility = View.GONE
-                            viewModel.stadium = resource.data ?: Stadium()
+                            viewModel.stadium = resource.data()
                             updateUI(viewModel.stadium.getName())
                         }
                         Status.ERROR -> {}

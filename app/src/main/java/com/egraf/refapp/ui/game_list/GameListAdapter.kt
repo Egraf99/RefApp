@@ -1,7 +1,6 @@
 package com.egraf.refapp.ui.game_list
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ import com.egraf.refapp.R
 import com.egraf.refapp.database.local.entities.GameDate
 import com.egraf.refapp.database.local.entities.GameWithAttributes
 import com.egraf.refapp.database.remote.model.Weather
-import com.egraf.refapp.database.remote.model.WeatherType
 import com.egraf.refapp.databinding.DateListItemBinding
 import com.egraf.refapp.databinding.GameListItemBinding
 import com.egraf.refapp.utils.Resource
@@ -137,7 +135,7 @@ sealed class GameListHolder(binding: ViewBinding) :
                             when (it.status) {
                                 Status.LOADING -> {}
                                 Status.SUCCESS -> {
-                                    it.data?.let { weather -> gameBinding.setWeather(weather) }
+                                    it.data().let { weather -> gameBinding.setWeather(weather) }
                                 }
                                 Status.ERROR -> {}
                             }
@@ -177,10 +175,10 @@ sealed class GameListHolder(binding: ViewBinding) :
                 visibility = View.VISIBLE
             }
             this.weatherIcon.apply {
-                if (weather.type == WeatherType.UNKNOWN) return@apply
-                setImageResource(weather.type.icon)
-                visibility = View.VISIBLE
-
+                weather.type.icon.onSuccess {
+                    setImageResource(it)
+                    visibility = View.VISIBLE
+                }
             }
         }
     }

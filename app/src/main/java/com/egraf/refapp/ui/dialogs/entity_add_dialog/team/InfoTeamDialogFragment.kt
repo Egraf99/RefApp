@@ -63,7 +63,7 @@ class InfoTeamDialogFragment(
                         Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
                         Status.SUCCESS -> {
                             binding.progressBar.visibility = View.GONE
-                            viewModel.team = resource.data ?: Team()
+                            viewModel.team = resource.data()
                             updateUI(viewModel.team.name)
                         }
                         Status.ERROR -> {}
