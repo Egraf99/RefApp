@@ -144,7 +144,7 @@ class SearchDialogFragment(
                             hideHintText()
                             hideLoading()
                             showRecycleView()
-                            resource.data?.let {
+                            resource.data.let {
                                 viewModel.items = it
                                 viewModel.filterItems = it.filter(binding.edit.text.toString())
                                 updateItems(viewModel.filterItems)
@@ -154,8 +154,6 @@ class SearchDialogFragment(
                             hideLoading()
                             hideRecycleView()
                             showHintTextWithText(getText(R.string.no_data) as String)
-
-                            Log.d("12345", "Don't receive data because: ${resource.message}")
                         }
                     }
                 }

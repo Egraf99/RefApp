@@ -18,12 +18,12 @@ class TeamChooseViewModel : ViewModelWithGameRepo() {
                     gameRepository.addTeam(team)
                     emit(Resource.success(Pair(team.id, team.name)))
                 } catch (e: Exception) {
-                    emit(Resource.error(null, e.message.toString()))
+                    emit(Resource.error(e))
                 }
             }.stateIn(
                 scope = viewModelScope,
                 started = WhileSubscribed(5000), // Or Lazily because it's a one-shot
-                initialValue = Resource.loading(null)
+                initialValue = Resource.loading()
             )
         }
 
@@ -35,12 +35,12 @@ class TeamChooseViewModel : ViewModelWithGameRepo() {
                     gameRepository.addLeague(league)
                     emit(Resource.success(Pair(league.id, league.name)))
                 } catch (e: Exception) {
-                    emit(Resource.error(null, e.message.toString()))
+                    emit(Resource.error(e))
                 }
             }.stateIn(
                 scope = viewModelScope,
                 started = WhileSubscribed(5000), // Or Lazily because it's a one-shot
-                initialValue = Resource.loading(null)
+                initialValue = Resource.loading()
             )
         }
 }

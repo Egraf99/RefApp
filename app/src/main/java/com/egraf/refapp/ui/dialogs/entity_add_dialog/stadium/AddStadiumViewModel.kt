@@ -11,7 +11,7 @@ class AddStadiumViewModel : ViewModel() {
     var entityTitle: String = ""
     var saveInDBFun: (String) -> StateFlow<Resource<Pair<UUID, String>>> = {
         flow {
-            emit(Resource.error(null, "Didn't init saveInDB function"))
+            emit(Resource.error("Didn't init saveInDB function"))
         } as StateFlow<Resource<Pair<UUID, String>>>
     }
 }

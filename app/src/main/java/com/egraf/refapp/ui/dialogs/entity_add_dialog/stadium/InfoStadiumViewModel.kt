@@ -17,7 +17,7 @@ class StadiumInfoViewModel(
     var title: String = ""
     var stadium: Stadium = Stadium()
     var deleteFunction: (Stadium) -> Unit = { GameRepository.get().deleteStadium(it) }
-    private val _componentId = MutableStateFlow<Resource<Stadium>>(Resource.loading(null))
+    private val _componentId = MutableStateFlow<Resource<Stadium>>(Resource.loading())
     val componentId: StateFlow<Resource<Stadium>> = _componentId
 
     // Load data from a suspend fun and mutate state

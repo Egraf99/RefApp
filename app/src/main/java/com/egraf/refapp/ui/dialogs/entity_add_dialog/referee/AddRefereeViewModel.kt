@@ -12,7 +12,7 @@ class AddRefereeViewModel : ViewModel() {
     var referee: Referee = Referee()
     var saveInDBFun: (Referee) -> StateFlow<Resource<Pair<UUID, String>>> = {
         flow {
-            emit(Resource.error(null, "Didn't init saveInDB function"))
+            emit(Resource.error("Didn't init saveInDB function"))
         } as StateFlow<Resource<Pair<UUID, String>>>
     }
 }

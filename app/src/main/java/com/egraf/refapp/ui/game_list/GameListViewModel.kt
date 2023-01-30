@@ -69,7 +69,7 @@ class GameListViewModel: ViewModel() {
         weatherFlow.mapLatest {
             // начальное значение устанавливаем с максимальным числом
             var resultWeather: Pair<Long, Resource<Weather>> =
-                Pair(Long.MAX_VALUE, Resource.error(null, message = "Don't find weather"))
+                Pair(Long.MAX_VALUE, Resource.error("Don't find weather"))
 
             it.forEach { weatherWithDt ->
                 // ищем наименьшую разницу между данной датой и доступными датами с прогнозом погоды
@@ -85,7 +85,7 @@ class GameListViewModel: ViewModel() {
         }.stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5000),
-            initialValue = Resource.loading(null)
+            initialValue = Resource.loading()
         )
     }
 

@@ -16,12 +16,12 @@ class RefereeChooseViewModel : ViewModelWithGameRepo() {
                     gameRepository.addReferee(referee)
                     emit(Resource.success(Pair(referee.id, referee.shortName)))
                 } catch (e: Exception) {
-                    emit(Resource.error(null, e.message.toString()))
+                    emit(Resource.error(e))
                 }
             }.stateIn(
                 scope = viewModelScope,
                 started = WhileSubscribed(5000), // Or Lazily because it's a one-shot
-                initialValue = Resource.loading(null)
+                initialValue = Resource.loading()
             )
         }
 }

@@ -28,24 +28,19 @@ class SearchViewModel: ViewModelWithGameRepo() {
     var icon: Drawable? = null
 
     private val _flowSearchItems =
-        MutableStateFlow<Resource<List<SearchItem>>>(Resource.loading(null))
+        MutableStateFlow<Resource<List<SearchItem>>>(Resource.loading())
     val flowSearchItems: StateFlow<Resource<List<SearchItem>>> = _flowSearchItems
 
     fun startReceiveData() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _flowSearchItems.value = if (receiveItems == null) Resource.error(
-                    null,
-                    "Function to get data is not defined"
-                ) else {
-                    val result = receiveItems!!()
-                    Resource.success(result)
-                }
+                _flowSearchItems.value =
+                    if (receiveItems == null) Resource.error("Function to get data is not defined") else {
+                        val result = receiveItems!!()
+                        Resource.success(result)
+                    }
             } catch (e: Exception) {
-                _flowSearchItems.value = Resource.error(
-                    data = null,
-                    message = e.message ?: "Unknown error occurred trying get data"
-                )
+                _flowSearchItems.value = Resource.error(e)
             }
         }
     }

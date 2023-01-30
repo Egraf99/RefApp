@@ -17,7 +17,7 @@ class InfoLeagueViewModel(
     var title: String = ""
     var league: League = League()
     var deleteFunction: (League) -> Unit = { GameRepository.get().deleteLeague(it) }
-    private val _componentId = MutableStateFlow<Resource<League>>(Resource.loading(null))
+    private val _componentId = MutableStateFlow<Resource<League>>(Resource.loading())
     val flowResourceLeague: StateFlow<Resource<League>> = _componentId
 
     // Load data from a suspend fun and mutate state

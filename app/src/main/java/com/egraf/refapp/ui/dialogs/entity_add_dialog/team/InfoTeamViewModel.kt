@@ -17,7 +17,7 @@ class InfoTeamViewModel(
     var title: String = ""
     var team: Team = Team()
     var deleteFunction: (Team) -> Unit = { GameRepository.get().deleteTeam(it) }
-    private val _componentId = MutableStateFlow<Resource<Team>>(Resource.loading(null))
+    private val _componentId = MutableStateFlow<Resource<Team>>(Resource.loading())
     val flowResourceTeam: StateFlow<Resource<Team>> = _componentId
 
     // Load data from a suspend fun and mutate state

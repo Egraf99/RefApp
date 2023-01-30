@@ -31,12 +31,12 @@ class StadiumChooseViewModel : ViewModelWithGameRepo() {
                     gameRepository.addStadium(stadium)
                     emit(Resource.success(Pair(stadium.id, stadium.name)))
                 } catch (e: Exception) {
-                    emit(Resource.error(null, e.message.toString()))
+                    emit(Resource.error(e))
                 }
             }.stateIn(
                 scope = viewModelScope,
                 started = WhileSubscribed(5000), // Or Lazily because it's a one-shot
-                initialValue = Resource.loading(null)
+                initialValue = Resource.loading()
             )
         }
 }

@@ -17,7 +17,7 @@ class InfoRefereeViewModel(
     var title: String = ""
     var referee: Referee = Referee()
     var deleteFunction: (Referee) -> Unit = { GameRepository.get().deleteReferee(it) }
-    private val _componentId = MutableStateFlow<Resource<Referee>>(Resource.loading(null))
+    private val _componentId = MutableStateFlow<Resource<Referee>>(Resource.loading())
     val flowResourceReferee: StateFlow<Resource<Referee>> = _componentId
 
     // Load data from a suspend fun and mutate state

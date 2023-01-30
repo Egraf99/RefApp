@@ -73,13 +73,13 @@ class AddLeagueDialogFragment(
                                 setFragmentResult(
                                     arguments?.getString(REQUEST) ?: "Unknown request",
                                     Bundle().apply {
-                                        putString(TITLE_RESULT, resource.data?.second)
-                                        putSerializable(ID_RESULT, resource.data?.first)
+                                        putString(TITLE_RESULT, resource.data.second)
+                                        putSerializable(ID_RESULT, resource.data.first)
                                     }
                                 )
                             }
 
-                            Status.ERROR -> Log.d(TAG, "Unknown error")
+                            Status.ERROR -> Log.d(TAG, resource.exception.message ?: "Unknown error")
                         }
                     }
                 }
