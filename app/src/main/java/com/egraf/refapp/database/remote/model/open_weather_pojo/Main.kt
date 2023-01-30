@@ -1,4 +1,4 @@
-package com.egraf.refapp.database.remote.model
+package com.egraf.refapp.database.remote.model.open_weather_pojo
 
 data class Main(
     val feels_like: Double,

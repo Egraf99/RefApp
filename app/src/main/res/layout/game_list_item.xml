@@ -56,18 +56,34 @@
         app:layout_constraintTop_toTopOf="@id/stadium_icon"
         app:layout_constraintBottom_toBottomOf="@id/stadium_icon"
         app:layout_constraintStart_toEndOf="@id/stadium_icon"
-        app:layout_constraintEnd_toStartOf="@id/weather_icon"
+        app:layout_constraintEnd_toStartOf="@id/weather_text"
         android:gravity="start"
         tools:text="Stadium" />
 
+    <TextView
+        android:id="@+id/weather_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/weather_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
+        tools:visibility="visible"
+        tools:text="-2"
+        />
+
     <ImageView
         android:id="@+id/weather_icon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginEnd="8dp"
+        android:visibility="invisible"
+        tools:visibility="visible"
         tools:src="@drawable/ic_sun" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

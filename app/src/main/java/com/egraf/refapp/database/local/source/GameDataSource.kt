@@ -2,8 +2,7 @@ package com.egraf.refapp.database.local.source
 
 import androidx.lifecycle.LiveData
 import com.egraf.refapp.database.local.entities.*
-import com.egraf.refapp.database.remote.model.Weather
-import com.egraf.refapp.database.remote.model.WeatherResponse
+import com.egraf.refapp.database.remote.model.open_weather_pojo.WeatherResponse
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
 import java.util.*

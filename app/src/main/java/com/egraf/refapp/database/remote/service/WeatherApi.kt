@@ -1,7 +1,6 @@
 package com.egraf.refapp.database.remote.service
 
-import com.egraf.refapp.database.remote.model.WeatherResponse
-import com.google.gson.Gson
+import com.egraf.refapp.database.remote.model.open_weather_pojo.WeatherResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

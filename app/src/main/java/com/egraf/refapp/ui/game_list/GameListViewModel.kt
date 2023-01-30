@@ -5,17 +5,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.database.local.entities.GameDate
-import com.egraf.refapp.database.remote.Common
-import com.egraf.refapp.database.remote.model.WeatherResponse
-import com.egraf.refapp.database.remote.service.WeatherApi
-import com.egraf.refapp.ui.ViewModelWithGameRepo
+import com.egraf.refapp.database.remote.model.Weather
+import com.egraf.refapp.database.remote.model.open_weather_pojo.WeatherResponse
 import com.egraf.refapp.utils.Resource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.time.LocalDate
+import java.time.LocalDateTime
+import kotlin.math.abs
 
 class GameListViewModel: ViewModel() {
     fun flowMapGamesWithDate(): Flow<List<GameListViewItem>> {
@@ -60,8 +61,33 @@ class GameListViewModel: ViewModel() {
         }
     }
 
-    val weatherFlow: MutableStateFlow<Resource<WeatherResponse>> =
-        MutableStateFlow(Resource.loading(null))
+    private val weatherFlow: MutableStateFlow<Map<Long, Weather>> =
+        MutableStateFlow(mapOf())
+
+    @ExperimentalCoroutinesApi
+    val getWeather: (Long) -> StateFlow<Resource<Weather>> = { dt ->
+        weatherFlow.mapLatest {
+            // начальное значение устанавливаем с максимальным числом
+            var resultWeather: Pair<Long, Resource<Weather>> =
+                Pair(Long.MAX_VALUE, Resource.error(null, message = "Don't find weather"))
+
+            it.forEach { weatherWithDt ->
+                // ищем наименьшую разницу между данной датой и доступными датами с прогнозом погоды
+                val difference = abs(dt - weatherWithDt.key)
+                val millisIn3h = 10_800_000
+
+                // разница должна быть меньше 3х часов
+                if (difference < millisIn3h && difference < resultWeather.first) {
+                    resultWeather = Pair(difference, Resource.success(weatherWithDt.value))
+                }
+            }
+            resultWeather.second
+        }.stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(5000),
+            initialValue = Resource.loading(null)
+        )
+    }
 
     init {
         GameRepository.get().getWeatherBy3h().enqueue(object : Callback<WeatherResponse> {
@@ -69,16 +95,18 @@ class GameListViewModel: ViewModel() {
                 call: Call<WeatherResponse>,
                 response: Response<WeatherResponse>
             ) {
-                Log.d("12345", "onResponse: ${response.body()}")
-                response.body()?.let { weatherFlow.value = Resource.success(it) }
+                response.body()?.let {
+                    weatherFlow.value =
+                        it.list.fold(mapOf()) { acc, w ->
+                            acc + Pair(
+                                // добавляем 000, так как в API возвращается дата без секунд и милисекунд
+                                (w.dt.toString() + "000").toLong(),
+                                Weather(id = w.weather[0].id, temp = w.main.temp)
+                            )
+                        }
+                }
             }
-
             override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {}
         })
-        viewModelScope.launch {
-            weatherFlow.collect() {
-                Log.d("123456", "t: ${it.status} ${it.data}")
-            }
-        }
     }
 }

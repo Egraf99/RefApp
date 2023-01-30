@@ -7,8 +7,7 @@ import com.egraf.refapp.database.local.GameDatabase
 import com.egraf.refapp.database.local.entities.*
 import com.egraf.refapp.database.local.migration_1_2
 import com.egraf.refapp.database.remote.Common
-import com.egraf.refapp.database.remote.model.Weather
-import com.egraf.refapp.database.remote.model.WeatherResponse
+import com.egraf.refapp.database.remote.model.open_weather_pojo.WeatherResponse
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
 import java.util.*

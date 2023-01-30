@@ -1,39 +1,62 @@
 package com.egraf.refapp.ui.game_list
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.egraf.refapp.R
 import com.egraf.refapp.database.local.entities.GameDate
 import com.egraf.refapp.database.local.entities.GameWithAttributes
+import com.egraf.refapp.database.remote.model.Weather
 import com.egraf.refapp.databinding.DateListItemBinding
 import com.egraf.refapp.databinding.GameListItemBinding
+import com.egraf.refapp.utils.Resource
+import com.egraf.refapp.utils.Status
 import com.egraf.refapp.utils.dp
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.ZoneId
+import kotlin.math.roundToInt
 
 
 interface ClickGameItemListener {
     fun onClick(gwa: GameWithAttributes)
 }
 
-class GameAdapter(private val context: Context, private val listener: ClickGameItemListener) :
+class GameAdapter(
+    private val fragment: Fragment,
+    private val listener: ClickGameItemListener,
+    private val getWeather: (Long) -> Flow<Resource<Weather>>
+) :
     RecyclerView.Adapter<GameListHolder>() {
     private var gamesList = emptyList<GameListViewItem>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameListHolder {
         return when (viewType) {
             R.layout.date_list_item -> GameListHolder.DateViewHolder(
-                context,
-                DateListItemBinding.inflate(LayoutInflater.from(context), parent, false)
+                fragment.requireContext(),
+                DateListItemBinding.inflate(
+                    LayoutInflater.from(fragment.requireContext()),
+                    parent,
+                    false
+                )
             )
             R.layout.game_list_item -> GameListHolder.GameViewHolder(
-                context,
+                fragment,
                 listener,
-                GameListItemBinding.inflate(LayoutInflater.from(context), parent, false)
+                getWeather,
+                GameListItemBinding.inflate(
+                    LayoutInflater.from(fragment.requireContext()),
+                    parent,
+                    false
+                )
             )
             else -> throw IllegalArgumentException("Invalid ViewType Provided")
         }
@@ -88,8 +111,9 @@ sealed class GameListHolder(binding: ViewBinding) :
     }
 
     class GameViewHolder(
-        private val context: Context,
+        private val fragment: Fragment,
         private val listener: ClickGameItemListener,
+        private val getWeather: (Long) -> Flow<Resource<Weather>>,
         private val gameBinding: GameListItemBinding
     ) : GameListHolder(gameBinding) {
         fun bind(gameItem: GameListViewItem.Game) {
@@ -98,9 +122,29 @@ sealed class GameListHolder(binding: ViewBinding) :
             gameBinding.timeTextview.text = gameItem.gwa.game.dateTime.time.title
 
             if (gameItem.gwa.game.isPassed)
-                gameBinding.dim(context)
-            else
-                gameBinding.bright(context)
+                gameBinding.dim(fragment.requireContext())
+            else {
+                gameBinding.bright(fragment.requireContext())
+
+                // запрашиваем погоду
+                fragment.viewLifecycleOwner.lifecycleScope.launch {
+                    fragment.viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+                        val gameDate = gameItem.gwa.game.dateTime.toMillis(zone = ZoneId.of("UTC"))
+                            ?: Long.MAX_VALUE
+                        if (gameDate < System.currentTimeMillis()) return@launchWhenStarted // не узнаем погоду для игр в прошлом
+                        getWeather(gameDate).collect() {
+                            when (it.status) {
+                                Status.LOADING -> {}
+                                Status.SUCCESS -> {
+                                    it.data?.let { weather -> gameBinding.setWeather(weather) }
+                                }
+                                Status.ERROR -> {}
+                            }
+                        }
+                    }
+
+                }
+            }
         }
 
         private fun GameListItemBinding.dim(context: Context) {
@@ -124,9 +168,14 @@ sealed class GameListHolder(binding: ViewBinding) :
             this.stadiumIcon.setImageResource(R.drawable.ic_stadium)
             this.timeTextview.setTextColor(context.getColor(R.color.black))
             this.stadiumTextview.setTextColor(context.getColor(R.color.black))
-            // TODO: стучимся к апи для получения погоды
-            this.weatherIcon.setImageResource(R.drawable.ic_sun)
-            this.weatherIcon.visibility = View.VISIBLE
+        }
+
+        private fun GameListItemBinding.setWeather(weather: Weather) {
+            this.weatherText.apply {
+                Log.d("12345", "weather: ${weather.temp.roundToInt()}")
+                text = weather.temp.roundToInt().toString()
+                visibility = View.VISIBLE
+            }
         }
     }
 }

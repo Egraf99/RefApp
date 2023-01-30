@@ -15,14 +15,16 @@ import com.egraf.refapp.database.local.entities.GameWithAttributes
 import com.egraf.refapp.databinding.GameListFragmentBinding
 import com.egraf.refapp.ui.FragmentWithToolbar
 import com.egraf.refapp.ui.game_detail.GameDetailFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
 private const val TAG = "GameListFragment"
 
+@ExperimentalCoroutinesApi
 class GameListFragment : FragmentWithToolbar(), ClickGameItemListener {
     private var _binding: GameListFragmentBinding? = null
     private val binding get() = _binding!!
-    private var adapter = lazy { GameAdapter(requireContext(), this) }
+    private var adapter = lazy { GameAdapter( this, this, gameListViewModel.getWeather) }
     private val gameListViewModel: GameListViewModel by lazy {
         ViewModelProvider(this)[GameListViewModel::class.java]
     }
