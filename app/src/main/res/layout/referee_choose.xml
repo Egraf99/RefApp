@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
+    <com.egraf.refapp.views.custom_views.game_components.ChiefRefereeComponentInputWithDialogs
         android:id="@+id/chief_referee_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +16,7 @@
         custom:endIcon="@drawable/ic_close_bracket"
         />
 
-    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
+    <com.egraf.refapp.views.custom_views.game_components.FirstAssistantRefereeComponentInputWithDialogs
         android:id="@+id/first_assistant_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
         custom:endIcon="@drawable/ic_close_bracket"
         />
 
-    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
+    <com.egraf.refapp.views.custom_views.game_components.SecondAssistantRefereeComponentInputWithDialogs
         android:id="@+id/second_assistant_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
         custom:endIcon="@drawable/ic_close_bracket"
         />
 
-    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
+    <com.egraf.refapp.views.custom_views.game_components.ReserveRefereeComponentInputWithDialogs
         android:id="@+id/reserve_referee_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
         custom:endIcon="@drawable/ic_close_bracket"
         custom:mIcon="@drawable/ic_scoreboard"
         />
-    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
+    <com.egraf.refapp.views.custom_views.game_components.InspectorComponentInputWithDialogs
         android:id="@+id/inspector_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

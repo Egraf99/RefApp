@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.SearchItem
+import com.egraf.refapp.views.custom_views.game_components.Component
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 

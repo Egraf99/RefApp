@@ -3,9 +3,10 @@ package com.egraf.refapp.database.local.entities
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.SearchItem
 import com.egraf.refapp.views.custom_views.Saving
+import com.egraf.refapp.views.custom_views.game_components.Component
 import java.util.*
 
-abstract class Entity : SearchItem, Saving<UUID> {
+abstract class Entity : Component {
     abstract override val id: UUID
     val isEmpty
         get() = id == EmptyItem.id

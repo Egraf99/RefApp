@@ -34,6 +34,8 @@ class GameDateTime(val date: GameDate, val time: GameTime) : Parcelable {
             GameDate(dateTime.toLocalDate()),
             GameTime(dateTime.toLocalTime())
         )
+
+        operator fun invoke(): GameDateTime = GameDateTime(GameDate(), GameTime())
     }
 }
 

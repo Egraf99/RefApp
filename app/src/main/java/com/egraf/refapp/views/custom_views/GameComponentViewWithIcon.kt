@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.Toast
 
-class GameComponentViewWithIcon<T, S : Saving<T>>(context: Context, attrs: AttributeSet) :
+open class GameComponentViewWithIcon<T, S : Saving<T>>(context: Context, attrs: AttributeSet) :
     GameComponentView<T, S>(context, attrs) {
 
     fun setOnInfoClickListener(listener: OnClickListener) {

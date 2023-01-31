@@ -35,7 +35,7 @@ class GameRepository private constructor(private val dataSource: GameDataSource)
     fun getTeam(id: UUID): Flow<Team?> = dataSource.getTeam(id)
     fun getTeams(): List<Team> = dataSource.getTeams()
     fun addTeam(team: Team) = dataSource.addTeam(team)
-    fun deleteTeam(stadium: Team) = dataSource.deleteTeam(stadium)
+    fun deleteTeam(team: Team) = dataSource.deleteTeam(team)
 
     //    referee block
     fun getReferee(id: UUID): Flow<Referee?> = dataSource.getReferee(id)

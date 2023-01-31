@@ -23,9 +23,7 @@ import com.egraf.refapp.R
 import com.egraf.refapp.databinding.SearchEntityFragmentBinding
 import com.egraf.refapp.utils.Status
 import kotlinx.android.parcel.Parcelize
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 
 private const val LENGTH_TEXT_BEFORE_FILTER: Int = 0
@@ -134,6 +132,7 @@ class SearchDialogFragment(
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.startReceiveData()
                 viewModel.flowSearchItems.collect() { resource ->
+                    Log.d(TAG, "update RecycleView ${resource.status}")
                     when (resource.status) {
                         Status.LOADING -> {
                             hideRecycleView()

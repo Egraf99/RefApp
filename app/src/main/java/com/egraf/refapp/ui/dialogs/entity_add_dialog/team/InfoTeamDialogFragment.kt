@@ -88,6 +88,7 @@ class InfoTeamDialogFragment(
             }
         }
         )
+        binding.buttonsBottomBar.cancelButton.setOnClickListener { dismiss() }
         return binding.root
     }
 

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
+    <com.egraf.refapp.views.custom_views.game_components.HomeTeamComponentInputWithDialogs
         android:id="@+id/home_team_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +16,7 @@
         custom:endIcon="@drawable/ic_close_bracket"
         />
 
-    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
+    <com.egraf.refapp.views.custom_views.game_components.GuestTeamComponentInputWithDialogs
         android:id="@+id/guest_team_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
         custom:endIcon="@drawable/ic_close_bracket"
         />
 
-    <com.egraf.refapp.views.custom_views.GameComponentViewWithIcon
+    <com.egraf.refapp.views.custom_views.game_components.LeagueComponentInputWithDialogs
         android:id="@+id/league_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
