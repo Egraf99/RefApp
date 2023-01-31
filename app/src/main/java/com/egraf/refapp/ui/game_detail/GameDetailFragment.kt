@@ -11,10 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
-import com.egraf.refapp.database.local.entities.League
-import com.egraf.refapp.database.local.entities.Referee
-import com.egraf.refapp.database.local.entities.Stadium
-import com.egraf.refapp.database.local.entities.Team
+import com.egraf.refapp.database.local.entities.*
 import com.egraf.refapp.databinding.FragmentGameBinding
 import com.egraf.refapp.ui.dialogs.DatePickerFragment
 import com.egraf.refapp.ui.dialogs.DeleteDialog
@@ -74,7 +71,7 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
         gameDetailViewModel.gameLiveData.observe(viewLifecycleOwner) { game ->
             game?.let {
                 gameDetailViewModel.setGameWithAttributes(game)
-                updateUI()
+                updateUI(it)
             }
         }
 
@@ -86,72 +83,38 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
     override fun onStart() {
         super.onStart()
         binding.homeTeamView.bind(
-            this.parentFragmentManager,
-            viewLifecycleOwner,
-            viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
         )
-        binding.homeTeamView.item = GameComponent()
         binding.guestTeamView.bind(
-            this.parentFragmentManager,
-            viewLifecycleOwner,
-            viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
         )
-        binding.guestTeamView.item = GameComponent()
         binding.stadiumComponentView.bind(
-            this.parentFragmentManager,
-            viewLifecycleOwner,
-            viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
         )
-        binding.stadiumComponentView.item = GameComponent()
         binding.leagueComponentView.bind(
-            this.parentFragmentManager,
-            viewLifecycleOwner,
-            viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
         )
-        binding.leagueComponentView.item = GameComponent()
         binding.chiefRefereeComponentView.bind(
-            this.parentFragmentManager,
-            viewLifecycleOwner,
-            viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
         )
-        binding.chiefRefereeComponentView.item = GameComponent()
         binding.firstAssistantComponentView.bind(
-            this.parentFragmentManager,
-            viewLifecycleOwner,
-            viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
         )
-        binding.firstAssistantComponentView.item = GameComponent()
         binding.secondAssistantComponentView.bind(
-            this.parentFragmentManager,
-            viewLifecycleOwner,
-            viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
         )
-        binding.secondAssistantComponentView.item = GameComponent()
         binding.reserveRefereeComponentView.bind(
-            this.parentFragmentManager,
-            viewLifecycleOwner,
-            viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
         )
-        binding.reserveRefereeComponentView.item = GameComponent()
         binding.inspectorComponentView.bind(
-            this.parentFragmentManager,
-            viewLifecycleOwner,
-            viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
         )
-        binding.inspectorComponentView.item = GameComponent()
         binding.dateInput.bind(
-            this.parentFragmentManager,
-            viewLifecycleOwner,
-            viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
         )
-        binding.dateInput.item = GameComponent()
-
         binding.timeInput.bind(
-            this.parentFragmentManager,
-            viewLifecycleOwner,
-            viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
         )
-        binding.timeInput.item = GameComponent()
         binding.gamePaidCheckBox.setOnCheckedChangeListener { _, isPaid ->
             gameDetailViewModel.gameWithAttributes.game.isPaid = isPaid
         }
@@ -171,38 +134,18 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
         gameDetailViewModel.updateGame()
     }
 
-    private fun updateUI() {
-//        val textInputs = listOf(
-//            binding.teamHomeLayout,
-//            binding.teamGuestLayout,
-//            binding.stadiumLayout,
-//            binding.leagueLayout,
-//            binding.chiefRefereeLayout,
-//            binding.firstRefereeLayout,
-//            binding.secondRefereeLayout,
-//            binding.reserveRefereeLayout,
-//            binding.inspectorLayout
-//        )
-//        val attributesList = listOf(
-//            gameDetailViewModel.gameWithAttributes.homeTeam,
-//            gameDetailViewModel.gameWithAttributes.guestTeam,
-//            gameDetailViewModel.gameWithAttributes.stadium,
-//            gameDetailViewModel.gameWithAttributes.league,
-//            gameDetailViewModel.gameWithAttributes.chiefReferee,
-//            gameDetailViewModel.gameWithAttributes.firstReferee,
-//            gameDetailViewModel.gameWithAttributes.secondReferee,
-//            gameDetailViewModel.gameWithAttributes.reserveReferee,
-//            gameDetailViewModel.gameWithAttributes.inspector
-//        )
-
-//        for (pair in textInputs.zip(attributesList)) {
-//            val textInput = pair.first
-//            val attribute = pair.second
-//            if (textInput.getText().isBlank())
-//                textInput.setText(attribute?.shortName ?: "")
-//        }
-//        updateDate()
-//        updateTime()
+    private fun updateUI(gameWithAttributes: GameWithAttributes) {
+        binding.homeTeamView.item = GameComponent(gameWithAttributes.homeTeam)
+        binding.guestTeamView.item = GameComponent(gameWithAttributes.guestTeam)
+        binding.stadiumComponentView.item = GameComponent(gameWithAttributes.stadium)
+        binding.leagueComponentView.item = GameComponent(gameWithAttributes.league)
+        binding.chiefRefereeComponentView.item = GameComponent(gameWithAttributes.chiefReferee)
+        binding.firstAssistantComponentView.item = GameComponent(gameWithAttributes.firstReferee)
+        binding.secondAssistantComponentView.item = GameComponent(gameWithAttributes.secondReferee)
+        binding.reserveRefereeComponentView.item = GameComponent(gameWithAttributes.reserveReferee)
+        binding.inspectorComponentView.item = GameComponent(gameWithAttributes.inspector)
+        binding.dateInput.item = GameComponent(gameWithAttributes.game.dateTime.date)
+        binding.timeInput.item = GameComponent(gameWithAttributes.game.dateTime.time)
 
         binding.gamePaidCheckBox.apply {
             isChecked = gameDetailViewModel.gameWithAttributes.game.isPaid
