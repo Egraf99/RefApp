@@ -3,13 +3,19 @@ package com.egraf.refapp.views.custom_views
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import com.egraf.refapp.R
+import com.egraf.refapp.utils.dp
 
 private const val TAG = "GameComponent"
 
@@ -48,26 +54,37 @@ open class CustomViewWithTitle(context: Context, attrs: AttributeSet) :
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.game_component_search, this, true)
 
+        tintTextView = getChildAt(4) as TextView
+
         startIcon = getChildAt(0) as ImageView
         startIcon.setImageDrawable(startIconDrawable)
 
-        endIcon = getChildAt(6) as ImageView
+        endIcon = getChildAt(7) as ImageView
         endIcon.setImageDrawable(endIconDrawable)
 
-        // set receive icon
-        mIcon = getChildAt(1) as ImageView
-        mIcon.setImageDrawable(icon)
-
         // search text views
-        smallTintTextView = getChildAt(2) as TextView
-        tintTextView = getChildAt(3) as TextView
-        contentTextView = getChildAt(4) as TextView
-        infoButton = getChildAt(5) as ImageButton
+        smallTintTextView = getChildAt(3) as TextView
+        contentTextView = getChildAt(5) as TextView
+        infoButton = getChildAt(6) as ImageButton
 
         // заполняем text views
         smallTintTextView.text = title
         tintTextView.text = title
         contentTextView.text = text
+
+        val tintSpace = getChildAt(2) as View
+
+        // set receive icon
+        mIcon = getChildAt(1) as ImageView
+        if (icon != null) {
+            mIcon.setImageDrawable(icon)
+            mIcon.isVisible = true
+            tintSpace.visibility = View.GONE
+        } else {
+            mIcon.isGone = true
+            tintSpace.visibility = View.VISIBLE
+        }
+
     }
 
     fun setText(text: String) {
@@ -92,15 +109,16 @@ open class CustomViewWithTitle(context: Context, attrs: AttributeSet) :
 
     internal open fun hideContent() {
         smallTintTextView.visibility = View.INVISIBLE
-        contentTextView.visibility = View.INVISIBLE
-        tintTextView.visibility = View.VISIBLE
+        contentTextView.setTextColor(context.getColor(R.color.grey))
+        contentTextView.text = title
+//        tintTextView.visibility = View.VISIBLE
     }
 
     internal open fun showContent(text: String) {
         smallTintTextView.visibility = View.VISIBLE
+        contentTextView.setTextColor(context.getColor(R.color.black))
         contentTextView.text = text
-        contentTextView.visibility = View.VISIBLE
-        tintTextView.visibility = View.INVISIBLE
+//        tintTextView.visibility = View.INVISIBLE
     }
 
     companion object {

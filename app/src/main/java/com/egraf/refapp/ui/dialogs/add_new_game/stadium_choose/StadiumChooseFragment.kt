@@ -5,9 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentResultListener
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.R
@@ -15,8 +12,6 @@ import com.egraf.refapp.database.local.entities.GameDate
 import com.egraf.refapp.database.local.entities.GameTime
 import com.egraf.refapp.database.local.entities.Stadium
 import com.egraf.refapp.databinding.StadiumChooseBinding
-import com.egraf.refapp.ui.dialogs.DatePickerFragment
-import com.egraf.refapp.ui.dialogs.TimePickerFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.Position
 import com.egraf.refapp.views.custom_views.GameComponent

@@ -5,8 +5,8 @@
     <string name="add_game">Add new Game</string>
     <string name="add">Add</string>
     <string name="team">Team</string>
-    <string name="home_team">Home Team</string>
-    <string name="guest_team">Guest Team</string>
+    <string name="home_team">Home</string>
+    <string name="guest_team">Guest</string>
     <string name="stadium">Stadium</string>
     <string name="league">League</string>
     <string name="referee">Referee</string>

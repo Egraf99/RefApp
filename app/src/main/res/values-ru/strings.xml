@@ -5,8 +5,8 @@
     <string name="add_game">Добавить новую игру</string>
     <string name="add">Добавить</string>
     <string name="team">Команда</string>
-    <string name="home_team">Команда хозяев</string>
-    <string name="guest_team">Команда гостей</string>
+    <string name="home_team">Хозяева</string>
+    <string name="guest_team">Гости</string>
     <string name="stadium">Стадион</string>
     <string name="league">Лига</string>
     <string name="referee">Судья</string>

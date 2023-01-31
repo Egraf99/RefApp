@@ -1,71 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:focusableInTouchMode="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout"
+    <com.egraf.refapp.views.custom_views.game_components.HomeTeamComponentInputWithDialogs
+        android:id="@+id/home_team_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/guest_team_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        custom:title="@string/home_team"
+        custom:startIcon="@drawable/ic_open_bracket"
+        />
+
+    <com.egraf.refapp.views.custom_views.game_components.GuestTeamComponentInputWithDialogs
+        android:id="@+id/guest_team_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/home_team_view"
+        app:layout_constraintTop_toTopOf="parent"
+
+        custom:title="@string/guest_team"
+        custom:startIcon="@drawable/ic_vertical_vector_separator"
+        custom:endIcon="@drawable/ic_close_bracket"
+        />
+<!--    <com.egraf.refapp.views.custom_views.game_components.GuestTeamComponentInputWithDialogs-->
+<!--        android:id="@+id/guest_team_view"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/home_team_view"-->
+<!---->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_weight="0.5"-->
+<!--        app:layout_constraintStart_toEndOf="@id/home_team_view"-->
+<!--        app:layout_constraintTop_toTopOf="@id/home_team_view"-->
+<!---->
+<!--        custom:endIcon="@drawable/ic_close_bracket"-->
+<!--        custom:startIcon="@drawable/ic_vertical_vector_separator"-->
+<!--        custom:title="@string/guest_team" />-->
+
+    <!--        <com.egraf.refapp.views.custom_views.game_components.LeagueComponentInputWithDialogs-->
+    <!--            android:id="@+id/league_view"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!---->
+    <!--            custom:mIcon="@drawable/ic_cup"-->
+    <!--            custom:title="@string/league"-->
+    <!--            custom:startIcon="@drawable/ic_open_bracket"-->
+    <!--            custom:endIcon="@drawable/ic_close_bracket"-->
+    <!--            />-->
+
+    <!--    Second line-->
+    <com.egraf.refapp.views.textInput.StadiumETI
+        android:id="@+id/stadium_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:focusableInTouchMode="true">
-
-        <!--First line-->
-        <com.egraf.refapp.views.textInput.TeamETI
-            android:id="@+id/team_home_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:hint="@string/home_team"
-            app:layout_constraintEnd_toStartOf="@id/team_guest_layout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:inputType="textImeMultiLine"
-                android:paddingStart="8dp"
-                android:paddingEnd="0dp"/>
-
-        </com.egraf.refapp.views.textInput.TeamETI>
-
-        <com.egraf.refapp.views.textInput.TeamETI
-            android:id="@+id/team_guest_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:hint="@string/guest_team"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/team_home_layout"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:inputType="textImeMultiLine"
-                android:paddingStart="8dp"
-                android:paddingEnd="0dp"/>
-
-        </com.egraf.refapp.views.textInput.TeamETI>
-
-        <!--    Second line-->
-        <com.egraf.refapp.views.textInput.StadiumETI
-            android:id="@+id/stadium_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:hint="@string/stadium"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/team_home_layout"
-            app:startIconDrawable="@drawable/ic_stadium"
+        android:layout_marginTop="4dp"
+        android:hint="@string/stadium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/home_team_view"
+        app:startIconDrawable="@drawable/ic_stadium"
             app:startIconTint="@color/orange">
 
             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
@@ -260,4 +265,3 @@
             android:contentDescription="@string/delete" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>

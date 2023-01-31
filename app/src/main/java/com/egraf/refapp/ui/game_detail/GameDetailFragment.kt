@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.R
 import com.egraf.refapp.database.local.entities.League
@@ -18,6 +19,7 @@ import com.egraf.refapp.ui.dialogs.DatePickerFragment
 import com.egraf.refapp.ui.dialogs.DeleteDialog
 import com.egraf.refapp.ui.dialogs.TimePickerFragment
 import com.egraf.refapp.ui.FragmentWithToolbar
+import com.egraf.refapp.views.custom_views.GameComponent
 import com.egraf.refapp.views.textInput.RefereeETI
 import com.egraf.refapp.views.textInput.TeamETI
 import java.util.*
@@ -81,23 +83,35 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
 
     override fun onStart() {
         super.onStart()
-        binding.teamHomeLayout
-            .init(this, gameDetailViewModel, TeamETI.TypeTeam.HOME_TEAM)
-            .whatDoWhenTextMatchedEntity { team ->
-                gameDetailViewModel.setHomeTeam(team as Team?)
-            }
-            .whatDoWhenTextIsBlank {
-                gameDetailViewModel.setHomeTeam(null)
-            }
+        binding.homeTeamView.bind(
+            this.parentFragmentManager,
+            viewLifecycleOwner,
+            viewLifecycleOwner.lifecycleScope
+        )
+        binding.homeTeamView.item = GameComponent()
+        binding.guestTeamView.bind(
+            this.parentFragmentManager,
+            viewLifecycleOwner,
+            viewLifecycleOwner.lifecycleScope
+        )
+        binding.guestTeamView.item = GameComponent()
+//        binding.guestTeamView.bind(parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope)
+//            .init(this, gameDetailViewModel, TeamETI.TypeTeam.HOME_TEAM)
+//            .whatDoWhenTextMatchedEntity { team ->
+//                gameDetailViewModel.setHomeTeam(team as Team?)
+//            }
+//            .whatDoWhenTextIsBlank {
+//                gameDetailViewModel.setHomeTeam(null)
+//            }
 
-        binding.teamGuestLayout
-            .init(this, gameDetailViewModel, TeamETI.TypeTeam.GUEST_TEAM)
-            .whatDoWhenTextMatchedEntity { team ->
-                gameDetailViewModel.setGuestTeam(team as Team?)
-            }
-            .whatDoWhenTextIsBlank {
-                gameDetailViewModel.setGuestTeam(null)
-            }
+//        binding.teamGuestLayout
+//            .init(this, gameDetailViewModel, TeamETI.TypeTeam.GUEST_TEAM)
+//            .whatDoWhenTextMatchedEntity { team ->
+//                gameDetailViewModel.setGuestTeam(team as Team?)
+//            }
+//            .whatDoWhenTextIsBlank {
+//                gameDetailViewModel.setGuestTeam(null)
+//            }
 
         binding.stadiumLayout
             .init(this, gameDetailViewModel)
@@ -201,8 +215,8 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
 
     private fun updateUI() {
         val textInputs = listOf(
-            binding.teamHomeLayout,
-            binding.teamGuestLayout,
+//            binding.teamHomeLayout,
+//            binding.teamGuestLayout,
             binding.stadiumLayout,
             binding.leagueLayout,
             binding.chiefRefereeLayout,
@@ -212,8 +226,8 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
             binding.inspectorLayout
         )
         val attributesList = listOf(
-            gameDetailViewModel.gameWithAttributes.homeTeam,
-            gameDetailViewModel.gameWithAttributes.guestTeam,
+//            gameDetailViewModel.gameWithAttributes.homeTeam,
+//            gameDetailViewModel.gameWithAttributes.guestTeam,
             gameDetailViewModel.gameWithAttributes.stadium,
             gameDetailViewModel.gameWithAttributes.league,
             gameDetailViewModel.gameWithAttributes.chiefReferee,
