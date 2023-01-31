@@ -33,235 +33,163 @@
         custom:startIcon="@drawable/ic_vertical_vector_separator"
         custom:endIcon="@drawable/ic_close_bracket"
         />
-<!--    <com.egraf.refapp.views.custom_views.game_components.GuestTeamComponentInputWithDialogs-->
-<!--        android:id="@+id/guest_team_view"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintBottom_toBottomOf="@id/home_team_view"-->
-<!---->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_weight="0.5"-->
-<!--        app:layout_constraintStart_toEndOf="@id/home_team_view"-->
-<!--        app:layout_constraintTop_toTopOf="@id/home_team_view"-->
-<!---->
-<!--        custom:endIcon="@drawable/ic_close_bracket"-->
-<!--        custom:startIcon="@drawable/ic_vertical_vector_separator"-->
-<!--        custom:title="@string/guest_team" />-->
 
-    <!--        <com.egraf.refapp.views.custom_views.game_components.LeagueComponentInputWithDialogs-->
-    <!--            android:id="@+id/league_view"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!---->
-    <!--            custom:mIcon="@drawable/ic_cup"-->
-    <!--            custom:title="@string/league"-->
-    <!--            custom:startIcon="@drawable/ic_open_bracket"-->
-    <!--            custom:endIcon="@drawable/ic_close_bracket"-->
-    <!--            />-->
-
-    <!--    Second line-->
-    <com.egraf.refapp.views.textInput.StadiumETI
-        android:id="@+id/stadium_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <com.egraf.refapp.views.custom_views.game_components.StadiumComponentInputWithDialogs
+        android:id="@+id/stadium_component_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:hint="@string/stadium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/home_team_view"
+
+        custom:mIcon="@drawable/ic_stadium"
+        custom:title="@string/stadium"
+    custom:startIcon="@drawable/ic_open_bracket"
+    custom:endIcon="@drawable/ic_close_bracket"/>
+
+    <com.egraf.refapp.views.custom_views.game_components.LeagueComponentInputWithDialogs
+        android:id="@+id/league_component_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/home_team_view"
-        app:startIconDrawable="@drawable/ic_stadium"
-            app:startIconTint="@color/orange">
+        app:layout_constraintTop_toBottomOf="@id/stadium_component_view"
 
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:inputType="textImeMultiLine"
-                android:paddingStart="8dp"
-                android:paddingEnd="0dp"/>
+        custom:mIcon="@drawable/ic_cup"
+        custom:title="@string/league"
+        custom:startIcon="@drawable/ic_open_bracket"
+        custom:endIcon="@drawable/ic_close_bracket"/>
 
-        </com.egraf.refapp.views.textInput.StadiumETI>
 
-        <com.egraf.refapp.views.textInput.LeagueETI
-            android:id="@+id/league_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:hint="@string/league"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/stadium_layout"
-            app:startIconDrawable="@drawable/ic_football_ball"
-            app:startIconTint="@color/orange">
+    <com.egraf.refapp.views.custom_views.game_components.ChiefRefereeComponentInputWithDialogs
+        android:id="@+id/chief_referee_component_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/league_component_view"
 
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:inputType="textImeMultiLine"
-                android:paddingStart="8dp"
-                android:paddingEnd="0dp"/>
+        custom:mIcon="@drawable/ic_whistle"
+        custom:title="@string/chief_referee"
+        custom:startIcon="@drawable/ic_open_bracket"
+        custom:endIcon="@drawable/ic_close_bracket"/>
 
-        </com.egraf.refapp.views.textInput.LeagueETI>
 
-        <com.egraf.refapp.views.textInput.RefereeETI
-            android:id="@+id/chief_referee_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:hint="@string/chief_referee"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/league_layout"
-            app:startIconDrawable="@drawable/ic_whistle"
-            app:startIconTint="@color/orange">
+    <com.egraf.refapp.views.custom_views.game_components.FirstAssistantRefereeComponentInputWithDialogs
+        android:id="@+id/first_assistant_component_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chief_referee_component_view"
 
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:inputType="textImeMultiLine"
-                android:paddingStart="8dp"
-                android:paddingEnd="0dp"/>
+        custom:mIcon="@drawable/ic_assistant_flag"
+        custom:title="@string/first_assistant"
+        custom:startIcon="@drawable/ic_open_bracket"
+        custom:endIcon="@drawable/ic_close_bracket"/>
 
-        </com.egraf.refapp.views.textInput.RefereeETI>
 
-        <com.egraf.refapp.views.textInput.RefereeETI
-            android:id="@+id/first_referee_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:hint="@string/first_assistant"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/chief_referee_layout"
-            app:startIconDrawable="@drawable/ic_flag"
-            app:startIconTint="@color/orange">
+    <com.egraf.refapp.views.custom_views.game_components.SecondAssistantRefereeComponentInputWithDialogs
+        android:id="@+id/second_assistant_component_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/first_assistant_component_view"
 
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:inputType="textImeMultiLine"
-                android:paddingStart="8dp"
-                android:paddingEnd="0dp"/>
+        custom:mIcon="@drawable/ic_assistant_flag"
+        custom:title="@string/second_assistant"
+        custom:startIcon="@drawable/ic_open_bracket"
+        custom:endIcon="@drawable/ic_close_bracket"/>
 
-        </com.egraf.refapp.views.textInput.RefereeETI>
 
-        <com.egraf.refapp.views.textInput.RefereeETI
-            android:id="@+id/second_referee_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:hint="@string/second_assistant"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/first_referee_layout"
-            app:startIconDrawable="@drawable/ic_flag"
-            app:startIconTint="@color/orange">
+    <com.egraf.refapp.views.custom_views.game_components.ReserveRefereeComponentInputWithDialogs
+        android:id="@+id/reserve_referee_component_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/second_assistant_component_view"
 
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:focusableInTouchMode="true"
-                android:inputType="textImeMultiLine"
-                android:paddingStart="8dp"
-                android:paddingEnd="0dp"/>
+        custom:mIcon="@drawable/ic_scoreboard"
+        custom:title="@string/reserve_referee"
+        custom:startIcon="@drawable/ic_open_bracket"
+        custom:endIcon="@drawable/ic_close_bracket"/>
 
-        </com.egraf.refapp.views.textInput.RefereeETI>
 
-        <com.egraf.refapp.views.textInput.RefereeETI
-            android:id="@+id/reserve_referee_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:hint="@string/reserve_referee"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/second_referee_layout"
-            app:startIconDrawable="@drawable/ic_scoreboard"
-            app:startIconTint="@color/orange">
+    <com.egraf.refapp.views.custom_views.game_components.InspectorComponentInputWithDialogs
+        android:id="@+id/inspector_component_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reserve_referee_component_view"
 
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:inputType="textImeMultiLine"
-                android:paddingStart="8dp"
-                android:paddingEnd="0dp"/>
+        custom:mIcon="@drawable/ic_inspector"
+        custom:title="@string/inspector"
+        custom:startIcon="@drawable/ic_open_bracket"
+        custom:endIcon="@drawable/ic_close_bracket"/>
 
-        </com.egraf.refapp.views.textInput.RefereeETI>
 
-        <com.egraf.refapp.views.textInput.RefereeETI
-            android:id="@+id/inspector_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:hint="@string/inspector"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/reserve_referee_layout"
-            app:startIconDrawable="@drawable/ic_inspectors_list"
-            app:startIconTint="@color/orange">
+    <com.egraf.refapp.views.custom_views.game_components.DateInputWithDialog
+        android:id="@+id/date_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/time_input"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inspector_component_view"
 
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:inputType="textImeMultiLine"
-                android:paddingStart="8dp"
-                android:paddingEnd="0dp"/>
+        custom:title="@string/date"
+        custom:mIcon="@drawable/ic_calendar"
+        custom:startIcon="@drawable/ic_open_bracket"
+        />
 
-        </com.egraf.refapp.views.textInput.RefereeETI>
+    <com.egraf.refapp.views.custom_views.game_components.TimeInputWithDialog
+        android:id="@+id/time_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/date_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/date_input"
+        app:layout_constraintBottom_toBottomOf="@id/date_input"
 
-        <CheckBox
-            android:id="@+id/game_paid_check_box"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/gamePaidCheckbox"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inspector_layout"
-            app:layout_constraintWidth_percent="0.5" />
+        custom:title="@string/time"
+        custom:mIcon="@drawable/ic_time"
+        custom:startIcon="@drawable/ic_vertical_vector_separator"
+        custom:endIcon="@drawable/ic_close_bracket"
+        />
 
-        <CheckBox
-            android:id="@+id/game_passed_check_box"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/gamePassedCheckBox"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/game_paid_check_box"
-            app:layout_constraintTop_toTopOf="@id/game_paid_check_box"
-            app:layout_constraintWidth_percent="0.5"/>
+    <CheckBox
+        android:id="@+id/game_paid_check_box"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/gamePaidCheckbox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date_input"
+        app:layout_constraintWidth_percent="0.5" />
 
-        <Button
-            android:id="@+id/game_date_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/game_paid_check_box"
-            app:layout_constraintWidth_percent="0.5"
-            tools:text="Wed Nov 14 2022" />
+    <CheckBox
+        android:id="@+id/game_passed_check_box"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/gamePassedCheckBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/game_paid_check_box"
+        app:layout_constraintTop_toTopOf="@id/game_paid_check_box"
+        app:layout_constraintWidth_percent="0.5" />
 
-        <Button
-            android:id="@+id/game_time_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/game_date_button"
-            app:layout_constraintTop_toTopOf="@id/game_date_button"
-            app:layout_constraintWidth_percent="0.5"
-            tools:text="12:00"/>
 
-        <ImageButton
-            android:id="@+id/delete_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/red"
-            android:src="@drawable/ic_delete_forever"
-            app:layout_constraintTop_toBottomOf="@id/game_time_button"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:contentDescription="@string/delete" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageButton
+        android:id="@+id/delete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/red"
+        android:contentDescription="@string/delete"
+        android:src="@drawable/ic_delete_forever"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/game_paid_check_box" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

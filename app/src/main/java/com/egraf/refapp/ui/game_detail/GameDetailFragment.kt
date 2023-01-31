@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
 import com.egraf.refapp.database.local.entities.League
 import com.egraf.refapp.database.local.entities.Referee
@@ -22,6 +23,7 @@ import com.egraf.refapp.ui.FragmentWithToolbar
 import com.egraf.refapp.views.custom_views.GameComponent
 import com.egraf.refapp.views.textInput.RefereeETI
 import com.egraf.refapp.views.textInput.TeamETI
+import kotlinx.coroutines.launch
 import java.util.*
 
 private const val TAG = "GameFragment"
@@ -95,110 +97,66 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
             viewLifecycleOwner.lifecycleScope
         )
         binding.guestTeamView.item = GameComponent()
-//        binding.guestTeamView.bind(parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope)
-//            .init(this, gameDetailViewModel, TeamETI.TypeTeam.HOME_TEAM)
-//            .whatDoWhenTextMatchedEntity { team ->
-//                gameDetailViewModel.setHomeTeam(team as Team?)
-//            }
-//            .whatDoWhenTextIsBlank {
-//                gameDetailViewModel.setHomeTeam(null)
-//            }
+        binding.stadiumComponentView.bind(
+            this.parentFragmentManager,
+            viewLifecycleOwner,
+            viewLifecycleOwner.lifecycleScope
+        )
+        binding.stadiumComponentView.item = GameComponent()
+        binding.leagueComponentView.bind(
+            this.parentFragmentManager,
+            viewLifecycleOwner,
+            viewLifecycleOwner.lifecycleScope
+        )
+        binding.leagueComponentView.item = GameComponent()
+        binding.chiefRefereeComponentView.bind(
+            this.parentFragmentManager,
+            viewLifecycleOwner,
+            viewLifecycleOwner.lifecycleScope
+        )
+        binding.chiefRefereeComponentView.item = GameComponent()
+        binding.firstAssistantComponentView.bind(
+            this.parentFragmentManager,
+            viewLifecycleOwner,
+            viewLifecycleOwner.lifecycleScope
+        )
+        binding.firstAssistantComponentView.item = GameComponent()
+        binding.secondAssistantComponentView.bind(
+            this.parentFragmentManager,
+            viewLifecycleOwner,
+            viewLifecycleOwner.lifecycleScope
+        )
+        binding.secondAssistantComponentView.item = GameComponent()
+        binding.reserveRefereeComponentView.bind(
+            this.parentFragmentManager,
+            viewLifecycleOwner,
+            viewLifecycleOwner.lifecycleScope
+        )
+        binding.reserveRefereeComponentView.item = GameComponent()
+        binding.inspectorComponentView.bind(
+            this.parentFragmentManager,
+            viewLifecycleOwner,
+            viewLifecycleOwner.lifecycleScope
+        )
+        binding.inspectorComponentView.item = GameComponent()
+        binding.dateInput.bind(
+            this.parentFragmentManager,
+            viewLifecycleOwner,
+            viewLifecycleOwner.lifecycleScope
+        )
+        binding.dateInput.item = GameComponent()
 
-//        binding.teamGuestLayout
-//            .init(this, gameDetailViewModel, TeamETI.TypeTeam.GUEST_TEAM)
-//            .whatDoWhenTextMatchedEntity { team ->
-//                gameDetailViewModel.setGuestTeam(team as Team?)
-//            }
-//            .whatDoWhenTextIsBlank {
-//                gameDetailViewModel.setGuestTeam(null)
-//            }
-
-        binding.stadiumLayout
-            .init(this, gameDetailViewModel)
-            .whatDoWhenTextMatchedEntity { stadium ->
-                gameDetailViewModel.setStadium(stadium as Stadium?)
-            }
-            .whatDoWhenTextIsBlank {
-                gameDetailViewModel.setStadium(null)
-            }
-
-        binding.leagueLayout
-            .init(this, gameDetailViewModel)
-            .whatDoWhenTextMatchedEntity { league ->
-                gameDetailViewModel.setLeague(league as League?)
-            }
-            .whatDoWhenTextIsBlank {
-                gameDetailViewModel.setLeague(null)
-            }
-
-        binding.chiefRefereeLayout
-            .init(
-                this,
-                gameDetailViewModel,
-                RefereeETI.TypeReferee.CHIEF_REFEREE
-            ).whatDoWhenTextMatchedEntity { referee ->
-                gameDetailViewModel.setChiefReferee(referee as Referee?)
-            }
-            .whatDoWhenTextIsBlank {
-                gameDetailViewModel.setChiefReferee(null)
-            }
-        binding.firstRefereeLayout
-            .init(
-                this,
-                gameDetailViewModel,
-                RefereeETI.TypeReferee.FIRST_REFEREE
-            ).whatDoWhenTextMatchedEntity { referee ->
-                gameDetailViewModel.setFirstReferee(referee as Referee?)
-            }
-            .whatDoWhenTextIsBlank {
-                gameDetailViewModel.setFirstReferee(null)
-            }
-        binding.secondRefereeLayout.init(
-            this,
-            gameDetailViewModel,
-            RefereeETI.TypeReferee.SECOND_REFEREE
-        ).whatDoWhenTextMatchedEntity { referee ->
-            gameDetailViewModel.setSecondReferee(referee as Referee?)
-        }
-            .whatDoWhenTextIsBlank {
-                gameDetailViewModel.setSecondReferee(null)
-            }
-        binding.reserveRefereeLayout.init(
-            this,
-            gameDetailViewModel,
-            RefereeETI.TypeReferee.RESERVE_REFEREE
-        ).whatDoWhenTextMatchedEntity { referee ->
-            gameDetailViewModel.setReserveReferee(referee as Referee?)
-        }
-            .whatDoWhenTextIsBlank {
-                gameDetailViewModel.setReserveReferee(null)
-            }
-        binding.inspectorLayout
-            .init(this, gameDetailViewModel, RefereeETI.TypeReferee.INSPECTOR)
-            .whatDoWhenTextMatchedEntity { referee ->
-                gameDetailViewModel.setInspector(referee as Referee?)
-            }
-            .whatDoWhenTextIsBlank {
-                gameDetailViewModel.setInspector(null)
-            }
-
+        binding.timeInput.bind(
+            this.parentFragmentManager,
+            viewLifecycleOwner,
+            viewLifecycleOwner.lifecycleScope
+        )
+        binding.timeInput.item = GameComponent()
         binding.gamePaidCheckBox.setOnCheckedChangeListener { _, isPaid ->
             gameDetailViewModel.gameWithAttributes.game.isPaid = isPaid
         }
         binding.gamePassedCheckBox.setOnCheckedChangeListener { _, isPassed ->
             gameDetailViewModel.gameWithAttributes.game.isPassed = isPassed
-        }
-
-        binding.gameDateButton.setOnClickListener {
-            DatePickerFragment
-                .newInstance(gameDetailViewModel.gameWithAttributes.game.dateTime, REQUEST_DATE)
-                .show(parentFragmentManager, REQUEST_DATE)
-        }
-
-        binding.gameTimeButton.setOnClickListener {
-            TimePickerFragment
-                .newInstance(gameDetailViewModel.gameWithAttributes.game.dateTime, REQUEST_TIME)
-                .show(parentFragmentManager, REQUEST_TIME)
         }
 
         binding.deleteButton.setOnClickListener {
@@ -214,35 +172,35 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
     }
 
     private fun updateUI() {
-        val textInputs = listOf(
+//        val textInputs = listOf(
 //            binding.teamHomeLayout,
 //            binding.teamGuestLayout,
-            binding.stadiumLayout,
-            binding.leagueLayout,
-            binding.chiefRefereeLayout,
-            binding.firstRefereeLayout,
-            binding.secondRefereeLayout,
-            binding.reserveRefereeLayout,
-            binding.inspectorLayout
-        )
-        val attributesList = listOf(
+//            binding.stadiumLayout,
+//            binding.leagueLayout,
+//            binding.chiefRefereeLayout,
+//            binding.firstRefereeLayout,
+//            binding.secondRefereeLayout,
+//            binding.reserveRefereeLayout,
+//            binding.inspectorLayout
+//        )
+//        val attributesList = listOf(
 //            gameDetailViewModel.gameWithAttributes.homeTeam,
 //            gameDetailViewModel.gameWithAttributes.guestTeam,
-            gameDetailViewModel.gameWithAttributes.stadium,
-            gameDetailViewModel.gameWithAttributes.league,
-            gameDetailViewModel.gameWithAttributes.chiefReferee,
-            gameDetailViewModel.gameWithAttributes.firstReferee,
-            gameDetailViewModel.gameWithAttributes.secondReferee,
-            gameDetailViewModel.gameWithAttributes.reserveReferee,
-            gameDetailViewModel.gameWithAttributes.inspector
-        )
+//            gameDetailViewModel.gameWithAttributes.stadium,
+//            gameDetailViewModel.gameWithAttributes.league,
+//            gameDetailViewModel.gameWithAttributes.chiefReferee,
+//            gameDetailViewModel.gameWithAttributes.firstReferee,
+//            gameDetailViewModel.gameWithAttributes.secondReferee,
+//            gameDetailViewModel.gameWithAttributes.reserveReferee,
+//            gameDetailViewModel.gameWithAttributes.inspector
+//        )
 
-        for (pair in textInputs.zip(attributesList)) {
-            val textInput = pair.first
-            val attribute = pair.second
-            if (textInput.getText().isBlank())
-                textInput.setText(attribute?.shortName ?: "")
-        }
+//        for (pair in textInputs.zip(attributesList)) {
+//            val textInput = pair.first
+//            val attribute = pair.second
+//            if (textInput.getText().isBlank())
+//                textInput.setText(attribute?.shortName ?: "")
+//        }
 //        updateDate()
 //        updateTime()
 
