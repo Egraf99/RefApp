@@ -11,7 +11,7 @@ interface GameDataSource {
     //    game block
     fun getGames(): Flow<List<GameWithAttributes>>
     fun countGames(): LiveData<Int>
-    fun getGame(id: UUID): LiveData<GameWithAttributes?>
+    fun getGame(id: UUID): Flow<GameWithAttributes?>
     fun updateGame(game: Game)
     fun addGame(game: Game)
     fun deleteGame(game: Game)

@@ -31,7 +31,7 @@ class LocalGameDataSource(context: Context) : GameDataSource {
     //    game block
     override fun getGames(): Flow<List<GameWithAttributes>> = gameDao.getGames()
     override fun countGames(): LiveData<Int> = gameDao.countGames()
-    override fun getGame(id: UUID): LiveData<GameWithAttributes?> = gameDao.getGame(id)
+    override fun getGame(id: UUID): Flow<GameWithAttributes?> = gameDao.getGame(id)
     override fun updateGame(game: Game) {
         executor.execute {
             gameDao.updateGame(game)

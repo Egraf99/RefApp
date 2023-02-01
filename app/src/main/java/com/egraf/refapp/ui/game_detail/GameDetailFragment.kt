@@ -9,29 +9,22 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
-import com.egraf.refapp.database.local.entities.*
+import com.egraf.refapp.database.local.entities.GameWithAttributes
 import com.egraf.refapp.databinding.FragmentGameBinding
-import com.egraf.refapp.ui.dialogs.DatePickerFragment
-import com.egraf.refapp.ui.dialogs.DeleteDialog
-import com.egraf.refapp.ui.dialogs.TimePickerFragment
 import com.egraf.refapp.ui.FragmentWithToolbar
+import com.egraf.refapp.ui.dialogs.DeleteDialog
+import com.egraf.refapp.utils.Status
 import com.egraf.refapp.views.custom_views.GameComponent
-import com.egraf.refapp.views.textInput.RefereeETI
-import com.egraf.refapp.views.textInput.TeamETI
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.util.*
 
 private const val TAG = "GameFragment"
 
 private const val ARG_GAME_ID = "game_id"
-private const val REQUEST_DATE = "DialogDate"
-private const val REQUEST_TIME = "DialogTime"
 private const val REQUEST_DELETE = "DialogDelete"
-private const val DATE_FORMAT = "EEE dd.MM.yyyy"
-private const val TIME_FORMAT = "HH:mm"
 
+@ExperimentalCoroutinesApi
 class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
 
     private val binding get() = _binding!!
@@ -67,16 +60,13 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
         setDisplayHomeAsUpEnabled(true)
         setActionBarTitle(requireContext().getString(R.string.back))
 
-        // при совпадении игры по id инициилизируем GameWithAttribute
-        gameDetailViewModel.gameLiveData.observe(viewLifecycleOwner) { game ->
-            game?.let {
-                gameDetailViewModel.setGameWithAttributes(game)
-                updateUI(it)
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            gameDetailViewModel.flowGameWithAttributes.collect() { gameResource ->
+                if (gameResource.status == Status.SUCCESS && gameResource.data() != null)
+                    updateUI(gameResource.data()!!)
             }
         }
 
-        parentFragmentManager.setFragmentResultListener(REQUEST_DATE, viewLifecycleOwner, this)
-        parentFragmentManager.setFragmentResultListener(REQUEST_TIME, viewLifecycleOwner, this)
         parentFragmentManager.setFragmentResultListener(REQUEST_DELETE, viewLifecycleOwner, this)
     }
 
@@ -157,36 +147,8 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
         }
     }
 
-    /**
-     * Устанавливает дату на кнопке выбора даты
-     */
-    private fun updateDate() {
-//        binding.gameDateButton.text =
-//            DateFormat.format(DATE_FORMAT, gameDetailViewModel.gameWithAttributes.game.dateTime)
-//                .toString()
-    }
-
-    /**
-     * Устанавливает время на кнопке выбора времени
-     */
-    private fun updateTime() {
-//        binding.gameTimeButton.text =
-//            DateFormat.format(TIME_FORMAT, gameDetailViewModel.gameWithAttributes.game.dateTime)
-//                .toString()
-    }
-
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         when (requestKey) {
-            REQUEST_DATE -> {
-//                gameDetailViewModel.gameWithAttributes.game.dateTime =
-//                    DatePickerFragment.getSelectedDate(result)
-//                updateDate()
-            }
-            REQUEST_TIME -> {
-//                gameDetailViewModel.gameWithAttributes.game.dateTime =
-//                    TimePickerFragment.getSelectedTime(result)
-//                updateTime()
-            }
             REQUEST_DELETE -> {
                 when (DeleteDialog.getDeleteAnswer(result)) {
                     AlertDialog.BUTTON_NEGATIVE -> {

@@ -13,7 +13,7 @@ interface GameDao {
     fun getGames(): Flow<List<GameWithAttributes>>
 
     @Query("SELECT * FROM Game WHERE id=(:id)")
-    fun getGame(id: UUID): LiveData<GameWithAttributes?>
+    fun getGame(id: UUID): Flow<GameWithAttributes?>
 
     @Update
     fun updateGame(game: Game)
