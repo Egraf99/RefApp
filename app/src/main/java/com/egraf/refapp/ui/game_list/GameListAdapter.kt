@@ -171,7 +171,7 @@ sealed class GameListHolder(binding: ViewBinding) :
 
         private fun GameListItemBinding.setWeather(weather: Weather) {
             this.weatherText.apply {
-                text = weather.temp.roundToInt().toString()
+                text = context.getString(R.string.temp, weather.temp.roundToInt())
                 visibility = View.VISIBLE
             }
             this.weatherIcon.apply {

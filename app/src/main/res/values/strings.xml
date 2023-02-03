@@ -51,4 +51,5 @@
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="yesterday">Yesterday</string>
+    <string name="temp" translatable="false">%d°</string>
 </resources>
