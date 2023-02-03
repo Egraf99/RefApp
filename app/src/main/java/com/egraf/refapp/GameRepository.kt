@@ -3,6 +3,7 @@ package com.egraf.refapp
 import androidx.lifecycle.LiveData
 import com.egraf.refapp.database.local.entities.*
 import com.egraf.refapp.database.local.source.GameDataSource
+import com.egraf.refapp.utils.getIfNotEmpty
 import kotlinx.coroutines.flow.Flow
 import java.util.*
 
@@ -14,6 +15,7 @@ class GameRepository private constructor(private val dataSource: GameDataSource)
     fun getGame(id: UUID): Flow<GameWithAttributes?> = dataSource.getGame(id)
     fun updateGame(game: Game) = dataSource.updateGame(game)
     fun addGame(game: Game) = dataSource.addGame(game)
+
     fun deleteGame(game: Game) = dataSource.deleteGame(game)
 
     //    stadium block

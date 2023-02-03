@@ -3,6 +3,7 @@ package com.egraf.refapp.database.local
 import androidx.room.TypeConverter
 import com.egraf.refapp.database.local.entities.GameDateTime
 import com.egraf.refapp.database.local.entities.toGameDateTime
+import com.egraf.refapp.utils.getIfNotEmpty
 import java.util.*
 
 class GameTypeConverters {
@@ -14,7 +15,7 @@ class GameTypeConverters {
 
     @TypeConverter
     fun fromUUID(uuid: UUID?): String? {
-        return uuid?.toString()
+        return uuid?.getIfNotEmpty()?.toString()
     }
 
     @TypeConverter
