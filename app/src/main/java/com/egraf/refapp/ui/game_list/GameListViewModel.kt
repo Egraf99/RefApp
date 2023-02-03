@@ -1,6 +1,5 @@
 package com.egraf.refapp.ui.game_list
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egraf.refapp.GameRepository
@@ -15,7 +14,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.time.LocalDate
-import java.time.LocalDateTime
 import kotlin.math.abs
 
 class GameListViewModel: ViewModel() {
@@ -23,8 +21,14 @@ class GameListViewModel: ViewModel() {
         class Sender(
             val date: GameDate, // Для передачи даты от предыдущего значения к следующему
             val gamesInDay: List<GameListViewItem>, // Для отделения группы игр с одинаковой датой (и упорядочивания их внутри группы)
-            val acc: List<GameListViewItem> // Аккумулятор для всех игр
-        )
+            val acc: List<GameListViewItem>, // Аккумулятор для всех игр
+        ) {
+            fun appendRestGamesInDay(): Sender = if (gamesInDay.isEmpty()) this else Sender(
+                date,
+                listOf(),
+                acc + gamesInDay
+            )
+        }
 
         return GameRepository.get().getGames().map { list ->
             // объединяем игры по дате проведения (без учета времени)
@@ -57,7 +61,7 @@ class GameListViewModel: ViewModel() {
                         sender.acc
                     )
                 }
-            }.acc
+            }.appendRestGamesInDay().acc
         }
     }
 
