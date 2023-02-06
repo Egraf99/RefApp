@@ -15,6 +15,7 @@ interface GameDataSource {
     fun updateGame(game: Game)
     fun addGame(game: Game)
     fun deleteGame(game: Game)
+    fun deleteGame(gameId: UUID)
 
     //    stadium block
     fun addStadium(stadium: Stadium)

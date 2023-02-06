@@ -17,6 +17,7 @@ class GameRepository private constructor(private val dataSource: GameDataSource)
     fun addGame(game: Game) = dataSource.addGame(game)
 
     fun deleteGame(game: Game) = dataSource.deleteGame(game)
+    fun deleteGame(gameId: UUID) = dataSource.deleteGame(gameId)
 
     //    stadium block
     fun addStadium(stadium: Stadium) = dataSource.addStadium(stadium)

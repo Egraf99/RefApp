@@ -24,6 +24,9 @@ interface GameDao {
     @Delete
     fun deleteGame(game: Game)
 
+    @Query("DELETE FROM Game WHERE id=:gameId")
+    fun deleteGame(gameId: UUID)
+
     @Query("SELECT COUNT(*) FROM Game")
     fun countGames(): LiveData<Int>
 }

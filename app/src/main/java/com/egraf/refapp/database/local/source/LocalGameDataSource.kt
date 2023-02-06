@@ -47,6 +47,9 @@ class LocalGameDataSource(context: Context) : GameDataSource {
     override fun deleteGame(game: Game) {
         executor.execute { gameDao.deleteGame(game) }
     }
+    override fun deleteGame(gameId:UUID) {
+        executor.execute { gameDao.deleteGame(gameId) }
+    }
 
     //    stadium block
     override fun addStadium(stadium: Stadium) {

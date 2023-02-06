@@ -1,5 +1,6 @@
 package com.egraf.refapp.ui.game_detail
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.database.local.entities.*
@@ -14,8 +15,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import java.util.*
 
-class GameDetailViewModel: ViewModelWithGame(),
-TeamInterface, LeagueInterface, StadiumInterface, RefereeInterface {
+class GameDetailViewModel: ViewModel()  {
     private val gameIdFlow = MutableStateFlow<UUID>(UUID.randomUUID())
 
     @ExperimentalCoroutinesApi
@@ -30,39 +30,7 @@ TeamInterface, LeagueInterface, StadiumInterface, RefereeInterface {
         gameIdFlow.value = gameId
     }
 
-    fun deleteGame(game: Game) {
-        gameRepository.deleteGame(game)
-    }
-
-    override fun addTeamToDB(team: Team) {
-        gameRepository.addTeam(team)
-    }
-
-    override fun getTeamsFromDB(): List<Team> {
-        return gameRepository.getTeams()
-    }
-
-    override fun addLeagueToDB(league: League) {
-        gameRepository.addLeague(league)
-    }
-
-    override fun addStadiumToDB(stadium: Stadium) {
-        gameRepository.addStadium(stadium)
-    }
-
-    override fun getLeagueFromDB(): List<League> {
-        return gameRepository.getLeagues()
-    }
-
-    override fun getStadiumsFromDB(): List<Stadium> {
-        return gameRepository.getStadiums()
-    }
-
-    override fun addRefereeToDB(referee: Referee) {
-        gameRepository.addReferee(referee)
-    }
-
-    override fun getRefereeFromDB(): List<Referee> {
-        return gameRepository.getReferees()
+    fun deleteGame() {
+        GameRepository.get().deleteGame(gameIdFlow.value)
     }
 }

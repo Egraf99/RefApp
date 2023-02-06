@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
 import com.egraf.refapp.database.local.entities.GameWithAttributes
 import com.egraf.refapp.databinding.FragmentGameBinding
@@ -105,23 +106,12 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
         binding.timeInput.bind(
             this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
         )
-        binding.gamePaidCheckBox.setOnCheckedChangeListener { _, isPaid ->
-            gameDetailViewModel.gameWithAttributes.game.isPaid = isPaid
-        }
-        binding.gamePassedCheckBox.setOnCheckedChangeListener { _, isPassed ->
-            gameDetailViewModel.gameWithAttributes.game.isPassed = isPassed
-        }
 
         binding.deleteButton.setOnClickListener {
             DeleteDialog
                 .newInstance(REQUEST_DELETE)
                 .show(parentFragmentManager, REQUEST_DELETE)
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        gameDetailViewModel.updateGame()
     }
 
     private fun updateUI(gameWithAttributes: GameWithAttributes) {
@@ -138,11 +128,11 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
         binding.timeInput.item = GameComponent(gameWithAttributes.game.dateTime.time)
 
         binding.gamePaidCheckBox.apply {
-            isChecked = gameDetailViewModel.gameWithAttributes.game.isPaid
+            isChecked = gameWithAttributes.game.isPaid
             jumpDrawablesToCurrentState()
         }
         binding.gamePassedCheckBox.apply {
-            isChecked = gameDetailViewModel.gameWithAttributes.game.isPassed
+            isChecked = gameWithAttributes.game.isPassed
             jumpDrawablesToCurrentState()
         }
     }
@@ -152,7 +142,7 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
             REQUEST_DELETE -> {
                 when (DeleteDialog.getDeleteAnswer(result)) {
                     AlertDialog.BUTTON_NEGATIVE -> {
-                        gameDetailViewModel.deleteGame(gameDetailViewModel.gameWithAttributes.game)
+                        gameDetailViewModel.deleteGame()
                         findNavController().popBackStack()
                     }
                 }
