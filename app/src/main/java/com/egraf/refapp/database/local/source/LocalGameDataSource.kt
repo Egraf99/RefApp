@@ -97,6 +97,18 @@ class LocalGameDataSource(context: Context) : GameDataSource {
         }
     }
 
+    override fun updatePassedGame(gameId: UUID, isPassed: Boolean) {
+        executor.execute {
+            gameDao.updatePassed(gameId, isPassed)
+        }
+    }
+
+    override fun updatePaidGame(gameId: UUID, isPaid: Boolean) {
+        executor.execute {
+            gameDao.updatePaid(gameId, isPaid)
+        }
+    }
+
     override fun addGame(game: Game) {
         executor.execute {
             gameDao.addGame(game)

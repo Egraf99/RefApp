@@ -49,6 +49,12 @@ interface GameDao {
     @Query("UPDATE Game SET date=:dt WHERE id=:gameId")
     fun updateDateTime(gameId: UUID, dt: GameDateTime)
 
+    @Query("UPDATE Game SET isPassed=:isPassed WHERE id=:gameId")
+    fun updatePassed(gameId: UUID, isPassed: Boolean)
+
+    @Query("UPDATE Game SET isPaid=:isPaid WHERE id=:gameId")
+    fun updatePaid(gameId: UUID, isPaid: Boolean)
+
     @Insert
     fun addGame(game: Game)
 

@@ -128,6 +128,13 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
             }
         )
 
+        binding.gamePassedCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            gameDetailViewModel.updatePassedGame(isChecked)
+        }
+        binding.gamePaidCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            gameDetailViewModel.updatePaidGame(isChecked)
+        }
+
         binding.deleteButton.setOnClickListener {
             DeleteDialog
                 .newInstance(REQUEST_DELETE)

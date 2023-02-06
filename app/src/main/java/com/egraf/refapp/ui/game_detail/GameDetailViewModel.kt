@@ -63,4 +63,10 @@ class GameDetailViewModel: ViewModel()  {
 
     fun updateDateTime(gdt: GameDateTime) =
         GameRepository.get().updateDateTimeInGame(gameId = gameIdFlow.value, dt = gdt)
+
+    fun updatePassedGame(isPassed: Boolean) =
+        GameRepository.get().updatePassedGame(gameId = gameIdFlow.value, isPassed = isPassed)
+
+    fun updatePaidGame(isPaid: Boolean) =
+        GameRepository.get().updatePaidGame(gameId = gameIdFlow.value, isPaid = isPaid)
 }
