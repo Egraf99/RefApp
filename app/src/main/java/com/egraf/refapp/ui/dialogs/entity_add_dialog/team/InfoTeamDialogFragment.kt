@@ -18,6 +18,7 @@ import com.egraf.refapp.databinding.TeamFieldsBinding
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 import com.egraf.refapp.utils.Status
+import com.egraf.refapp.utils.onDoubleClick
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -71,23 +72,10 @@ class InfoTeamDialogFragment(
                 }
             }
         }
-        binding.buttonsBottomBar.deleteButton.setOnClickListener(object : View.OnClickListener {
-            private var clickMoment: Long = 0
-
-            override fun onClick(v: View?) {
-                if (clickMoment + 2000 > System.currentTimeMillis()) {
-                    delete(viewModel.team)
-                    dismiss()
-                } else {
-                    Toast.makeText(
-                        requireContext(), getText(R.string.press_again_delete),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    clickMoment = System.currentTimeMillis()
-                }
-            }
-        }
-        )
+        binding.buttonsBottomBar.deleteButton.onDoubleClick(
+            requireContext(),
+            getString(R.string.press_again_delete)
+        ) { delete(viewModel.team) }
         binding.buttonsBottomBar.cancelButton.setOnClickListener { dismiss() }
         return binding.root
     }

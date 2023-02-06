@@ -18,6 +18,7 @@ import com.egraf.refapp.databinding.FragmentGameBinding
 import com.egraf.refapp.ui.FragmentWithToolbar
 import com.egraf.refapp.ui.dialogs.DeleteDialog
 import com.egraf.refapp.utils.Status
+import com.egraf.refapp.utils.onDoubleClick
 import com.egraf.refapp.views.custom_views.GameComponent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.util.*
@@ -135,10 +136,12 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
             gameDetailViewModel.updatePaidGame(isChecked)
         }
 
-        binding.deleteButton.setOnClickListener {
-            DeleteDialog
-                .newInstance(REQUEST_DELETE)
-                .show(parentFragmentManager, REQUEST_DELETE)
+        binding.deleteButton.onDoubleClick(
+            requireContext(),
+            getString(R.string.press_again_delete)
+        ) {
+            gameDetailViewModel.deleteGame()
+            findNavController().popBackStack()
         }
     }
 
@@ -170,8 +173,6 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
             REQUEST_DELETE -> {
                 when (DeleteDialog.getDeleteAnswer(result)) {
                     AlertDialog.BUTTON_NEGATIVE -> {
-                        gameDetailViewModel.deleteGame()
-                        findNavController().popBackStack()
                     }
                 }
             }
