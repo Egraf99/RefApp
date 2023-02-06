@@ -79,7 +79,10 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
             }
         )
         binding.guestTeamView.bind(
-            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope,
+            onUpdateItem = {
+                gameDetailViewModel.updateGuestTeam(it)
+            }
         )
         binding.stadiumComponentView.bind(
             this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope

@@ -35,4 +35,5 @@ class GameDetailViewModel: ViewModel()  {
     }
 
     fun updateHomeTeam(teamId: UUID) = GameRepository.get().updateHomeTeamInGame(gameId=gameIdFlow.value, teamId=teamId)
+    fun updateGuestTeam(teamId: UUID) = GameRepository.get().updateGuestTeamInGame(gameId=gameIdFlow.value, teamId=teamId)
 }

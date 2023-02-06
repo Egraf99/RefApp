@@ -14,6 +14,7 @@ interface GameDataSource {
     fun getGame(id: UUID): Flow<GameWithAttributes?>
     fun updateGame(game: Game)
     fun updateHomeTeamInGame(gameId: UUID, teamId: UUID)
+    fun updateGuestTeamInGame(gameId: UUID, teamId: UUID)
     fun addGame(game: Game)
     fun deleteGame(game: Game)
     fun deleteGame(gameId: UUID)
