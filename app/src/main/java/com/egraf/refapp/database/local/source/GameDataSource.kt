@@ -15,6 +15,8 @@ interface GameDataSource {
     fun updateGame(game: Game)
     fun updateHomeTeamInGame(gameId: UUID, teamId: UUID)
     fun updateGuestTeamInGame(gameId: UUID, teamId: UUID)
+    fun updateStadiumInGame(gameId: UUID, stadiumId: UUID)
+    fun updateLeagueInGame(gameId: UUID, leagueId: UUID)
     fun addGame(game: Game)
     fun deleteGame(game: Game)
     fun deleteGame(gameId: UUID)

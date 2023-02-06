@@ -16,6 +16,8 @@ class GameRepository private constructor(private val dataSource: GameDataSource)
     fun updateGame(game: Game) = dataSource.updateGame(game)
     fun updateHomeTeamInGame(gameId: UUID, teamId: UUID) = dataSource.updateHomeTeamInGame(gameId, teamId)
     fun updateGuestTeamInGame(gameId: UUID, teamId: UUID) = dataSource.updateGuestTeamInGame(gameId, teamId)
+    fun updateStadiumInGame(gameId: UUID, stadiumId: UUID) = dataSource.updateStadiumInGame(gameId, stadiumId)
+    fun updateLeagueInGame(gameId: UUID, leagueId: UUID) = dataSource.updateLeagueInGame(gameId, leagueId)
     fun addGame(game: Game) = dataSource.addGame(game)
 
     fun deleteGame(game: Game) = dataSource.deleteGame(game)

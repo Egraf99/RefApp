@@ -24,6 +24,12 @@ interface GameDao {
     @Query("UPDATE Game SET guestTeamId=:teamId WHERE id=:gameId")
     fun updateGuestTeam(gameId: UUID, teamId: UUID)
 
+    @Query("UPDATE Game SET stadiumId=:stadiumId WHERE id=:gameId")
+    fun updateStadium(gameId: UUID, stadiumId: UUID)
+
+    @Query("UPDATE Game SET leagueId=:leagueId WHERE id=:gameId")
+    fun updateLeague(gameId: UUID, leagueId: UUID)
+
     @Insert
     fun addGame(game: Game)
 

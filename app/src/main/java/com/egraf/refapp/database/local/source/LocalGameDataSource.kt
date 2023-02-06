@@ -48,6 +48,16 @@ class LocalGameDataSource(context: Context) : GameDataSource {
             gameDao.updateGuestTeam(gameId, teamId)
         }
     }
+    override fun updateStadiumInGame(gameId: UUID, stadiumId: UUID) {
+        executor.execute {
+            gameDao.updateStadium(gameId, stadiumId)
+        }
+    }
+    override fun updateLeagueInGame(gameId: UUID, leagueId: UUID) {
+        executor.execute {
+            gameDao.updateLeague(gameId, leagueId)
+        }
+    }
 
     override fun addGame(game: Game) {
         executor.execute {

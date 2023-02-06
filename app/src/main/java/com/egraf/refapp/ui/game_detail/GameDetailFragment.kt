@@ -74,21 +74,19 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
         super.onStart()
         binding.homeTeamView.bind(
             this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope,
-            onUpdateItem = {
-                gameDetailViewModel.updateHomeTeam(it)
-            }
+            onUpdateItem = { gameDetailViewModel.updateHomeTeam(it) }
         )
         binding.guestTeamView.bind(
             this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope,
-            onUpdateItem = {
-                gameDetailViewModel.updateGuestTeam(it)
-            }
+            onUpdateItem = { gameDetailViewModel.updateGuestTeam(it) }
         )
         binding.stadiumComponentView.bind(
-            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope,
+            onUpdateItem = { gameDetailViewModel.updateStadium(it) }
         )
         binding.leagueComponentView.bind(
-            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope,
+            onUpdateItem = {gameDetailViewModel.updateLeague(it)}
         )
         binding.chiefRefereeComponentView.bind(
             this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
