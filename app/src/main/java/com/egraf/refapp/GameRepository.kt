@@ -14,6 +14,7 @@ class GameRepository private constructor(private val dataSource: GameDataSource)
     fun countGames(): LiveData<Int> = dataSource.countGames()
     fun getGame(id: UUID): Flow<GameWithAttributes?> = dataSource.getGame(id)
     fun updateGame(game: Game) = dataSource.updateGame(game)
+    fun updateHomeTeamInGame(gameId: UUID, teamId: UUID) = dataSource.updateHomeTeamInGame(gameId, teamId)
     fun addGame(game: Game) = dataSource.addGame(game)
 
     fun deleteGame(game: Game) = dataSource.deleteGame(game)

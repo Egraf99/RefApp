@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
 import com.egraf.refapp.database.local.entities.GameWithAttributes
 import com.egraf.refapp.databinding.FragmentGameBinding
@@ -74,7 +73,10 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
     override fun onStart() {
         super.onStart()
         binding.homeTeamView.bind(
-            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope,
+            onUpdateItem = {
+                gameDetailViewModel.updateHomeTeam(it)
+            }
         )
         binding.guestTeamView.bind(
             this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope

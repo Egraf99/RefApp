@@ -33,4 +33,6 @@ class GameDetailViewModel: ViewModel()  {
     fun deleteGame() {
         GameRepository.get().deleteGame(gameIdFlow.value)
     }
+
+    fun updateHomeTeam(teamId: UUID) = GameRepository.get().updateHomeTeamInGame(gameId=gameIdFlow.value, teamId=teamId)
 }

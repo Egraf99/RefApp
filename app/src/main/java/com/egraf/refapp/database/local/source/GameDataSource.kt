@@ -13,6 +13,7 @@ interface GameDataSource {
     fun countGames(): LiveData<Int>
     fun getGame(id: UUID): Flow<GameWithAttributes?>
     fun updateGame(game: Game)
+    fun updateHomeTeamInGame(gameId: UUID, teamId: UUID)
     fun addGame(game: Game)
     fun deleteGame(game: Game)
     fun deleteGame(gameId: UUID)
