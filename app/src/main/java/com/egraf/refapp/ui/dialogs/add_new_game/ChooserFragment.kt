@@ -1,6 +1,7 @@
 package com.egraf.refapp.ui.dialogs.add_new_game
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -38,7 +39,7 @@ abstract class ChooserFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (view != null) {
-            bundle = putGameComponentsInSavedBundle(outState)
+            bundle = putGameComponentsInSavedBundle(bundle)
         }
     }
 
