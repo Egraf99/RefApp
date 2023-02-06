@@ -74,6 +74,11 @@ abstract class AbstractComponentInputWithDialogs<C : Component>(
         }
     }
 
+    private fun updateItem(item: GameComponent<UUID, C>) {
+        this.item = item
+        onUpdateItem(item.getSavedValue { EmptyItem.id })
+    }
+
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         when (requestKey) {
@@ -84,9 +89,8 @@ abstract class AbstractComponentInputWithDialogs<C : Component>(
                 ).filter { it.id != EmptyItem.id }
                 when (SearchDialogFragment.getTypeOfResult(result)) {
                     SearchDialogFragment.Companion.ResultRequest.SEARCH_ITEM_RESULT_REQUEST -> {
-                        this.item = item
                         searchDialogFragment.dismiss()
-                        onUpdateItem(SearchDialogFragment.getId(result))
+                        updateItem(item)
                     }
                     SearchDialogFragment.Companion.ResultRequest.INFO_RESULT_REQUEST -> {
                         infoDialogFragment(SearchDialogFragment.getId(result))
@@ -100,9 +104,11 @@ abstract class AbstractComponentInputWithDialogs<C : Component>(
             }
             requestAdd -> {
                 fragmentManager.close(fragmentSearchTag, fragmentAddTag)
-                this.item = createComponent(
-                    AddTeamDialogFragment.getId(result),
-                    AddTeamDialogFragment.getTitle(result),
+                updateItem(
+                    createComponent(
+                        AddTeamDialogFragment.getId(result),
+                        AddTeamDialogFragment.getTitle(result),
+                    )
                 )
 
             }

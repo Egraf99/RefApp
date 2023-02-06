@@ -2,6 +2,11 @@ package com.egraf.refapp.views.custom_views
 
 sealed class GameComponent<out T, out S: Saving<T>> {
     abstract val isEmpty: Boolean
+    fun getSavedValue(default: () -> @UnsafeVariance T): T = when (this) {
+        is Empty -> default()
+        is Fill -> value.savedValue
+    }
+
     fun getOrElse(default: () -> @UnsafeVariance S): S = when (this) {
         is Empty -> default()
         is Fill -> value
