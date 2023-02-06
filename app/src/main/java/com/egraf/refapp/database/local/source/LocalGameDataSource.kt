@@ -91,6 +91,12 @@ class LocalGameDataSource(context: Context) : GameDataSource {
         }
     }
 
+    override fun updateDateTimeInGame(gameId: UUID, dt: GameDateTime) {
+        executor.execute {
+            gameDao.updateDateTime(gameId, dt)
+        }
+    }
+
     override fun addGame(game: Game) {
         executor.execute {
             gameDao.addGame(game)

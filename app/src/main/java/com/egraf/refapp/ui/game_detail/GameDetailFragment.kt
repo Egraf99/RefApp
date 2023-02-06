@@ -10,6 +10,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.R
+import com.egraf.refapp.database.local.entities.GameDate
+import com.egraf.refapp.database.local.entities.GameDateTime
+import com.egraf.refapp.database.local.entities.GameTime
 import com.egraf.refapp.database.local.entities.GameWithAttributes
 import com.egraf.refapp.databinding.FragmentGameBinding
 import com.egraf.refapp.ui.FragmentWithToolbar
@@ -109,10 +112,20 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
             onUpdateItem = { gameDetailViewModel.updateInspector(it) }
         )
         binding.dateInput.bind(
-            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope,
+            onUpdateDate = {
+                gameDetailViewModel.updateDateTime(
+                    GameDateTime(it, binding.timeInput.item.getOrElse { GameTime() })
+                )
+            }
         )
         binding.timeInput.bind(
-            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope,
+            onUpdateTime = {
+                gameDetailViewModel.updateDateTime(
+                    GameDateTime(binding.dateInput.item.getOrElse { GameDate() }, it)
+                )
+            }
         )
 
         binding.deleteButton.setOnClickListener {

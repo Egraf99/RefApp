@@ -60,4 +60,7 @@ class GameDetailViewModel: ViewModel()  {
 
     fun updateInspector(refereeId: UUID) =
         GameRepository.get().updateInspectorInGame(gameId = gameIdFlow.value, refereeId = refereeId)
+
+    fun updateDateTime(gdt: GameDateTime) =
+        GameRepository.get().updateDateTimeInGame(gameId = gameIdFlow.value, dt = gdt)
 }

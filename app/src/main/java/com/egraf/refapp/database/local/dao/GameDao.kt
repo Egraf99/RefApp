@@ -3,6 +3,7 @@ package com.egraf.refapp.database.local.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.egraf.refapp.database.local.entities.Game
+import com.egraf.refapp.database.local.entities.GameDateTime
 import com.egraf.refapp.database.local.entities.GameWithAttributes
 import kotlinx.coroutines.flow.Flow
 import java.util.*
@@ -44,6 +45,9 @@ interface GameDao {
 
     @Query("UPDATE Game SET inspectorId=:refereeId WHERE id=:gameId")
     fun updateInspector(gameId: UUID, refereeId: UUID)
+
+    @Query("UPDATE Game SET date=:dt WHERE id=:gameId")
+    fun updateDateTime(gameId: UUID, dt: GameDateTime)
 
     @Insert
     fun addGame(game: Game)

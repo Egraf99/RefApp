@@ -22,6 +22,7 @@ interface GameDataSource {
     fun updateSecondAssistantInGame(gameId: UUID, refereeId: UUID)
     fun updateReserveRefereeInGame(gameId: UUID, refereeId: UUID)
     fun updateInspectorInGame(gameId: UUID, refereeId: UUID)
+    fun updateDateTimeInGame(gameId: UUID, dt: GameDateTime)
     fun addGame(game: Game)
     fun deleteGame(game: Game)
     fun deleteGame(gameId: UUID)
