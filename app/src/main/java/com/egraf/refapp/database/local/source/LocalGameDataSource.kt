@@ -48,14 +48,46 @@ class LocalGameDataSource(context: Context) : GameDataSource {
             gameDao.updateGuestTeam(gameId, teamId)
         }
     }
+
     override fun updateStadiumInGame(gameId: UUID, stadiumId: UUID) {
         executor.execute {
             gameDao.updateStadium(gameId, stadiumId)
         }
     }
+
     override fun updateLeagueInGame(gameId: UUID, leagueId: UUID) {
         executor.execute {
             gameDao.updateLeague(gameId, leagueId)
+        }
+    }
+
+    override fun updateChiefRefereeInGame(gameId: UUID, refereeId: UUID) {
+        executor.execute {
+            gameDao.updateChiefReferee(gameId, refereeId)
+        }
+    }
+
+    override fun updateFirstAssistantInGame(gameId: UUID, refereeId: UUID) {
+        executor.execute {
+            gameDao.updateFirstAssistant(gameId, refereeId)
+        }
+    }
+
+    override fun updateSecondAssistantInGame(gameId: UUID, refereeId: UUID) {
+        executor.execute {
+            gameDao.updateSecondAssistant(gameId, refereeId)
+        }
+    }
+
+    override fun updateReserveRefereeInGame(gameId: UUID, refereeId: UUID) {
+        executor.execute {
+            gameDao.updateReserveReferee(gameId, refereeId)
+        }
+    }
+
+    override fun updateInspectorInGame(gameId: UUID, refereeId: UUID) {
+        executor.execute {
+            gameDao.updateInspector(gameId, refereeId)
         }
     }
 
@@ -68,7 +100,8 @@ class LocalGameDataSource(context: Context) : GameDataSource {
     override fun deleteGame(game: Game) {
         executor.execute { gameDao.deleteGame(game) }
     }
-    override fun deleteGame(gameId:UUID) {
+
+    override fun deleteGame(gameId: UUID) {
         executor.execute { gameDao.deleteGame(gameId) }
     }
 

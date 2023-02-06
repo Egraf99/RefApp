@@ -86,22 +86,27 @@ class GameDetailFragment : FragmentWithToolbar(), FragmentResultListener {
         )
         binding.leagueComponentView.bind(
             this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope,
-            onUpdateItem = {gameDetailViewModel.updateLeague(it)}
+            onUpdateItem = { gameDetailViewModel.updateLeague(it) }
         )
         binding.chiefRefereeComponentView.bind(
-            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope,
+            onUpdateItem = { gameDetailViewModel.updateChiefReferee(it) }
         )
         binding.firstAssistantComponentView.bind(
-            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope,
+            onUpdateItem = { gameDetailViewModel.updateFirstAssistant(it) }
         )
         binding.secondAssistantComponentView.bind(
-            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope,
+            onUpdateItem = { gameDetailViewModel.updateSecondAssistant(it) }
         )
         binding.reserveRefereeComponentView.bind(
-            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope,
+            onUpdateItem = { gameDetailViewModel.updateReserveReferee(it) }
         )
         binding.inspectorComponentView.bind(
-            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope
+            this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope,
+            onUpdateItem = { gameDetailViewModel.updateInspector(it) }
         )
         binding.dateInput.bind(
             this.parentFragmentManager, viewLifecycleOwner, viewLifecycleOwner.lifecycleScope

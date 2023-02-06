@@ -34,8 +34,30 @@ class GameDetailViewModel: ViewModel()  {
         GameRepository.get().deleteGame(gameIdFlow.value)
     }
 
-    fun updateHomeTeam(teamId: UUID) = GameRepository.get().updateHomeTeamInGame(gameId=gameIdFlow.value, teamId=teamId)
-    fun updateGuestTeam(teamId: UUID) = GameRepository.get().updateGuestTeamInGame(gameId=gameIdFlow.value, teamId=teamId)
-    fun updateStadium(stadiumId: UUID) = GameRepository.get().updateStadiumInGame(gameId=gameIdFlow.value, stadiumId =stadiumId)
-    fun updateLeague(leagueId: UUID) = GameRepository.get().updateLeagueInGame(gameId=gameIdFlow.value, leagueId = leagueId)
+    fun updateHomeTeam(teamId: UUID) =
+        GameRepository.get().updateHomeTeamInGame(gameId = gameIdFlow.value, teamId = teamId)
+
+    fun updateGuestTeam(teamId: UUID) =
+        GameRepository.get().updateGuestTeamInGame(gameId = gameIdFlow.value, teamId = teamId)
+
+    fun updateStadium(stadiumId: UUID) =
+        GameRepository.get().updateStadiumInGame(gameId = gameIdFlow.value, stadiumId = stadiumId)
+
+    fun updateLeague(leagueId: UUID) =
+        GameRepository.get().updateLeagueInGame(gameId = gameIdFlow.value, leagueId = leagueId)
+
+    fun updateChiefReferee(refereeId: UUID) = GameRepository.get()
+        .updateChiefRefereeInGame(gameId = gameIdFlow.value, refereeId = refereeId)
+
+    fun updateFirstAssistant(refereeId: UUID) = GameRepository.get()
+        .updateFirstAssistantInGame(gameId = gameIdFlow.value, refereeId = refereeId)
+
+    fun updateSecondAssistant(refereeId: UUID) = GameRepository.get()
+        .updateSecondAssistantInGame(gameId = gameIdFlow.value, refereeId = refereeId)
+
+    fun updateReserveReferee(refereeId: UUID) = GameRepository.get()
+        .updateReserveRefereeInGame(gameId = gameIdFlow.value, refereeId = refereeId)
+
+    fun updateInspector(refereeId: UUID) =
+        GameRepository.get().updateInspectorInGame(gameId = gameIdFlow.value, refereeId = refereeId)
 }

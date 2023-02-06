@@ -30,6 +30,21 @@ interface GameDao {
     @Query("UPDATE Game SET leagueId=:leagueId WHERE id=:gameId")
     fun updateLeague(gameId: UUID, leagueId: UUID)
 
+    @Query("UPDATE Game SET chiefRefereeId=:refereeId WHERE id=:gameId")
+    fun updateChiefReferee(gameId: UUID, refereeId: UUID)
+
+    @Query("UPDATE Game SET firstRefereeId=:refereeId WHERE id=:gameId")
+    fun updateFirstAssistant(gameId: UUID, refereeId: UUID)
+
+    @Query("UPDATE Game SET secondRefereeId=:refereeId WHERE id=:gameId")
+    fun updateSecondAssistant(gameId: UUID, refereeId: UUID)
+
+    @Query("UPDATE Game SET reserveRefereeId=:refereeId WHERE id=:gameId")
+    fun updateReserveReferee(gameId: UUID, refereeId: UUID)
+
+    @Query("UPDATE Game SET inspectorId=:refereeId WHERE id=:gameId")
+    fun updateInspector(gameId: UUID, refereeId: UUID)
+
     @Insert
     fun addGame(game: Game)
 
