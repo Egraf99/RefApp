@@ -1,13 +1,10 @@
 package com.egraf.refapp.ui.dialogs.entity_info_dialog.stadium
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -17,6 +14,7 @@ import com.egraf.refapp.R
 import com.egraf.refapp.database.local.entities.Stadium
 import com.egraf.refapp.databinding.InfoComponentDialogBinding
 import com.egraf.refapp.databinding.StadiumFieldsBinding
+import com.egraf.refapp.ui.dialogs.entity_info_dialog.AbstractInfoDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 import com.egraf.refapp.utils.Status
@@ -27,16 +25,16 @@ import java.util.*
 private const val TAG = "InfoDialog"
 
 class InfoStadiumDialogFragment(
-    private val title: String = "",
+    title: String = "",
     private val componentId: UUID = EmptyItem.id,
     private val deleteStadiumFunction: (Stadium) -> Unit = {}
-) : DialogFragment() {
-    private val binding get() = _binding!!
+) : AbstractInfoDialogFragment(title) {
+    override val binding get() = _binding!!
     private var _binding: InfoComponentDialogBinding? = null
     private val fieldBinding get() = _fieldBinding!!
     private var _fieldBinding: StadiumFieldsBinding? = null
 
-    private val viewModel: StadiumInfoViewModel by lazy {
+    override val viewModel: StadiumInfoViewModel by lazy {
         ViewModelProvider(
             this,
             GameComponentViewModelFactory(componentId)
@@ -46,7 +44,6 @@ class InfoStadiumDialogFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) { // первое создание диалога
-            viewModel.title = title
             viewModel.deleteFunction = deleteStadiumFunction
         }
     }
@@ -62,7 +59,6 @@ class InfoStadiumDialogFragment(
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.componentId.collect { resource ->
-                    Log.d(TAG, "${resource.status}, ${resource.data}")
                     when (resource.status) {
                         Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
                         Status.SUCCESS -> {
@@ -93,18 +89,8 @@ class InfoStadiumDialogFragment(
         )
     }
 
-    private fun setSaveButtonDim() {
-        binding.buttonsBottomBar.saveButton.setBackgroundResource(R.drawable.ic_accept_button_dim)
-    }
-
-    private fun setSaveButtonBright() {
-        binding.buttonsBottomBar.saveButton.setBackgroundResource(R.drawable.accept_button)
-    }
-
-
     override fun onStart() {
         super.onStart()
-        binding.dialogTitle.text = viewModel.title
         fieldBinding.title.editText.addTextChangedListener {
             val newTitle = it.toString()
             if (newTitle != viewModel.stadium.title) {

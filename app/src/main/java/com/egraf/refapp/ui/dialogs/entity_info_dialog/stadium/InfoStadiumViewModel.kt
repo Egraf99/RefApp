@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.database.local.entities.Stadium
+import com.egraf.refapp.ui.dialogs.entity_info_dialog.InfoViewModel
 import com.egraf.refapp.utils.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,8 +14,7 @@ import java.util.*
 
 class StadiumInfoViewModel(
     private val stadiumId: UUID,
-) : ViewModel() {
-    var title: String = ""
+) : InfoViewModel() {
     var stadium: Stadium = Stadium()
     var deleteFunction: (Stadium) -> Unit = { GameRepository.get().deleteStadium(it) }
     private val _componentId = MutableStateFlow<Resource<Stadium>>(Resource.loading())
