@@ -1,30 +1,30 @@
-package com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium
+package com.egraf.refapp.ui.dialogs.entity_info_dialog.league
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.egraf.refapp.GameRepository
-import com.egraf.refapp.database.local.entities.Stadium
+import com.egraf.refapp.database.local.entities.League
 import com.egraf.refapp.utils.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.*
 
-class StadiumInfoViewModel(
-    stadiumId: UUID,
+class InfoLeagueViewModel(
+    leagueId: UUID,
 ) : ViewModel() {
     var title: String = ""
-    var stadium: Stadium = Stadium()
-    var deleteFunction: (Stadium) -> Unit = { GameRepository.get().deleteStadium(it) }
-    private val _componentId = MutableStateFlow<Resource<Stadium>>(Resource.loading())
-    val componentId: StateFlow<Resource<Stadium>> = _componentId
+    var league: League = League()
+    var deleteFunction: (League) -> Unit = { GameRepository.get().deleteLeague(it) }
+    private val _componentId = MutableStateFlow<Resource<League>>(Resource.loading())
+    val flowResourceLeague: StateFlow<Resource<League>> = _componentId
 
     // Load data from a suspend fun and mutate state
     init {
         viewModelScope.launch {
-            GameRepository.get().getStadium(stadiumId).collect() {
-                _componentId.value = Resource.success(it ?: Stadium())
+            GameRepository.get().getLeague(leagueId).collect {
+                _componentId.value = Resource.success(it ?: League())
             }
         }
     }
@@ -35,6 +35,6 @@ class GameComponentViewModelFactory(
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return StadiumInfoViewModel(componentId) as T
+        return InfoLeagueViewModel(componentId) as T
     }
 }

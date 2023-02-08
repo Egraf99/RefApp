@@ -137,6 +137,10 @@ class LocalGameDataSource(context: Context) : GameDataSource {
             stadiumDao.updateStadium(stadium)
         }
     }
+
+    override fun updateStadiumTitle(stadiumId: UUID, title: String) {
+        executor.execute { stadiumDao.updateStadiumTitle(stadiumId, title) }
+    }
     override fun deleteStadium(stadium: Stadium) {
         executor.execute { stadiumDao.deleteStadium(stadium) }
     }

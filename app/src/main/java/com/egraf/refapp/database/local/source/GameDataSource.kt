@@ -34,6 +34,7 @@ interface GameDataSource {
     fun getStadiums(): List<Stadium>
     fun getStadium(id: UUID): Flow<Stadium?>
     fun updateStadium(stadium: Stadium)
+    fun updateStadiumTitle(stadiumId: UUID, title: String)
     fun deleteStadium(stadium: Stadium)
 
     //    league block

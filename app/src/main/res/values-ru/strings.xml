@@ -51,4 +51,5 @@
     <string name="today">Сегодня</string>
     <string name="tomorrow">Завтра</string>
     <string name="yesterday">Вчера</string>
+    <string name="save_game">Сохранить игру</string>
 </resources>

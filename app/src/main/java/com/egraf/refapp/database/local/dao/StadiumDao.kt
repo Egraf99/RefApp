@@ -19,6 +19,9 @@ interface StadiumDao {
     @Update
     fun updateStadium(stadium: Stadium)
 
+    @Query("UPDATE Stadium SET name=:title WHERE id=:stadiumId")
+    fun updateStadiumTitle(stadiumId: UUID, title: String)
+
     @Delete
     fun deleteStadium(stadium: Stadium)
 }

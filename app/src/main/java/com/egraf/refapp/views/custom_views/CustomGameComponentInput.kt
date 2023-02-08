@@ -14,7 +14,7 @@ import com.egraf.refapp.R
 class CustomGameComponentInput(context: Context, attrs: AttributeSet): ConstraintLayout(context, attrs) {
     private val animTextView: TextView
     private val tintTextView: TextView
-    private val editText: EditText
+    val editText: EditText
     val text: String
         get() = editText.text.toString()
 

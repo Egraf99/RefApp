@@ -1,10 +1,12 @@
-package com.egraf.refapp.ui.dialogs.entity_add_dialog.league
+package com.egraf.refapp.ui.dialogs.entity_info_dialog.stadium
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
@@ -12,9 +14,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.egraf.refapp.R
-import com.egraf.refapp.database.local.entities.League
+import com.egraf.refapp.database.local.entities.Stadium
 import com.egraf.refapp.databinding.InfoComponentDialogBinding
-import com.egraf.refapp.databinding.LeagueFieldsBinding
+import com.egraf.refapp.databinding.StadiumFieldsBinding
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 import com.egraf.refapp.utils.Status
@@ -24,28 +26,28 @@ import java.util.*
 
 private const val TAG = "InfoDialog"
 
-class InfoLeagueDialogFragment(
+class InfoStadiumDialogFragment(
     private val title: String = "",
     private val componentId: UUID = EmptyItem.id,
-    private val deleteFunction: (League) -> Unit = {}
+    private val deleteStadiumFunction: (Stadium) -> Unit = {}
 ) : DialogFragment() {
     private val binding get() = _binding!!
     private var _binding: InfoComponentDialogBinding? = null
     private val fieldBinding get() = _fieldBinding!!
-    private var _fieldBinding: LeagueFieldsBinding? = null
+    private var _fieldBinding: StadiumFieldsBinding? = null
 
-    private val viewModel: InfoLeagueViewModel by lazy {
+    private val viewModel: StadiumInfoViewModel by lazy {
         ViewModelProvider(
             this,
             GameComponentViewModelFactory(componentId)
-        )[InfoLeagueViewModel::class.java]
+        )[StadiumInfoViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) { // первое создание диалога
             viewModel.title = title
-            viewModel.deleteFunction = deleteFunction
+            viewModel.deleteFunction = deleteStadiumFunction
         }
     }
 
@@ -56,16 +58,17 @@ class InfoLeagueDialogFragment(
     ): View {
         setCustomBackground()
         _binding = InfoComponentDialogBinding.inflate(inflater, container, false)
-        _fieldBinding = LeagueFieldsBinding.bind(binding.root)
+        _fieldBinding = StadiumFieldsBinding.bind(binding.root)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.flowResourceLeague.collect { resource ->
+                viewModel.componentId.collect { resource ->
+                    Log.d(TAG, "${resource.status}, ${resource.data}")
                     when (resource.status) {
                         Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
                         Status.SUCCESS -> {
                             binding.progressBar.visibility = View.GONE
-                            viewModel.league = resource.data() ?: League()
-                            updateUI(viewModel.league.name)
+                            viewModel.stadium = resource.data()
+                            updateUI(viewModel.stadium.getName())
                         }
                         Status.ERROR -> {}
                     }
@@ -76,23 +79,48 @@ class InfoLeagueDialogFragment(
         binding.buttonsBottomBar.deleteButton.onDoubleClick(
             requireContext(),
             getString(R.string.press_again_delete)
-        ) { delete(viewModel.league) }
+        ) { delete(viewModel.stadium) }
         return binding.root
     }
 
-    private fun delete(league: League) {
-        viewModel.deleteFunction(league)
+    private fun delete(stadium: Stadium) {
+        viewModel.deleteFunction(stadium)
         setFragmentResult(
             arguments?.getString(REQUEST) ?: "Unknown request",
             Bundle().apply {
-                putParcelable(DELETED_LEAGUE, viewModel.league)
+                putParcelable(DELETED_STADIUM, viewModel.stadium)
             }
         )
     }
 
+    private fun setSaveButtonDim() {
+        binding.buttonsBottomBar.saveButton.setBackgroundResource(R.drawable.ic_accept_button_dim)
+    }
+
+    private fun setSaveButtonBright() {
+        binding.buttonsBottomBar.saveButton.setBackgroundResource(R.drawable.accept_button)
+    }
+
+
     override fun onStart() {
         super.onStart()
         binding.dialogTitle.text = viewModel.title
+        fieldBinding.title.editText.addTextChangedListener {
+            val newTitle = it.toString()
+            if (newTitle != viewModel.stadium.title) {
+                setSaveButtonBright()
+                binding.buttonsBottomBar.saveButton.apply {
+                    isClickable = true
+                    setOnClickListener {
+                        viewModel.updateStadiumTitle(newTitle)
+                        this@InfoStadiumDialogFragment.dismiss()
+                    }
+                }
+            } else {
+                binding.buttonsBottomBar.saveButton.isClickable = true
+                setSaveButtonDim()
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -107,19 +135,19 @@ class InfoLeagueDialogFragment(
 
     companion object {
         private const val REQUEST = "Request"
-        private const val DELETED_LEAGUE = "DeleteLeague"
+        private const val DELETED_STADIUM = "DeleteStadium"
 
         operator fun invoke(
             title: String = "",
             componentId: UUID = EmptyItem.id,
-            deleteFunction: (League) -> Unit = {},
+            deleteStadiumFunction: (Stadium) -> Unit = {},
             request: String
-        ): InfoLeagueDialogFragment =
-            InfoLeagueDialogFragment(title, componentId, deleteFunction).apply {
+        ): InfoStadiumDialogFragment =
+            InfoStadiumDialogFragment(title, componentId, deleteStadiumFunction).apply {
                 arguments = Bundle().apply { putString(REQUEST, request) }
             }
 
-        fun getDeletedLeague(bundle: Bundle): League =
-            bundle.getParcelable(DELETED_LEAGUE) ?: League()
+        fun getDeletedStadium(bundle: Bundle): Stadium =
+            bundle.getParcelable(DELETED_STADIUM) ?: Stadium()
     }
 }

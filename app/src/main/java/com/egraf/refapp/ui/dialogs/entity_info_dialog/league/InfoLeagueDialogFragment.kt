@@ -1,4 +1,4 @@
-package com.egraf.refapp.ui.dialogs.entity_add_dialog.stadium
+package com.egraf.refapp.ui.dialogs.entity_info_dialog.league
 
 import android.os.Bundle
 import android.util.Log
@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
@@ -13,9 +15,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.egraf.refapp.R
-import com.egraf.refapp.database.local.entities.Stadium
+import com.egraf.refapp.database.local.entities.League
 import com.egraf.refapp.databinding.InfoComponentDialogBinding
-import com.egraf.refapp.databinding.StadiumFieldsBinding
+import com.egraf.refapp.databinding.LeagueFieldsBinding
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 import com.egraf.refapp.utils.Status
@@ -25,28 +27,28 @@ import java.util.*
 
 private const val TAG = "InfoDialog"
 
-class InfoStadiumDialogFragment(
+class InfoLeagueDialogFragment(
     private val title: String = "",
     private val componentId: UUID = EmptyItem.id,
-    private val deleteStadiumFunction: (Stadium) -> Unit = {}
+    private val deleteFunction: (League) -> Unit = {}
 ) : DialogFragment() {
     private val binding get() = _binding!!
     private var _binding: InfoComponentDialogBinding? = null
     private val fieldBinding get() = _fieldBinding!!
-    private var _fieldBinding: StadiumFieldsBinding? = null
+    private var _fieldBinding: LeagueFieldsBinding? = null
 
-    private val viewModel: StadiumInfoViewModel by lazy {
+    private val viewModel: InfoLeagueViewModel by lazy {
         ViewModelProvider(
             this,
             GameComponentViewModelFactory(componentId)
-        )[StadiumInfoViewModel::class.java]
+        )[InfoLeagueViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) { // первое создание диалога
             viewModel.title = title
-            viewModel.deleteFunction = deleteStadiumFunction
+            viewModel.deleteFunction = deleteFunction
         }
     }
 
@@ -57,17 +59,16 @@ class InfoStadiumDialogFragment(
     ): View {
         setCustomBackground()
         _binding = InfoComponentDialogBinding.inflate(inflater, container, false)
-        _fieldBinding = StadiumFieldsBinding.bind(binding.root)
+        _fieldBinding = LeagueFieldsBinding.bind(binding.root)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.componentId.collect { resource ->
-                    Log.d(TAG, "${resource.status}, ${resource.data}")
+                viewModel.flowResourceLeague.collect { resource ->
                     when (resource.status) {
                         Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
                         Status.SUCCESS -> {
                             binding.progressBar.visibility = View.GONE
-                            viewModel.stadium = resource.data()
-                            updateUI(viewModel.stadium.getName())
+                            viewModel.league = resource.data() ?: League()
+                            updateUI(viewModel.league.name)
                         }
                         Status.ERROR -> {}
                     }
@@ -78,16 +79,26 @@ class InfoStadiumDialogFragment(
         binding.buttonsBottomBar.deleteButton.onDoubleClick(
             requireContext(),
             getString(R.string.press_again_delete)
-        ) { delete(viewModel.stadium) }
+        ) { delete(viewModel.league) }
         return binding.root
     }
 
-    private fun delete(stadium: Stadium) {
-        viewModel.deleteFunction(stadium)
+    private fun setSaveButtonDim() {
+        Log.d("12345", "setSaveButtonDim")
+        binding.buttonsBottomBar.saveButton.setBackgroundResource(R.drawable.ic_accept_button_dim)
+    }
+
+    private fun setSaveButtonBright() {
+        Log.d("12345", "setSaveButtonBright")
+        binding.buttonsBottomBar.saveButton.setBackgroundResource(R.drawable.accept_button)
+    }
+
+    private fun delete(league: League) {
+        viewModel.deleteFunction(league)
         setFragmentResult(
             arguments?.getString(REQUEST) ?: "Unknown request",
             Bundle().apply {
-                putParcelable(DELETED_STADIUM, viewModel.stadium)
+                putParcelable(DELETED_LEAGUE, viewModel.league)
             }
         )
     }
@@ -109,19 +120,19 @@ class InfoStadiumDialogFragment(
 
     companion object {
         private const val REQUEST = "Request"
-        private const val DELETED_STADIUM = "DeleteStadium"
+        private const val DELETED_LEAGUE = "DeleteLeague"
 
         operator fun invoke(
             title: String = "",
             componentId: UUID = EmptyItem.id,
-            deleteStadiumFunction: (Stadium) -> Unit = {},
+            deleteFunction: (League) -> Unit = {},
             request: String
-        ): InfoStadiumDialogFragment =
-            InfoStadiumDialogFragment(title, componentId, deleteStadiumFunction).apply {
+        ): InfoLeagueDialogFragment =
+            InfoLeagueDialogFragment(title, componentId, deleteFunction).apply {
                 arguments = Bundle().apply { putString(REQUEST, request) }
             }
 
-        fun getDeletedStadium(bundle: Bundle): Stadium =
-            bundle.getParcelable(DELETED_STADIUM) ?: Stadium()
+        fun getDeletedLeague(bundle: Bundle): League =
+            bundle.getParcelable(DELETED_LEAGUE) ?: League()
     }
 }

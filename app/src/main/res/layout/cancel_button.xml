@@ -14,6 +14,18 @@
         android:contentDescription="@string/delete" />
 
     <ImageButton
+        android:id="@+id/save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/ic_accept_button_dim"
+        android:contentDescription="@string/save_game"
+        android:clickable="false"
+        app:layout_constraintBottom_toBottomOf="@id/cancel_button"
+        app:layout_constraintEnd_toStartOf="@id/cancel_button"
+        app:layout_constraintTop_toTopOf="@id/cancel_button" />
+
+    <ImageButton
         android:id="@+id/cancel_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

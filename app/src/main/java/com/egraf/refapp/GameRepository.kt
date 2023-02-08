@@ -37,6 +37,7 @@ class GameRepository private constructor(private val dataSource: GameDataSource)
     fun getStadiums(): List<Stadium> = dataSource.getStadiums()
     fun getStadium(id: UUID): Flow<Stadium?> = dataSource.getStadium(id)
     fun updateStadium(stadium: Stadium) = dataSource.updateStadium(stadium)
+    fun updateStadiumTitle(stadiumId: UUID, title: String) = dataSource.updateStadiumTitle(stadiumId, title)
     fun deleteStadium(stadium: Stadium) = dataSource.deleteStadium(stadium)
 
     //    league block

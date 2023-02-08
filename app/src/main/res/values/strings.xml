@@ -52,4 +52,5 @@
     <string name="tomorrow">Tomorrow</string>
     <string name="yesterday">Yesterday</string>
     <string name="temp" translatable="false">%d°</string>
+    <string name="save_game">Save game</string>
 </resources>
