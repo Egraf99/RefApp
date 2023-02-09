@@ -45,6 +45,7 @@ class GameRepository private constructor(private val dataSource: GameDataSource)
     fun getLeagues(): List<League> = dataSource.getLeagues()
     fun addLeague(league: League) = dataSource.addLeague(league)
     fun updateLeague(league: League) = dataSource.updateLeague(league)
+    fun updateLeagueTitle(leagueId: UUID, title: String) = dataSource.updateLeagueTitle(leagueId, title)
     fun deleteLeague(stadium: League) = dataSource.deleteLeague(stadium)
 
     //    team block

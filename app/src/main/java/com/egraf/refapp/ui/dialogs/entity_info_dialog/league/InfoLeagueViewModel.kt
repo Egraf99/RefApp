@@ -21,6 +21,8 @@ class InfoLeagueViewModel(
     private val _componentId = MutableStateFlow<Resource<League>>(Resource.loading())
     val flowResourceLeague: StateFlow<Resource<League>> = _componentId
 
+    fun updateLeagueTitle(title: String) = GameRepository.get().updateLeagueTitle(league.id, title)
+
     // Load data from a suspend fun and mutate state
     init {
         viewModelScope.launch {

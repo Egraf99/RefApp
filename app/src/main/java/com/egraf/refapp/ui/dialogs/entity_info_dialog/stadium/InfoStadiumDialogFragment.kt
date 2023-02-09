@@ -91,16 +91,8 @@ class InfoStadiumDialogFragment(
         fieldBinding.title.editText.addTextChangedListener {
             val newTitle = it.toString()
             if (newTitle != viewModel.stadium.title) {
-                setSaveButtonBright()
-                binding.buttonsBottomBar.saveButton.apply {
-                    isClickable = true
-                    setOnClickListener {
-                        viewModel.updateStadiumTitle(newTitle)
-                        this@InfoStadiumDialogFragment.dismiss()
-                    }
-                }
+                setSaveButtonBright { viewModel.updateStadiumTitle(newTitle) }
             } else {
-                binding.buttonsBottomBar.saveButton.isClickable = false
                 setSaveButtonDim()
             }
         }

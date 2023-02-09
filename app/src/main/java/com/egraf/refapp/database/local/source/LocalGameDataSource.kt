@@ -162,6 +162,11 @@ class LocalGameDataSource(context: Context) : GameDataSource {
             leagueDao.updateLeague(league)
         }
     }
+    override fun updateLeagueTitle(leagueId: UUID, title: String) {
+        executor.execute {
+            leagueDao.updateLeagueTitle(leagueId, title)
+        }
+    }
 
     //    team block
     override fun getTeam(id: UUID): Flow<Team?> = teamDao.getTeam(id)

@@ -22,5 +22,8 @@ interface LeagueDao {
     @Update
     fun updateLeague(league: League)
 
+    @Query("UPDATE League SET name=:title WHERE id=:leagueId")
+    fun updateLeagueTitle(leagueId: UUID, title: String)
+
 
 }

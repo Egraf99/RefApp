@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -87,6 +88,13 @@ class InfoLeagueDialogFragment(
     override fun onStart() {
         super.onStart()
         binding.dialogTitle.text = viewModel.title
+        fieldBinding.title.editText.addTextChangedListener {
+            val newTitle = it.toString()
+            if (newTitle != viewModel.league.title)
+                setSaveButtonBright { viewModel.updateLeagueTitle(newTitle) }
+            else
+                setSaveButtonDim()
+        }
     }
 
     override fun onDestroyView() {

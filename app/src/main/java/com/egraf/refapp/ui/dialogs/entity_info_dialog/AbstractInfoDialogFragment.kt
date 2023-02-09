@@ -46,10 +46,18 @@ abstract class AbstractInfoDialogFragment(private val title: String = ""): Dialo
     }
 
     protected fun setSaveButtonDim() {
+        buttonsBottomBar.saveButton.isClickable = false
         buttonsBottomBar.saveButton.setBackgroundResource(R.drawable.ic_accept_button_dim)
     }
 
-    protected fun setSaveButtonBright() {
+    protected fun setSaveButtonBright(onSave: () -> Unit) {
         buttonsBottomBar.saveButton.setBackgroundResource(R.drawable.accept_button)
+        buttonsBottomBar.saveButton.apply {
+            isClickable = true
+            setOnClickListener {
+                onSave()
+                dismiss()
+            }
+        }
     }
 }

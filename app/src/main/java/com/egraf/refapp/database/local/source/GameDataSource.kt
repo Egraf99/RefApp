@@ -42,6 +42,7 @@ interface GameDataSource {
     fun getLeagues(): List<League>
     fun addLeague(league: League)
     fun updateLeague(league: League)
+    fun updateLeagueTitle(leagueId: UUID, title: String)
     fun deleteLeague(league: League)
 
     //    team block
