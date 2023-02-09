@@ -85,15 +85,18 @@ class InfoLeagueDialogFragment(
         )
     }
 
+    override val saveComponent
+        get() = viewModel::updateLeagueTitle
+
     override fun onStart() {
         super.onStart()
         binding.dialogTitle.text = viewModel.title
         fieldBinding.title.editText.addTextChangedListener {
-            val newTitle = it.toString()
-            if (newTitle != viewModel.league.title)
-                setSaveButtonBright { viewModel.updateLeagueTitle(newTitle) }
-            else
-                setSaveButtonDim()
+            unlockSaveButtonIf { it.toString() != viewModel.league.title }() {
+                viewModel.updateLeagueTitle(
+                    it.toString()
+                )
+            }
         }
     }
 

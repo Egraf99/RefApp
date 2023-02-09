@@ -86,14 +86,16 @@ class InfoStadiumDialogFragment(
         )
     }
 
+    override val saveComponent: (String) -> Unit
+        get() = viewModel::updateStadiumTitle
+
     override fun onStart() {
         super.onStart()
         fieldBinding.title.editText.addTextChangedListener {
-            val newTitle = it.toString()
-            if (newTitle != viewModel.stadium.title) {
-                setSaveButtonBright { viewModel.updateStadiumTitle(newTitle) }
-            } else {
-                setSaveButtonDim()
+            unlockSaveButtonIf { it.toString() != viewModel.stadium.title }() {
+                viewModel.updateStadiumTitle(
+                    it.toString()
+                )
             }
         }
     }

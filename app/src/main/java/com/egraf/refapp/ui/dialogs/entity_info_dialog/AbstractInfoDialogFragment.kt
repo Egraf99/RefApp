@@ -18,6 +18,7 @@ abstract class AbstractInfoDialogFragment(private val title: String = ""): Dialo
     abstract val titleTextView: TextView
     abstract val viewModel: InfoViewModel
     abstract fun onDeleteComponent()
+    abstract val saveComponent: (String) -> Unit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +45,13 @@ abstract class AbstractInfoDialogFragment(private val title: String = ""): Dialo
         super.onStart()
         titleTextView.text = viewModel.title
     }
+
+    protected val unlockSaveButtonIf: (() -> Boolean) -> (() -> Unit) -> Unit =
+        { p: () -> Boolean ->
+            { onSave ->
+                if (p()) setSaveButtonBright(onSave) else setSaveButtonDim()
+            }
+        }
 
     protected fun setSaveButtonDim() {
         buttonsBottomBar.saveButton.isClickable = false
