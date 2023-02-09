@@ -4,13 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.DialogFragment
+import androidx.viewbinding.ViewBinding
 import com.egraf.refapp.R
+import com.egraf.refapp.databinding.CancelButtonBinding
 import com.egraf.refapp.databinding.InfoComponentDialogBinding
 import com.egraf.refapp.utils.onDoubleClick
 
 abstract class AbstractInfoDialogFragment(private val title: String = ""): DialogFragment() {
-    abstract val binding: InfoComponentDialogBinding
+    abstract val binding: ViewBinding
+    abstract val buttonsBottomBar: CancelButtonBinding
+    abstract val titleTextView: TextView
     abstract val viewModel: InfoViewModel
     abstract fun onDeleteComponent()
 
@@ -26,8 +31,8 @@ abstract class AbstractInfoDialogFragment(private val title: String = ""): Dialo
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding.buttonsBottomBar.cancelButton.setOnClickListener { dismiss() }
-        binding.buttonsBottomBar.deleteButton.onDoubleClick(
+        buttonsBottomBar.cancelButton.setOnClickListener { dismiss() }
+        buttonsBottomBar.deleteButton.onDoubleClick(
             requireContext(),
             getString(R.string.press_again_delete),
             this::onDeleteComponent
@@ -37,14 +42,14 @@ abstract class AbstractInfoDialogFragment(private val title: String = ""): Dialo
 
     override fun onStart() {
         super.onStart()
-        binding.dialogTitle.text = viewModel.title
+        titleTextView.text = viewModel.title
     }
 
     protected fun setSaveButtonDim() {
-        binding.buttonsBottomBar.saveButton.setBackgroundResource(R.drawable.ic_accept_button_dim)
+        buttonsBottomBar.saveButton.setBackgroundResource(R.drawable.ic_accept_button_dim)
     }
 
     protected fun setSaveButtonBright() {
-        binding.buttonsBottomBar.saveButton.setBackgroundResource(R.drawable.accept_button)
+        buttonsBottomBar.saveButton.setBackgroundResource(R.drawable.accept_button)
     }
 }

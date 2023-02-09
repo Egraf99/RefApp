@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
@@ -11,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.egraf.refapp.database.local.entities.Stadium
+import com.egraf.refapp.databinding.CancelButtonBinding
 import com.egraf.refapp.databinding.InfoComponentDialogBinding
 import com.egraf.refapp.databinding.StadiumFieldsBinding
 import com.egraf.refapp.ui.dialogs.entity_info_dialog.AbstractInfoDialogFragment
@@ -29,6 +31,8 @@ class InfoStadiumDialogFragment(
 ) : AbstractInfoDialogFragment(title) {
     override val binding get() = _binding!!
     private var _binding: InfoComponentDialogBinding? = null
+    override val buttonsBottomBar: CancelButtonBinding by lazy { binding.buttonsBottomBar }
+    override val titleTextView: TextView by lazy { binding.dialogTitle }
     private val fieldBinding get() = _fieldBinding!!
     private var _fieldBinding: StadiumFieldsBinding? = null
 
