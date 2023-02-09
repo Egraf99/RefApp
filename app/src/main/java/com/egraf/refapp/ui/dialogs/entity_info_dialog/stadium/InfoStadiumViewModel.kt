@@ -16,6 +16,7 @@ class StadiumInfoViewModel(
     private val stadiumId: UUID,
 ) : InfoViewModel() {
     var stadium: Stadium = Stadium()
+    fun deleteStadium() = deleteFunction(stadium)
     var deleteFunction: (Stadium) -> Unit = { GameRepository.get().deleteStadium(it) }
     private val _componentId = MutableStateFlow<Resource<Stadium>>(Resource.loading())
     val componentId: StateFlow<Resource<Stadium>> = _componentId

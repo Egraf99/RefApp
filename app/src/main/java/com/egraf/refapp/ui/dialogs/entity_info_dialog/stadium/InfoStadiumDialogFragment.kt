@@ -10,7 +10,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.egraf.refapp.R
 import com.egraf.refapp.database.local.entities.Stadium
 import com.egraf.refapp.databinding.InfoComponentDialogBinding
 import com.egraf.refapp.databinding.StadiumFieldsBinding
@@ -18,7 +17,6 @@ import com.egraf.refapp.ui.dialogs.entity_info_dialog.AbstractInfoDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 import com.egraf.refapp.utils.Status
-import com.egraf.refapp.utils.onDoubleClick
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -71,16 +69,11 @@ class InfoStadiumDialogFragment(
                 }
             }
         }
-        binding.buttonsBottomBar.cancelButton.setOnClickListener { dismiss() }
-        binding.buttonsBottomBar.deleteButton.onDoubleClick(
-            requireContext(),
-            getString(R.string.press_again_delete)
-        ) { delete(viewModel.stadium) }
-        return binding.root
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
-    private fun delete(stadium: Stadium) {
-        viewModel.deleteFunction(stadium)
+    override fun onDeleteComponent() {
+        viewModel.deleteStadium()
         setFragmentResult(
             arguments?.getString(REQUEST) ?: "Unknown request",
             Bundle().apply {
@@ -103,7 +96,7 @@ class InfoStadiumDialogFragment(
                     }
                 }
             } else {
-                binding.buttonsBottomBar.saveButton.isClickable = true
+                binding.buttonsBottomBar.saveButton.isClickable = false
                 setSaveButtonDim()
             }
         }
