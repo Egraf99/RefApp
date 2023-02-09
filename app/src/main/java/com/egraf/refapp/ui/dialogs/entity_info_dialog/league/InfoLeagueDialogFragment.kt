@@ -1,43 +1,36 @@
 package com.egraf.refapp.ui.dialogs.entity_info_dialog.league
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import com.egraf.refapp.R
+import androidx.lifecycle.whenStarted
 import com.egraf.refapp.database.local.entities.League
 import com.egraf.refapp.databinding.InfoComponentDialogBinding
 import com.egraf.refapp.databinding.LeagueFieldsBinding
+import com.egraf.refapp.ui.dialogs.entity_info_dialog.AbstractInfoDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 import com.egraf.refapp.utils.Status
-import com.egraf.refapp.utils.onDoubleClick
 import kotlinx.coroutines.launch
 import java.util.*
 
 private const val TAG = "InfoDialog"
 
 class InfoLeagueDialogFragment(
-    private val title: String = "",
+    title: String = "",
     private val componentId: UUID = EmptyItem.id,
     private val deleteFunction: (League) -> Unit = {}
-) : DialogFragment() {
-    private val binding get() = _binding!!
+) : AbstractInfoDialogFragment(title) {
+    override val binding get() = _binding!!
     private var _binding: InfoComponentDialogBinding? = null
     private val fieldBinding get() = _fieldBinding!!
     private var _fieldBinding: LeagueFieldsBinding? = null
 
-    private val viewModel: InfoLeagueViewModel by lazy {
+    override val viewModel: InfoLeagueViewModel by lazy {
         ViewModelProvider(
             this,
             GameComponentViewModelFactory(componentId)
@@ -47,7 +40,6 @@ class InfoLeagueDialogFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) { // первое создание диалога
-            viewModel.title = title
             viewModel.deleteFunction = deleteFunction
         }
     }
@@ -61,7 +53,7 @@ class InfoLeagueDialogFragment(
         _binding = InfoComponentDialogBinding.inflate(inflater, container, false)
         _fieldBinding = LeagueFieldsBinding.bind(binding.root)
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.lifecycle.whenStarted {
                 viewModel.flowResourceLeague.collect { resource ->
                     when (resource.status) {
                         Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
@@ -75,26 +67,11 @@ class InfoLeagueDialogFragment(
                 }
             }
         }
-        binding.buttonsBottomBar.cancelButton.setOnClickListener { dismiss() }
-        binding.buttonsBottomBar.deleteButton.onDoubleClick(
-            requireContext(),
-            getString(R.string.press_again_delete)
-        ) { delete(viewModel.league) }
         return binding.root
     }
 
-    private fun setSaveButtonDim() {
-        Log.d("12345", "setSaveButtonDim")
-        binding.buttonsBottomBar.saveButton.setBackgroundResource(R.drawable.ic_accept_button_dim)
-    }
-
-    private fun setSaveButtonBright() {
-        Log.d("12345", "setSaveButtonBright")
-        binding.buttonsBottomBar.saveButton.setBackgroundResource(R.drawable.accept_button)
-    }
-
-    private fun delete(league: League) {
-        viewModel.deleteFunction(league)
+    override fun onDeleteComponent() {
+        viewModel.deleteLeague()
         setFragmentResult(
             arguments?.getString(REQUEST) ?: "Unknown request",
             Bundle().apply {
