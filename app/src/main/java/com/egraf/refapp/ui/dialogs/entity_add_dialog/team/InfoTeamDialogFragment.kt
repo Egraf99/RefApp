@@ -78,7 +78,7 @@ class InfoTeamDialogFragment(
                 }
             }
         }
-        return binding.root
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onDeleteComponent() {

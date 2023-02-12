@@ -13,6 +13,15 @@ interface RefereeDao {
     @Query("SELECT * FROM Referee ORDER BY secondName, firstName, thirdName")
     fun getReferees(): List<Referee>
 
+    @Query("UPDATE Referee SET firstName=:firstName WHERE id=:refereeId")
+    fun updateRefereeFirstName(refereeId: UUID, firstName: String)
+
+    @Query("UPDATE Referee SET secondName=:middleName WHERE id=:refereeId")
+    fun updateRefereeMiddleName(refereeId: UUID, middleName: String)
+
+    @Query("UPDATE Referee SET thirdName=:lastName WHERE id=:refereeId")
+    fun updateRefereeLastName(refereeId: UUID, lastName: String)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addReferee(referee: Referee)
 

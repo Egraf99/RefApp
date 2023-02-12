@@ -59,7 +59,10 @@ class GameRepository private constructor(private val dataSource: GameDataSource)
     fun getReferee(id: UUID): Flow<Referee?> = dataSource.getReferee(id)
     fun getReferees(): List<Referee> = dataSource.getReferees()
     fun addReferee(referee: Referee) = dataSource.addReferee(referee)
-    fun deleteReferee(stadium: Referee) = dataSource.deleteReferee(stadium)
+    fun deleteReferee(referee: Referee) = dataSource.deleteReferee(referee)
+    fun updateRefereeFirstName(refereeId: UUID, firstName: String) = dataSource.updateRefereeFirstName(refereeId, firstName)
+    fun updateRefereeMiddleName(refereeId: UUID, middleName: String) = dataSource.updateRefereeMiddleName(refereeId, middleName)
+    fun updateRefereeLastName(refereeId: UUID, lastName: String) = dataSource.updateRefereeLastName(refereeId, lastName)
 
     // weather block
     fun getWeatherBy3h() = dataSource.getWeathersList()

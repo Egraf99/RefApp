@@ -42,6 +42,8 @@ data class Referee(
         return this
     }
 
+    override fun toString(): String = "$middleName $firstName $lastName"
+
     companion object {
         /**
          * ------- bySpace = false --------

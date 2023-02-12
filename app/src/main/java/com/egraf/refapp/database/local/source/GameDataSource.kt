@@ -57,6 +57,9 @@ interface GameDataSource {
     fun getReferees(): List<Referee>
     fun addReferee(referee: Referee)
     fun deleteReferee(referee: Referee)
+    fun updateRefereeFirstName(refereeId: UUID, firstName: String)
+    fun updateRefereeMiddleName(refereeId: UUID, middleName: String)
+    fun updateRefereeLastName(refereeId: UUID, lastName: String)
 
     // weather
     fun getWeathersList(): Call<WeatherResponse>

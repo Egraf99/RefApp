@@ -1,40 +1,43 @@
 package com.egraf.refapp.ui.dialogs.entity_add_dialog.referee
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.DialogFragment
+import android.widget.TextView
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.egraf.refapp.R
 import com.egraf.refapp.database.local.entities.Referee
+import com.egraf.refapp.databinding.CancelButtonBinding
 import com.egraf.refapp.databinding.InfoRefereeDialogBinding
 import com.egraf.refapp.databinding.RefereeFieldsBinding
+import com.egraf.refapp.ui.dialogs.entity_info_dialog.AbstractInfoDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 import com.egraf.refapp.utils.Status
-import com.egraf.refapp.utils.onDoubleClick
 import kotlinx.coroutines.launch
 import java.util.*
 
 private const val TAG = "InfoDialog"
 
 class InfoRefereeDialogFragment(
-    private val title: String = "",
+    title: String = "",
     private val componentId: UUID = EmptyItem.id,
     private val deleteFunction: (Referee) -> Unit = {}
-) : DialogFragment() {
-    private val binding get() = _binding!!
+) : AbstractInfoDialogFragment(title) {
+    override val binding get() = _binding!!
     private var _binding: InfoRefereeDialogBinding? = null
     private val fieldBinding get() = _fieldBinding!!
     private var _fieldBinding: RefereeFieldsBinding? = null
+    override val titleTextView: TextView by lazy { binding.dialogTitle }
+    override val buttonsBottomBar: CancelButtonBinding by lazy { binding.buttonsBottomBar }
 
-    private val viewModel: InfoRefereeViewModel by lazy {
+    override val viewModel: InfoRefereeViewModel by lazy {
         ViewModelProvider(
             this,
             GameComponentViewModelFactory(componentId)
@@ -44,7 +47,6 @@ class InfoRefereeDialogFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) { // первое создание диалога
-            viewModel.title = title
             viewModel.deleteFunction = deleteFunction
         }
     }
@@ -72,16 +74,11 @@ class InfoRefereeDialogFragment(
                 }
             }
         }
-        binding.buttonsBottomBar.cancelButton.setOnClickListener { dismiss() }
-        binding.buttonsBottomBar.deleteButton.onDoubleClick(
-            requireContext(),
-            getString(R.string.press_again_delete)
-        ) { delete(viewModel.referee) }
-        return binding.root
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
-    private fun delete(referee: Referee) {
-        viewModel.deleteFunction(referee)
+    override fun onDeleteComponent() {
+        viewModel.deleteReferee()
         setFragmentResult(
             arguments?.getString(REQUEST) ?: "Unknown request",
             Bundle().apply {
@@ -93,7 +90,31 @@ class InfoRefereeDialogFragment(
     override fun onStart() {
         super.onStart()
         binding.dialogTitle.text = viewModel.title
+        // first name field
+        fieldBinding.firstName.editText.addTextChangedListener {
+            unlockSaveButtonIf(this::isNewRefereeName)() {
+                viewModel.updateRefereeFirstName(it.toString())
+            }
+        }
+        // middle name field
+        fieldBinding.middleName.editText.addTextChangedListener {
+            unlockSaveButtonIf(this::isNewRefereeName)() {
+                viewModel.updateRefereeMiddleName(it.toString())
+            }
+        }
+        // last name field
+        fieldBinding.lastName.editText.addTextChangedListener {
+            unlockSaveButtonIf(this::isNewRefereeName)() {
+                viewModel.updateRefereeLastName(it.toString())
+            }
+        }
     }
+
+    private fun isNewRefereeName(): Boolean =
+        fieldBinding.firstName.editText.text.toString() != viewModel.referee.firstName ||
+                fieldBinding.middleName.editText.text.toString() != viewModel.referee.middleName ||
+                fieldBinding.lastName.editText.text.toString() != viewModel.referee.lastName
+
 
     override fun onDestroyView() {
         super.onDestroyView()

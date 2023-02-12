@@ -197,6 +197,18 @@ class LocalGameDataSource(context: Context) : GameDataSource {
         executor.execute { refereeDao.deleteReferee(referee) }
     }
 
+    override fun updateRefereeFirstName(refereeId: UUID, firstName: String) {
+        executor.execute { refereeDao.updateRefereeFirstName(refereeId, firstName) }
+    }
+
+    override fun updateRefereeMiddleName(refereeId: UUID, middleName: String) {
+        executor.execute { refereeDao.updateRefereeMiddleName(refereeId, middleName) }
+    }
+
+    override fun updateRefereeLastName(refereeId: UUID, lastName: String) {
+        executor.execute { refereeDao.updateRefereeLastName(refereeId, lastName) }
+    }
+
     // weather
     override fun getWeathersList(): Call<WeatherResponse> = Common.weatherService.getWeatherForecast()
 }
