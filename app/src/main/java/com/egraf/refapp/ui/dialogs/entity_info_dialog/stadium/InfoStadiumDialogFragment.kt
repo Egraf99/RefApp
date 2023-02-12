@@ -86,9 +86,6 @@ class InfoStadiumDialogFragment(
         )
     }
 
-    override val saveComponent: (String) -> Unit
-        get() = viewModel::updateStadiumTitle
-
     override fun onStart() {
         super.onStart()
         fieldBinding.title.editText.addTextChangedListener {

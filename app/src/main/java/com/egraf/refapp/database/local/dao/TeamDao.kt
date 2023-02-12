@@ -16,6 +16,9 @@ interface TeamDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addTeam(team: Team)
 
+    @Query("UPDATE Team SET name=:name WHERE id=:teamId")
+    fun updateTeamName(teamId: UUID, name: String)
+
     @Delete
     fun deleteTeam(team: Team)
 }

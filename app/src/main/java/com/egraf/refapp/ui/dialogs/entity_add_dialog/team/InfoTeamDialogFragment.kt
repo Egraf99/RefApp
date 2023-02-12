@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
@@ -13,28 +15,33 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.egraf.refapp.R
 import com.egraf.refapp.database.local.entities.Team
+import com.egraf.refapp.databinding.CancelButtonBinding
 import com.egraf.refapp.databinding.InfoComponentDialogBinding
 import com.egraf.refapp.databinding.TeamFieldsBinding
+import com.egraf.refapp.ui.dialogs.entity_info_dialog.AbstractInfoDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 import com.egraf.refapp.utils.Status
 import com.egraf.refapp.utils.onDoubleClick
+import kotlinx.android.synthetic.main.add_stadium_fragment.view.*
 import kotlinx.coroutines.launch
 import java.util.*
 
 private const val TAG = "InfoDialog"
 
 class InfoTeamDialogFragment(
-    private val title: String = "",
+    title: String = "",
     private val componentId: UUID = EmptyItem.id,
     private val deleteFunction: (Team) -> Unit = {}
-) : DialogFragment() {
-    private val binding get() = _binding!!
+) : AbstractInfoDialogFragment(title) {
+    override val binding get() = _binding!!
     private var _binding: InfoComponentDialogBinding? = null
     private val fieldBinding get() = _fieldBinding!!
     private var _fieldBinding: TeamFieldsBinding? = null
+    override val titleTextView: TextView by lazy { binding.dialogTitle }
+    override val buttonsBottomBar: CancelButtonBinding by lazy { binding.buttonsBottomBar }
 
-    private val viewModel: InfoTeamViewModel by lazy {
+    override val viewModel: InfoTeamViewModel by lazy {
         ViewModelProvider(
             this,
             GameComponentViewModelFactory(componentId)
@@ -44,7 +51,6 @@ class InfoTeamDialogFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) { // первое создание диалога
-            viewModel.title = title
             viewModel.deleteFunction = deleteFunction
         }
     }
@@ -72,16 +78,11 @@ class InfoTeamDialogFragment(
                 }
             }
         }
-        binding.buttonsBottomBar.deleteButton.onDoubleClick(
-            requireContext(),
-            getString(R.string.press_again_delete)
-        ) { delete(viewModel.team) }
-        binding.buttonsBottomBar.cancelButton.setOnClickListener { dismiss() }
         return binding.root
     }
 
-    private fun delete(team: Team) {
-        viewModel.deleteFunction(team)
+    override fun onDeleteComponent() {
+        viewModel.deleteTeam()
         setFragmentResult(
             arguments?.getString(REQUEST) ?: "Unknown request",
             Bundle().apply {
@@ -93,6 +94,11 @@ class InfoTeamDialogFragment(
     override fun onStart() {
         super.onStart()
         binding.dialogTitle.text = viewModel.title
+        fieldBinding.title.editText.addTextChangedListener {
+            unlockSaveButtonIf { it.toString() != viewModel.team.title}() {
+                viewModel.updateTeamName(it.toString())
+            }
+        }
     }
 
     override fun onDestroyView() {

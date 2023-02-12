@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.egraf.refapp.GameRepository
 import com.egraf.refapp.database.local.entities.Team
+import com.egraf.refapp.ui.dialogs.entity_info_dialog.InfoViewModel
 import com.egraf.refapp.utils.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,13 +13,16 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 class InfoTeamViewModel(
-    teamId: UUID,
-) : ViewModel() {
-    var title: String = ""
+    private val teamId: UUID,
+) : InfoViewModel() {
     var team: Team = Team()
     var deleteFunction: (Team) -> Unit = { GameRepository.get().deleteTeam(it) }
     private val _componentId = MutableStateFlow<Resource<Team>>(Resource.loading())
     val flowResourceTeam: StateFlow<Resource<Team>> = _componentId
+    fun updateTeamName(name: String) = GameRepository.get().updateTeamName(teamId, name)
+    fun deleteTeam() {
+        deleteFunction(team)
+    }
 
     // Load data from a suspend fun and mutate state
     init {

@@ -49,6 +49,7 @@ interface GameDataSource {
     fun getTeam(id: UUID): Flow<Team?>
     fun getTeams(): List<Team>
     fun deleteTeam(team: Team)
+    fun updateTeamName(teamId: UUID, name: String)
     fun addTeam(team: Team)
 
     //    referee block

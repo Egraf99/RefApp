@@ -85,9 +85,6 @@ class InfoLeagueDialogFragment(
         )
     }
 
-    override val saveComponent
-        get() = viewModel::updateLeagueTitle
-
     override fun onStart() {
         super.onStart()
         binding.dialogTitle.text = viewModel.title

@@ -18,7 +18,6 @@ abstract class AbstractInfoDialogFragment(private val title: String = ""): Dialo
     abstract val titleTextView: TextView
     abstract val viewModel: InfoViewModel
     abstract fun onDeleteComponent()
-    abstract val saveComponent: (String) -> Unit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +45,10 @@ abstract class AbstractInfoDialogFragment(private val title: String = ""): Dialo
         titleTextView.text = viewModel.title
     }
 
+    /**
+     * Принимает на вход условие, при котором становится доступной кнопка сохранения
+     * и действие при нажатии на эту кнопку.
+    **/
     protected val unlockSaveButtonIf: (() -> Boolean) -> (() -> Unit) -> Unit =
         { p: () -> Boolean ->
             { onSave ->
@@ -53,12 +56,12 @@ abstract class AbstractInfoDialogFragment(private val title: String = ""): Dialo
             }
         }
 
-    protected fun setSaveButtonDim() {
+    private fun setSaveButtonDim() {
         buttonsBottomBar.saveButton.isClickable = false
         buttonsBottomBar.saveButton.setBackgroundResource(R.drawable.ic_accept_button_dim)
     }
 
-    protected fun setSaveButtonBright(onSave: () -> Unit) {
+    private fun setSaveButtonBright(onSave: () -> Unit) {
         buttonsBottomBar.saveButton.setBackgroundResource(R.drawable.accept_button)
         buttonsBottomBar.saveButton.apply {
             isClickable = true
