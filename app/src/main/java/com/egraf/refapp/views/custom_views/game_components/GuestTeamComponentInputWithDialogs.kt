@@ -8,7 +8,7 @@ import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
 import com.egraf.refapp.database.local.entities.Team
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.team.AddTeamDialogFragment
-import com.egraf.refapp.ui.dialogs.entity_add_dialog.team.InfoTeamDialogFragment
+import com.egraf.refapp.ui.dialogs.entity_info_dialog.team.InfoTeamDialogFragment
 import com.egraf.refapp.utils.Resource
 import com.egraf.refapp.views.custom_views.GameComponent
 import kotlinx.coroutines.flow.SharingStarted

@@ -1,4 +1,4 @@
-package com.egraf.refapp.ui.dialogs.entity_add_dialog.referee
+package com.egraf.refapp.ui.dialogs.entity_info_dialog.referee
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

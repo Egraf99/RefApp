@@ -8,7 +8,7 @@ import com.egraf.refapp.GameRepository
 import com.egraf.refapp.R
 import com.egraf.refapp.database.local.entities.Referee
 import com.egraf.refapp.ui.dialogs.entity_add_dialog.referee.AddRefereeDialogFragment
-import com.egraf.refapp.ui.dialogs.entity_add_dialog.referee.InfoRefereeDialogFragment
+import com.egraf.refapp.ui.dialogs.entity_info_dialog.referee.InfoRefereeDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.SearchItem
 import com.egraf.refapp.utils.Resource
 import com.egraf.refapp.views.custom_views.GameComponent

@@ -1,4 +1,4 @@
-package com.egraf.refapp.ui.dialogs.entity_add_dialog.team
+package com.egraf.refapp.ui.dialogs.entity_info_dialog.team
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.egraf.refapp.ui.dialogs.entity_add_dialog.referee
+package com.egraf.refapp.ui.dialogs.entity_info_dialog.referee
 
 import android.os.Bundle
 import android.util.Log
