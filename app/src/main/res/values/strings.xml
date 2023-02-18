@@ -53,4 +53,6 @@
     <string name="yesterday">Yesterday</string>
     <string name="temp" translatable="false">%d°</string>
     <string name="save_game">Save game</string>
+    <string name="copy_title">Move in new game:</string>
+    <string name="date_and_time">Date and time</string>
 </resources>

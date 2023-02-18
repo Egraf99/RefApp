@@ -16,6 +16,7 @@ import com.egraf.refapp.database.local.entities.GameWithAttributes
 import com.egraf.refapp.database.remote.model.Weather
 import com.egraf.refapp.databinding.DateListItemBinding
 import com.egraf.refapp.databinding.GameListItemBinding
+import com.egraf.refapp.ui.dialogs.choose_component_dialog.ChooseComponentDialogFragment
 import com.egraf.refapp.utils.Resource
 import com.egraf.refapp.utils.Status
 import com.egraf.refapp.utils.dp
@@ -116,6 +117,11 @@ sealed class GameListHolder(binding: ViewBinding) :
         private val gameBinding: GameListItemBinding
     ) : GameListHolder(gameBinding) {
         fun bind(gameItem: GameListViewItem.Game) {
+            itemView.setOnLongClickListener {
+                ChooseComponentDialogFragment().show(fragment.parentFragmentManager, "")
+                return@setOnLongClickListener true
+            }
+
             itemView.setOnClickListener { listener.onClick(gameItem.gwa) }
             gameBinding.stadiumTextview.text = gameItem.gwa.stadium?.name
             gameBinding.timeTextview.text = gameItem.gwa.game.dateTime.time.title

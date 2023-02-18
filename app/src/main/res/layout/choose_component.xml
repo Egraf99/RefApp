@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/fragment_background"
+    android:minWidth="350dp"
+    android:orientation="vertical"
+    android:paddingHorizontal="32dp"
+    android:paddingVertical="16dp">
+
+    <TextView
+        android:id="@+id/copy_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:gravity="center_horizontal"
+        android:text="@string/copy_title" />
+
+    <CheckBox
+        android:id="@+id/date_and_time_checkbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="@string/date_and_time"/>
+
+    <CheckBox
+        android:id="@+id/stadium_checkbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="@string/stadium"/>
+
+    <CheckBox
+        android:id="@+id/team_checkbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="@string/team"/>
+
+    <CheckBox
+        android:id="@+id/referee_checkbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="@string/referee"/>
+
+</LinearLayout>

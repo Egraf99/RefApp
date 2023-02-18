@@ -52,4 +52,6 @@
     <string name="tomorrow">Завтра</string>
     <string name="yesterday">Вчера</string>
     <string name="save_game">Сохранить игру</string>
+    <string name="copy_title">Копировать в новую игру:</string>
+    <string name="date_and_time">Дата и время</string>
 </resources>
