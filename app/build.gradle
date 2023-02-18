@@ -74,6 +74,7 @@ dependencies {
     //Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:2.5.2"
     implementation "androidx.navigation:navigation-ui-ktx:2.5.2"
+    implementation 'androidx.test.ext:junit-ktx:1.1.5'
     androidTestImplementation "androidx.navigation:navigation-testing:2.5.3"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
@@ -98,4 +99,15 @@ dependencies {
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+
+    // Nav testing
+    androidTestImplementation("androidx.navigation:navigation-testing:2.5.3")
+
+    // Fragment scenario
+    debugImplementation("androidx.fragment:fragment-testing:1.5.5")
+
+    // Espresso
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.4.0')
+    androidTestImplementation('androidx.test:runner:1.4.0')
+    androidTestImplementation('androidx.test:rules:1.4.0')
 }
