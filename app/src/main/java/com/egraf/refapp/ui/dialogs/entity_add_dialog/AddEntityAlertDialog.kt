@@ -42,10 +42,6 @@ class AddEntityAlertDialog: Fragment() {
         binding_ = null
     }
 
-    private fun returnRequest() {
-        Log.d("MyAlertDialog", "returnRequest: return")
-    }
-
     companion object {
         operator fun invoke(
             title: String,
