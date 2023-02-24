@@ -7,13 +7,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.egraf.refapp.database.local.entities.*
+import com.egraf.refapp.utils.*
 import java.time.LocalDateTime
 
 private const val TAG = "AddGame"
 private const val BUNDLE_KEY = "BundleKey"
-
-private fun Bundle.putCurrentTime(): Bundle =
-    this.apply { putSerializable(ChooserFragment.CREATED_TIME, LocalDateTime.now()) }
 
 abstract class ChooserFragment : Fragment() {
     protected var bundle: Bundle = Bundle().putCurrentTime()
@@ -43,6 +41,11 @@ abstract class ChooserFragment : Fragment() {
         }
     }
 
+    fun updateArguments(bundle: Bundle) {
+        this.bundle = updateBundle(this.bundle, bundle.putCurrentTime())
+        getGameComponentsFromSavedBundle(this.bundle)
+    }
+
     protected open fun putGameComponentsInSavedBundle(bundle: Bundle): Bundle =
         bundle.putCurrentTime()
 
@@ -70,21 +73,21 @@ abstract class ChooserFragment : Fragment() {
     }
 
     protected fun getGameFromBundle(bundle: Bundle): Game = Game(
-        stadiumId = bundle.getParcelable<Stadium>(STADIUM_VALUE)?.id,
+        stadiumId = bundle.getStadium()?.id,
         dateTime = GameDateTime(
-            bundle.getParcelable(DATE_VALUE) ?: GameDate(),
-            bundle.getParcelable(TIME_VALUE) ?: GameTime()
+            bundle.getDate() ?: GameDate(),
+            bundle.getTime() ?: GameTime()
         ),
-        isPaid = bundle.getBoolean(PAY_VALUE),
-        isPassed = bundle.getBoolean(PASS_VALUE),
-        homeTeamId = bundle.getParcelable<Team>(HOME_TEAM_VALUE)?.id,
-        guestTeamId = bundle.getParcelable<Team>(GUEST_TEAM_VALUE)?.id,
-        leagueId = bundle.getParcelable<League>(LEAGUE_VALUE)?.id,
-        chiefRefereeId = bundle.getParcelable<Referee>(CHIEF_REFEREE_VALUE)?.id,
-        firstRefereeId = bundle.getParcelable<Referee>(FIRST_ASSISTANT_VALUE)?.id,
-        secondRefereeId = bundle.getParcelable<Referee>(SECOND_ASSISTANT_VALUE)?.id,
-        reserveRefereeId = bundle.getParcelable<Referee>(RESERVE_REFEREE_VALUE)?.id,
-        inspectorId = bundle.getParcelable<Referee>(INSPECTOR_VALUE)?.id,
+        isPaid = bundle.getPaid(),
+        isPassed = bundle.getPassed(),
+        homeTeamId = bundle.getHomeTeam()?.id,
+        guestTeamId = bundle.getGuestTeam()?.id,
+        leagueId = bundle.getLeague()?.id,
+        chiefRefereeId = bundle.getChiefReferee()?.id,
+        firstRefereeId = bundle.getFirstAssistant()?.id,
+        secondRefereeId = bundle.getSecondAssistant()?.id,
+        reserveRefereeId = bundle.getReserveReferee()?.id,
+        inspectorId = bundle.getInspector()?.id,
     )
 
     protected fun addGameToDB(game: Game) {
@@ -95,100 +98,40 @@ abstract class ChooserFragment : Fragment() {
      *  Если значение есть в обоих Bundle, обновляемое значение берется из того, который создан позже. **/
     private fun updateBundle(firstBundle: Bundle, secondBundle: Bundle = Bundle()): Bundle {
         val firstBundleCreateTime =
-            firstBundle.getSerializable(CREATED_TIME) as LocalDateTime? ?: LocalDateTime.MIN
+            firstBundle.getCreatedTime()
         val secondBundleCreateTime =
-            secondBundle.getSerializable(CREATED_TIME) as LocalDateTime? ?: LocalDateTime.MIN
+            secondBundle.getCreatedTime()
         val (laterBundle, earlierBundle) = when {
             firstBundleCreateTime > secondBundleCreateTime -> Pair(firstBundle, secondBundle)
             else -> Pair(secondBundle, firstBundle)
         }
         return Bundle().apply {
-            putParcelable(
-                STADIUM_VALUE,
-                laterBundle.getParcelable<Stadium>(STADIUM_VALUE)
-                    ?: earlierBundle.getParcelable<Stadium>(STADIUM_VALUE)
-            )
-            putParcelable(
-                DATE_VALUE,
-                laterBundle.getParcelable<GameDate>(DATE_VALUE)
-                    ?: earlierBundle.getParcelable<GameDate>(DATE_VALUE)
-            )
-            putParcelable(
-                TIME_VALUE,
-                laterBundle.getParcelable<GameTime>(TIME_VALUE)
-                    ?: earlierBundle.getParcelable<GameTime>(TIME_VALUE)
-            )
+            putStadium(laterBundle.getStadium() ?: earlierBundle.getStadium())
+            putDate(laterBundle.getDate() ?: earlierBundle.getDate())
+            putTime(laterBundle.getTime() ?: earlierBundle.getTime())
             val passed = when {
-                laterBundle.containsKey(PASS_VALUE) -> laterBundle.getBoolean(PASS_VALUE)
-                earlierBundle.containsKey(PASS_VALUE) -> earlierBundle.getBoolean(PASS_VALUE)
+                laterBundle.containPassKey() -> laterBundle.getPassed()
+                earlierBundle.containPassKey() -> earlierBundle.getPassed()
                 else -> false
             }
-            putBoolean(PASS_VALUE, passed)
+            putPassed(passed)
             val pay = when {
-                laterBundle.containsKey(PAY_VALUE) -> laterBundle.getBoolean(PAY_VALUE)
-                earlierBundle.containsKey(PAY_VALUE) -> earlierBundle.getBoolean(PAY_VALUE)
+                laterBundle.containPaidKey() -> laterBundle.getPaid()
+                earlierBundle.containPaidKey() -> earlierBundle.getPaid()
                 else -> false
             }
-            putBoolean(PAY_VALUE, pay)
-            putParcelable(
-                HOME_TEAM_VALUE,
-                laterBundle.getParcelable<Team>(HOME_TEAM_VALUE)
-                    ?: earlierBundle.getParcelable<Team>(HOME_TEAM_VALUE)
+            putPaid(pay)
+            putHomeTeam(laterBundle.getHomeTeam() ?: earlierBundle.getHomeTeam())
+            putGuestTeam(laterBundle.getGuestTeam() ?: earlierBundle.getGuestTeam())
+            putLeague(laterBundle.getLeague() ?: earlierBundle.getLeague())
+            putChiefReferee(laterBundle.getChiefReferee() ?: earlierBundle.getChiefReferee())
+            putFirstAssistant(laterBundle.getFirstAssistant() ?: earlierBundle.getFirstAssistant())
+            putSecondAssistant(
+                laterBundle.getSecondAssistant() ?: earlierBundle.getSecondAssistant()
             )
-            putParcelable(
-                GUEST_TEAM_VALUE,
-                laterBundle.getParcelable<Team>(GUEST_TEAM_VALUE)
-                    ?: earlierBundle.getParcelable<Team>(GUEST_TEAM_VALUE)
-            )
-            putParcelable(
-                LEAGUE_VALUE,
-                laterBundle.getParcelable<League>(LEAGUE_VALUE)
-                    ?: earlierBundle.getParcelable<League>(LEAGUE_VALUE)
-            )
-            putParcelable(
-                CHIEF_REFEREE_VALUE,
-                laterBundle.getParcelable<Referee>(CHIEF_REFEREE_VALUE)
-                    ?: earlierBundle.getParcelable<Referee>(CHIEF_REFEREE_VALUE)
-            )
-            putParcelable(
-                FIRST_ASSISTANT_VALUE,
-                laterBundle.getParcelable<Referee>(FIRST_ASSISTANT_VALUE)
-                    ?: earlierBundle.getParcelable<Referee>(FIRST_ASSISTANT_VALUE)
-            )
-            putParcelable(
-                SECOND_ASSISTANT_VALUE,
-                laterBundle.getParcelable<Referee>(SECOND_ASSISTANT_VALUE)
-                    ?: earlierBundle.getParcelable<Referee>(SECOND_ASSISTANT_VALUE)
-            )
-            putParcelable(
-                RESERVE_REFEREE_VALUE,
-                laterBundle.getParcelable<Referee>(RESERVE_REFEREE_VALUE)
-                    ?: earlierBundle.getParcelable<Referee>(RESERVE_REFEREE_VALUE)
-            )
-            putParcelable(
-                INSPECTOR_VALUE,
-                laterBundle.getParcelable<Referee>(INSPECTOR_VALUE)
-                    ?: earlierBundle.getParcelable<Referee>(INSPECTOR_VALUE)
-            )
+            putReserveReferee(laterBundle.getReserveReferee() ?: earlierBundle.getReserveReferee())
+            putInspector(laterBundle.getInspector() ?: earlierBundle.getInspector())
         }
-    }
-
-    companion object {
-        const val STADIUM_VALUE = "StadiumValue"
-        const val DATE_VALUE = "DateValue"
-        const val TIME_VALUE = "TimeValue"
-        const val PAY_VALUE = "PayValue"
-        const val PASS_VALUE = "PassValue"
-        const val HOME_TEAM_VALUE = "HomeTeamValue"
-        const val GUEST_TEAM_VALUE = "GuestTeamValue"
-        const val LEAGUE_VALUE = "LeagueValue"
-        const val CHIEF_REFEREE_VALUE = "ChiefRefereeValue"
-        const val FIRST_ASSISTANT_VALUE = "FirstAssistantValue"
-        const val SECOND_ASSISTANT_VALUE = "SecondAssistantValue"
-        const val RESERVE_REFEREE_VALUE = "ReserveRefereeValue"
-        const val INSPECTOR_VALUE = "InspectorValue"
-
-        const val CREATED_TIME = "BundleCreatedTime"
     }
 }
 

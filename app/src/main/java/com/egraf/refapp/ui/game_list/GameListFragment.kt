@@ -1,9 +1,11 @@
 package com.egraf.refapp.ui.game_list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -11,20 +13,27 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.egraf.refapp.R
-import com.egraf.refapp.database.local.entities.GameWithAttributes
+import com.egraf.refapp.database.local.entities.*
 import com.egraf.refapp.databinding.GameListFragmentBinding
 import com.egraf.refapp.ui.FragmentWithToolbar
+import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
+import com.egraf.refapp.ui.dialogs.choose_component_dialog.ChooseComponentDialogFragment
 import com.egraf.refapp.ui.game_detail.GameDetailFragment
+import com.egraf.refapp.utils.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.reflect.KClass
 
 private const val TAG = "GameListFragment"
 
+private const val CHOOSE_COMPONENT_KEY = "ChooseComponentKey"
+
 @ExperimentalCoroutinesApi
-class GameListFragment : FragmentWithToolbar(), ClickGameItemListener {
+class GameListFragment : FragmentWithToolbar(), ClickGameItemListener, LongClickGameItemListener {
     private var _binding: GameListFragmentBinding? = null
     private val binding get() = _binding!!
-    private var adapter = lazy { GameAdapter( this, this, gameListViewModel.getWeather) }
+    private var adapter = lazy { GameAdapter(this, this, this, gameListViewModel.getWeather) }
     private val gameListViewModel: GameListViewModel by lazy {
         ViewModelProvider(this)[GameListViewModel::class.java]
     }
@@ -36,6 +45,18 @@ class GameListFragment : FragmentWithToolbar(), ClickGameItemListener {
         )
     }
 
+    override fun onLongCLick(gwa: GameWithAttributes) {
+        val chooseComponentListener = ChooseComponentListener(gwa) {
+            addNewGame(it.putCurrentTime())
+        }
+        parentFragmentManager.setFragmentResultListener(
+            CHOOSE_COMPONENT_KEY,
+            viewLifecycleOwner,
+            chooseComponentListener
+        )
+        ChooseComponentDialogFragment(CHOOSE_COMPONENT_KEY).show(parentFragmentManager, "")
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,9 +65,7 @@ class GameListFragment : FragmentWithToolbar(), ClickGameItemListener {
         _binding = GameListFragmentBinding.inflate(inflater, container, false)
         binding.gameRecycleView.layoutManager = LinearLayoutManager(context)
         binding.gameRecycleView.adapter = adapter.value
-        binding.addNewGameButton.setOnClickListener {
-            findNavController().navigate(R.id.action_gameListFragment_to_addNewGame)
-        }
+        binding.addNewGameButton.setOnClickListener { addNewGame() }
         return binding.root
     }
 
@@ -69,6 +88,10 @@ class GameListFragment : FragmentWithToolbar(), ClickGameItemListener {
     override fun onStart() {
         super.onStart()
         showLoading()
+    }
+
+    private fun addNewGame(bundle: Bundle = Bundle()) {
+        findNavController().navigate(R.id.action_gameListFragment_to_addNewGame, bundle)
     }
 
     private fun showLoading() {
@@ -99,5 +122,34 @@ class GameListFragment : FragmentWithToolbar(), ClickGameItemListener {
             showRecycleView()
         }
     }
+}
 
+class ChooseComponentListener(private val gwa: GameWithAttributes, private val effect: (Bundle) -> Unit): FragmentResultListener {
+    override fun onFragmentResult(requestKey: String, result: Bundle) {
+        if (requestKey == CHOOSE_COMPONENT_KEY) {
+            val filteringBundle = Bundle()
+            if (ChooseComponentDialogFragment.isCheckedDateTime(result)) {
+                filteringBundle.putDate(gwa.game.dateTime.date)
+                filteringBundle.putTime(gwa.game.dateTime.time)
+                filteringBundle.putPaid(gwa.game.isPaid)
+                filteringBundle.putPassed(gwa.game.isPassed)
+            }
+            if (ChooseComponentDialogFragment.isCheckedStadium(result)) {
+                filteringBundle.putStadium(gwa.stadium)
+            }
+            if (ChooseComponentDialogFragment.isCheckedTeam(result)) {
+                filteringBundle.putHomeTeam(gwa.homeTeam)
+                filteringBundle.putGuestTeam(gwa.guestTeam)
+                filteringBundle.putLeague(gwa.league)
+            }
+            if (ChooseComponentDialogFragment.isCheckedReferee(result)) {
+                filteringBundle.putChiefReferee(gwa.chiefReferee)
+                filteringBundle.putFirstAssistant(gwa.firstReferee)
+                filteringBundle.putSecondAssistant(gwa.secondReferee)
+                filteringBundle.putReserveReferee(gwa.reserveReferee)
+                filteringBundle.putInspector(gwa.inspector)
+            }
+            effect(filteringBundle)
+        }
+    }
 }

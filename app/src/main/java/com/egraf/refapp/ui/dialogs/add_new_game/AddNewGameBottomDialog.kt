@@ -44,6 +44,7 @@ class AddNewGameBottomDialog: BottomSheetDialogFragment() {
     override fun onStart() {
         super.onStart()
         updateButtonsWithCurrentPosition(addNewGameViewModel.fragmentPosition)
+        this.arguments?.let { currentFragment().updateArguments(it) }
         binding.counter.updatePosition(addNewGameViewModel.counterPosition)
     }
 

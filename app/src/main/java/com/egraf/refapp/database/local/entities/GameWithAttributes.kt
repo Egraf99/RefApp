@@ -1,7 +1,9 @@
 package com.egraf.refapp.database.local.entities
 
+import android.os.Bundle
 import androidx.room.Embedded
 import androidx.room.Relation
+import com.egraf.refapp.utils.*
 
 class GameWithAttributes(
     @Embedded
@@ -37,5 +39,21 @@ class GameWithAttributes(
 //                " FirstReferee name: ${firstReferee?.middleName}, id is: ${firstReferee?.id}" +
 //                " isPaid: ${game.isPaid}" +
 //                " isPassed: ${game.isPassed}"
+    }
+
+    fun toBundle(): Bundle = Bundle().apply {
+        this.putPaid(game.isPaid)
+        this.putPassed(game.isPassed)
+        this.putDate(game.dateTime.date)
+        this.putTime(game.dateTime.time)
+        this.putStadium(stadium)
+        this.putLeague(league)
+        this.putHomeTeam(homeTeam)
+        this.putGuestTeam(guestTeam)
+        this.putChiefReferee(chiefReferee)
+        this.putFirstAssistant(firstReferee)
+        this.putSecondAssistant(secondReferee)
+        this.putReserveReferee(reserveReferee)
+        this.putInspector(inspector)
     }
 }

@@ -3,16 +3,15 @@ package com.egraf.refapp.ui.game_detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.egraf.refapp.GameRepository
-import com.egraf.refapp.database.local.entities.*
-import com.egraf.refapp.interface_viewmodel.all.LeagueInterface
-import com.egraf.refapp.interface_viewmodel.all.RefereeInterface
-import com.egraf.refapp.interface_viewmodel.all.StadiumInterface
-import com.egraf.refapp.interface_viewmodel.all.TeamInterface
-import com.egraf.refapp.ui.ViewModelWithGame
+import com.egraf.refapp.database.local.entities.GameDateTime
+import com.egraf.refapp.database.local.entities.GameWithAttributes
 import com.egraf.refapp.utils.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transformLatest
 import java.util.*
 
 class GameDetailViewModel: ViewModel()  {

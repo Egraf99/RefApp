@@ -14,6 +14,7 @@ import com.egraf.refapp.database.local.entities.Stadium
 import com.egraf.refapp.databinding.StadiumChooseBinding
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.Position
+import com.egraf.refapp.utils.*
 import com.egraf.refapp.views.custom_views.GameComponent
 
 private const val TAG = "AddGame"
@@ -51,7 +52,6 @@ class StadiumChooseFragment : ChooserFragment() {
             viewLifecycleOwner,
             viewLifecycleOwner.lifecycleScope
         )
-        updateCheckBox()
     }
 
     override fun onDestroyView() {
@@ -59,45 +59,24 @@ class StadiumChooseFragment : ChooserFragment() {
         _binding = null
     }
 
-    private fun updateCheckBox() {
-        binding.gamePassedCheckBox.apply {
-            isChecked = addNewGameViewModel.gameWithAttributes.game.isPassed
-            jumpDrawablesToCurrentState()
-        }
-        binding.gamePaidCheckBox.apply {
-            isChecked = addNewGameViewModel.gameWithAttributes.game.isPaid
-            jumpDrawablesToCurrentState()
-        }
-
-    }
-
     override fun getGameComponentsFromSavedBundle(bundle: Bundle) {
         binding.stadiumComponentView.item =
-            GameComponent(bundle.getParcelable(STADIUM_VALUE) as Stadium?).filter { !it.isEmpty }
+            GameComponent(bundle.getStadium()).filter { !it.isEmpty }
 
-        binding.dateInput.item = GameComponent(bundle.getParcelable(DATE_VALUE) ?: GameDate())
-        binding.timeInput.item = GameComponent(bundle.getParcelable(TIME_VALUE) ?: GameTime())
+        binding.dateInput.item = GameComponent(bundle.getDate() ?: GameDate())
+        binding.timeInput.item = GameComponent(bundle.getTime() ?: GameTime())
 
-        binding.gamePassedCheckBox.isChecked = bundle.getBoolean(PASS_VALUE)
-        binding.gamePaidCheckBox.isChecked = bundle.getBoolean(PAY_VALUE)
+        binding.gamePassedCheckBox.isChecked = bundle.getPassed()
+        binding.gamePaidCheckBox.isChecked = bundle.getPaid()
     }
 
     override fun putGameComponentsInSavedBundle(bundle: Bundle): Bundle {
         return super.putGameComponentsInSavedBundle(bundle).apply {
-            putParcelable(
-                STADIUM_VALUE,
-                binding.stadiumComponentView.item.getOrElse { Stadium() } as Stadium
-            )
-            putParcelable(
-                DATE_VALUE,
-                binding.dateInput.item.getOrThrow(IllegalStateException("Date shouldn't be empty")) as GameDate
-            )
-            putParcelable(
-                TIME_VALUE,
-                binding.timeInput.item.getOrThrow(IllegalStateException("Time shouldn't be empty")) as GameTime
-            )
-            putBoolean(PAY_VALUE, binding.gamePaidCheckBox.isChecked)
-            putBoolean(PASS_VALUE, binding.gamePassedCheckBox.isChecked)
+            putStadium(binding.stadiumComponentView.item.getOrElse { Stadium() })
+            putDate(binding.dateInput.item.getOrThrow(IllegalStateException("Date shouldn't be empty")))
+            putTime(binding.timeInput.item.getOrThrow(IllegalStateException("Time shouldn't be empty")))
+            putPaid(binding.gamePaidCheckBox.isChecked)
+            putPassed(binding.gamePassedCheckBox.isChecked)
         }
     }
 

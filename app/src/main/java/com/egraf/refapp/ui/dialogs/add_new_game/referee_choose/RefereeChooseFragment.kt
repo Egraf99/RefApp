@@ -10,6 +10,7 @@ import com.egraf.refapp.database.local.entities.Referee
 import com.egraf.refapp.databinding.RefereeChooseBinding
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.Position
+import com.egraf.refapp.utils.*
 import com.egraf.refapp.views.custom_views.GameComponent
 
 class RefereeChooseFragment : ChooserFragment() {
@@ -20,44 +21,29 @@ class RefereeChooseFragment : ChooserFragment() {
 
     override fun putGameComponentsInSavedBundle(bundle: Bundle): Bundle {
         return super.putGameComponentsInSavedBundle(bundle).apply {
-            putParcelable(
-                CHIEF_REFEREE_VALUE,
-                binding.chiefRefereeView.item.getOrElse { Referee() }
-            )
-            putParcelable(
-                FIRST_ASSISTANT_VALUE,
-                binding.firstAssistantView.item.getOrElse { Referee() }
-            )
-            putParcelable(
-                SECOND_ASSISTANT_VALUE,
-                binding.secondAssistantView.item.getOrElse { Referee() }
-            )
-            putParcelable(
-                RESERVE_REFEREE_VALUE,
-                binding.reserveRefereeView.item.getOrElse { Referee() }
-            )
-            putParcelable(
-                INSPECTOR_VALUE,
-                binding.inspectorView.item.getOrElse { Referee() }
-            )
+            putChiefReferee(binding.chiefRefereeView.item.getOrElse { Referee() })
+            putFirstAssistant(binding.firstAssistantView.item.getOrElse { Referee() })
+            putSecondAssistant(binding.secondAssistantView.item.getOrElse { Referee() })
+            putReserveReferee(binding.reserveRefereeView.item.getOrElse { Referee() })
+            putInspector(binding.inspectorView.item.getOrElse { Referee() })
         }
     }
 
     override fun getGameComponentsFromSavedBundle(bundle: Bundle) {
         binding.chiefRefereeView.item =
-            GameComponent(bundle.getParcelable<Referee>(CHIEF_REFEREE_VALUE)).filter { !it.isEmpty }
+            GameComponent(bundle.getChiefReferee()).filter { !it.isEmpty }
 
         binding.firstAssistantView.item =
-            GameComponent(bundle.getParcelable<Referee>(FIRST_ASSISTANT_VALUE)).filter { !it.isEmpty }
+            GameComponent(bundle.getFirstAssistant()).filter { !it.isEmpty }
 
         binding.secondAssistantView.item =
-            GameComponent(bundle.getParcelable<Referee>(SECOND_ASSISTANT_VALUE)).filter { !it.isEmpty }
+            GameComponent(bundle.getSecondAssistant()).filter { !it.isEmpty }
 
         binding.reserveRefereeView.item =
-            GameComponent(bundle.getParcelable<Referee>(RESERVE_REFEREE_VALUE)).filter { !it.isEmpty }
+            GameComponent(bundle.getReserveReferee()).filter { !it.isEmpty }
 
         binding.inspectorView.item =
-            GameComponent(bundle.getParcelable<Referee>(INSPECTOR_VALUE)).filter { !it.isEmpty }
+            GameComponent(bundle.getInspector()).filter { !it.isEmpty }
     }
 
     override fun showNextFragment() {

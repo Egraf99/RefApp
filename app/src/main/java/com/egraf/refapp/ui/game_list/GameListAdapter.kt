@@ -27,13 +27,18 @@ import java.time.ZoneId
 import kotlin.math.roundToInt
 
 
-interface ClickGameItemListener {
+fun interface ClickGameItemListener {
     fun onClick(gwa: GameWithAttributes)
+}
+
+fun interface LongClickGameItemListener {
+    fun onLongCLick(gwa: GameWithAttributes)
 }
 
 class GameAdapter(
     private val fragment: Fragment,
-    private val listener: ClickGameItemListener,
+    private val clickListener: ClickGameItemListener,
+    private val longClickListener: LongClickGameItemListener,
     private val getWeather: (Long) -> Flow<Resource<Weather>>
 ) :
     RecyclerView.Adapter<GameListHolder>() {
@@ -50,7 +55,8 @@ class GameAdapter(
             )
             R.layout.game_list_item -> GameListHolder.GameViewHolder(
                 fragment,
-                listener,
+                clickListener,
+                longClickListener,
                 getWeather,
                 GameListItemBinding.inflate(
                     LayoutInflater.from(fragment.requireContext()),
@@ -112,17 +118,16 @@ sealed class GameListHolder(binding: ViewBinding) :
 
     class GameViewHolder(
         private val fragment: Fragment,
-        private val listener: ClickGameItemListener,
+        private val clickListener: ClickGameItemListener,
+        private val longClickListener: LongClickGameItemListener,
         private val getWeather: (Long) -> Flow<Resource<Weather>>,
         private val gameBinding: GameListItemBinding
     ) : GameListHolder(gameBinding) {
         fun bind(gameItem: GameListViewItem.Game) {
-            itemView.setOnLongClickListener {
-                ChooseComponentDialogFragment().show(fragment.parentFragmentManager, "")
-                return@setOnLongClickListener true
-            }
+            // setup listeners
+            itemView.setOnLongClickListener { longClickListener.onLongCLick(gameItem.gwa); true }
+            itemView.setOnClickListener { clickListener.onClick(gameItem.gwa) }
 
-            itemView.setOnClickListener { listener.onClick(gameItem.gwa) }
             gameBinding.stadiumTextview.text = gameItem.gwa.stadium?.name
             gameBinding.timeTextview.text = gameItem.gwa.game.dateTime.time.title
 

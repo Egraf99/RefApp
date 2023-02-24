@@ -13,6 +13,7 @@ import com.egraf.refapp.database.local.entities.Team
 import com.egraf.refapp.databinding.TeamChooseBinding
 import com.egraf.refapp.ui.dialogs.add_new_game.ChooserFragment
 import com.egraf.refapp.ui.dialogs.add_new_game.Position
+import com.egraf.refapp.utils.*
 import com.egraf.refapp.views.custom_views.GameComponent
 
 private const val TAG = "AddGame"
@@ -25,30 +26,21 @@ class TeamChooseFragment : ChooserFragment() {
 
     override fun putGameComponentsInSavedBundle(bundle: Bundle): Bundle {
         return super.putGameComponentsInSavedBundle(bundle).apply {
-            putParcelable(
-                HOME_TEAM_VALUE,
-                binding.homeTeamView.item.getOrElse { Team() }
-            )
-            putParcelable(
-                GUEST_TEAM_VALUE,
-                binding.guestTeamView.item.getOrElse { Team() }
-            )
-            putParcelable(
-                LEAGUE_VALUE,
-                binding.leagueView.item.getOrElse { League() }
-            )
+            putHomeTeam(binding.homeTeamView.item.getOrElse { Team() })
+            putGuestTeam(binding.guestTeamView.item.getOrElse { Team() })
+            putLeague(binding.leagueView.item.getOrElse { League() })
         }
     }
 
     override fun getGameComponentsFromSavedBundle(bundle: Bundle) {
         binding.homeTeamView.item =
-            GameComponent(bundle.getParcelable<Team>(HOME_TEAM_VALUE)).filter { !it.isEmpty }
+            GameComponent(bundle.getHomeTeam()).filter { !it.isEmpty }
 
         binding.guestTeamView.item =
-            GameComponent(bundle.getParcelable<Team>(GUEST_TEAM_VALUE)).filter { !it.isEmpty }
+            GameComponent(bundle.getGuestTeam()).filter { !it.isEmpty }
 
         binding.leagueView.item =
-            GameComponent(bundle.getParcelable<League>(LEAGUE_VALUE)).filter { !it.isEmpty }
+            GameComponent(bundle.getLeague()).filter { !it.isEmpty }
     }
 
     override fun showNextFragment() {
