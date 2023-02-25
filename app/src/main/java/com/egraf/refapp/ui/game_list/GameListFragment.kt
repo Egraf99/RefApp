@@ -124,32 +124,34 @@ class GameListFragment : FragmentWithToolbar(), ClickGameItemListener, LongClick
     }
 }
 
-class ChooseComponentListener(private val gwa: GameWithAttributes, private val effect: (Bundle) -> Unit): FragmentResultListener {
+class ChooseComponentListener(
+    private val gwa: GameWithAttributes,
+    private val effect: (Bundle) -> Unit
+) : FragmentResultListener {
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         if (requestKey == CHOOSE_COMPONENT_KEY) {
             val filteringBundle = Bundle()
-            if (ChooseComponentDialogFragment.isCheckedDate(result)) {
-                filteringBundle.putDate(gwa.game.dateTime.date)
-                filteringBundle.putPaid(gwa.game.isPaid)
-                filteringBundle.putPassed(gwa.game.isPassed)
-            }
-            if(ChooseComponentDialogFragment.isCheckedTime(result))
-                filteringBundle.putTime(gwa.game.dateTime.time)
-            if (ChooseComponentDialogFragment.isCheckedStadium(result)) {
+            if (ChooseComponentDialogFragment.isCheckedDate(result)) filteringBundle.putDate(gwa.game.dateTime.date)
+            if (ChooseComponentDialogFragment.isCheckedPass(result)) filteringBundle.putPassed(gwa.game.isPassed)
+            if (ChooseComponentDialogFragment.isCheckedPay(result)) filteringBundle.putPaid(gwa.game.isPaid)
+            if (ChooseComponentDialogFragment.isCheckedTime(result)) filteringBundle.putTime(gwa.game.dateTime.time)
+            if (ChooseComponentDialogFragment.isCheckedStadium(result))
                 filteringBundle.putStadium(gwa.stadium)
-            }
-            if (ChooseComponentDialogFragment.isCheckedTeam(result)) {
+            if (ChooseComponentDialogFragment.isCheckedHomeTeam(result))
                 filteringBundle.putHomeTeam(gwa.homeTeam)
+            if (ChooseComponentDialogFragment.isCheckedGuestTeam(result))
                 filteringBundle.putGuestTeam(gwa.guestTeam)
-                filteringBundle.putLeague(gwa.league)
-            }
-            if (ChooseComponentDialogFragment.isCheckedReferee(result)) {
+            if (ChooseComponentDialogFragment.isCheckedLeague(result)) filteringBundle.putLeague(gwa.league)
+            if (ChooseComponentDialogFragment.isCheckedChiefReferee(result))
                 filteringBundle.putChiefReferee(gwa.chiefReferee)
+            if (ChooseComponentDialogFragment.isCheckedFirstReferee(result))
                 filteringBundle.putFirstAssistant(gwa.firstReferee)
+            if (ChooseComponentDialogFragment.isCheckedSecondReferee(result))
                 filteringBundle.putSecondAssistant(gwa.secondReferee)
+            if (ChooseComponentDialogFragment.isCheckedReserveReferee(result))
                 filteringBundle.putReserveReferee(gwa.reserveReferee)
+            if (ChooseComponentDialogFragment.isCheckedInspector(result))
                 filteringBundle.putInspector(gwa.inspector)
-            }
             effect(filteringBundle)
         }
     }

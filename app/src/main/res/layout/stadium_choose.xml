@@ -54,7 +54,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:minHeight="48dp"
-        android:text="@string/gamePassedCheckBox"
+        android:text="@string/passed"
         app:layout_constraintEnd_toStartOf="@id/game_paid_check_box"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/date_input"
@@ -66,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:minHeight="48dp"
-        android:text="@string/gamePaidCheckbox"
+        android:text="@string/paid"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/game_passed_check_box"
         app:layout_constraintTop_toTopOf="@id/game_passed_check_box" />

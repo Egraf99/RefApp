@@ -1,5 +1,5 @@
 <resources>
-    <string name="gamePaidCheckbox">Paid</string>
+    <string name="paid">Paid</string>
     <string name="versus" translatable="false">vs.</string>
     <string name="new_game">New Game</string>
     <string name="add_game">Add new Game</string>
@@ -15,7 +15,7 @@
     <string name="warning">Warning</string>
     <string name="warning_delete_text">Are you sure?</string>
     <string name="empty_list">Games list is empty</string>
-    <string name="gamePassedCheckBox">Passed</string>
+    <string name="passed">Passed</string>
     <string name="chief_referee">Chief Referee</string>
     <string name="first_assistant">First Assistant</string>
     <string name="second_assistant">Second Assistant</string>
@@ -55,4 +55,7 @@
     <string name="save_game">Save game</string>
     <string name="copy_title">Move in new game:</string>
     <string name="date_and_time">Date and time</string>
+    <string name="state">State</string>
+    <string name="teams">Teams</string>
+    <string name="referees">Referee</string>
 </resources>
