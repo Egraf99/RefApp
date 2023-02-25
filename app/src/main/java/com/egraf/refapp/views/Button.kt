@@ -1,4 +1,4 @@
-package com.egraf.refapp.utils
+package com.egraf.refapp.views
 
 import android.content.Context
 import android.view.View

@@ -9,8 +9,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.viewbinding.ViewBinding
 import com.egraf.refapp.R
 import com.egraf.refapp.databinding.CancelButtonBinding
-import com.egraf.refapp.databinding.InfoComponentDialogBinding
-import com.egraf.refapp.utils.onDoubleClick
+import com.egraf.refapp.views.onDoubleClick
 
 abstract class AbstractInfoDialogFragment(private val title: String = ""): DialogFragment() {
     abstract val binding: ViewBinding

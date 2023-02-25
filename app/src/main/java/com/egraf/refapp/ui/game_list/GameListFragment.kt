@@ -128,12 +128,13 @@ class ChooseComponentListener(private val gwa: GameWithAttributes, private val e
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         if (requestKey == CHOOSE_COMPONENT_KEY) {
             val filteringBundle = Bundle()
-            if (ChooseComponentDialogFragment.isCheckedDateTime(result)) {
+            if (ChooseComponentDialogFragment.isCheckedDate(result)) {
                 filteringBundle.putDate(gwa.game.dateTime.date)
-                filteringBundle.putTime(gwa.game.dateTime.time)
                 filteringBundle.putPaid(gwa.game.isPaid)
                 filteringBundle.putPassed(gwa.game.isPassed)
             }
+            if(ChooseComponentDialogFragment.isCheckedTime(result))
+                filteringBundle.putTime(gwa.game.dateTime.time)
             if (ChooseComponentDialogFragment.isCheckedStadium(result)) {
                 filteringBundle.putStadium(gwa.stadium)
             }

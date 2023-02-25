@@ -18,7 +18,7 @@ import com.egraf.refapp.databinding.FragmentGameBinding
 import com.egraf.refapp.ui.FragmentWithToolbar
 import com.egraf.refapp.ui.dialogs.DeleteDialog
 import com.egraf.refapp.utils.Status
-import com.egraf.refapp.utils.onDoubleClick
+import com.egraf.refapp.views.onDoubleClick
 import com.egraf.refapp.views.custom_views.GameComponent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.util.*

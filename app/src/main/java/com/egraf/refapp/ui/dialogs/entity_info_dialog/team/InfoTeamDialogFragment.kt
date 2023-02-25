@@ -5,15 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.egraf.refapp.R
 import com.egraf.refapp.database.local.entities.Team
 import com.egraf.refapp.databinding.CancelButtonBinding
 import com.egraf.refapp.databinding.InfoComponentDialogBinding
@@ -22,8 +19,6 @@ import com.egraf.refapp.ui.dialogs.entity_info_dialog.AbstractInfoDialogFragment
 import com.egraf.refapp.ui.dialogs.search_entity.EmptyItem
 import com.egraf.refapp.ui.dialogs.search_entity.setCustomBackground
 import com.egraf.refapp.utils.Status
-import com.egraf.refapp.utils.onDoubleClick
-import kotlinx.android.synthetic.main.add_stadium_fragment.view.*
 import kotlinx.coroutines.launch
 import java.util.*
 
