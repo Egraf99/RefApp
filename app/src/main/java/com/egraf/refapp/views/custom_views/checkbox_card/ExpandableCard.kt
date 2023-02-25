@@ -18,41 +18,40 @@ import com.egraf.refapp.R
 import com.egraf.refapp.utils.dp
 
 class ExpandableCard(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
-    private var num = 0
+    private var isExpand = false
+    private lateinit var expandButton: ImageButton
 
     override fun onFinishInflate() {
         super.onFinishInflate()
         val firstView = children.first()
         removeView(firstView)
+        expandButton = ImageButton(context).apply {
+            setBackgroundResource(R.drawable.expand_button)
+            layoutParams =
+                LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+            setOnClickListener {
+                if (isExpand) collapse() else expand()
+                isExpand = !isExpand
+            }
+        }
         addView(LinearLayout(context).apply {
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             addView(firstView, 0)
             addView(Space(context).apply {
                 layoutParams = LayoutParams(dp(context, 0), LayoutParams.WRAP_CONTENT)
             }, 1)
-            addView(
-                ImageButton(context).apply {
-                    setBackgroundResource(R.drawable.expand_button)
-                    layoutParams =
-                        LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-                    setOnClickListener {
-                        if (num % 2 == 0) {
-                            expand()
-                        } else {
-                            collapse()
-                        }
-                        num++
-                    }
-                }, 2)
+            addView(expandButton, 2)
         }, 0)
     }
 
     fun expand() {
+        expandButton.setBackgroundResource(R.drawable.collapse_button)
         for (child in this.children)
             child.isVisible = true
     }
 
     fun collapse() {
+        expandButton.setBackgroundResource(R.drawable.expand_button)
         for (child in this.children)
             if (child != this.children.first()) child.isVisible = false
     }
